@@ -1,4 +1,4 @@
-package com.harris.camera2training.helper;
+package com.harris.camera2training.tasks;
 
 import android.media.Image;
 

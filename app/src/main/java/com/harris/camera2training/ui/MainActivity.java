@@ -1,4 +1,4 @@
-package com.harris.camera2training;
+package com.harris.camera2training.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,9 +37,10 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.harris.camera2training.helper.AutoFitTextureView;
-import com.harris.camera2training.helper.CompareSizesByArea;
-import com.harris.camera2training.helper.ImageSaver;
+import com.harris.camera2training.R;
+import com.harris.camera2training.widget.AutoFitTextureView;
+import com.harris.camera2training.util.CompareSizesByArea;
+import com.harris.camera2training.tasks.ImageSaver;
 
 import java.io.File;
 import java.util.ArrayList;

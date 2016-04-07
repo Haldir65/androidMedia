@@ -1,4 +1,4 @@
-package com.harris.camera2training.helper;
+package com.harris.camera2training.widget;
 
 /**
  * Created by Harris on 2016/4/1.

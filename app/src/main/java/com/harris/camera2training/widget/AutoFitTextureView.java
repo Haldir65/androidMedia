@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.harris.camera2training.helper;
+package com.harris.camera2training.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
