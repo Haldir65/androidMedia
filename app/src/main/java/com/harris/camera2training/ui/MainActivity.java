@@ -38,9 +38,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.camera2training.R;
-import com.harris.camera2training.widget.AutoFitTextureView;
-import com.harris.camera2training.util.CompareSizesByArea;
 import com.harris.camera2training.tasks.ImageSaver;
+import com.harris.camera2training.util.CompareSizesByArea;
+import com.harris.camera2training.widget.AutoFitSurfaceView;
+import com.harris.camera2training.widget.AutoFitTextureView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback{
 
+    private AutoFitSurfaceView msurfaceView;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
@@ -130,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     };
+
+
+
 
 
     /**
@@ -753,7 +758,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 takePicture();
                 break;
             case R.id.album:
-                Toast.makeText(MainActivity.this, "需要跳转至相册", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "跳转至文件浏览器", Toast.LENGTH_SHORT).show();
+               /* String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Happy/camera2";
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                Uri myUri = Uri.parse(folderPath);
+                intent.setDataAndType(myUri , "file/jpg");
+                startActivity(Intent.createChooser(intent,"Open folder"));*/
                 break;
 
         }
