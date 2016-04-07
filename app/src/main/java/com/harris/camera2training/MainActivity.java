@@ -22,6 +22,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -303,7 +304,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), Environment.getExternalStorageDirectory().getAbsolutePath()+"/Happy/camera2"));
+
         }
 
     };
@@ -708,7 +710,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
                     //showToast("Saved: " + mFile);
-                    Log.d(TAG, "文件已经保存到 " + mFile.toString());
+                    //Log.d(TAG, "文件已经保存到 " + mFile.toString());
                     unlockFocus();
                 }
             };
@@ -728,7 +730,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTextureView = (AutoFitTextureView) findViewById(R.id.texture);
         findViewById(R.id.picture).setOnClickListener(this);
         findViewById(R.id.album).setOnClickListener(this);
-        mFile = new File(getExternalFilesDir(null), "pic.jpg");
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
