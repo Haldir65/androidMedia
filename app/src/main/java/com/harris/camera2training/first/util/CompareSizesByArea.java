@@ -1,4 +1,4 @@
-package com.harris.camera2training.util;
+package com.harris.camera2training.first.util;
 
 /**
  * Created by Harris on 2016/4/1.

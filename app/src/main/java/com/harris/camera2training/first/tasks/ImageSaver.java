@@ -1,8 +1,8 @@
-package com.harris.camera2training.tasks;
+package com.harris.camera2training.first.tasks;
 
 import android.media.Image;
 
-import com.harris.camera2training.util.LogUtil;
+import com.harris.camera2training.first.util.LogUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

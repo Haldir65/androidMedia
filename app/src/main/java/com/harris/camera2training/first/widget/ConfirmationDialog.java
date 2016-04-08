@@ -1,4 +1,4 @@
-package com.harris.camera2training.widget;
+package com.harris.camera2training.first.widget;
 
 
 import android.Manifest;

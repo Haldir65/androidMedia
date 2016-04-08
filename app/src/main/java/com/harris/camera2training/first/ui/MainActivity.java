@@ -1,4 +1,4 @@
-package com.harris.camera2training.ui;
+package com.harris.camera2training.first.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -38,10 +38,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.camera2training.R;
-import com.harris.camera2training.tasks.ImageSaver;
-import com.harris.camera2training.util.CompareSizesByArea;
-import com.harris.camera2training.widget.AutoFitSurfaceView;
-import com.harris.camera2training.widget.AutoFitTextureView;
+import com.harris.camera2training.first.tasks.ImageSaver;
+import com.harris.camera2training.first.util.CompareSizesByArea;
+import com.harris.camera2training.first.widget.AutoFitTextureView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback{
 
-    private AutoFitSurfaceView msurfaceView;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
@@ -408,7 +406,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                        @NonNull TotalCaptureResult result) {
             process(result);
         }
-
     };
 
 
@@ -586,6 +583,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mPreviewRequestBuilder.addTarget(surface);
 
             // Here, we create a CameraCaptureSession for camera preview.
+            // Be patient, this usually can take several hundred milliseconds
             mCameraDevice.createCaptureSession(Arrays.asList(surface, mImageReader.getSurface()),
                     new CameraCaptureSession.StateCallback() {
 
@@ -710,6 +708,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             CameraCaptureSession.CaptureCallback CaptureCallback
                     = new CameraCaptureSession.CaptureCallback() {
+                @Override
+                public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
+                    super.onCaptureStarted(session, request, timestamp, frameNumber);
+                }
+
+                @Override
+                public void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult) {
+                    super.onCaptureProgressed(session, request, partialResult);
+                }
 
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
