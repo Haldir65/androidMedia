@@ -1,11 +1,7 @@
 package com.harris.camera2training.first.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.util.SparseIntArray;
-import android.view.Surface;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,20 +10,7 @@ import com.harris.camera2training.first.subManagers.CameraHolder;
 import com.harris.camera2training.first.tasks.ThreadManager;
 import com.harris.camera2training.first.widget.AutoFitTextureView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
-    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-
-    static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 90);
-        ORIENTATIONS.append(Surface.ROTATION_90, 0);
-        ORIENTATIONS.append(Surface.ROTATION_180, 270);
-        ORIENTATIONS.append(Surface.ROTATION_270, 180);
-    }
-
-    /**
-     * Tag for the {@link Log}.
-     */
-    public static final String TAG = MainActivity.class.getSimpleName();
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private AutoFitTextureView mTextureView;
@@ -87,13 +70,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return mTextureView;
     }
 
-    private void requestCameraPermission() {
-       /* if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-            // new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
-            //需要弹出一个Dialog
-        } else {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, 1
-            );
-        }*/
-    }
+
 }
