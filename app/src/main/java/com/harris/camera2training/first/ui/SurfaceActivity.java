@@ -41,7 +41,7 @@ import android.widget.Toast;
 import com.harris.camera2training.R;
 import com.harris.camera2training.first.tasks.ImageSaver;
 import com.harris.camera2training.first.util.CompareSizesByArea;
-import com.harris.camera2training.first.util.Utils;
+import com.harris.camera2training.first.util.CameraUtils;
 import com.harris.camera2training.first.widget.AutoFitSurfaceView;
 import com.harris.camera2training.first.widget.AutoFitTextureView;
 
@@ -754,7 +754,7 @@ public class SurfaceActivity extends AppCompatActivity implements View.OnClickLi
            @Override
            public void surfaceCreated(SurfaceHolder holder) {
                //do nothing here
-               openCamera(Utils.getScreenWidth(SurfaceActivity.this), Utils.getScreenHeight(SurfaceActivity.this));
+               openCamera(CameraUtils.getScreenWidth(SurfaceActivity.this), CameraUtils.getScreenHeight(SurfaceActivity.this));
            }
 
            @Override

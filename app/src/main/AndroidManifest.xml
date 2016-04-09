@@ -20,7 +20,11 @@
         android:clearTaskOnLaunch="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
         <activity android:name=".first.ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".first.ui.SurfaceActivity"
@@ -32,11 +36,7 @@
             android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
     </application>
