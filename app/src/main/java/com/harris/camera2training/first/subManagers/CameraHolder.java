@@ -234,6 +234,10 @@ public class CameraHolder implements TextureView.SurfaceTextureListener {
                                         CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                                 // Flash is automatically enabled when necessary.
                                 setAutoFlash(mPreviewRequestBuilder);
+                                mPreviewRequestBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE,
+                                        CaptureRequest.CONTROL_EFFECT_MODE_SEPIA
+                                );// TODO: 2016/4/9  在发送请求前可以设置更多的属性
+                                // 参考 http://developer.android.com/intl/zh-cn/reference/android/hardware/camera2/CameraMetadata.html
 
                                 // Finally, we start displaying the camera preview.
                                 mPreviewRequest = mPreviewRequestBuilder.build();
