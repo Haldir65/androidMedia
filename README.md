@@ -7,6 +7,7 @@ Camera2学习项目
 [camera2 video](https://github.com/googlesamples/android-Camera2Video)<br/>
 [camera2 raw] (https://github.com/googlesamples/android-Camera2Raw)<br/>
 
+add a new package for mediaPlayBack practices
 
 -----aim<br/>
 try to extract and make it simple
