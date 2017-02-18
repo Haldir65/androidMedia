@@ -21,7 +21,7 @@
         android:screenOrientation="portrait"
         android:clearTaskOnLaunch="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-        <activity android:name=".camera2.uiMainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,17 +29,24 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.harris.androidMedia.camera2.SurfaceActivity"
+        <activity android:name="com.harris.androidMedia.camera2.ui.SurfaceActivity"
             android:screenOrientation="portrait">
-
-
         </activity>
+
+
         <activity android:name="com.harris.androidMedia.test.SimpleCameraApp"
-            android:screenOrientation="portrait"
-            android:clearTaskOnLaunch="true"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+                  android:screenOrientation="portrait"
+                  android:clearTaskOnLaunch="true"
+                  android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
         </activity>
+
+        <activity android:name=".camera2.ui.Camera2Activity"/>
+
+        <activity android:name=".exoPlayer.ExoPlayerActivity"/>
+
+        <activity android:name=".mediaPlayBack.MediaPlayBackActivity"/>
+
 
     </application>
 

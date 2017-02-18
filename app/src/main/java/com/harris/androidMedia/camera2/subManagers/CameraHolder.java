@@ -30,9 +30,9 @@ import android.view.TextureView;
 
 import com.harris.androidMedia.camera2.impls.CameraTasksImpl;
 import com.harris.androidMedia.camera2.tasks.ThreadManager;
-import com.harris.androidMedia.camera2.MainActivity;
-import com.harris.androidMedia.camera2.util.CompareSizesByArea;
-import com.harris.androidMedia.camera2.util.LogUtil;
+import com.harris.androidMedia.camera2.ui.Camera2Activity;
+import com.harris.androidMedia.util.CompareSizesByArea;
+import com.harris.androidMedia.util.LogUtil;
 import com.harris.androidMedia.camera2.widget.AutoFitTextureView;
 
 import java.util.Arrays;
@@ -47,7 +47,7 @@ import static com.harris.androidMedia.camera2.subManagers.Camera2Constants.STATE
 import static com.harris.androidMedia.camera2.subManagers.Camera2Constants.STATE_WAITING_LOCK;
 import static com.harris.androidMedia.camera2.subManagers.Camera2Constants.STATE_WAITING_NON_PRECAPTURE;
 import static com.harris.androidMedia.camera2.subManagers.Camera2Constants.STATE_WAITING_PRECAPTURE;
-import static com.harris.androidMedia.camera2.util.CameraUtils.chooseOptimalSize;
+import static com.harris.androidMedia.util.CameraUtils.chooseOptimalSize;
 
 /**
  * Created by Harris on 2016/4/9.
@@ -60,13 +60,13 @@ public class CameraHolder implements TextureView.SurfaceTextureListener {
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         LogUtil.d("");
-        openCamera(width, height, activity, ((MainActivity) activity).getmTextureView());
+        openCamera(width, height, activity, ((Camera2Activity) activity).getmTextureView());
     }
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         LogUtil.d("");
-        configureTransform(width, height, activity, ((MainActivity) activity).getmTextureView());
+        configureTransform(width, height, activity, ((Camera2Activity) activity).getmTextureView());
     }
 
     @Override
@@ -548,7 +548,7 @@ public class CameraHolder implements TextureView.SurfaceTextureListener {
             // This method is called when the camera is opened.  We start camera preview here.
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
-            createCameraPreviewSession(((MainActivity) activity).getmTextureView().getSurfaceTexture());
+            createCameraPreviewSession(((Camera2Activity) activity).getmTextureView().getSurfaceTexture());
         }
 
         @Override

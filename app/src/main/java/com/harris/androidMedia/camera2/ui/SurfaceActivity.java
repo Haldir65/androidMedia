@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2;
+package com.harris.androidMedia.camera2.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -39,6 +39,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.androidMedia.R;
+import com.harris.androidMedia.camera2.tasks.ImageSaver;
+import com.harris.androidMedia.util.CameraUtils;
+import com.harris.androidMedia.util.CompareSizesByArea;
+import com.harris.androidMedia.camera2.widget.AutoFitSurfaceView;
+import com.harris.androidMedia.camera2.widget.AutoFitTextureView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,7 +69,7 @@ public class SurfaceActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Tag for the {@link Log}.
      */
-    public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = Camera2Activity.class.getSimpleName();
 
     /**
      * Camera state: Showing camera preview.
@@ -739,7 +744,7 @@ public class SurfaceActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera2);
        // mTextureView = (AutoFitTextureView) findViewById(R.id.texture);
         mSurfaceView = (AutoFitSurfaceView) findViewById(R.id.surfaceview);
         findViewById(R.id.picture).setOnClickListener(this);

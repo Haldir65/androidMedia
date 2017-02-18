@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2;
+package com.harris.androidMedia.camera2.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,8 +6,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.androidMedia.R;
+import com.harris.androidMedia.camera2.subManagers.CameraHolder;
+import com.harris.androidMedia.camera2.tasks.ThreadManager;
+import com.harris.androidMedia.camera2.widget.AutoFitTextureView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class Camera2Activity extends AppCompatActivity implements View.OnClickListener {
 
 
     private AutoFitTextureView mTextureView;
@@ -18,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera2);
         mTextureView = (AutoFitTextureView) findViewById(R.id.texture);
         findViewById(R.id.picture).setOnClickListener(this);
         findViewById(R.id.album).setOnClickListener(this);
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 takePicture();
                 break;
             case R.id.album:
-                Toast.makeText(MainActivity.this, "跳转至文件浏览器", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Camera2Activity.this, "跳转至文件浏览器", Toast.LENGTH_SHORT).show();
                /* String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Happy/camera2";
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_GET_CONTENT);
