@@ -1,4 +1,4 @@
-package com.harris.androidMedia.first.application;
+package com.harris.androidMedia;
 
 import android.app.Application;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.harris.androidMedia.first.ui;
+package com.harris.androidMedia.camera2;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,9 +6,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.first.subManagers.CameraHolder;
-import com.harris.androidMedia.first.tasks.ThreadManager;
-import com.harris.androidMedia.first.widget.AutoFitTextureView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

@@ -1,4 +1,4 @@
-package com.harris.androidMedia.first.widget;
+package com.harris.androidMedia.camera2.widget;
 
 /**
  * Created by Harris on 2016/4/1.

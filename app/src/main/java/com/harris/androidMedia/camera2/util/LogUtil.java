@@ -1,4 +1,4 @@
-package com.harris.androidMedia.first.util;
+package com.harris.androidMedia.camera2.util;
 
 import android.util.Log;
 

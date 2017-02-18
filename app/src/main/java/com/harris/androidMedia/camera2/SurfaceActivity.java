@@ -1,4 +1,4 @@
-package com.harris.androidMedia.first.ui;
+package com.harris.androidMedia.camera2;
 
 import android.Manifest;
 import android.app.Activity;
@@ -39,11 +39,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.first.tasks.ImageSaver;
-import com.harris.androidMedia.first.util.CompareSizesByArea;
-import com.harris.androidMedia.first.util.CameraUtils;
-import com.harris.androidMedia.first.widget.AutoFitSurfaceView;
-import com.harris.androidMedia.first.widget.AutoFitTextureView;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
-package com.harris.androidMedia.first.util;
+package com.harris.androidMedia.camera2.util;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import com.harris.androidMedia.first.application.App;
+import com.harris.androidMedia.App;
 
 /**
  * Created by Harris on 2016/4/8.

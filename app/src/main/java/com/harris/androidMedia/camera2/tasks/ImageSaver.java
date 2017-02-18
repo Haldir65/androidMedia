@@ -1,8 +1,8 @@
-package com.harris.androidMedia.first.tasks;
+package com.harris.androidMedia.camera2.tasks;
 
 import android.media.Image;
 
-import com.harris.androidMedia.first.util.LogUtil;
+import com.harris.androidMedia.camera2.util.LogUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

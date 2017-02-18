@@ -1,4 +1,4 @@
-package com.harris.androidMedia.first.subManagers;
+package com.harris.androidMedia.camera2.subManagers;
 
 /**
  * Created by Harris on 2016/4/9.

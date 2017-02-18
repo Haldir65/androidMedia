@@ -1,4 +1,4 @@
-package com.harris.androidMedia.first.impls;
+package com.harris.androidMedia.camera2.impls;
 
 /**
  * Created by Harris on 2016/4/9.
