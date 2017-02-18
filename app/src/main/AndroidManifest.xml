@@ -45,6 +45,8 @@
 
         <activity android:name=".exoPlayer.ExoPlayerActivity"/>
 
+        <activity android:name=".exoPlayer.PlayerActivity"/>
+
         <activity android:name=".mediaPlayBack.MediaPlayBackActivity"/>
 
 
