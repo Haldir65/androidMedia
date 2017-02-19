@@ -43,7 +43,7 @@
 
         <activity android:name=".camera2.ui.Camera2Activity"/>
 
-        <activity android:name=".exoPlayer.ExoPlayerEntrance"/>
+        <activity android:name=".exoPlayer.ExoPlayerMainActivity"/>
 
         <activity android:name=".exoPlayer.SimpleExoPlayerViewActivity"
             android:theme="@style/PlayerTheme"
