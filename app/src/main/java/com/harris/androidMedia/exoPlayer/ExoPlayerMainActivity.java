@@ -28,6 +28,8 @@ public class ExoPlayerMainActivity extends AppCompatActivity implements View.OnC
         binding = DataBindingUtil.setContentView(this, R.layout.activity_exoplayer);
         setSupportActionBar(binding.toolbar);
         uri = "http://odzl05jxx.bkt.clouddn.com/%E6%9D%8E%E5%BF%97&quot;%E7%9C%8B%E8%A7%81&quot;2015%E5%B7%A1%E6%BC%94%E9%A2%84%E5%91%8A%E7%89%87.mp4";
+		String flvString= "http://odzl05jxx.bkt.clouddn.com/CINDERELLA%20--%20Moccona%20%28quest%29_%E6%A0%87%E6%B8%85.flv";
+		String rmvbString = "http://odzl05jxx.bkt.clouddn.com/girl.rmvb";
         binding.card1.setOnClickListener(this);
         binding.card2.setOnClickListener(this);
         binding.card3.setOnClickListener(this);
