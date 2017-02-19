@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityExoplayerBinding;
+
+import static com.harris.androidMedia.MainActivity.TRANSIT_FAB;
 
 /**
  * Created by Harris on 2017/2/18.
@@ -28,6 +31,8 @@ public class ExoPlayerMainActivity extends AppCompatActivity implements View.OnC
         binding.card1.setOnClickListener(this);
         binding.card2.setOnClickListener(this);
         binding.card3.setOnClickListener(this);
+        ViewCompat.setTransitionName(binding.fab, TRANSIT_FAB);
+
     }
 
     @Override
