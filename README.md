@@ -13,8 +13,12 @@ Note! quote from [Google's guide](https://google.github.io/ExoPlayer/faqs.html) 
 > you should report this to the developer of the emulator rather than to the ExoPlayer team. Where possible,
 > we recommend testing media applications on physical devices rather than emulators.
 
-- #### Camera2 API use case(Not done yet)
-- #### ExoPlayer2 for Android 16 and above 
+Also
+
+> SurfaceView are more performant than textureView ,the latter is shall only be used as media output when scrolling or animation are required.
+
+- #### Camera 2 API use case(Not done yet)
+- #### ExoPlayer 2 for Android 16 and above 
 - #### MusicPlayer imitating (timber)[https://github.com/naman14/Timber]
 
 
@@ -27,6 +31,7 @@ Note! quote from [Google's guide](https://google.github.io/ExoPlayer/faqs.html) 
 - [camera2 video](https://github.com/googlesamples/android-Camera2Video)
 - [camera2 raw](https://github.com/googlesamples/android-Camera2Raw)
 - [ExoPlayer Guide](https://google.github.io/ExoPlayer/guide.html)
+- [ExoPlayer Blog](https://medium.com/google-exoplayer)
 
 
 
