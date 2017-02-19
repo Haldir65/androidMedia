@@ -127,7 +127,7 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         if (Util.SDK_INT > 23) {
             initializePlayer();
@@ -135,7 +135,7 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
@@ -157,6 +157,9 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
             releasePlayer();
         }
     }
+
+
+
 
 
     @Override
