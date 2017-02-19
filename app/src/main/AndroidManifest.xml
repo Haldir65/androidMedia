@@ -43,9 +43,16 @@
 
         <activity android:name=".camera2.ui.Camera2Activity"/>
 
-        <activity android:name=".exoPlayer.ExoPlayerActivity"/>
+        <activity android:name=".exoPlayer.ExoPlayerEntrance"/>
 
-        <activity android:name=".exoPlayer.PlayerActivity"/>
+        <activity android:name=".exoPlayer.SimpleExoPlayerViewActivity"
+            android:theme="@style/PlayerTheme"
+            />
+
+        <activity android:name=".exoPlayer.SurfaceViewPlayerActivity"
+            />
+
+        <activity android:name=".exoPlayer.TextureViewActivity"/>
 
         <activity android:name=".mediaPlayBack.MediaPlayBackActivity"/>
 

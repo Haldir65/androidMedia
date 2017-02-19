@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.harris.androidMedia.camera2.ui.Camera2Activity;
 import com.harris.androidMedia.databinding.ActivityMainBinding;
-import com.harris.androidMedia.exoPlayer.ExoPlayerActivity;
+import com.harris.androidMedia.exoPlayer.ExoPlayerEntrance;
 import com.harris.androidMedia.mediaPlayBack.MediaPlayBackActivity;
 import com.harris.androidMedia.util.ActionCallBack;
 
@@ -35,8 +35,7 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
                 startActivity(new Intent(this, Camera2Activity.class));
                 break;
             case R.id.button2:
-                startActivity(new Intent(this, ExoPlayerActivity.class));
-
+                startActivity(new Intent(this, ExoPlayerEntrance.class));
                 break;
             case R.id.button3:
                 startActivity(new Intent(this, MediaPlayBackActivity.class));
