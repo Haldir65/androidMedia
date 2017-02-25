@@ -21,5 +21,6 @@
     <string name="error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>
     <string name="storage_permission_denied">Permission to access storage was denied</string>
     <string name="sample_list_load_error">One or more sample lists failed to load</string>
+    <string name="exo_player_intro">SurfaceView rendering wasn’t properly synchronized with view animations until Android N. On earlier releases this could result in unwanted effects when a SurfaceView was placed into scrolling container, or when it was subjected to animation. Such effects included the SurfaceView’s contents appearing to lag slightly behind where it should be displayed, and the view turning black when subjected to animation.  To achieve smooth animation or scrolling of video prior to Android N, it’s therefore necessary to use TextureView rather than SurfaceView. If smooth animation or scrolling is not required then SurfaceView should be preferred</string>
     <!--Values for ExoPlayer End-->
 </resources>

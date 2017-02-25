@@ -50,9 +50,14 @@
             />
 
         <activity android:name=".exoPlayer.SurfaceViewPlayerActivity"
+                  android:theme="@style/FullScreenPlayerTheme"
+
             />
 
-        <activity android:name=".exoPlayer.TextureViewActivity"/>
+        <activity android:name=".exoPlayer.TextureViewActivity"
+                  android:theme="@style/PlayerTheme"
+
+            />
 
         <activity android:name=".mediaPlayBack.MediaPlayBackActivity"/>
 

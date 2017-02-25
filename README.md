@@ -31,7 +31,6 @@ Also
 - [camera2 video](https://github.com/googlesamples/android-Camera2Video)
 - [camera2 raw](https://github.com/googlesamples/android-Camera2Raw)
 - [ExoPlayer Guide](https://google.github.io/ExoPlayer/guide.html)
-- [ExoPlayer Blog](https://medium.com/google-exoplayer)
 
 
 
