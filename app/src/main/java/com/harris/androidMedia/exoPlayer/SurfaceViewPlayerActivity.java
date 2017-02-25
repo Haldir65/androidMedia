@@ -19,6 +19,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -49,14 +50,14 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
     ActivitySurfaceViewPlayerBinding binding;
     private SimpleExoPlayer player;
     private Handler mHandler;
-    private Uri mp4VideoUri;
+    private Uri resourceUri;
     private List<String> fileList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_surface_view_player);
-//        mp4VideoUri = Uri.parse(UriRepositories.flvString);
+//        resourceUri = Uri.parse(UriRepositories.flvString);
         checkPermissions();
     }
 
@@ -118,7 +119,7 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
     private void checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
-                showEXTERNAL_STORAGE_PermissionRequestRationale();
+                show_EXTERNAL_STORAGE_PermissionRequestRationale();
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
@@ -127,12 +128,14 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
             //已经拥有permission
             fileList = Utils.getFileAbsolutePathList();
             if (fileList != null && fileList.size() > 0) {
-                mp4VideoUri = Uri.fromFile(new File(fileList.get(0)));
+                for (int i = 0; i < fileList.size(); i++) {
+                        resourceUri = Uri.fromFile(new File(fileList.get(0)));
+                }
             }
         }
     }
 
-    private void showEXTERNAL_STORAGE_PermissionRequestRationale() {
+    private void show_EXTERNAL_STORAGE_PermissionRequestRationale() {
         //do something tell the user why you need this permission
         ToastUtil.showTextLong(this, "Please Grant permission!!");
     }
@@ -190,10 +193,11 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
 // Produces Extractor instances for parsing the media data.
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 // This is the MediaSource representing the media to be played.
-        MediaSource videoSource = new ExtractorMediaSource(mp4VideoUri,
+        MediaSource videoSource = new ExtractorMediaSource(resourceUri,
                 dataSourceFactory, extractorsFactory, null, null);
+        LoopingMediaSource loopingSource = new LoopingMediaSource(videoSource);
 // Prepare the player with the source.
-        player.prepare(videoSource);
+        player.prepare(loopingSource);
     }
 
     private void releasePlayer() {
