@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -47,6 +48,8 @@ public class CustomExoPlayerView extends FrameLayout {
     private SimpleExoPlayer player;
     private boolean useController = true;
     private int controllerShowTimeoutMs;
+    int scaleTouchSlop;
+    float currentX;
 
     public CustomExoPlayerView(@NonNull Context context) {
         this(context, null);
@@ -100,6 +103,7 @@ public class CustomExoPlayerView extends FrameLayout {
             view.setLayoutParams(params);
             surfaceView = view;
             layout.addView(surfaceView, 0);
+            scaleTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         }
     }
 
@@ -266,6 +270,7 @@ public class CustomExoPlayerView extends FrameLayout {
         return true;
     }
 
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (player != null) { //1. getCurrent Status of player
@@ -281,19 +286,52 @@ public class CustomExoPlayerView extends FrameLayout {
             if (showIndefinitely || wasShowingIndefinitely) {
                 controller.show();
             }
-            VelocityTracker tracker = VelocityTracker.obtain();
-            try {
-                tracker.addMovement(ev);
-                tracker.computeCurrentVelocity(1000);
-                float ve =  tracker.getXVelocity();
-            } finally {
-                tracker.recycle();
+            if (velocityTracker == null) {
+                velocityTracker = VelocityTracker.obtain();
             }
+            switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    return true; // critical , only in this way can wo accept ongoing events
+                case MotionEvent.ACTION_MOVE:
+                    velocityTracker.computeCurrentVelocity(1000);
+                    float velocityY = velocityTracker.getYVelocity();
+                    float velocityX = velocityTracker.getXVelocity();
+                    if (Math.hypot(velocityX, velocityY)>scaleTouchSlop) {
+                        if (Math.abs(velocityX) > Math.abs(velocityY)) {
+                            if (velocityX < 0) {
+                                //record current change horizontally
+                            }else {
+
+                            }
+
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    releaseVelocityTracker();
+                    break;
+                default:
+                    break;
+            }
+            return super.dispatchTouchEvent(ev);
+
+
             // todo and current Resource not null and ...
             //if swipe left .... if swipe right....  maybe show some progressView
             // swipe up adjust volume
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    VelocityTracker velocityTracker;
+
+    void releaseVelocityTracker() {
+        if (velocityTracker != null) {
+            velocityTracker.clear();
+            velocityTracker.recycle();
+            velocityTracker = null;
+        }
     }
 
     @Override
