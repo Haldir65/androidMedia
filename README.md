@@ -17,11 +17,13 @@ Also
 
 > SurfaceView are more performant than textureView ,the latter is shall only be used as media output when scrolling or animation are required.
 
-- #### Camera 2 API use case(Not done yet)
-- #### ExoPlayer 2 for Android 16 and above .By the way, ExoPlayer is the default videoPlayer for the youtube Player
-- #### MusicPlayer imitating (timber)[https://github.com/naman14/Timber]
-- #### Best Practice in MediaPlayback - Ian Lake
+- Camera 2 API use case(Not done yet)
+-  ExoPlayer 2 for Android 16 and above .By the way, ExoPlayer is the default videoPlayer for the youtube Player
+-  MusicPlayer imitating (timber)[https://github.com/naman14/Timber]
+-  Best Practice in MediaPlayback - Ian Lake
 
+![Music](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225245.jpg)
+![Movie](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225305.jpg)
 
 
 
