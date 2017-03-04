@@ -31,7 +31,7 @@ import com.harris.androidMedia.databinding.ActivityCustomizePlayerViewBinding;
 import com.harris.androidMedia.exoPlayer.Constants;
 
 /**
- * Created by Harris on 2017/3/4.
+ * Created by Harris on 2017/3/4. support swipe left or right to change the track
  */
 
 public class CustomPlayerViewActivity extends AppCompatActivity {

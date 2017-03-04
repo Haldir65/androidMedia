@@ -25,5 +25,8 @@ public class MediaPlayBackActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ViewCompat.setTransitionName(binding.fab, TRANSIT_FAB);
+
+
+
     }
 }
