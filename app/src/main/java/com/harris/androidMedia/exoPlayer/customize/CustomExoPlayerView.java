@@ -1,6 +1,7 @@
 package com.harris.androidMedia.exoPlayer.customize;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.TextureView;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -262,6 +264,41 @@ public class CustomExoPlayerView extends FrameLayout {
         }
         maybeShowController(true);
         return true;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (player != null) { //1. getCurrent Status of player
+            // 2. do we need to show the controller for this particular event?
+            // 3 . detect current MotionEventAction swipe left? right? up -> volume brightness
+            // 4. adjust the player position using <code>palyer.seekTo()</code>
+            // 5. post a hideController runnable
+            int playbackState = player.getPlaybackState();
+            boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
+                    || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
+            boolean wasShowingIndefinitely = controller.isVisible() && controller.getShowTimeoutMs() <= 0;
+            controller.setShowTimeoutMs(showIndefinitely ? 0 : controllerShowTimeoutMs);
+            if (showIndefinitely || wasShowingIndefinitely) {
+                controller.show();
+            }
+            VelocityTracker tracker = VelocityTracker.obtain();
+            try {
+                tracker.addMovement(ev);
+                tracker.computeCurrentVelocity(1000);
+                float ve =  tracker.getXVelocity();
+            } finally {
+                tracker.recycle();
+            }
+            // todo and current Resource not null and ...
+            //if swipe left .... if swipe right....  maybe show some progressView
+            // swipe up adjust volume
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);//todo shift to horizontal and proceed playing
     }
 
     @Override
