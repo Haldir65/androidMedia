@@ -19,7 +19,7 @@ Also
 
 - Camera 2 API use case(Not done yet)
 -  ExoPlayer 2 for Android 16 and above .By the way, ExoPlayer is the default videoPlayer for the youtube Player
--  MusicPlayer imitating (timber)[https://github.com/naman14/Timber]
+-  MusicPlayer imitating [timber](https://github.com/naman14/Timber)
 -  Best Practice in MediaPlayback - Ian Lake
 
 ![Music](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225245.jpg)
