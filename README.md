@@ -20,6 +20,7 @@ Also
 - #### Camera 2 API use case(Not done yet)
 - #### ExoPlayer 2 for Android 16 and above 
 - #### MusicPlayer imitating (timber)[https://github.com/naman14/Timber]
+- #### Best Practice in MediaPlayback - Ian Lake
 
 
 

@@ -59,6 +59,11 @@
 
             />
 
+
+        <activity android:name=".exoPlayer.customize.CustomizePlayerViewActivity"
+            android:theme="@style/PlayerTheme"
+            />
+
         <activity android:name=".mediaPlayBack.MediaPlayBackActivity"/>
 
 
