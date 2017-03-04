@@ -60,7 +60,7 @@
             />
 
 
-        <activity android:name=".exoPlayer.customize.CustomizePlayerViewActivity"
+        <activity android:name=".exoPlayer.customize.CustomPlayerViewActivity"
             android:theme="@style/PlayerTheme"
             />
 

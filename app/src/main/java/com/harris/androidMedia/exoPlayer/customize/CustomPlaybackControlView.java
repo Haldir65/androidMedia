@@ -255,7 +255,7 @@ public class CustomPlaybackControlView extends FrameLayout {
 
     private void updateAll() {
         updatePlayPauseButton();
-        updateNavigation();
+//        updateNavigation();
         updateProgress();
     }
 

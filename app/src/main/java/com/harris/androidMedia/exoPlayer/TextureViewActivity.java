@@ -45,7 +45,7 @@ public class TextureViewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_texture_view_player);
-        mp4VideoUri = Uri.parse(UriRepositories.RMVBuri);
+        mp4VideoUri = Uri.parse(Constants.RMVBuri);
 
     }
 
