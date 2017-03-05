@@ -128,6 +128,7 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         Uri uri;
         if (file.exists()) {
             uri = Uri.fromFile(file);
+//            uri = Uri.parse(Constants.Mp4uri);
             MediaSource mediaSources = new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
                     mainHandler, null);
             LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSources);

@@ -8,7 +8,6 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -49,7 +48,7 @@ public class CustomPlaybackControlView extends FrameLayout {
     }
 
     public static final int DEFAULT_FAST_FORWARD_MS = 15000;
-    public static final int DEFAULT_REWIND_MS = 5000;
+    public static final int DEFAULT_REWIND_MS = 15000;
     public static final int DEFAULT_SHOW_TIMEOUT_MS = 5000;
 
     private static final int PROGRESS_BAR_MAX = 1000;
@@ -427,7 +426,9 @@ public class CustomPlaybackControlView extends FrameLayout {
         removeCallbacks(hideAction);
     }
 
-    @Override
+
+
+  /*  @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (player == null || event.getAction() != KeyEvent.ACTION_DOWN) {
             return super.dispatchKeyEvent(event);
@@ -461,7 +462,7 @@ public class CustomPlaybackControlView extends FrameLayout {
         }
         show();
         return true;
-    }
+    }*/
 
     private final class ComponentListener implements ExoPlayer.EventListener,
             SeekBar.OnSeekBarChangeListener, View.OnClickListener {
