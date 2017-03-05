@@ -11,8 +11,9 @@
      limitations under the License.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+             android:layout_height="match_parent"
+             android:layout_width="match_parent"
+             xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.exoplayer2.ui.AspectRatioFrameLayout android:id="@+id/video_frame"
         android:layout_width="match_parent"
@@ -24,7 +25,18 @@
             android:layout_height="match_parent"
             android:background="@android:color/black"/>
 
-        <com.google.android.exoplayer2.ui.SubtitleView android:id="@+id/subtitles"
+        <ImageView
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_media_play"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <com.google.android.exoplayer2.ui.SubtitleView
+            android:id="@+id/subtitles"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

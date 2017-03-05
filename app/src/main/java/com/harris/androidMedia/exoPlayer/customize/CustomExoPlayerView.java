@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -34,11 +35,12 @@ import java.util.List;
  * Created by Harris on 2017/2/25.
  */
 
-public class CustomExoPlayerView extends FrameLayout {
+public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackControlView.VisibilityListener, View.OnClickListener {
 
     private View surfaceView;
     private View shutterView;
     private SubtitleView subtitleLayout;
+    private ImageView controlView;
     private AspectRatioFrameLayout layout;
     private CustomPlaybackControlView controller;
     private CustomExoPlayerView.ComponentListener componentListener;
@@ -48,6 +50,8 @@ public class CustomExoPlayerView extends FrameLayout {
     private int controllerShowTimeoutMs;
     int scaleTouchSlop;
     float currentX,currentY;
+    boolean dragging;
+
 
 
     public CustomExoPlayerView(@NonNull Context context) {
@@ -85,6 +89,7 @@ public class CustomExoPlayerView extends FrameLayout {
             LayoutInflater.from(context).inflate(R.layout.exo_simple_player_view, this);
             componentListener = new CustomExoPlayerView.ComponentListener();
             layout = (AspectRatioFrameLayout) findViewById(R.id.video_frame);
+            controlView = (ImageView) findViewById(R.id.play);
             layout.setResizeMode(resizeMode);
             shutterView = findViewById(R.id.shutter);
             subtitleLayout = (SubtitleView) findViewById(R.id.subtitles);
@@ -95,6 +100,8 @@ public class CustomExoPlayerView extends FrameLayout {
             controller.setRewindIncrementMs(rewindMs);
             controller.setFastForwardIncrementMs(fastForwardMs);
             this.controllerShowTimeoutMs = controllerShowTimeoutMs;
+            controller.setVisibilityListener(this);
+            controlView.setOnClickListener(this);
             View view = useTextureView ? new TextureView(context) : new SurfaceView(context);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -258,59 +265,7 @@ public class CustomExoPlayerView extends FrameLayout {
         return true;
     }
 
-    boolean dragging;
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-       /* if (player != null) { //1. getCurrent Status of player
-            // 2. do we need to show the controller for this particular event?
-            // 3 . detect current MotionEventAction swipe left? right? up -> volume brightness
-            // 4. adjust the player position using <code>palyer.seekTo()</code>
-            // 5. post a hideController runnable
-          *//*  int playbackState = player.getPlaybackState();
-            boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
-                    || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
-            boolean wasShowingIndefinitely = controller.isVisible() && controller.getShowTimeoutMs() <= 0;
-            controller.setShowTimeoutMs(showIndefinitely ? 0 : controllerShowTimeoutMs);
-            if (showIndefinitely || wasShowingIndefinitely) {
-                controller.show();
-            }*//*
-
-            int playbackState = player.getPlaybackState();
-            boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
-                    || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
-
-            switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    currentX = ev.getX();
-                    currentY = ev.getY();
-                    controller.show();
-                    return true; // critical , only in this way can wo accept ongoing events
-                case MotionEvent.ACTION_MOVE:
-                    float x = ev.getX();
-                    float y = ev.getY();
-                    if (Math.abs(x-currentX) > Math.abs(y-currentY)&&!dragging) {
-                        if (x - currentX > 0) {
-                            controller.fastForward();
-                        } else {
-                            controller.rewind();
-                        }
-                        dragging = true;
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    currentX = currentY = 0;
-//                    controller.hide();
-                    player.setPlayWhenReady(true);
-                    dragging = false;
-                    break;
-                default:
-                    break;
-            }
-        }*/
-        return super.onInterceptTouchEvent(ev);
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -326,7 +281,8 @@ public class CustomExoPlayerView extends FrameLayout {
                     currentX = ev.getX();
                     currentY = ev.getY();
                     controller.show();
-                    return true; // critical , only in this way can wo accept ongoing events
+
+                    return true; // critical , only in this way can we accept ongoing events
                 case MotionEvent.ACTION_MOVE:
                     float x = ev.getX();
                     float y = ev.getY();
@@ -342,18 +298,12 @@ public class CustomExoPlayerView extends FrameLayout {
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     currentX = currentY = 0;
-//                    controller.hide();
                     player.setPlayWhenReady(true);
                     dragging = false;
                     break;
                 default:
                     break;
             }
-
-
-            // todo and current Resource not null and ...
-            //if swipe left .... if swipe right....  maybe show some progressView
-            // swipe up adjust volume
         }
         return super.onTouchEvent(ev);
     }
@@ -383,6 +333,25 @@ public class CustomExoPlayerView extends FrameLayout {
         if (isForced || showIndefinitely || wasShowingIndefinitely) {
             controller.show();
         }
+    }
+
+    @Override
+    public void onVisibilityChange(int visibility) {
+        if (controlView != null) {
+            if (controlView.getVisibility() != visibility) {
+                controlView.setVisibility(visibility);
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (!controller.getPlayer().getPlayWhenReady()) {
+            controlView.setImageResource(android.R.drawable.ic_media_play);
+        } else {
+            controlView.setImageResource(android.R.drawable.ic_media_pause);
+        }
+        controller.getPlayer().setPlayWhenReady(!controller.getPlayer().getPlayWhenReady());
     }
 
     private final class ComponentListener implements SimpleExoPlayer.VideoListener,
