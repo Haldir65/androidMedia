@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.util.Util;
 public class App extends Application {
     public static Context mContext;
 
+
     protected String userAgent;
 
     @Override

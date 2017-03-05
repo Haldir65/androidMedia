@@ -126,7 +126,7 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
             }
         } else {
             //已经拥有permission
-            fileList = Utils.getFileAbsolutePathList();
+            fileList = Utils.getVideoFileAbsolutePathList();
             if (fileList != null && fileList.size() > 0) {
                 for (int i = 0; i < fileList.size(); i++) {
                         resourceUri = Uri.fromFile(new File(fileList.get(0)));
@@ -160,7 +160,7 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                fileList = Utils.getFileAbsolutePathList();
+                fileList = Utils.getVideoFileAbsolutePathList();
                 if (fileList != null && fileList.size() > 0) {
                     if ((Util.SDK_INT <= 23 || player == null)) {
                         initializePlayer();

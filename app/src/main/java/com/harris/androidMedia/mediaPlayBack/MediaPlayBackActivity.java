@@ -18,6 +18,9 @@ import static com.harris.androidMedia.MainActivity.TRANSIT_FAB;
 public class MediaPlayBackActivity extends AppCompatActivity {
     ActivityMediaPlaybackBinding binding;
 
+    private static final int BUFFER_SEGMENT_SIZE = 64 * 1024;
+    private static final int BUFFER_SEGMENT_COUNT = 256;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +28,13 @@ public class MediaPlayBackActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ViewCompat.setTransitionName(binding.fab, TRANSIT_FAB);
+        initializePlayer();
+    }
 
-
+    void initializePlayer() {
 
     }
+
+
+
 }

@@ -100,7 +100,7 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
             }
         } else {
             //已经拥有permission
-          fileList = Utils.getFileAbsolutePathList();
+          fileList = Utils.getVideoFileAbsolutePathList();
 
         }
     }
@@ -223,7 +223,7 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                fileList = Utils.getFileAbsolutePathList();
+                fileList = Utils.getVideoFileAbsolutePathList();
                 if (fileList != null && fileList.size() > 0) {
                     if ((Util.SDK_INT <= 23 || player == null)) {
                         initializePlayer();
