@@ -255,7 +255,7 @@ public class CustomPlaybackControlView extends FrameLayout {
 
     private void updateAll() {
         updatePlayPauseButton();
-//        updateNavigation();
+        updateNavigation();
         updateProgress();
     }
 
@@ -272,7 +272,7 @@ public class CustomPlaybackControlView extends FrameLayout {
     }
 
     private void updateNavigation() {
-        if (!isVisible() || !isAttachedToWindow) {
+        /*if (!isVisible() || !isAttachedToWindow) {
             return;
         }
         Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
@@ -288,7 +288,7 @@ public class CustomPlaybackControlView extends FrameLayout {
             enableNext = (currentWindowIndex < currentTimeline.getWindowCount() - 1)
                     || currentWindow.isDynamic;
         }
-        progressBar.setEnabled(isSeekable);
+        progressBar.setEnabled(isSeekable);*/
     }
 
     private void updateProgress() {

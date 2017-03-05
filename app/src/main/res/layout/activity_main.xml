@@ -38,91 +38,64 @@
         </android.support.v7.widget.Toolbar>
 
 
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/card2"
+        <Button
+            android:id="@+id/button2"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="2dp"
             android:layout_centerInParent="true"
-            >
+            android:layout_margin="10dp"
+            android:background="@color/cardview_light_background"
+            android:onClick="@{(v) -> callback.onClickView(v)}"
+            android:padding="20dp"
+            android:text="ExoPlayer"
+            android:textAllCaps="false"
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/cardview_light_background"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                android:padding="12dp"
-                android:text="ExoPlayer"
-                android:textAllCaps="false"
-                android:layout_gravity="center"
-                />
+            />
 
-        </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card1"
+        <Button
+            android:id="@+id/button1"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:layout_above="@id/card2"
-            >
-
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/cardview_light_background"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                android:padding="12dp"
-                android:text="camera2"
-                android:textAllCaps="false"
-                />
-        </android.support.v7.widget.CardView>
+            android:layout_above="@id/button2"
+            android:layout_alignLeft="@id/button2"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/cardview_light_background"
+            android:onClick="@{(v) -> callback.onClickView(v)}"
+            android:padding="20dp"
+            android:text="camera2"
+            android:textAllCaps="false"
+            />
 
 
-
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/card3"
+        <Button
+            android:id="@+id/button3"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/card2"
-            android:layout_centerHorizontal="true"
-            >
+            android:layout_alignLeft="@id/button2"
+            android:layout_below="@id/button2"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/cardview_light_background"
+            android:onClick="@{(v) -> callback.onClickView(v)}"
+            android:padding="20dp"
+            android:text="MediaPlayBack"
+            android:textAllCaps="false"
 
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/cardview_light_background"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                android:padding="20dp"
-                android:text="MediaPlayBack"
-                android:textAllCaps="false"
-
-                />
-        </android.support.v7.widget.CardView>
+            />
 
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|bottom"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:onClick="@{(v) -> callback.onClickView(v)}"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             />
 
     </RelativeLayout>

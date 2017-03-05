@@ -1,10 +1,16 @@
 package com.harris.androidMedia.exoPlayer.customize;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.exoplayer2.C;
@@ -28,7 +34,15 @@ import com.google.android.exoplayer2.util.Util;
 import com.harris.androidMedia.App;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityCustomizePlayerViewBinding;
-import com.harris.androidMedia.exoPlayer.Constants;
+import com.harris.androidMedia.util.ToastUtil;
+import com.harris.androidMedia.util.Utils;
+
+import java.io.File;
+import java.util.List;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.harris.androidMedia.exoPlayer.SurfaceViewPlayerActivity.REQUEST_READ_EXTERNAL_STORAGE;
 
 /**
  * Created by Harris on 2017/3/4. support swipe left or right to change the track
@@ -54,6 +68,8 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
     private BandwidthMeter bandwidthMeter;
     private DefaultExtractorsFactory extractorsFactory;
 
+    List<String> fileList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +80,33 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         mainHandler = new Handler();
         window = new Timeline.Window();
         simpleExoPlayerView = binding.playerView;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermissions();
+        }
+
+
+    }
+
+
+
+    @TargetApi(23)
+    private void checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
+                show_EXTERNAL_STORAGE_PermissionRequestRationale();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        } else {
+            //已经拥有permission
+          fileList = Utils.getFileAbsolutePathList();
+
+        }
+    }
+
+    private void show_EXTERNAL_STORAGE_PermissionRequestRationale() {
+        ToastUtil.showTextLong(this,"Please grant permission");
     }
 
     private void initializePlayer() {
@@ -81,11 +124,15 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
                 null, extensionRendererMode);
         simpleExoPlayerView.setPlayer(player);
         player.setPlayWhenReady(shouldAutoPlay);
-        Uri uri = Uri.parse(Constants.Mp4uri);
-        MediaSource mediaSources = new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
-                mainHandler, null);
-        LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSources);
-        player.prepare(loopingMediaSource);
+        File file = new File(fileList.get(0));
+        Uri uri;
+        if (file.exists()) {
+            uri = Uri.fromFile(file);
+            MediaSource mediaSources = new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
+                    mainHandler, null);
+            LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSources);
+            player.prepare(loopingMediaSource);
+        }
     }
 
     private void releasePlayer() {
@@ -106,6 +153,16 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         if (Util.SDK_INT > 23) {
             initializePlayer();
         }
@@ -114,6 +171,16 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
         }
@@ -132,6 +199,36 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         super.onStop();
         if (Util.SDK_INT > 23) {
             releasePlayer();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_READ_EXTERNAL_STORAGE) {
+            // Empty Permission and result array means a cancellation
+            if (grantResults.length == 0) {
+                return;
+            }
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // do something with this permission
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                fileList = Utils.getFileAbsolutePathList();
+                if (fileList != null && fileList.size() > 0) {
+                    if ((Util.SDK_INT <= 23 || player == null)) {
+                        initializePlayer();
+                    }
+                }
+            }
         }
     }
 }
