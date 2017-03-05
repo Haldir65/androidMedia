@@ -346,7 +346,7 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
 
     @Override
     public void onClick(View v) {
-        if (!controller.getPlayer().getPlayWhenReady()) {
+        if (controller.getPlayer().getPlayWhenReady()) {
             controlView.setImageResource(android.R.drawable.ic_media_play);
         } else {
             controlView.setImageResource(android.R.drawable.ic_media_pause);
