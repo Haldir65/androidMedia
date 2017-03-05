@@ -71,6 +71,8 @@ public class CustomPlaybackControlView extends FrameLayout {
     public int fastForwardMs;
     private int showTimeoutMs;
     private long hideAtMs;
+    long curPosition;
+
 
     private final Runnable updateProgressAction = new Runnable() {
         @Override
@@ -402,6 +404,15 @@ public class CustomPlaybackControlView extends FrameLayout {
         }
         player.seekTo(Math.min(player.getCurrentPosition() + fastForwardMs, player.getDuration()));
     }
+
+    public void fastFoward(long position) {
+        player.seekTo(Math.min(curPosition+position,player.getDuration()));
+    }
+
+    public void rewind(long position) {
+        player.seekTo(Math.max(curPosition - position, 0));
+    }
+
 
     @Override
     public void onAttachedToWindow() {

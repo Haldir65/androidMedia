@@ -28,6 +28,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SubtitleView;
 import com.harris.androidMedia.R;
+import com.harris.androidMedia.util.Utils;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
     private int controllerShowTimeoutMs;
     int scaleTouchSlop;
     float currentX,currentY;
-    boolean dragging;
+    float screenWidth;
 
 
 
@@ -267,39 +268,40 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
 
 
 
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (player != null) {
-            int playbackState = player.getPlaybackState();
+            /*int playbackState = player.getPlaybackState();
             boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
                     || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
             if (showIndefinitely) {
                 controller.show();
+            }*/
+            if (screenWidth == 0) {
+                screenWidth = Utils.getScreenWidth(getContext());
             }
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     currentX = ev.getX();
                     currentY = ev.getY();
                     controller.show();
-
+                    controller.curPosition = controller.getPlayer().getCurrentPosition();
                     return true; // critical , only in this way can we accept ongoing events
                 case MotionEvent.ACTION_MOVE:
                     float x = ev.getX();
                     float y = ev.getY();
-                    if (Math.abs(x-currentX) > Math.abs(y-currentY)&&!dragging) {
+                    if (Math.abs(x-currentX) > Math.abs(y-currentY)) {
                         if (x - currentX > 0) {
-                            controller.fastForward();
+                            controller.fastFoward((long) ((x-currentX)*controller.getPlayer().getDuration()/screenWidth));
                         } else {
-                            controller.rewind();
+                            controller.rewind((long) ((currentX-x)*controller.getPlayer().getDuration()/screenWidth));
                         }
-                        dragging = true;
                     }
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     currentX = currentY = 0;
-                    player.setPlayWhenReady(true);
-                    dragging = false;
                     break;
                 default:
                     break;
