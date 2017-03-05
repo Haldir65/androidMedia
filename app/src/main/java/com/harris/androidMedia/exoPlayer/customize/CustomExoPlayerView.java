@@ -281,21 +281,27 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
             if (screenWidth == 0) {
                 screenWidth = Utils.getScreenWidth(getContext());
             }
+            ExoPlayer player = controller.getPlayer();
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     currentX = ev.getX();
                     currentY = ev.getY();
-                    controller.show();
-                    controller.curPosition = controller.getPlayer().getCurrentPosition();
+                    if (!player.getPlayWhenReady()) {
+                        controller.hide();
+                        player.setPlayWhenReady(true);
+                    } else {
+                        controller.show();
+                    }
+                    controller.curPosition = player.getCurrentPosition();
                     return true; // critical , only in this way can we accept ongoing events
                 case MotionEvent.ACTION_MOVE:
                     float x = ev.getX();
                     float y = ev.getY();
                     if (Math.abs(x-currentX) > Math.abs(y-currentY)) {
                         if (x - currentX > 0) {
-                            controller.fastFoward((long) ((x-currentX)*controller.getPlayer().getDuration()/screenWidth));
+                            controller.fastFoward((long) ((x-currentX)*player.getDuration()/screenWidth));
                         } else {
-                            controller.rewind((long) ((currentX-x)*controller.getPlayer().getDuration()/screenWidth));
+                            controller.rewind((long) ((currentX-x)*player.getDuration()/screenWidth));
                         }
                     }
                     break;
@@ -342,6 +348,13 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
         if (controlView != null) {
             if (controlView.getVisibility() != visibility) {
                 controlView.setVisibility(visibility);
+                if (visibility == VISIBLE) {
+                    if (controller.getPlayer().getPlayWhenReady()) {
+                        controlView.setImageResource(android.R.drawable.ic_media_pause);
+                    } else {
+                        controlView.setImageResource(android.R.drawable.ic_media_play);
+                    }
+                }
             }
         }
     }

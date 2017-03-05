@@ -21,6 +21,7 @@ Also
 -  ExoPlayer 2 for Android 16 and above .By the way, ExoPlayer is the default videoPlayer for the youtube Player
 -  MusicPlayer imitating [timber](https://github.com/naman14/Timber)
 -  Best Practice in MediaPlayback - Ian Lake
+- [siwtching-exoplayer-better-video](https://realm.io/news/360andev-effie-barak-switching-exoplayer-better-video-android/)
 
 ![Music](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225245.jpg)
 ![Movie](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225305.jpg)

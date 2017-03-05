@@ -73,7 +73,6 @@ public class CustomPlaybackControlView extends FrameLayout {
     private long hideAtMs;
     long curPosition;
 
-
     private final Runnable updateProgressAction = new Runnable() {
         @Override
         public void run() {
@@ -87,12 +86,13 @@ public class CustomPlaybackControlView extends FrameLayout {
             hide();
         }
     };
+
     public CustomPlaybackControlView(@NonNull Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public CustomPlaybackControlView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public CustomPlaybackControlView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
@@ -112,12 +112,10 @@ public class CustomPlaybackControlView extends FrameLayout {
                 a.recycle();
             }
         }
-
         currentWindow = new Timeline.Window();
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
         componentListener = new CustomPlaybackControlView.ComponentListener();
-
         LayoutInflater.from(context).inflate(R.layout.exo_playback_control_view, this);
         timeCurrent = (TextView) findViewById(R.id.time_current);
         progressBar = (SeekBar) findViewById(R.id.mediacontroller_progress);
@@ -187,7 +185,7 @@ public class CustomPlaybackControlView extends FrameLayout {
      * this duration of time has elapsed without user input.
      *
      * @return The duration in milliseconds. A non-positive value indicates that the controls will
-     *     remain visible indefinitely.
+     * remain visible indefinitely.
      */
     public int getShowTimeoutMs() {
         return showTimeoutMs;
@@ -198,7 +196,7 @@ public class CustomPlaybackControlView extends FrameLayout {
      * duration of time has elapsed without user input.
      *
      * @param showTimeoutMs The duration in milliseconds. A non-positive value will cause the controls
-     *     to remain visible indefinitely.
+     *                      to remain visible indefinitely.
      */
     public void setShowTimeoutMs(int showTimeoutMs) {
         this.showTimeoutMs = showTimeoutMs;
@@ -406,13 +404,12 @@ public class CustomPlaybackControlView extends FrameLayout {
     }
 
     public void fastFoward(long position) {
-        player.seekTo(Math.min(curPosition+position,player.getDuration()));
+        player.seekTo(Math.min(curPosition + position, player.getDuration()));
     }
 
     public void rewind(long position) {
         player.seekTo(Math.max(curPosition - position, 0));
     }
-
 
     @Override
     public void onAttachedToWindow() {
@@ -538,6 +535,5 @@ public class CustomPlaybackControlView extends FrameLayout {
             }
             hideAfterTimeout();
         }
-
     }
 }
