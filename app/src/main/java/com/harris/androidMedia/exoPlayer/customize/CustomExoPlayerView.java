@@ -272,6 +272,8 @@ public class CustomExoPlayerView extends FrameLayout {
         return true;
     }
 
+    boolean dragging;
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -297,28 +299,25 @@ public class CustomExoPlayerView extends FrameLayout {
                     currentX = ev.getX();
                     currentY = ev.getY();
                     controller.show();
-                    player.setPlayWhenReady(false);
                     return true; // critical , only in this way can wo accept ongoing events
                 case MotionEvent.ACTION_MOVE:
                     float x = ev.getX();
                     float y = ev.getY();
-                    if (Math.pow(x-currentX, y-currentY) > scaleTouchSlop) {//do stuff
-                        if (Math.abs(x-currentX) > Math.abs(y-currentY)) {
-                            float change = Math.abs( (x-currentX) / screenWidth);
-                            if (x > currentX) {
-                                player.seekTo((long) Math.min(player.getCurrentPosition() + change*controller.fastForwardMs, player.getDuration()));
+                        if (Math.abs(x-currentX) > Math.abs(y-currentY)&&!dragging) {
+                            if (x - currentX > 0) {
+                                controller.fastForward();
                             } else {
-                                player.seekTo((long) Math.max(player.getCurrentPosition() - change*controller.rewindMs , 0));
+                                controller.rewind();
                             }
-                            player.setPlayWhenReady(false);
+                            dragging = true;
                         }
-                    }
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     currentX = currentY = 0;
-                    controller.hide();
+//                    controller.hide();
                     player.setPlayWhenReady(true);
+                    dragging = false;
                     break;
                 default:
                     break;

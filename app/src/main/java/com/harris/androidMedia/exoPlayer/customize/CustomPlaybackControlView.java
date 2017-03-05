@@ -319,7 +319,7 @@ public class CustomPlaybackControlView extends FrameLayout {
             } else {
                 delayMs = 1000;
             }
-//            postDelayed(updateProgressAction, delayMs);
+            postDelayed(updateProgressAction, delayMs);
         }
     }
 
@@ -377,7 +377,7 @@ public class CustomPlaybackControlView extends FrameLayout {
         }
     }
 
-    private void next() {
+    public void next() {
         Timeline currentTimeline = player.getCurrentTimeline();
         if (currentTimeline == null) {
             return;
@@ -390,14 +390,14 @@ public class CustomPlaybackControlView extends FrameLayout {
         }
     }
 
-    private void rewind() {
+    public void rewind() {
         if (rewindMs <= 0) {
             return;
         }
         player.seekTo(Math.max(player.getCurrentPosition() - rewindMs, 0));
     }
 
-    private void fastForward() {
+    public void fastForward() {
         if (fastForwardMs <= 0) {
             return;
         }
