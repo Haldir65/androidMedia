@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.TextureView;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SubtitleView;
 import com.harris.androidMedia.R;
+import com.harris.androidMedia.util.Utils;
 
 import java.util.List;
 
@@ -49,7 +49,9 @@ public class CustomExoPlayerView extends FrameLayout {
     private boolean useController = true;
     private int controllerShowTimeoutMs;
     int scaleTouchSlop;
-    float currentX;
+    float currentX,currentY;
+
+    int screenWidth;
 
     public CustomExoPlayerView(@NonNull Context context) {
         this(context, null);
@@ -278,38 +280,45 @@ public class CustomExoPlayerView extends FrameLayout {
             // 3 . detect current MotionEventAction swipe left? right? up -> volume brightness
             // 4. adjust the player position using <code>palyer.seekTo()</code>
             // 5. post a hideController runnable
-            int playbackState = player.getPlaybackState();
+          /*  int playbackState = player.getPlaybackState();
             boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
                     || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
             boolean wasShowingIndefinitely = controller.isVisible() && controller.getShowTimeoutMs() <= 0;
             controller.setShowTimeoutMs(showIndefinitely ? 0 : controllerShowTimeoutMs);
             if (showIndefinitely || wasShowingIndefinitely) {
                 controller.show();
-            }
-            if (velocityTracker == null) {
-                velocityTracker = VelocityTracker.obtain();
-            }
+            }*/
+          if (screenWidth==0){
+              screenWidth = Utils.getScreenWidth(getContext());
+          }
+
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    currentX = ev.getX();
+                    currentY = ev.getY();
+                    controller.show();
+                    player.setPlayWhenReady(false);
                     return true; // critical , only in this way can wo accept ongoing events
                 case MotionEvent.ACTION_MOVE:
-                    velocityTracker.computeCurrentVelocity(1000);
-                    float velocityY = velocityTracker.getYVelocity();
-                    float velocityX = velocityTracker.getXVelocity();
-                    if (Math.hypot(velocityX, velocityY)>scaleTouchSlop) {
-                        if (Math.abs(velocityX) > Math.abs(velocityY)) {
-                            if (velocityX < 0) {
-                                //record current change horizontally
-                            }else {
-
+                    float x = ev.getX();
+                    float y = ev.getY();
+                    if (Math.pow(x-currentX, y-currentY) > scaleTouchSlop) {//do stuff
+                        if (Math.abs(x-currentX) > Math.abs(y-currentY)) {
+                            float change = Math.abs( (x-currentX) / screenWidth);
+                            if (x > currentX) {
+                                player.seekTo((long) Math.min(player.getCurrentPosition() + change*controller.fastForwardMs, player.getDuration()));
+                            } else {
+                                player.seekTo((long) Math.max(player.getCurrentPosition() - change*controller.rewindMs , 0));
                             }
-
+                            player.setPlayWhenReady(false);
                         }
                     }
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    releaseVelocityTracker();
+                    currentX = currentY = 0;
+                    controller.hide();
+                    player.setPlayWhenReady(true);
                     break;
                 default:
                     break;
@@ -324,15 +333,7 @@ public class CustomExoPlayerView extends FrameLayout {
         return super.dispatchTouchEvent(ev);
     }
 
-    VelocityTracker velocityTracker;
 
-    void releaseVelocityTracker() {
-        if (velocityTracker != null) {
-            velocityTracker.clear();
-            velocityTracker.recycle();
-            velocityTracker = null;
-        }
-    }
 
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {

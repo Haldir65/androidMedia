@@ -58,7 +58,7 @@ public class CustomPlaybackControlView extends FrameLayout {
     private final CustomPlaybackControlView.ComponentListener componentListener;
     private final ImageView playButton;
     private final TextView timeCurrent;
-    private final SeekBar progressBar;
+    public final SeekBar progressBar;
     private final StringBuilder formatBuilder;
     private final Formatter formatter;
     private final Timeline.Window currentWindow;
@@ -68,8 +68,8 @@ public class CustomPlaybackControlView extends FrameLayout {
 
     private boolean isAttachedToWindow;
     private boolean dragging;
-    private int rewindMs;
-    private int fastForwardMs;
+    public int rewindMs;
+    public int fastForwardMs;
     private int showTimeoutMs;
     private long hideAtMs;
 
@@ -319,7 +319,7 @@ public class CustomPlaybackControlView extends FrameLayout {
             } else {
                 delayMs = 1000;
             }
-            postDelayed(updateProgressAction, delayMs);
+//            postDelayed(updateProgressAction, delayMs);
         }
     }
 
