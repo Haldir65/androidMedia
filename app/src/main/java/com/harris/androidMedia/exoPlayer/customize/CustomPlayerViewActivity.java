@@ -34,6 +34,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.harris.androidMedia.App;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityCustomizePlayerViewBinding;
+import com.harris.androidMedia.exoPlayer.Constants;
 import com.harris.androidMedia.util.ToastUtil;
 import com.harris.androidMedia.util.Utils;
 
@@ -124,11 +125,16 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
                 null, extensionRendererMode);
         simpleExoPlayerView.setPlayer(player);
         player.setPlayWhenReady(shouldAutoPlay);
-        File file = new File(fileList.get(0));
-        Uri uri;
-        if (file.exists()) {
-            uri = Uri.fromFile(file);
-//            uri = Uri.parse(Constants.Mp4uri);
+        Uri uri = null;
+        if (fileList != null && fileList.size() > 0) {
+            File file = new File(fileList.get(0));
+            if (file.exists()) {
+                uri = Uri.fromFile(file);
+            }
+        } else {
+            uri = Uri.parse(Constants.Mp4uri);
+        }
+        if (uri != null) {
             MediaSource mediaSources = new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
                     mainHandler, null);
             LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSources);
