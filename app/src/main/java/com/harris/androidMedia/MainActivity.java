@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.harris.androidMedia.exoPlayer.ExoPlayerMainActivity;
 import com.harris.androidMedia.mediaPlayBack.MediaPlayBackActivity;
 import com.harris.androidMedia.util.ActionCallBack;
 import com.harris.androidMedia.util.LogUtil;
+import com.harris.androidMedia.util.UtilImage;
 import com.harris.androidMedia.util.UtilVideo;
 
 import java.util.ArrayList;
@@ -51,10 +53,12 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        List<UtilVideo.VideoInfo> list = new ArrayList<>();
+       /* List<UtilVideo.VideoInfo> list = new ArrayList<>();
         UtilVideo.getAllVideoOnDevice(this, list);
-        LogUtil.d("" + list.size());
-        binding.image.setImageBitmap(ThumbnailUtils.createVideoThumbnail(list.get(0).path,MINI_KIND));
+        LogUtil.d("" + list.size());*/
+        List<UtilImage.ImageInfo> list = new ArrayList<>();
+        list = UtilImage.getAllImageOnDevice(this, list);
+        binding.image.setImageBitmap(BitmapFactory.decodeFile(list.get(0).path));
 
     }
 
