@@ -81,11 +81,7 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         mainHandler = new Handler();
         window = new Timeline.Window();
         simpleExoPlayerView = binding.playerView;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermissions();
-        }
-
-
+        checkPermissions();
     }
 
 
@@ -126,8 +122,12 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         simpleExoPlayerView.setPlayer(player);
         player.setPlayWhenReady(shouldAutoPlay);
         Uri uri = null;
+
         if (fileList != null && fileList.size() > 0) {
             File file = new File(fileList.get(0));
+            if (file.isDirectory()) {
+                file = new File(fileList.get(1));
+            }
             if (file.exists()) {
                 uri = Uri.fromFile(file);
             }
