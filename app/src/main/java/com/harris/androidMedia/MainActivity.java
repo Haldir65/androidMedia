@@ -1,12 +1,7 @@
 package com.harris.androidMedia;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.BitmapFactory;
-import android.media.AudioDeviceInfo;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -18,18 +13,6 @@ import com.harris.androidMedia.databinding.ActivityMainBinding;
 import com.harris.androidMedia.exoPlayer.ExoPlayerMainActivity;
 import com.harris.androidMedia.mediaPlayBack.MediaPlayBackActivity;
 import com.harris.androidMedia.util.ActionCallBack;
-import com.harris.androidMedia.util.LogUtil;
-import com.harris.androidMedia.util.UtilImage;
-import com.harris.androidMedia.util.UtilMusic;
-import com.harris.androidMedia.util.UtilVideo;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import android.provider.MediaStore.Video.Thumbnails;
-
-import static android.provider.MediaStore.Video.Thumbnails.MICRO_KIND;
-import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 
 /**
  * Created by Harris on 2017/2/18.
@@ -45,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(binding.toolbar);
         binding.setCallback(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+   /*     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -55,12 +38,12 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-       /* List<UtilVideo.VideoInfo> list = new ArrayList<>();
+        List<UtilVideo.VideoInfo> list = new ArrayList<>();
         UtilVideo.getAllVideoOnDevice(this, list);
-        LogUtil.d("" + list.size());*/
-        List<UtilMusic.MusicInfo> list = new ArrayList<>();
-        list = UtilMusic.getAllAudioOnDevice(this, list);
-        binding.image.setImageBitmap(BitmapFactory.decodeFile(list.get(0).info));
+        LogUtil.d("" + list.size());
+        *//*List<UtilMusic.MusicInfo> list = new ArrayList<>();
+        list = UtilMusic.getAllAudioOnDevice(this, list);*//*
+        binding.image.setImageBitmap(BitmapFactory.decodeFile(list.get(0).info));*/
 
     }
 
