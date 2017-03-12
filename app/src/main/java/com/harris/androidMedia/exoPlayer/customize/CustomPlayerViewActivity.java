@@ -2,14 +2,20 @@ package com.harris.androidMedia.exoPlayer.customize;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
@@ -84,8 +90,6 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         checkPermissions();
     }
 
-
-
     @TargetApi(23)
     private void checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
@@ -97,13 +101,12 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
             }
         } else {
             //已经拥有permission
-          fileList = Utils.getVideoFileAbsolutePathList();
-
+            fileList = Utils.getVideoFileAbsolutePathList();
         }
     }
 
     private void show_EXTERNAL_STORAGE_PermissionRequestRationale() {
-        ToastUtil.showTextLong(this,"Please grant permission");
+        ToastUtil.showTextLong(this, "Please grant permission");
     }
 
     private void initializePlayer() {
@@ -122,17 +125,13 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         simpleExoPlayerView.setPlayer(player);
         player.setPlayWhenReady(shouldAutoPlay);
         Uri uri = null;
-
-        if (fileList != null && fileList.size() > 0) {
-            File file = new File(fileList.get(0));
-            if (file.isDirectory()) {
-                file = new File(fileList.get(1));
-            }
-            if (file.exists()) {
-                uri = Uri.fromFile(file);
-            }
+        uri = Uri.parse(Constants.Mp4Url2);
+        String fileName = uri.getLastPathSegment();
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_MOVIES+File.separator+fileName);
+        if (file.exists()) {
+            uri = Uri.fromFile(file);
         } else {
-            uri = Uri.parse(Constants.Mp4uri);
+            saveFileToLocal(uri);
         }
         if (uri != null) {
             MediaSource mediaSources = new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
@@ -141,6 +140,29 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
             player.prepare(loopingMediaSource);
         }
     }
+
+    @WorkerThread
+    void saveFileToLocal(Uri uri) {
+        // TODO: 2017/3/12 Move to rxjava, make notification beautiful , maybe notificationCompat  style inbox
+        String fileName = uri.getLastPathSegment();
+        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES, fileName);
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+    // request.setTitle("MeiLiShuo");
+    // request.setDescription("MeiLiShuo desc");
+    // request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+    // request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+    // request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+    // request.setMimeType("application/cn.trinea.download.file");
+        long downloadId = downloadManager.enqueue(request);
+        completeReceiver = new CompleteReceiver();
+        /** register download success broadcast **/
+        registerReceiver(completeReceiver,
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    private CompleteReceiver completeReceiver;
 
     private void releasePlayer() {
         if (player != null) {
@@ -236,6 +258,26 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
                     }
                 }
             }
+        }
+    }
+
+    class CompleteReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // get complete download id
+            long completeDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            ToastUtil.showTextShort(CustomPlayerViewActivity.this, "DownLoadCompleted!");
+        }
+    }
+
+    ;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (completeReceiver != null) {
+            unregisterReceiver(completeReceiver);
         }
     }
 }
