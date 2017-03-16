@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityExoplayerBinding;
-import com.harris.androidMedia.exoPlayer.customize.CustomPlayerViewActivity;
+import com.harris.androidMedia.exoPlayer.customize.ChooseLocalVideoActivity;
 
 import static com.harris.androidMedia.MainActivity.TRANSIT_FAB;
 
@@ -61,7 +61,7 @@ public class ExoPlayerMainActivity extends AppCompatActivity implements View.OnC
                 intent = new Intent(this, TextureViewActivity.class);
                 break;
             case R.id.card4:
-                intent = new Intent(this, CustomPlayerViewActivity.class);
+                intent = new Intent(this, ChooseLocalVideoActivity.class);
             default:
                 break;
         }
