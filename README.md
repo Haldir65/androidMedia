@@ -27,6 +27,7 @@ Also
 ![Music](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225245.jpg)
 ![Movie](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225305.jpg)
 
+## todo RemoteControlClient onLockScreen , or MediaSession on L
 
 
 

@@ -1,0 +1,48 @@
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision dc9e9411ab0372fb9b64a86cf7fa1ec1616b9e26)
++++ build.gradle	(revision )
+@@ -5,7 +5,7 @@
+         jcenter()
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:2.3.0-beta4'
++        classpath 'com.android.tools.build:gradle:2.3.0'
+ 
+ 
+         // NOTE: Do not place your application dependencies here; they belong
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/modules.xml	(revision dc9e9411ab0372fb9b64a86cf7fa1ec1616b9e26)
++++ .idea/modules.xml	(revision )
+@@ -5,7 +5,6 @@
+       <module fileurl="file://$PROJECT_DIR$/Camera2Training.iml" filepath="$PROJECT_DIR$/Camera2Training.iml" />
+       <module fileurl="file://$PROJECT_DIR$/androidMedia.iml" filepath="$PROJECT_DIR$/androidMedia.iml" />
+       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+     </modules>
+   </component>
+ </project>
+\ No newline at end of file
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision dc9e9411ab0372fb9b64a86cf7fa1ec1616b9e26)
++++ app/build.gradle	(revision )
+@@ -24,7 +24,7 @@
+ }
+ 
+ ext {
+-    supportLibVersion = "25.1.1"
++    supportLibVersion = "25.2.0"
+ }
+ 
+ dependencies {
