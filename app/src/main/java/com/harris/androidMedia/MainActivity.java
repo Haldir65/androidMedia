@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.harris.androidMedia.databinding.ActivityMainBinding;
 import com.harris.androidMedia.exoPlayer.ExoPlayerMainActivity;
+import com.harris.androidMedia.mediaPlayBack.LockScreenNotificationControl;
 import com.harris.androidMedia.mediaPlayBack.MediaPlayBackActivity;
 import com.harris.androidMedia.util.ActionCallBack;
 
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
                 intent = new Intent(this, MediaPlayBackActivity.class);
                 break;
             case R.id.fab:
+                intent = new Intent(this, LockScreenNotificationControl.class);
+
                 break;
             default:
                 break;

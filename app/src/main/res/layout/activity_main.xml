@@ -104,6 +104,7 @@
             android:onClick="@{(v) -> callback.onClickView(v)}"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:src="@drawable/camera"
             />
 
     </RelativeLayout>
