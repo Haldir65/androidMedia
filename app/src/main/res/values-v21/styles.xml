@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="RippleSelectTheme" parent="AppTheme">
+        <item name="android:colorControlHighlight">@color/md_green_200</item>
+        <item name="colorAccent">@color/md_yellow_300</item>
+    </style>
+
+
+</resources>

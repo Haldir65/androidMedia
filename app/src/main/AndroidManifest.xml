@@ -22,7 +22,7 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/RippleSelectTheme"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -48,7 +48,9 @@
 
         <activity android:name=".camera2.ui.Camera2Activity"/>
 
-        <activity android:name=".exoPlayer.ExoPlayerMainActivity"/>
+        <activity android:name=".exoPlayer.ExoPlayerMainActivity"
+            android:theme="@style/RippleSelectTheme"
+            />
 
         <activity
             android:name=".exoPlayer.SimpleExoPlayerViewActivity"

@@ -19,5 +19,24 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
+    <style name="RippleSelectTheme" parent="AppTheme">
+        <item name="colorAccent">@color/md_yellow_300</item>
+
+    </style>
+
+    <style name="card_view_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="text_style_main">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/md_white_1000</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 
 </resources>

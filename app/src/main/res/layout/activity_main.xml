@@ -8,17 +8,6 @@
             name="callback"
             type="com.harris.androidMedia.util.ActionCallBack"/>
 
-        <variable
-            name="intent1"
-            type="android.content.Intent"/>
-
-        <variable
-            name="intent2"
-            type="android.content.Intent"/>
-
-        <variable
-            name="intent3"
-            type="android.content.Intent"/>
 
     </data>
 
@@ -37,76 +26,65 @@
             >
         </android.support.v7.widget.Toolbar>
 
-
-        <Button
+        <android.support.v7.widget.CardView
             android:id="@+id/button2"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            style="@style/card_view_style"
             android:layout_centerInParent="true"
-            android:layout_margin="10dp"
-            android:background="@color/cardview_light_background"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:onClick="@{(v) -> callback.onClickView(v)}"
-            android:padding="20dp"
-            android:text="ExoPlayer"
-            android:textAllCaps="false"
+            app:cardElevation="5dp"
+            >
 
-            />
+            <Button
+                style="@style/text_style_main"
+                android:text="ExoPlayer"
+                />
+        </android.support.v7.widget.CardView>
 
-
-        <Button
+        <android.support.v7.widget.CardView
             android:id="@+id/button1"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            style="@style/card_view_style"
             android:layout_above="@id/button2"
-            android:layout_alignLeft="@id/button2"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@color/cardview_light_background"
             android:onClick="@{(v) -> callback.onClickView(v)}"
-            android:padding="20dp"
-            android:text="camera2"
-            android:textAllCaps="false"
-            />
+            app:cardElevation="5dp"
+            >
 
+            <Button
+                style="@style/text_style_main"
+                android:text="camera2"
+                />
+        </android.support.v7.widget.CardView>
 
-        <Button
+        <android.support.v7.widget.CardView
             android:id="@+id/button3"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/button2"
+            style="@style/card_view_style"
             android:layout_below="@id/button2"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@color/cardview_light_background"
             android:onClick="@{(v) -> callback.onClickView(v)}"
-            android:padding="20dp"
-            android:text="MediaPlayBack"
-            android:textAllCaps="false"
+            app:cardElevation="5dp"
+            >
 
-            />
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/camera"
-            android:layout_below="@id/button3"
-            />
+            <Button
+                style="@style/text_style_main"
+                android:text="MediaPlayBack"/>
+        </android.support.v7.widget.CardView>
 
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:onClick="@{(v) -> callback.onClickView(v)}"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
             android:src="@drawable/camera"
+            app:backgroundTintMode="screen"
+            app:borderWidth="10dp"
+            app:elevation="6dp"
+            app:fabSize="normal"
             />
-
     </RelativeLayout>
-
 </layout>
