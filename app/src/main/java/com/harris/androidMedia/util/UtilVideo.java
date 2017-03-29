@@ -29,13 +29,13 @@ public class UtilVideo {
                 null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                // 图片的名称
+                // 视频的名称
                 String name = cursor.getString(cursor
                         .getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME));
-                // 图片的描述
+                // 视频的描述
                 String info = cursor.getString(cursor
                         .getColumnIndex(MediaStore.Video.Media.DESCRIPTION));
-                // 图片位置的数据
+                // 视频位置的数据
                 byte[] data = cursor.getBlob(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
                 // 将data转换成String类型的图片路径
                 String path = new String(data, 0, data.length - 1);

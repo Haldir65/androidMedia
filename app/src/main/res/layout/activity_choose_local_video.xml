@@ -21,7 +21,9 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layoutManager="LinearLayoutManager"
+                >
             </android.support.v7.widget.RecyclerView>
 
 
@@ -29,13 +31,11 @@
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="bottom|end"
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:backgroundTint="@android:color/transparent"
+                app:backgroundTint="@android:color/transparent"
                 android:onClick="@{(v) -> callback.onClickView(v)}"
                 android:src="@drawable/camera"
                 app:backgroundTintMode="src_over"

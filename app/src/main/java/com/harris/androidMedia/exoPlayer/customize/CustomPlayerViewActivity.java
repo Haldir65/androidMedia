@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -58,6 +59,7 @@ import static com.harris.androidMedia.exoPlayer.SurfaceViewPlayerActivity.REQUES
 public class CustomPlayerViewActivity extends AppCompatActivity {
 
     public static final String TAG = CustomPlayerViewActivity.class.getSimpleName();
+    public static final String CUSTOM_PLAYER_VIEW_URL_STRING = "custom_layer_view_url";
 
     ActivityCustomizePlayerViewBinding binding;
 
@@ -124,10 +126,15 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
                 null, extensionRendererMode);
         simpleExoPlayerView.setPlayer(player);
         player.setPlayWhenReady(shouldAutoPlay);
-        Uri uri = null;
-        uri = Uri.parse(Constants.Mp4Url2);
+        Uri uri;
+        String urlPassedIn = getIntent().getStringExtra(CUSTOM_PLAYER_VIEW_URL_STRING);
+        if (!TextUtils.isEmpty(urlPassedIn)) {
+            uri = Uri.parse(urlPassedIn);
+        } else {
+            uri = Uri.parse(Constants.Mp4Url2);
+        }
         String fileName = uri.getLastPathSegment();
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_MOVIES+File.separator+fileName);
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_MOVIES + File.separator + fileName);
         if (file.exists()) {
             uri = Uri.fromFile(file);
         } else {
@@ -149,12 +156,12 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         DownloadManager.Request request = new DownloadManager.Request(uri);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES, fileName);
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-    // request.setTitle("MeiLiShuo");
-    // request.setDescription("MeiLiShuo desc");
-    // request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-    // request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-    // request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-    // request.setMimeType("application/cn.trinea.download.file");
+        // request.setTitle("MeiLiShuo");
+        // request.setDescription("MeiLiShuo desc");
+        // request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        // request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+        // request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+        // request.setMimeType("application/cn.trinea.download.file");
         long downloadId = downloadManager.enqueue(request);
         completeReceiver = new CompleteReceiver();
         /** register download success broadcast **/

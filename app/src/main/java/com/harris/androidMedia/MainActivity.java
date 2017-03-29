@@ -52,13 +52,13 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
     public void onClickView(View view) {
         Intent intent = null;
         switch (view.getId()) {
-            case R.id.button1:
+            case R.id.card1:
 //                intent = new Intent(this, Camera2Activity.class); buggy for now
                 break;
-            case R.id.button2:
+            case R.id.card2:
                 intent = new Intent(this, ExoPlayerMainActivity.class);
                 break;
-            case R.id.button3:
+            case R.id.card3:
                 intent = new Intent(this, MediaPlayBackActivity.class);
                 break;
             case R.id.fab:
