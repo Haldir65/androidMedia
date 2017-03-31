@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2.widget;
+package com.harris.androidMedia.camera2.basic.widget;
 
 
 import android.Manifest;

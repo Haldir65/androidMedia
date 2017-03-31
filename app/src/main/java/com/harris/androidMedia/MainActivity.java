@@ -2,6 +2,7 @@ package com.harris.androidMedia;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -9,11 +10,13 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.harris.androidMedia.camera2.Camera2MainActivity;
 import com.harris.androidMedia.databinding.ActivityMainBinding;
 import com.harris.androidMedia.exoPlayer.ExoPlayerMainActivity;
 import com.harris.androidMedia.mediaPlayBack.LockScreenNotificationControl;
 import com.harris.androidMedia.mediaPlayBack.MediaPlayBackActivity;
 import com.harris.androidMedia.util.ActionCallBack;
+import com.harris.androidMedia.util.ToastUtil;
 
 /**
  * Created by Harris on 2017/2/18.
@@ -53,7 +56,11 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.card1:
-//                intent = new Intent(this, Camera2Activity.class); buggy for now
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                   intent = new Intent(this, Camera2MainActivity.class);
+                } else {
+                    ToastUtil.showTextShort(this,"Current Sdk minus Lollipop!");
+                }
                 break;
             case R.id.card2:
                 intent = new Intent(this, ExoPlayerMainActivity.class);

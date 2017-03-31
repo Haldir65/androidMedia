@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2.tasks;
+package com.harris.androidMedia.camera2.basic.tasks;
 
 import android.media.ImageReader;
 import android.os.Environment;

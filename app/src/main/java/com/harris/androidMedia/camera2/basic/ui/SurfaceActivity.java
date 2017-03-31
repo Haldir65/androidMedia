@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2.ui;
+package com.harris.androidMedia.camera2.basic.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -39,11 +39,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.camera2.tasks.ImageSaver;
+import com.harris.androidMedia.camera2.basic.tasks.ImageSaver;
 import com.harris.androidMedia.util.CameraUtils;
 import com.harris.androidMedia.util.CompareSizesByArea;
-import com.harris.androidMedia.camera2.widget.AutoFitSurfaceView;
-import com.harris.androidMedia.camera2.widget.AutoFitTextureView;
+import com.harris.androidMedia.camera2.basic.widget.AutoFitSurfaceView;
+import com.harris.androidMedia.camera2.basic.widget.AutoFitTextureView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class SurfaceActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Tag for the {@link Log}.
      */
-    public static final String TAG = Camera2Activity.class.getSimpleName();
+    public static final String TAG = Camera2BasicActivity.class.getSimpleName();
 
     /**
      * Camera state: Showing camera preview.

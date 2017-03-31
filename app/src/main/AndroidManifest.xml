@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name="com.harris.androidMedia.camera2.ui.SurfaceActivity"
+            android:name="com.harris.androidMedia.camera2.basic.ui.SurfaceActivity"
             android:screenOrientation="portrait">
         </activity>
 
@@ -46,7 +46,13 @@
 
         </activity>
 
-        <activity android:name=".camera2.ui.Camera2Activity"/>
+        <activity android:name=".camera2.Camera2MainActivity"
+            android:parentActivityName=".MainActivity"
+            />
+
+        <activity android:name=".camera2.basic.ui.Camera2BasicActivity"/>
+        <activity android:name=".camera2.video.Camera2VideoActivity"/>
+        <activity android:name=".camera2.raw.Camera2RawActivity"/>
 
         <activity android:name=".exoPlayer.ExoPlayerMainActivity"
             android:theme="@style/RippleSelectTheme"
