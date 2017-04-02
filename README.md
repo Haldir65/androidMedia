@@ -21,7 +21,7 @@ Also
 
 > [Camera2Raw](https://github.com/googlesamples/android-Camera2Raw) ShowCase for heavyLifting coding for concurrency code</br>
 > [camera2 basics](https://github.com/googlesamples/android-Camera2Basic) </br>
-> [camera2 raw](https://github.com/googlesamples/android-Camera2Raw)</br>
+> [camera2 Video](https://github.com/googlesamples/android-Camera2Video)</br>
 > [Android相机开发(六): 高效实时处理预览帧数据](https://www.polarxiong.com/archives/Android%E7%9B%B8%E6%9C%BA%E5%BC%80%E5%8F%91-%E5%85%AD-%E9%AB%98%E6%95%88%E5%AE%9E%E6%97%B6%E5%A4%84%E7%90%86%E9%A2%84%E8%A7%88%E5%B8%A7%E6%95%B0%E6%8D%AE.html)</br>
 > [Using concurrency to improve speed and performance in Android](https://medium.com/@ali.muzaffar/using-concurrency-and-speed-and-performance-on-android-d00ab4c5c8e3)
 
