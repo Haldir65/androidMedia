@@ -8,8 +8,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.me.harris.androidanimations.R;
-import com.me.harris.androidanimations.utils.Utils;
+import com.harris.androidMedia.R;
+import com.harris.androidMedia.util.Utils;
 
 /**
  * Created by Fermi on 2016/9/21.

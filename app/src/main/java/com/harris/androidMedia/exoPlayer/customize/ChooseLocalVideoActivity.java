@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityChooseLocalVideoBinding;
 import com.harris.androidMedia.util.OnItemClickListener;
@@ -28,7 +28,6 @@ import com.harris.androidMedia.util.UtilVideo;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.provider.MediaStore.Video.Thumbnails.MINI_KIND;
 import static com.harris.androidMedia.exoPlayer.customize.CustomPlayerViewActivity.CUSTOM_PLAYER_VIEW_URL_STRING;
 
 /**
@@ -128,8 +127,8 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
 
 
         public void bindData(@NonNull UtilVideo.VideoInfo videoInfo) {
-            mImageView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(videoInfo.path,MINI_KIND));
-//            Glide.with(itemView.getContext()).load(videoInfo.path).asBitmap().centerCrop().into(mImageView);
+//            mImageView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(videoInfo.path,MINI_KIND));
+            Glide.with(itemView.getContext()).load(videoInfo.path).asBitmap().centerCrop().into(mImageView);
             mTextView.setText(videoInfo.name);
 
         }

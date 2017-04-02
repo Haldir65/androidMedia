@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Harris on 2016/4/1.
@@ -23,10 +24,10 @@ public class ImageSaver implements Runnable {
      * The file we save the image into.
      */
     private final File mFile;
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒", Locale.CHINA);;
 
     public ImageSaver(Image image, String FolderPath) {
         mImage = image;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒");
         String fileName = dateFormat.format(new Date())+".jpg";
         File parentFolder = new File(FolderPath);
         if (!parentFolder.exists()) {
