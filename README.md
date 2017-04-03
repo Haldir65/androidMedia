@@ -19,6 +19,8 @@ Also
 
 - Camera 2 API use case(Not done yet)
 
+Note: I'm  too lazy to write that bunch of Permission Check BoilerPlate Code , so Please grant all permission required: Camera,disk and that kind of stuff if you are on an Marshmallow Device
+
 > [Camera2Raw](https://github.com/googlesamples/android-Camera2Raw) ShowCase for heavyLifting coding for concurrency code</br>
 > [camera2 basics](https://github.com/googlesamples/android-Camera2Basic) </br>
 > [camera2 Video](https://github.com/googlesamples/android-Camera2Video)</br>

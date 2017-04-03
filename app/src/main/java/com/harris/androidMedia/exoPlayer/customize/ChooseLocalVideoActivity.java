@@ -28,6 +28,13 @@ import com.harris.androidMedia.util.UtilVideo;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 import static com.harris.androidMedia.exoPlayer.customize.CustomPlayerViewActivity.CUSTOM_PLAYER_VIEW_URL_STRING;
 
 /**
@@ -37,7 +44,7 @@ import static com.harris.androidMedia.exoPlayer.customize.CustomPlayerViewActivi
 public class ChooseLocalVideoActivity extends AppCompatActivity implements OnItemClickListener {
 
     ActivityChooseLocalVideoBinding binding;
-    private List<UtilVideo.VideoInfo> list;
+    List<UtilVideo.VideoInfo> list;
     VideoAdapter mAdapter;
 
     @Override
@@ -46,8 +53,6 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
         binding = DataBindingUtil.setContentView(this, R.layout.activity_choose_local_video);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -61,7 +66,28 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
         if (list == null) {
             list = new ArrayList<>();
         }
-        UtilVideo.getAllVideoOnDevice(this, list);
+        Observable.create(new ObservableOnSubscribe<List<UtilVideo.VideoInfo>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<UtilVideo.VideoInfo>> e) throws Exception {
+                if (ActivityCompat.checkSelfPermission(ChooseLocalVideoActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                e.onNext(UtilVideo.getAllVideoOnDevice(ChooseLocalVideoActivity.this, list));
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<UtilVideo.VideoInfo>>() {
+                    @Override
+                    public void accept(List<UtilVideo.VideoInfo> videoInfos) throws Exception {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
         mAdapter = new VideoAdapter(list,this);
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.addItemDecoration(new VideoItemDecoration(this));
