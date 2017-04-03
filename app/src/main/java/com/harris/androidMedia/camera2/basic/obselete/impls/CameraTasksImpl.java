@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2.basic.impls;
+package com.harris.androidMedia.camera2.basic.obselete.impls;
 
 /**
  * Created by Harris on 2016/4/9.

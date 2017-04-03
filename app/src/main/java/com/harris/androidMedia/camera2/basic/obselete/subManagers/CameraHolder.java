@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2.basic.subManagers;
+package com.harris.androidMedia.camera2.basic.obselete.subManagers;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,8 +28,8 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 
-import com.harris.androidMedia.camera2.basic.impls.CameraTasksImpl;
-import com.harris.androidMedia.camera2.basic.tasks.ThreadManager;
+import com.harris.androidMedia.camera2.basic.obselete.impls.CameraTasksImpl;
+import com.harris.androidMedia.camera2.basic.obselete.tasks.ThreadManager;
 import com.harris.androidMedia.camera2.basic.ui.Camera2BasicActivity;
 import com.harris.androidMedia.util.CompareSizesByArea;
 import com.harris.androidMedia.util.LogUtil;
@@ -40,13 +40,13 @@ import java.util.Collections;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import static com.harris.androidMedia.camera2.basic.subManagers.Camera2Constants.MAX_PREVIEW_HEIGHT;
-import static com.harris.androidMedia.camera2.basic.subManagers.Camera2Constants.MAX_PREVIEW_WIDTH;
-import static com.harris.androidMedia.camera2.basic.subManagers.Camera2Constants.STATE_PICTURE_TAKEN;
-import static com.harris.androidMedia.camera2.basic.subManagers.Camera2Constants.STATE_PREVIEW;
-import static com.harris.androidMedia.camera2.basic.subManagers.Camera2Constants.STATE_WAITING_LOCK;
-import static com.harris.androidMedia.camera2.basic.subManagers.Camera2Constants.STATE_WAITING_NON_PRECAPTURE;
-import static com.harris.androidMedia.camera2.basic.subManagers.Camera2Constants.STATE_WAITING_PRECAPTURE;
+import static com.harris.androidMedia.camera2.basic.obselete.subManagers.Camera2Constants.MAX_PREVIEW_HEIGHT;
+import static com.harris.androidMedia.camera2.basic.obselete.subManagers.Camera2Constants.MAX_PREVIEW_WIDTH;
+import static com.harris.androidMedia.camera2.basic.obselete.subManagers.Camera2Constants.STATE_PICTURE_TAKEN;
+import static com.harris.androidMedia.camera2.basic.obselete.subManagers.Camera2Constants.STATE_PREVIEW;
+import static com.harris.androidMedia.camera2.basic.obselete.subManagers.Camera2Constants.STATE_WAITING_LOCK;
+import static com.harris.androidMedia.camera2.basic.obselete.subManagers.Camera2Constants.STATE_WAITING_NON_PRECAPTURE;
+import static com.harris.androidMedia.camera2.basic.obselete.subManagers.Camera2Constants.STATE_WAITING_PRECAPTURE;
 import static com.harris.androidMedia.util.CameraUtils.chooseOptimalSize;
 
 /**

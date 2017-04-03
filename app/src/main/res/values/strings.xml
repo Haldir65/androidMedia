@@ -23,4 +23,20 @@
     <string name="sample_list_load_error">One or more sample lists failed to load</string>
     <string name="exo_player_intro">SurfaceView rendering wasn’t properly synchronized with view animations until Android N. On earlier releases this could result in unwanted effects when a SurfaceView was placed into scrolling container, or when it was subjected to animation. Such effects included the SurfaceView’s contents appearing to lag slightly behind where it should be displayed, and the view turning black when subjected to animation.  To achieve smooth animation or scrolling of video prior to Android N, it’s therefore necessary to use TextureView rather than SurfaceView. If smooth animation or scrolling is not required then SurfaceView should be preferred</string>
     <!--Values for ExoPlayer End-->
+
+
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="intro_message">
+        <![CDATA[
+
+
+            This sample demonstrates the basic use of Camera2 API. Check the source code to see how
+            you can display camera preview and take pictures.
+
+
+        ]]>
+    </string>
 </resources>

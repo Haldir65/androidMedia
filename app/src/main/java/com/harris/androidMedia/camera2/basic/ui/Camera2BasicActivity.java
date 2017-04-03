@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.camera2.basic.subManagers.CameraHolder;
-import com.harris.androidMedia.camera2.basic.tasks.ThreadManager;
+import com.harris.androidMedia.camera2.basic.obselete.subManagers.CameraHolder;
+import com.harris.androidMedia.camera2.basic.obselete.tasks.ThreadManager;
 import com.harris.androidMedia.camera2.basic.widget.AutoFitTextureView;
 
 public class Camera2BasicActivity extends AppCompatActivity implements View.OnClickListener {

@@ -51,6 +51,7 @@
             />
 
         <activity android:name=".camera2.basic.ui.Camera2BasicActivity"/>
+        <activity android:name=".camera2.basic.project.Camera2Activity"/>
         <activity android:name=".camera2.video.Camera2VideoActivity"/>
         <activity android:name=".camera2.raw.Camera2RawActivity"/>
 

@@ -1,4 +1,4 @@
-package com.harris.androidMedia.camera2.basic.widget;
+package com.harris.androidMedia.camera2.basic.obselete;
 
 
 import android.Manifest;

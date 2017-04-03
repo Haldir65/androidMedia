@@ -12,4 +12,6 @@ public class Constants {
 
 
     public static final String mp3Url = "http://odzl05jxx.bkt.clouddn.com/%E5%8E%9F%E5%A3%B0%E5%B8%A6%20-%20Cloud%20Atlas%20Finale.mp3";
+
+    public static final String PATH_CAMERA2 = "camera2Basic";
 }
