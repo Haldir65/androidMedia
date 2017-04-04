@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.harris.androidMedia.album.AlbumMainActivity;
 import com.harris.androidMedia.camera2.Camera2MainActivity;
 import com.harris.androidMedia.databinding.ActivityMainBinding;
 import com.harris.androidMedia.exoPlayer.ExoPlayerMainActivity;
@@ -32,23 +33,6 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(binding.toolbar);
         binding.setCallback(this);
-   /*     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        List<UtilVideo.VideoInfo> list = new ArrayList<>();
-        UtilVideo.getAllVideoOnDevice(this, list);
-        LogUtil.d("" + list.size());
-        *//*List<UtilMusic.MusicInfo> list = new ArrayList<>();
-        list = UtilMusic.getAllAudioOnDevice(this, list);*//*
-        binding.image.setImageBitmap(BitmapFactory.decodeFile(list.get(0).info));*/
-
     }
 
     @Override
@@ -57,9 +41,9 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
         switch (view.getId()) {
             case R.id.card1:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                   intent = new Intent(this, Camera2MainActivity.class);
+                    intent = new Intent(this, Camera2MainActivity.class);
                 } else {
-                    ToastUtil.showTextShort(this,"Current Sdk minus Lollipop!");
+                    ToastUtil.showTextShort(this, "Current Sdk minus Lollipop!");
                 }
                 break;
             case R.id.card2:
@@ -68,9 +52,12 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
             case R.id.card3:
                 intent = new Intent(this, MediaPlayBackActivity.class);
                 break;
+            case R.id.card4:
+                intent = new Intent(this, AlbumMainActivity.class);
+                ToastUtil.showTextShort(this,"Not Prepared Yet!");
+                break;
             case R.id.fab:
                 intent = new Intent(this, LockScreenNotificationControl.class);
-
                 break;
             default:
                 break;

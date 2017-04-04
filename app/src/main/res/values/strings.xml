@@ -1,5 +1,12 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">DroidMedia</string>
+
+
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+
+    <string name="web_server">192.100.20.53:99</string>
+
     <!--values for ExoPlayer-->
     <string name="video">Video</string>
     <string name="audio">Audio</string>

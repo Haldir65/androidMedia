@@ -46,7 +46,8 @@
 
         </activity>
 
-        <activity android:name=".camera2.Camera2MainActivity"
+        <activity
+            android:name=".camera2.Camera2MainActivity"
             android:parentActivityName=".MainActivity"
             />
 
@@ -55,7 +56,8 @@
         <activity android:name=".camera2.video.Camera2VideoActivity"/>
         <activity android:name=".camera2.raw.Camera2RawActivity"/>
 
-        <activity android:name=".exoPlayer.ExoPlayerMainActivity"
+        <activity
+            android:name=".exoPlayer.ExoPlayerMainActivity"
             android:theme="@style/RippleSelectTheme"
             />
 
@@ -88,6 +90,10 @@
         <activity android:name=".mediaPlayBack.LockScreenNotificationControl"
             />
 
+        <activity android:name=".album.AlbumMainActivity"
+            android:parentActivityName=".MainActivity"
+            />
+
         <service android:name=".mediaPlayBack.MediaPlayerService"/>
 
         <service
@@ -101,8 +107,6 @@
 
 
     </application>
-
-
 
 
 </manifest>
