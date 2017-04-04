@@ -1,4 +1,4 @@
-## AndroidMedia
+## Android Media related stuff
  A series of small Demo for media related api on android platform , including ExoPlayer, camera2 , mediaPlayerBack, etc.... All of which rely on android's hardware layer support. Just a small piece of draft.
 
 1. Camera2 Api demo
@@ -10,8 +10,6 @@ Note: I'm  too lazy to write that bunch of Permission Check BoilerPlate Code , s
 > [camera2 raw](https://github.com/googlesamples/android-Camera2Raw)
 > [Android相机开发(六): 高效实时处理预览帧数据](https://www.polarxiong.com/archives/Android%E7%9B%B8%E6%9C%BA%E5%BC%80%E5%8F%91-%E5%85%AD-%E9%AB%98%E6%95%88%E5%AE%9E%E6%97%B6%E5%A4%84%E7%90%86%E9%A2%84%E8%A7%88%E5%B8%A7%E6%95%B0%E6%8D%AE.html)
 > [Using concurrency to improve speed and performance in Android](https://medium.com/@ali.muzaffar/using-concurrency-and-speed-and-performance-on-android-d00ab4c5c8e3)
-
-1.1 Album  local imageScanning
 
 
 2. ExoPlayer 2.x
@@ -54,6 +52,10 @@ Note! quote from [Google's guide](https://google.github.io/ExoPlayer/faqs.html) 
 ![Movie](https://github.com/Haldir65/androidMedia/blob/master/art/snapshot20170304225305.jpg)
 
 ## todo RemoteControlClient onLockScreen , or MediaSession on L
+
+
+4. A demo bestow the superiority of ThreadPool handling intense request ,not very interesting ,though some concurrency issues are worth learning
+[threadPool](http://blog.csdn.net/carrey1989/article/details/12002033) scanning local image with high level concurrency
 
 ### Reference
 - [CameraView](https://github.com/google/cameraview)
