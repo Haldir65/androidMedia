@@ -1,7 +1,9 @@
 package com.harris.androidMedia.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
@@ -24,8 +26,14 @@ public class UtilImage {
 
     @RequiresPermission(READ_EXTERNAL_STORAGE)
     public static List<ImageInfo> getAllImageOnDevice(Context context, @NonNull List<ImageInfo> list) {
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, null, null, null);
+       /* Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, null, null, null);*/
+        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        ContentResolver contentResolver = context.getContentResolver();
+        //获取jpeg和png格式的文件，并且按照时间进行倒序
+        Cursor cursor = contentResolver.query(uri, null, MediaStore.Images.Media.MIME_TYPE + "=\"image/jpeg\" or " +
+                MediaStore.Images.Media.MIME_TYPE + "=\"image/png\"", null, MediaStore.Images.Media.DATE_MODIFIED+" desc");
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 // 图片的名称

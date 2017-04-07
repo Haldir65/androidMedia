@@ -46,4 +46,6 @@
 
         ]]>
     </string>
+
+    <string name="image_name">Image_%d</string>
 </resources>
