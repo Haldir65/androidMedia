@@ -66,6 +66,29 @@ public class AlbumActivity extends AppCompatActivity implements GenericCallBack<
                     return;
                 }
                 e.onNext(UtilImage.getAllImageOnDevice(AlbumActivity.this,mList));
+            /*    if (mList.size() == 1) {
+                    File file = new File(mList.get(0).path);
+                    File parentFolder = file.getParentFile();
+                    File[] files = parentFolder.listFiles();
+                    for (int i = 0; i < files.length; i++) {
+                        if (!files[i].getAbsolutePath().endsWith(".jpeg")&&!files[i].isDirectory()) {
+                            files[i].renameTo(new File(files[i].getAbsolutePath() + ".jpeg"));
+                            LogUtil.d("renameFile " + i + " Thread" + Thread.currentThread());
+                        }
+                    }
+
+                } else {
+                    for (int i = 0; i < mList.size(); i++) {
+                        UtilImage.ImageInfo imageInfo = mList.get(i);
+                        File file = new File(imageInfo.path);
+                        if (file.exists()) {
+                            File newFile = new File(file.getAbsolutePath() + ".jpeg");
+                            file.renameTo(newFile);
+                            LogUtil.d("renameFile " + i + " Thread" + Thread.currentThread());
+                        }
+                    }
+                }*/
+
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<UtilImage.ImageInfo>>() {
