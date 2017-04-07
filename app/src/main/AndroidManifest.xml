@@ -55,6 +55,10 @@
         <activity android:name=".camera2.basic.project.Camera2Activity"/>
         <activity android:name=".camera2.video.Camera2VideoActivity"/>
         <activity android:name=".camera2.raw.Camera2RawActivity"/>
+        <activity
+            android:name=".camera2.album.AlbumActivity"
+            android:parentActivityName=".camera2.Camera2MainActivity"
+            />
 
         <activity
             android:name=".exoPlayer.ExoPlayerMainActivity"
@@ -90,7 +94,8 @@
         <activity android:name=".mediaPlayBack.LockScreenNotificationControl"
             />
 
-        <activity android:name=".album.AlbumMainActivity"
+        <activity
+            android:name=".album.AlbumMainActivity"
             android:parentActivityName=".MainActivity"
             />
 

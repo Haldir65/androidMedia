@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.card1:
+                intent = new Intent(this, Camera2MainActivity.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    intent = new Intent(this, Camera2MainActivity.class);
                 } else {
                     ToastUtil.showTextShort(this, "Current Sdk minus Lollipop!");
                 }

@@ -1,4 +1,4 @@
-package com.harris.androidMedia.exoPlayer.customize;
+package com.harris.androidMedia.recyclerView.itemDecoration;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,21 +15,21 @@ import com.harris.androidMedia.util.Utils;
  * Created by Fermi on 2016/9/21.
  */
 
-public class VideoItemDecoration extends RecyclerView.ItemDecoration {
+public class AlbumItemDecoration extends RecyclerView.ItemDecoration {
 
     private Paint paintBlue, paintRed;
     private int offset;
 
 
-    public VideoItemDecoration(Context context) {
-        offset = Utils.dip2px(context, 30);
+    public AlbumItemDecoration(Context context) {
+        offset = Utils.dip2px(context, 3);
        /* paintBlue = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintBlue.setColor(Color.BLUE);
         paintBlue.setStyle(Paint.Style.STROKE);
         paintBlue.setStrokeWidth(3);*/
 
         paintRed = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paintRed.setColor(ContextCompat.getColor(context, R.color.md_blue_grey_400));
+        paintRed.setColor(ContextCompat.getColor(context, R.color.colorAccent));
         paintRed.setStyle(Paint.Style.STROKE);
         paintRed.setStrokeWidth(1);
     }

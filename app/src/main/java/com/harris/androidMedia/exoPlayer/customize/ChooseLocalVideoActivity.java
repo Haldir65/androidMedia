@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityChooseLocalVideoBinding;
+import com.harris.androidMedia.recyclerView.itemDecoration.VideoItemDecoration;
 import com.harris.androidMedia.util.OnItemClickListener;
 import com.harris.androidMedia.util.ToastUtil;
 import com.harris.androidMedia.util.UtilVideo;

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.harris.androidMedia.R;
+import com.harris.androidMedia.camera2.album.AlbumActivity;
 import com.harris.androidMedia.camera2.basic.project.Camera2Activity;
 import com.harris.androidMedia.camera2.raw.Camera2RawActivity;
 import com.harris.androidMedia.camera2.video.Camera2VideoActivity;
@@ -44,6 +45,9 @@ public class Camera2MainActivity extends AppCompatActivity implements ActionCall
                 break;
             case R.id.card3:
                 intent = new Intent(this, Camera2RawActivity.class);
+                break;
+            case R.id.card4:
+                intent = new Intent(this, AlbumActivity.class);
                 break;
             default:
                 break;
