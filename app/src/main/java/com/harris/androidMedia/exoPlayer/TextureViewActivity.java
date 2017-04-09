@@ -26,6 +26,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityTextureViewPlayerBinding;
+import com.harris.androidMedia.util.Constants;
 
 /**
  * Created by Harris on 2017/2/19.
@@ -45,9 +46,10 @@ public class TextureViewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_texture_view_player);
-        mp4VideoUri = Uri.parse(Constants.RMVBuri);
-
+        mp4VideoUri = Uri.parse(Constants.Mp4Url3);
     }
+
+
 
     @Override
     public void onStart() {

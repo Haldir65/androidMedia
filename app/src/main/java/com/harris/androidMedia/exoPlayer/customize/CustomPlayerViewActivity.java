@@ -41,7 +41,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.harris.androidMedia.App;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivityCustomizePlayerViewBinding;
-import com.harris.androidMedia.exoPlayer.Constants;
+import com.harris.androidMedia.util.Constants;
 import com.harris.androidMedia.util.ToastUtil;
 import com.harris.androidMedia.util.Utils;
 

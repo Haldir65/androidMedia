@@ -32,10 +32,10 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.databinding.ActivitySurfaceViewPlayerBinding;
+import com.harris.androidMedia.util.Constants;
 import com.harris.androidMedia.util.ToastUtil;
 import com.harris.androidMedia.util.Utils;
 
-import java.io.File;
 import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -129,7 +129,8 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
             fileList = Utils.getVideoFileAbsolutePathList();
             if (fileList != null && fileList.size() > 0) {
                 for (int i = 0; i < fileList.size(); i++) {
-                        resourceUri = Uri.fromFile(new File(fileList.get(0)));
+//                        resourceUri = Uri.fromFile(new File(fileList.get(0)));
+                    resourceUri = Uri.parse(Constants.Mp4uri);
                 }
             }
         }

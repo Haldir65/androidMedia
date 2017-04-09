@@ -63,7 +63,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.exoPlayer.Constants;
+import com.harris.androidMedia.util.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -451,7 +451,7 @@ public class Camera2BasicFragment extends Fragment
     }
 
     File createFile() {
-        String fileName = dateFormat.format(new Date())+".jpg";
+        String fileName = dateFormat.format(new Date())+Constants.FILE_FORMAT_JPEG;
         String FolderPath = Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator + Environment.DIRECTORY_DCIM + File.separator + Constants.PATH_CAMERA2;
         File parentFolder = new File(FolderPath);

@@ -2,6 +2,7 @@ package com.harris.androidMedia.camera2.basic.obselete.tasks;
 
 import android.media.Image;
 
+import com.harris.androidMedia.util.Constants;
 import com.harris.androidMedia.util.LogUtil;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class ImageSaver implements Runnable {
 
     public ImageSaver(Image image, String FolderPath) {
         mImage = image;
-        String fileName = dateFormat.format(new Date())+".jpg";
+        String fileName = dateFormat.format(new Date())+ Constants.FILE_FORMAT_JPEG;
         File parentFolder = new File(FolderPath);
         if (!parentFolder.exists()) {
             parentFolder.mkdirs();

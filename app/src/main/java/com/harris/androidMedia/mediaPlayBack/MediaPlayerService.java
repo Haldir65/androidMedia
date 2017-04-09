@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.exoPlayer.Constants;
+import com.harris.androidMedia.util.Constants;
 
 import java.io.IOException;
 
