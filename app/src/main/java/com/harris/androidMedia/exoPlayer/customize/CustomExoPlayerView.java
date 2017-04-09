@@ -28,6 +28,8 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SubtitleView;
 import com.harris.androidMedia.R;
+import com.harris.androidMedia.util.AudioUtil;
+import com.harris.androidMedia.util.LogUtil;
 import com.harris.androidMedia.util.Utils;
 
 import java.util.List;
@@ -297,11 +299,29 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
                 case MotionEvent.ACTION_MOVE:
                     float x = ev.getX();
                     float y = ev.getY();
-                    if (Math.abs(x-currentX) > Math.abs(y-currentY)) {
+                    if (Math.abs(x - currentX) >= Math.abs(y - currentY)) {
                         if (x - currentX > 0) {
-                            controller.fastFoward((long) ((x-currentX)*player.getDuration()/screenWidth));
+                            controller.fastFoward((long) ((x - currentX) * player.getDuration() / screenWidth));
                         } else {
-                            controller.rewind((long) ((currentX-x)*player.getDuration()/screenWidth));
+                            controller.rewind((long) ((currentX - x) * player.getDuration() / screenWidth));
+                        }
+                    } else {
+                        if (Math.abs(y - currentY) > 300) {
+                            if (y < currentY) {
+                                int CurVolume = AudioUtil.getInstance(getContext()).getMediaVolume();
+                                int MaxVolume = AudioUtil.getInstance(getContext()).getMediaMaxVolume();
+                                if (CurVolume < MaxVolume) {
+                                    AudioUtil.getInstance(getContext()).setMediaVolume((CurVolume + 1) > MaxVolume ? MaxVolume : CurVolume + 1);
+                                }
+                                LogUtil.d("CurVolume " + CurVolume + " MaxV" + MaxVolume);
+                            } else {
+                                int CurVolume = AudioUtil.getInstance(getContext()).getMediaVolume();
+                                int MaxVolume = AudioUtil.getInstance(getContext()).getMediaMaxVolume();
+                                if (CurVolume > 0) {
+                                    AudioUtil.getInstance(getContext()).setMediaVolume((CurVolume - 1) > 0 ? CurVolume - 1 : 0);
+                                }
+                                LogUtil.d("CurVolume " + CurVolume);
+                            }
                         }
                     }
                     break;
