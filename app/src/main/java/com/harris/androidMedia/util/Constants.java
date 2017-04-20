@@ -20,8 +20,16 @@ public class Constants {
 
     public static final String PATH_CAMERA2 = "camera2Basic";
 
+
     /*File format*/
     public static final String FILE_FORMAT_JPEG = ".jpg";
 
     public static final String FILE_FORMAT_PNG = ".png";
+
+    public static final String IMG_URL_1 = "http://odzl05jxx.bkt.clouddn.com/minion.jpg";
+    public static final String IMG_URL_2 = "http://odzl05jxx.bkt.clouddn.com/rationalizingyourhoriiblehack-big.png";
+    public static final String IMG_URL_3 = "http://odzl05jxx.bkt.clouddn.com/implementingdumbfeatures-big.png";
+    public static final String IMG_URL_4 = "http://odzl05jxx.bkt.clouddn.com/writing%20code%20that%20nobody%20else%20can%20read.jpg";
+    public static final String IMG_URL_5 = "http://odzl05jxx.bkt.clouddn.com/Trying%20stuff%20Untill%20it%20work.jpg";
+
 }

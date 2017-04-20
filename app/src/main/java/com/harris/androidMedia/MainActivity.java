@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
                 break;
             case R.id.card4:
                 intent = new Intent(this, AlbumMainActivity.class);
-                ToastUtil.showTextShort(this,"Not Prepared Yet!");
                 break;
             case R.id.fab:
                 intent = new Intent(this, LockScreenNotificationControl.class);
