@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".MainActivity" >
+                tools:context=".MainActivity">
 
     <LinearLayout
         android:id="@+id/topButtons"
@@ -10,26 +10,29 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center">
+
         <Button
             android:id="@+id/btn_async"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AsyncTask"/>
+            android:text="AsyncTask"
+            android:textAllCaps="false"/>
+
         <Button
             android:id="@+id/btn_pool"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ThreadPool"/>
+            android:text="ThreadPool"
+            android:textAllCaps="false"
+            />
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/gridview"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/topButtons"
-        android:numColumns="8"
-        android:horizontalSpacing="2dp"
-        android:verticalSpacing="2dp"
-        android:background="#436EEE"
-        android:fadeScrollbars="false"/>
+        >
+
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

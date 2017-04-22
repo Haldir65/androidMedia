@@ -24,7 +24,7 @@ public class AsyncLoadTask extends AsyncTask<Integer, Void, Pair<Integer, Bitmap
 	@Override
 	protected Pair<Integer, Bitmap> doInBackground(Integer... params) {
 		int position = params[0];
-		String imageUrl = ImageHelper.getImageUrl(AlbumMainActivity.webServerStr, position);
+		String imageUrl = ImageHelper.getImageUrl(position);
 		Log.i(TAG, "AsyncLoad from NET :" + imageUrl);
 		Bitmap bitmap = ImageHelper.loadBitmapFromNet(imageUrl);
 		return new Pair<Integer, Bitmap>(position, bitmap);

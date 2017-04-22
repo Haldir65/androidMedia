@@ -15,15 +15,15 @@ public class ThreadPoolTaskBitmap extends ThreadPoolTask {
 
 	private CallBack callBack;
 
-	private CustomView view;
+
+
 
 	private int position;
 
-	public ThreadPoolTaskBitmap(String url, CallBack callBack, int position, CustomView view) {
+	public ThreadPoolTaskBitmap(String url, CallBack callBack, int position) {
 		super(url);
 		this.callBack = callBack;
 		this.position = position;
-		this.view = view;
 	}
 
 	@Override
@@ -35,11 +35,9 @@ public class ThreadPoolTaskBitmap extends ThreadPoolTask {
 		Log.i(TAG, "loaded: " + url);
 
 		if (callBack != null) {
-			callBack.onReady(url, bitmap, this.position, this.view);
+			callBack.onReady( bitmap, this.position);
 		}
 	}
 
-	public interface CallBack {
-		public void onReady(String url, Bitmap bitmap, int position, CustomView view);
-	}
+
 }
