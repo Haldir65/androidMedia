@@ -66,5 +66,9 @@ public class AlbumImageHolder extends RecyclerView.ViewHolder implements CallBac
         }
     }
 
+    public void releaseResourse() {
+        imageView.setImageBitmap(null);
+    }
+
 
 }

@@ -15,9 +15,6 @@ public class ThreadPoolTaskBitmap extends ThreadPoolTask {
 
 	private CallBack callBack;
 
-
-
-
 	private int position;
 
 	public ThreadPoolTaskBitmap(String url, CallBack callBack, int position) {

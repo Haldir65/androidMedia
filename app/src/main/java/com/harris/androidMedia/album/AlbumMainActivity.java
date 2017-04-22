@@ -71,4 +71,6 @@ public class AlbumMainActivity extends Activity {
             mAdapter.notifyDataSetChanged();
         }
     }
+
+
 }

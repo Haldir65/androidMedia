@@ -1,11 +1,16 @@
 package com.harris.androidMedia.album;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 
+import com.harris.androidMedia.App;
 import com.harris.androidMedia.util.Constants;
 import com.harris.androidMedia.util.LogUtil;
+import com.harris.androidMedia.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +38,7 @@ public class ImageHelper {
         return array[random.nextInt(5)];
     }
 
+
     public static List<String> getDummyStringList(int size) {
         if (random == null) {
             random = new Random();
@@ -44,6 +50,39 @@ public class ImageHelper {
         return res;
     }
 
+    public static int getMemoryCacheSize(Context context) {
+        // Get memory class of this device, exceeding this amount will throw an
+        // OutOfMemory exception.
+        final int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        // Use 1/8th of the available memory for this memory cache.
+        return 1024 * 1024 * memClass / 8;
+    }
+
+    public static volatile LruCache<String, Bitmap> mMemoryCache;
+
+    /**
+     * @param key
+     * @param bitmap
+     * @description 将bitmap添加到内存中去
+     */
+    public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    /**
+     * @param key
+     * @return
+     * @description 通过key来从内存缓存中获得bitmap对象
+     */
+    private static Bitmap getBitmapFromMemCache(String key) {
+        if (mMemoryCache == null) {
+            mMemoryCache = new LruCache<>(getMemoryCacheSize(App.getContext()));
+        }
+        return mMemoryCache.get(key);
+    }
+
     /**
      * 获得网络图片Bitmap
      *
@@ -53,11 +92,16 @@ public class ImageHelper {
     public static Bitmap loadBitmapFromNet(String imageUrlStr) {
         Bitmap bitmap = null;
         URL imageUrl = null;
-        LogUtil.e("load url " + imageUrlStr+" currentThreadId " +Thread.currentThread().getId());
         if (imageUrlStr == null || imageUrlStr.length() == 0) {
             return null;
         }
+        bitmap = getBitmapFromMemCache(imageUrlStr);
+        if (bitmap != null) {
+            LogUtil.d("cache hit !");
+            return bitmap;
+        }
         try {
+            LogUtil.e("load url " + imageUrlStr + " currentThreadId " + Thread.currentThread().getId());
             imageUrl = new URL(imageUrlStr);
             URLConnection conn = imageUrl.openConnection();
             conn.setDoInput(true);
@@ -73,8 +117,13 @@ public class ImageHelper {
                     System.arraycopy(temp, 0, imgData, destPos, readLen);
                     destPos += readLen;
                 }
-                bitmap = BitmapFactory.decodeByteArray(imgData, 0, imgData.length);
-                LogUtil.e("bitmap loaded! ");
+//                bitmap = decodeByteArray(imgData, 0, imgData.length);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.outWidth = Utils.getScreenWidth(App.getContext());
+                options.outHeight = Utils.dip2px(App.getContext(), 100);
+                bitmap = BitmapFactory.decodeByteArray(imgData, 0, imgData.length, options);
+                addBitmapToMemoryCache(imageUrlStr, bitmap);
+                LogUtil.e("bitmap loaded! and added to cache! Thread Id is "+ Thread.currentThread().getId() + "Bitmap size is " + imgData.length);
             }
         } catch (IOException e) {
             Log.e(TAG, e.toString());

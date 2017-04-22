@@ -78,6 +78,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumImageHolder> {
     @Override
     public void onViewDetachedFromWindow(AlbumImageHolder holder) {
         holder.isDetachedFromWindow = true;
+        holder.releaseResourse();
+
     }
 
 

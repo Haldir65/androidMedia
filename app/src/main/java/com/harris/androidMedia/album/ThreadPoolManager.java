@@ -2,7 +2,9 @@ package com.harris.androidMedia.album;
 
 import android.util.Log;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -101,6 +103,8 @@ public class ThreadPoolManager {
 	 */
 	private class PoolRunnable implements Runnable {
 
+		Map<String, String> map = new HashMap<>();
+
 		@Override
 		public void run() {
 			Log.i(TAG, "开始轮询");
@@ -116,6 +120,10 @@ public class ThreadPoolManager {
 						}
 						continue;
 					}
+					if (ImageHelper.mMemoryCache!=null&&ImageHelper.mMemoryCache.get(task.getURL()) == null&&map.containsKey(task.getURL())) {
+						continue;
+					}
+					map.put(task.getURL(), "this url has been executed or maybe ongoing ");
 					threadPool.execute(task);
 				}
 			} finally {
