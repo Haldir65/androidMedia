@@ -48,7 +48,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumImageHolder> {
                 holder.beginTask(position);
             } else if (loadFashion == LOAD_POOL) {
                 poolManager.start();
-                poolManager.addAsyncTask(new ThreadPoolTaskBitmap(ImageHelper.getImageUrl(position),holder,position));
+                poolManager.addAsyncTask(new ThreadPoolBitmapTask(ImageHelper.getImageUrl(position),holder,position));
             }
 
         }

@@ -4,6 +4,9 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
@@ -38,7 +41,6 @@ public class ImageHelper {
         return array[random.nextInt(5)];
     }
 
-
     public static List<String> getDummyStringList(int size) {
         if (random == null) {
             random = new Random();
@@ -58,7 +60,8 @@ public class ImageHelper {
         return 1024 * 1024 * memClass / 8;
     }
 
-    public static volatile LruCache<String, Bitmap> mMemoryCache;
+    public static volatile LruCache<String, Bitmap> mMemoryCache; //original cache
+    public static volatile LruCache<String, Bitmap> mMemoryResultCache; //scaledDown cache
 
     /**
      * @param key
@@ -68,6 +71,12 @@ public class ImageHelper {
     public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {
             mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    public static void addBitmapToResultCache(String key, @NonNull Bitmap scaledBitmap) {
+        if (getBitmapFromResultCache(key) == null) {
+            mMemoryResultCache.put(key, scaledBitmap);
         }
     }
 
@@ -84,7 +93,21 @@ public class ImageHelper {
     }
 
     /**
-     * 获得网络图片Bitmap
+     * 获取scaled Down version的Bitmap
+     *
+     * @param key
+     * @return
+     */
+    @Nullable
+    private static Bitmap getBitmapFromResultCache(String key) {
+        if (mMemoryResultCache == null) {
+            mMemoryResultCache = new LruCache<>(getMemoryCacheSize(App.getContext()));
+        }
+        return mMemoryResultCache.get(key);
+    }
+
+    /**
+     * 获得网络图片Bitmap,理应在这里处理缓存
      *
      * @param
      * @return
@@ -119,16 +142,40 @@ public class ImageHelper {
                 }
 //                bitmap = decodeByteArray(imgData, 0, imgData.length);
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.outWidth = Utils.getScreenWidth(App.getContext());
-                options.outHeight = Utils.dip2px(App.getContext(), 100);
+                options.outWidth = Utils.getScreenWidth(App.getContext())/4;
+                options.outHeight = Utils.dip2px(App.getContext(), 200);
                 bitmap = BitmapFactory.decodeByteArray(imgData, 0, imgData.length, options);
                 addBitmapToMemoryCache(imageUrlStr, bitmap);
-                LogUtil.e("bitmap loaded! and added to cache! Thread Id is "+ Thread.currentThread().getId() + "Bitmap size is " + imgData.length);
+                LogUtil.e("bitmap loaded! and added to cache! Thread Id is " + Thread.currentThread().getId() + "Bitmap size is " + imgData.length);
             }
         } catch (IOException e) {
             Log.e(TAG, e.toString());
             return null;
         }
         return bitmap;
+    }
+
+    @WorkerThread
+    public static Bitmap getResultBitmapWithExactSize(String url, int width, int height) {
+        Bitmap bitmap = getBitmapFromResultCache(url);
+        if (bitmap != null) {
+            return bitmap; //return immediately
+        } else {
+            bitmap = getBitmapFromMemCache(url);
+            if (bitmap != null) {
+                bitmap = resizeBitmapAndAddToCache(url, bitmap, width, height);
+                return bitmap;
+            } else {
+                bitmap = loadBitmapFromNet(url);
+                return resizeBitmapAndAddToCache(url, bitmap, width, height);
+            }
+        }
+    }
+
+    @WorkerThread
+    public static Bitmap resizeBitmapAndAddToCache(String url, @NonNull Bitmap bitmap, int width, int height) {
+        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        addBitmapToResultCache(url, newBitmap);
+        return newBitmap;
     }
 }
