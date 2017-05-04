@@ -2,19 +2,24 @@ package com.harris.androidMedia.album;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
+import com.bumptech.glide.disklrucache.DiskLruCache;
 import com.harris.androidMedia.App;
 import com.harris.androidMedia.util.Constants;
 import com.harris.androidMedia.util.LogUtil;
 import com.harris.androidMedia.util.Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -60,8 +65,9 @@ public class ImageHelper {
         return 1024 * 1024 * memClass / 8;
     }
 
-    public static volatile LruCache<String, Bitmap> mMemoryCache; //original cache
-    public static volatile LruCache<String, Bitmap> mMemoryResultCache; //scaledDown cache
+    public static volatile LruCache<String, Bitmap> mMemoryResultCache; //scaledDown cache , first Layer of Cache
+    public static volatile LruCache<String, Bitmap> mMemoryCache; //original cache, second Layer of Cache
+    public static volatile DiskLruCache mDiskLruCache; //DiskLruCache, third layer of cache
 
     /**
      * @param key
@@ -74,10 +80,31 @@ public class ImageHelper {
         }
     }
 
+    public static File getDiskCacheDir(Context context, String uniqueName) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return new File(cachePath + File.separator + uniqueName);
+    }
+
     public static void addBitmapToResultCache(String key, @NonNull Bitmap scaledBitmap) {
         if (getBitmapFromResultCache(key) == null) {
             mMemoryResultCache.put(key, scaledBitmap);
         }
+    }
+
+    public static int getAppVersion(Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 1;
     }
 
     /**
@@ -90,6 +117,18 @@ public class ImageHelper {
             mMemoryCache = new LruCache<>(getMemoryCacheSize(App.getContext()));
         }
         return mMemoryCache.get(key);
+    }
+
+    @Nullable
+    private static Bitmap getUnScaledBitmapFromDiskCache(String key) {
+        if (mDiskLruCache == null) {
+            try {
+                mDiskLruCache = DiskLruCache.open(getDiskCacheDir(App.getContext(),"bitmap"),getAppVersion(App.getContext()),1, 10 * 1024 * 1024);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } // TODO: 2017/5/4 grab a copy of bitmap soon
+        return null;
     }
 
     /**
