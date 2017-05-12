@@ -450,7 +450,8 @@ public class Camera2BasicFragment extends Fragment
         mFile = createFile();
     }
 
-    File createFile() {
+   public File createFile() {
+       // TODO: 2017/5/12  Request Storage Permission Here
         String fileName = dateFormat.format(new Date())+Constants.FILE_FORMAT_JPEG;
         String FolderPath = Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator + Environment.DIRECTORY_DCIM + File.separator + Constants.PATH_CAMERA2;
@@ -962,6 +963,7 @@ public class Camera2BasicFragment extends Fragment
             buffer.get(bytes);
             FileOutputStream output = null;
             try {
+                // TODO: 2017/5/12 File May not exist
                 output = new FileOutputStream(mFile);
                 output.write(bytes);
             } catch (IOException e) {
