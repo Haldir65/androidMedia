@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Camera2Training.iml" filepath="$PROJECT_DIR$/Camera2Training.iml" />
+      <module fileurl="file://D:\workspace\clones\androidMedia\Camera2Training.iml" filepath="D:\workspace\clones\androidMedia\Camera2Training.iml" />
       <module fileurl="file://$PROJECT_DIR$/androidMedia.iml" filepath="$PROJECT_DIR$/androidMedia.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
