@@ -134,7 +134,7 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
             uri = Uri.parse(Constants.Mp4Url2);
         }
         String fileName = uri.getLastPathSegment();
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_MOVIES + File.separator + fileName);
+        File file = new File(urlPassedIn);
         if (file.exists()) {
             uri = Uri.fromFile(file);
         } else {

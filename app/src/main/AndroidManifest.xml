@@ -100,6 +100,10 @@
             android:parentActivityName=".MainActivity"
             />
 
+        <activity android:name=".filter.CameraFilterActivity"/>
+
+        <activity android:name=".filter.PictureFilterActivity"/>
+
         <service android:name=".mediaPlayBack.MediaPlayerService"/>
 
         <service
