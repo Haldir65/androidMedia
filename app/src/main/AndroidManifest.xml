@@ -103,6 +103,7 @@
         <activity android:name=".filter.CameraFilterActivity"/>
 
         <activity android:name=".filter.PictureFilterActivity"/>
+        <activity android:name=".ijkPlayers.IjkPlayerDemoActivity"/>
 
         <service android:name=".mediaPlayBack.MediaPlayerService"/>
 
