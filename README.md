@@ -1,6 +1,10 @@
 ## Android Media related stuff
  A series of small Demo for media related api on android platform , including ExoPlayer, camera2 , mediaPlayerBack, etc.... All of which rely on android's hardware layer support. Just a small piece of draft.
 
+### Status
+[![Build Status](https://travis-ci.org/Haldir65/androidMedia.svg?branch=master)](https://travis-ci.org/Haldir65/androidMedia)
+
+
 1. Camera2 Api demo
 - Camera 2 API use case(Not done yet)
 Note: I'm  too lazy to write that bunch of Permission Check BoilerPlate Code , so Please grant all permission required: Camera,disk and that kind of stuff if you are on an Marshmallow Device
