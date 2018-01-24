@@ -71,4 +71,5 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
             ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
         }
     }
+
 }

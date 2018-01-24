@@ -83,10 +83,12 @@
 
             />
         <activity android:name=".exoPlayer.customize.ChooseLocalVideoActivity"
+            android:screenOrientation="portrait"
             />
 
         <activity
             android:name=".exoPlayer.customize.CustomPlayerViewActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/PlayerTheme"
             />
 
@@ -105,6 +107,7 @@
         <activity android:name=".filter.PictureFilterActivity"/>
         <activity android:name=".ijkPlayers.IjkPlayerDemoActivity"/>
 
+
         <service android:name=".mediaPlayBack.MediaPlayerService"/>
 
         <service
@@ -115,6 +118,11 @@
                 <action android:name="android.media.browse.MediaBrowserService"/>
             </intent-filter>
         </service>
+
+        <service android:name="com.harris.starry.ijkplayer.widget.MediaPlayerService"
+            android:enabled="true"
+            android:exported="true"
+            />
 
 
     </application>
