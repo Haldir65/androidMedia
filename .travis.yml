@@ -21,7 +21,13 @@ cache:
 
  - $HOME/.gradle/wrapper/
 
- -  /usr/local/android-sdk/
+## Large files that are quick to install but slow to download do not benefit from caching, as they take as long to download from the cache as from the original source:
+#Android SDKs
+#Debian packages
+#JDK packages
+#Compiled binaries
+#Docker images
+# -  /usr/local/android-sdk/
 
 env:
   matrix:
