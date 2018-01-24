@@ -10,6 +10,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-arm64" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-armv5" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-armv7a" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-example" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-exo" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-java" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-x86" />
+            <option value="$PROJECT_DIR$/ijkplayer/ijkplayer-x86_64" />
             <option value="$PROJECT_DIR$/starry" />
           </set>
         </option>

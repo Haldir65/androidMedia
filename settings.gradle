@@ -1,1 +1,9 @@
-include ':app', ':starry'
+include ':app', ':starry', ':ijkplayer-java', ':ijkplayer-x86_64', ':ijkplayer-example', ':ijkplayer-x86', ':ijkplayer-armv5', ':ijkplayer-arm64', ':ijkplayer-exo', ':ijkplayer-armv7a'
+project(':ijkplayer-java').projectDir = new File('ijkplayer/ijkplayer-java')
+project(':ijkplayer-x86_64').projectDir = new File('ijkplayer/ijkplayer-x86_64')
+project(':ijkplayer-example').projectDir = new File('ijkplayer/ijkplayer-example')
+project(':ijkplayer-x86').projectDir = new File('ijkplayer/ijkplayer-x86')
+project(':ijkplayer-armv5').projectDir = new File('ijkplayer/ijkplayer-armv5')
+project(':ijkplayer-arm64').projectDir = new File('ijkplayer/ijkplayer-arm64')
+project(':ijkplayer-exo').projectDir = new File('ijkplayer/ijkplayer-exo')
+project(':ijkplayer-armv7a').projectDir = new File('ijkplayer/ijkplayer-armv7a')
