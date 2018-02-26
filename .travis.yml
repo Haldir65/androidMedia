@@ -33,34 +33,46 @@ env:
   matrix:
     - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
 
-android:
-  components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # - tools
-    # - platform-tools
+# android:
+#   components:
+#     # Uncomment the lines below if you want to
+#     # use the latest revision of Android SDK Tools
+#     # - tools
+#     # - platform-tools
 
-    # The BuildTools version used by your project
-    - build-tools-26.0.2
+#     # The BuildTools version used by your project
+#     - build-tools-26.0.2
 
-    # The SDK version used to compile your project
-    - android-26
+#     # The SDK version used to compile your project
+#     - android-26
 
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-26
+#     # Additional components
+#     - extra-google-google_play_services
+#     - extra-google-m2repository
+#     - extra-android-m2repository
+#     - addon-google_apis-google-26
 
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-#    - sys-img-armeabi-v7a-android-26
-#    - sys-img-armeabi-v7a-android-19
+#     # Specify at least one system image,
+#     # if you need to run emulator(s) during your tests
+# #    - sys-img-armeabi-v7a-android-26
+# #    - sys-img-armeabi-v7a-android-19
 
 
 #  https://stackoverflow.com/questions/33820638/travis-yml-gradlew-permission-denied/33820642
 before_install:
  - chmod +x gradlew
+
+install:
+    - pushd $ANDROID_HOME
+    - rm -rf tools
+    - wget -q https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -O tools.zip
+    - unzip -q tools.zip
+    - popd
+    - touch $HOME/.android/repositories.cfg
+    - yes | sdkmanager
+        "build-tools;27.0.3"
+        ndk-bundle
+        "platforms;android-27" >/dev/null 
 
 script:
 - "./gradlew clean build --stacktrace --daemon"
