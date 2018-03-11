@@ -5,4 +5,5 @@ package com.harris.starry;
  */
 
 public class Configuration {
+    public static final int MAGIC_CODE =65536;
 }
