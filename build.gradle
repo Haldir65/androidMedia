@@ -37,5 +37,12 @@ ext {
     versionCode = 800400
     versionName = "0.8.4"
 
-    supportLibVersion = "27.0.2"
+    supportLibVersion = "27.1.0"
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('lint')){
+        logger.log(LogLevel.ERROR,"${task.name}")
+        task.enabled = false
+    }
 }

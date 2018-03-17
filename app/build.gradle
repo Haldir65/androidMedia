@@ -42,9 +42,9 @@ android {
     }*/
 }
 
-ext {
-    supportLibVersion = "26.1.0"
-}
+//ext {
+//    supportLibVersion = "26.1.0"
+//}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -67,4 +67,10 @@ dependencies {
 //    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.7.6'
 
     implementation project(':starry')
+}
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('lint')){
+        logger.log(LogLevel.ERROR,"sorry we want disable lint task ${task.name} for this is merely a experimental project")
+        task.enabled = false
+    }
 }

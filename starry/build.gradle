@@ -34,8 +34,8 @@ dependencies {
 
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.0'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     api 'com.github.ctiao:DanmakuFlameMaster:0.9.12'
 
@@ -56,4 +56,11 @@ dependencies {
 
 apply from: new File(rootProject.projectDir, "tools/gradle-on-demand.gradle")
 
+
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('lint')){
+        logger.log(LogLevel.ERROR,"sorry we want disable lint task ${task.name} for this is merely a experimental project")
+        task.enabled = false
+    }
+}
 
