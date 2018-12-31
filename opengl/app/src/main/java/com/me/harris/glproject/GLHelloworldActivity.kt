@@ -6,7 +6,6 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.me.harris.glproject.shapes.Square
 import com.me.harris.glproject.shapes.Triangle
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -44,14 +43,13 @@ class GLHelloworldActivity:AppCompatActivity() {
     class MyGLRenderer : GLSurfaceView.Renderer {
 
         private lateinit var mTriangle: Triangle
-        private lateinit var mSquare: Square
 
         override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
 
             // initialize a triangle
             mTriangle = Triangle()
             // initialize a square
-            mSquare = Square()
+//            mSquare = Square()
             // Set the background frame color
             GLES20.glClearColor(247.0f, 0.0f, 0.0f, 1.0f)
         }

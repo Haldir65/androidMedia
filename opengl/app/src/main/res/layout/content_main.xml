@@ -23,6 +23,15 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:layout_margin="10dp"
-            android:text="one "/>
+            android:text="triangle "/>
+
+
+    <Button
+            android:id="@+id/btn_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:layout_margin="10dp"
+            android:text="rectangle "/>
 
 </LinearLayout>

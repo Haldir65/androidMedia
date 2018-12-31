@@ -21,6 +21,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,GLHelloworldActivity::class.java))
         }
 
+        btn_2.setOnClickListener {
+            startActivity(Intent(this,GLSquareActivity::class.java))
+        }
+
+
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
