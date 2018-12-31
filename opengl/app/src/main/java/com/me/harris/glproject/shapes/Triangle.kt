@@ -105,11 +105,11 @@ class Triangle {
         // Pass the projection and view transformation to the shader
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
 
-        // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
-
-        // Disable vertex array
-        GLES20.glDisableVertexAttribArray(mPositionHandle)
+//        // Draw the triangle
+//        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
+//
+//        // Disable vertex array
+//        GLES20.glDisableVertexAttribArray(mPositionHandle)
 
         // get handle to vertex shader's vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition").also {
