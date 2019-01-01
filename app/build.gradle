@@ -9,9 +9,7 @@ android {
         abortOnError false
     }
     repositories {
-        maven{
-            url "https://maven.google.com"
-        }
+        google()
         mavenCentral()
     }
     defaultConfig {
