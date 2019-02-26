@@ -15,6 +15,7 @@ import com.harris.androidMedia.camera2.Camera2MainActivity;
 import com.harris.androidMedia.databinding.ActivityMainBinding;
 import com.harris.androidMedia.exoPlayer.ExoPlayerMainActivity;
 import com.harris.androidMedia.ijkPlayers.IjkPlayerDemoActivity;
+import com.harris.androidMedia.mediaCodec.CodecMainActivity;
 import com.harris.androidMedia.mediaPlayBack.LockScreenNotificationControl;
 import com.harris.androidMedia.mediaPlayBack.MediaPlayBackActivity;
 import com.harris.androidMedia.util.ActionCallBack;
@@ -61,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
                 break;
             case R.id.card5:
                 intent = new Intent(this, IjkPlayerDemoActivity.class);
+                break;
+            case R.id.card6:
+                intent = new Intent(this, CodecMainActivity.class);
                 break;
             default:
                 break;

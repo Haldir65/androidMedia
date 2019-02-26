@@ -109,8 +109,7 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
         binding.retryButton.setOnClickListener(this);
         binding.controlsRoot.setOnClickListener(this);
 
-        binding.playerView.setControllerVisibilityListener(this);
-        binding.playerView.requestFocus();
+
     }
 
 
@@ -240,6 +239,8 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
             playerNeedsSource = false;
             updateButtonVisibilities();
         }
+        binding.playerView.setControllerVisibilityListener(this);
+        binding.playerView.requestFocus();
     }
 
     private void updateButtonVisibilities() {

@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -53,9 +56,9 @@ dependencies {
     implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     implementation 'com.google.android.exoplayer:exoplayer:r2.2.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.okio:okio:2.2.2'
 //    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
 //    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'

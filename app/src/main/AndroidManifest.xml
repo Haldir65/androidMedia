@@ -83,7 +83,6 @@
 
             />
         <activity android:name=".exoPlayer.customize.ChooseLocalVideoActivity"
-            android:screenOrientation="portrait"
             />
 
         <activity
@@ -106,6 +105,7 @@
 
         <activity android:name=".filter.PictureFilterActivity"/>
         <activity android:name=".ijkPlayers.IjkPlayerDemoActivity"/>
+        <activity android:name=".mediaCodec.CodecMainActivity" />
 
 
         <service android:name=".mediaPlayBack.MediaPlayerService"/>

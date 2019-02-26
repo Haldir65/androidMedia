@@ -143,7 +143,7 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         } else {
             saveFileToLocal(uri);
         }
-        uri = Uri.parse("http://10.106.213.55/video.mp4");
+//        uri = Uri.parse("http://10.106.213.55/video.mp4");
         if (uri != null) {
             MediaSource mediaSources = new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
                     mainHandler, null);

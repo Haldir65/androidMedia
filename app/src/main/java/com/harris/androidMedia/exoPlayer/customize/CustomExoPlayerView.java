@@ -53,7 +53,7 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
     private int controllerShowTimeoutMs;
     int scaleTouchSlop;
     float currentX,currentY;
-    float screenWidth;
+    float screenWidth,screenHeight;
 
 
 
@@ -271,6 +271,9 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
 
 
 
+
+    float currentVolumeY = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (player != null) {
@@ -280,14 +283,19 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
             if (showIndefinitely) {
                 controller.show();
             }*/
+            Context context = getContext();
             if (screenWidth == 0) {
-                screenWidth = Utils.getScreenWidth(getContext());
+                screenWidth = Utils.getScreenWidth(context);
             }
+            if (screenHeight == 0) {
+                screenWidth = Utils.getScreenHeight(context);
+            }
+
             ExoPlayer player = controller.getPlayer();
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     currentX = ev.getX();
-                    currentY = ev.getY();
+                    currentVolumeY = currentY = ev.getY();
                     if (!player.getPlayWhenReady()) {
                         controller.hide();
                         player.setPlayWhenReady(true);
@@ -305,29 +313,37 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
                         } else {
                             controller.rewind((long) ((currentX - x) * player.getDuration() / screenWidth));
                         }
+                        LogUtil.d("this is horizontal scroll"+(x - currentX));
                     } else {
-                        if (Math.abs(y - currentY) > 300) {
-                            if (y < currentY) {
-                                int CurVolume = AudioUtil.getInstance(getContext()).getMediaVolume();
-                                int MaxVolume = AudioUtil.getInstance(getContext()).getMediaMaxVolume();
+                        // TODO: 2019/2/26 use simpleMexoplayer setVolume instead of framework api
+                        LogUtil.d("this is vertical scroll"+(y - currentY));// y-currentY < 0 手指往上走
+                        float VERTICAL_THRESHHOLD = screenHeight;
+                        if (Math.abs(y - currentVolumeY) > 0) {
+                            if (y < currentVolumeY) { //手指往上走，调大音量
+                                int CurVolume = AudioUtil.getInstance(context).getMediaVolume();
+                                int MaxVolume = AudioUtil.getInstance(context).getMediaMaxVolume();
                                 if (CurVolume < MaxVolume) {
-                                    AudioUtil.getInstance(getContext()).setMediaVolume((CurVolume + 1) > MaxVolume ? MaxVolume : CurVolume + 1);
+                                    AudioUtil.getInstance(context).setMediaVolume((CurVolume + 1) > MaxVolume ? MaxVolume : CurVolume + 1);
                                 }
+                                currentVolumeY+=VERTICAL_THRESHHOLD;
                                 LogUtil.d("CurVolume " + CurVolume + " MaxV" + MaxVolume);
                             } else {
-                                int CurVolume = AudioUtil.getInstance(getContext()).getMediaVolume();
-                                int MaxVolume = AudioUtil.getInstance(getContext()).getMediaMaxVolume();
+                                int CurVolume = AudioUtil.getInstance(context).getMediaVolume();
+                                int MaxVolume = AudioUtil.getInstance(context).getMediaMaxVolume();
                                 if (CurVolume > 0) {
-                                    AudioUtil.getInstance(getContext()).setMediaVolume((CurVolume - 1) > 0 ? CurVolume - 1 : 0);
+                                    AudioUtil.getInstance(context).setMediaVolume((CurVolume - 1) > 0 ? CurVolume - 1 : 0);
                                 }
+                                currentVolumeY-=VERTICAL_THRESHHOLD;
                                 LogUtil.d("CurVolume " + CurVolume);
                             }
                         }
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                    currentVolumeY= currentX = currentY = 0;
+                    break;
                 case MotionEvent.ACTION_CANCEL:
-                    currentX = currentY = 0;
+                    currentVolumeY = currentX = currentY = 0;
                     break;
                 default:
                     break;
