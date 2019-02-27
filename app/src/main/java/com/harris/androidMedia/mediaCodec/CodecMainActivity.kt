@@ -1,5 +1,7 @@
 package com.harris.androidMedia.mediaCodec
 
+import android.app.Activity
+import android.content.Intent
 import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.media.MediaFormat
@@ -8,8 +10,11 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.harris.androidMedia.exoPlayer.customize.ChooseLocalVideoActivity
+import com.harris.androidMedia.exoPlayer.customize.ChooseLocalVideoActivity.FLAG_CHOOSE_AND_RETURN_URL
+import com.harris.androidMedia.exoPlayer.customize.CustomPlayerViewActivity.CUSTOM_PLAYER_VIEW_URL_STRING
 import com.harris.androidMedia.util.LogUtil
-import com.harris.androidMedia.util.UtilVideo
+import com.harris.androidMedia.util.getAllVideoOnDevice
 import kotlinx.android.synthetic.main.activity_code_main.*
 import java.io.File
 import java.io.FileOutputStream
@@ -41,12 +46,35 @@ class CodecMainActivity : AppCompatActivity() {
                 combineVideo()
             }.start()
         }
+        btn5.setOnClickListener {
+            startActivityForResult(Intent(this,ChooseLocalVideoActivity::class.java).apply {
+                putExtra(FLAG_CHOOSE_AND_RETURN_URL,true)
+            }, REQUEST_CODE_CHOOSE_LOCAL_VIDEO_THEN_TO_H256)
+        }
+        btn6.setOnClickListener {
+            startActivity(Intent(this,CameraToMpegTestActivity::class.java))
+        }
+    }
+
+    companion object {
+        val REQUEST_CODE_CHOOSE_LOCAL_VIDEO_THEN_TO_H256 = 1090
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode== Activity.RESULT_OK&&data!=null){
+            if (requestCode== REQUEST_CODE_CHOOSE_LOCAL_VIDEO_THEN_TO_H256){
+                startActivityForResult(Intent(this,H256VideoPlayerActivity::class.java).apply {
+                    putExtra(CUSTOM_PLAYER_VIEW_URL_STRING,data.getStringExtra(CUSTOM_PLAYER_VIEW_URL_STRING))
+                }, REQUEST_CODE_CHOOSE_LOCAL_VIDEO_THEN_TO_H256)
+            }
+        }
     }
 
     //由此生成的视频文件不能播放，音频文件不能播放
     fun exactorMedia() {
         val mediaExtractor = MediaExtractor()
-        val videoPath = UtilVideo.getAllVideoOnDevice(this, mutableListOf())[0]
+        val videoPath = getAllVideoOnDevice(this, mutableListOf())[0]
                 .path
         LogUtil.d("CodecMainActivity", "videoPath = $videoPath")
         val outPutVideoPath = "${Environment.getExternalStorageDirectory().absolutePath}${File.separator}${Environment.DIRECTORY_DOWNLOADS}${File.separator}output_video.mp4"
@@ -118,7 +146,7 @@ class CodecMainActivity : AppCompatActivity() {
             val mediaExtractor = MediaExtractor()
             val outPutVideoPath = "${Environment.getExternalStorageDirectory().absolutePath}${File.separator}${Environment.DIRECTORY_DOWNLOADS}${File.separator}output_video_can_play.mp4"
             var videoTrackIndex = -1
-            val videoPath = UtilVideo.getAllVideoOnDevice(this, mutableListOf())[0]
+            val videoPath = getAllVideoOnDevice(this, mutableListOf())[0]
                     .path
             LogUtil.d("CodecMainActivity", "videoPath = $videoPath")
             mediaExtractor.setDataSource(videoPath)
@@ -190,7 +218,7 @@ class CodecMainActivity : AppCompatActivity() {
             val mediaExtractor = MediaExtractor()
             val outPutAduioPath = "${Environment.getExternalStorageDirectory().absolutePath}${File.separator}${Environment.DIRECTORY_DOWNLOADS}${File.separator}output_audio_can_play"
             var audioTrackIndex = -1
-            val videoPath = UtilVideo.getAllVideoOnDevice(this, mutableListOf())[0]
+            val videoPath = getAllVideoOnDevice(this, mutableListOf())[0]
                     .path
             LogUtil.d("CodecMainActivity", "videoPath = $videoPath")
             mediaExtractor.setDataSource(videoPath)

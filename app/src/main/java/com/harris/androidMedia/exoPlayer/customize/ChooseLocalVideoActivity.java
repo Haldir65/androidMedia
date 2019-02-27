@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -24,15 +25,18 @@ import com.harris.androidMedia.databinding.ActivityChooseLocalVideoBinding;
 import com.harris.androidMedia.recyclerView.itemDecoration.VideoItemDecoration;
 import com.harris.androidMedia.util.OnItemClickListener;
 import com.harris.androidMedia.util.ToastUtil;
-import com.harris.androidMedia.util.UtilVideo;
+import com.harris.androidMedia.util.UtilVideosKt;
+import com.harris.androidMedia.util.VideoInfo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -44,9 +48,12 @@ import static com.harris.androidMedia.exoPlayer.customize.CustomPlayerViewActivi
 
 public class ChooseLocalVideoActivity extends AppCompatActivity implements OnItemClickListener {
 
+
+    public static final String FLAG_CHOOSE_AND_RETURN_URL = "choose_and_return";
     ActivityChooseLocalVideoBinding binding;
-    List<UtilVideo.VideoInfo> list;
+    List<VideoInfo> list;
     VideoAdapter mAdapter;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,50 +74,52 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
         if (list == null) {
             list = new ArrayList<>();
         }
-        Observable.create(new ObservableOnSubscribe<List<UtilVideo.VideoInfo>>() {
+        Disposable subscribe = Observable.fromCallable(new Callable<List<VideoInfo>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<UtilVideo.VideoInfo>> e) throws Exception {
-                if (ActivityCompat.checkSelfPermission(ChooseLocalVideoActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                e.onNext(UtilVideo.getAllVideoOnDevice(ChooseLocalVideoActivity.this, list));
+            public List<VideoInfo> call() throws Exception {
+                return UtilVideosKt.
+                        getAllVideoUnderCertainDirNonRecrusive
+                                (Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+Environment.DIRECTORY_MOVIES, list);
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<UtilVideo.VideoInfo>>() {
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<VideoInfo>>() {
                     @Override
-                    public void accept(List<UtilVideo.VideoInfo> videoInfos) throws Exception {
+                    public void accept(List<VideoInfo> videoInfos) throws Exception {
                         mAdapter.notifyDataSetChanged();
                     }
                 });
+        compositeDisposable.add(subscribe);
         mAdapter = new VideoAdapter(list,this);
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.addItemDecoration(new VideoItemDecoration(this));
-
 //        binding.image.setImageBitmap(ThumbnailUtils.createVideoThumbnail(list.get(0).path,MINI_KIND));
     }
 
     @Override
     public void onItemClicked(View view, int position) {
-        UtilVideo.VideoInfo info = list.get(position);
-        ToastUtil.showTextShort(this, info.name);
-        Intent intent = new Intent(this, CustomPlayerViewActivity.class);
-        intent.putExtra(CUSTOM_PLAYER_VIEW_URL_STRING, info.path);
-        startActivityForResult(intent, -1);
+        VideoInfo info = list.get(position);
+        ToastUtil.showTextShort(this, info.getName());
+        Intent intent;
+        if (getIntent().getBooleanExtra(FLAG_CHOOSE_AND_RETURN_URL,false)){
+            intent = new Intent();
+            intent.putExtra(CUSTOM_PLAYER_VIEW_URL_STRING,info.getPath());
+            setResult(RESULT_OK,intent);
+            finish();
+        }else {
+            intent = new Intent(this, CustomPlayerViewActivity.class);
+            intent.putExtra(CUSTOM_PLAYER_VIEW_URL_STRING, info.getPath());
+            startActivityForResult(intent, -1);
+            finish();
+        }
     }
 
     static class VideoAdapter extends RecyclerView.Adapter<VideoHolder> {
 
-        List<UtilVideo.VideoInfo> mList;
+        List<VideoInfo> mList;
         OnItemClickListener mListener;
 
-        public VideoAdapter(List<UtilVideo.VideoInfo> mList, OnItemClickListener mListener) {
+        public VideoAdapter(List<VideoInfo> mList, OnItemClickListener mListener) {
             this.mList = mList;
             this.mListener = mListener;
         }
@@ -153,10 +162,10 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
 
 
 
-        public void bindData(@NonNull UtilVideo.VideoInfo videoInfo) {
+        public void bindData(@NonNull VideoInfo videoInfo) {
 //            mImageView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(videoInfo.path,MINI_KIND));
-            Glide.with(itemView.getContext()).load(videoInfo.path).asBitmap().centerCrop().into(mImageView);
-            mTextView.setText(videoInfo.name);
+            Glide.with(itemView.getContext()).load(videoInfo.getPath()).asBitmap().centerCrop().into(mImageView);
+            mTextView.setText(videoInfo.getName());
 
         }
 
@@ -168,4 +177,9 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
+    }
 }
