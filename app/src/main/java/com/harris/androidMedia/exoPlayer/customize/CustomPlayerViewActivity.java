@@ -24,6 +24,7 @@ import android.view.View;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
@@ -31,7 +32,7 @@ import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
@@ -88,7 +89,7 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
         hideSystemUI();
         shouldAutoPlay = true;
         bandwidthMeter = new DefaultBandwidthMeter();
-        mediaDataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
+        mediaDataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"), (TransferListener) bandwidthMeter);
         mainHandler = new Handler();
         window = new Timeline.Window();
         simpleExoPlayerView = binding.playerView;
@@ -117,14 +118,14 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
     private void initializePlayer() {
         simpleExoPlayerView.requestFocus();
         TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
+                new AdaptiveTrackSelection.Factory(bandwidthMeter);
         trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         boolean preferExtensionDecoders = false;
-        @SimpleExoPlayer.ExtensionRendererMode int extensionRendererMode =
+        @DefaultRenderersFactory.ExtensionRendererMode int extensionRendererMode =
                 ((App) getApplication()).useExtensionRenderers()
-                        ? (preferExtensionDecoders ? SimpleExoPlayer.EXTENSION_RENDERER_MODE_PREFER
-                        : SimpleExoPlayer.EXTENSION_RENDERER_MODE_ON)
-                        : SimpleExoPlayer.EXTENSION_RENDERER_MODE_OFF;
+                        ? (preferExtensionDecoders ? DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER
+                        : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
+                        : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, new DefaultLoadControl(),
                 null, extensionRendererMode);
         simpleExoPlayerView.setPlayer(player);

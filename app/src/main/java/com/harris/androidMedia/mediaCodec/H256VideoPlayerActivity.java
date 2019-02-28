@@ -2,6 +2,7 @@ package com.harris.androidMedia.mediaCodec;
 
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
+import android.media.MediaFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +10,14 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.exoplayer2.ui.PlaybackControlView;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.harris.androidMedia.R;
 import com.harris.androidMedia.util.LogUtil;
 
 import java.io.File;
 import java.util.HashMap;
 
+import static android.media.MediaCodecInfo.CodecCapabilities.FEATURE_AdaptivePlayback;
 import static com.harris.androidMedia.exoPlayer.customize.CustomPlayerViewActivity.CUSTOM_PLAYER_VIEW_URL_STRING;
 
 // https://github.com/JavaNoober/MedioDecode

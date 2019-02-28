@@ -102,12 +102,12 @@ public class CustomPlaybackControlView extends FrameLayout {
         showTimeoutMs = DEFAULT_SHOW_TIMEOUT_MS;
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                    R.styleable.PlaybackControlView, 0, 0);
+                    R.styleable.PlayerControlView, 0, 0);
             try {
-                rewindMs = a.getInt(R.styleable.PlaybackControlView_rewind_increment, rewindMs);
-                fastForwardMs = a.getInt(R.styleable.PlaybackControlView_fastforward_increment,
+                rewindMs = a.getInt(R.styleable.PlayerControlView_rewind_increment, rewindMs);
+                fastForwardMs = a.getInt(R.styleable.PlayerControlView_fastforward_increment,
                         fastForwardMs);
-                showTimeoutMs = a.getInt(R.styleable.PlaybackControlView_show_timeout, showTimeoutMs);
+                showTimeoutMs = a.getInt(R.styleable.PlayerControlView_show_timeout, showTimeoutMs);
             } finally {
                 a.recycle();
             }
@@ -264,7 +264,7 @@ public class CustomPlaybackControlView extends FrameLayout {
         }
         boolean playing = player != null && player.getPlayWhenReady();
         String contentDescription = getResources().getString(
-                playing ? com.google.android.exoplayer2.R.string.exo_controls_pause_description : com.google.android.exoplayer2.R.string.exo_controls_play_description);
+                playing ? R.string.exo_controls_pause_description :R.string.exo_controls_play_description);
         playButton.setContentDescription(contentDescription);
         playButton.setImageResource(
                 playing ? R.drawable.pausecontrol : R.drawable.playcontrol);
@@ -501,17 +501,17 @@ public class CustomPlaybackControlView extends FrameLayout {
             updateProgress();
         }
 
-        @Override
-        public void onPositionDiscontinuity() {
-            updateNavigation();
-            updateProgress();
-        }
-
-        @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
-            updateNavigation();
-            updateProgress();
-        }
+//        @Override
+//        public void onPositionDiscontinuity() {
+//            updateNavigation();
+//            updateProgress();
+//        }
+//
+//        @Override
+//        public void onTimelineChanged(Timeline timeline, Object manifest) {
+//            updateNavigation();
+//            updateProgress();
+//        }
 
         @Override
         public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {

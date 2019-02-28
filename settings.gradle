@@ -7,3 +7,4 @@ project(':ijkplayer-armv5').projectDir = new File('ijkplayer/ijkplayer-armv5')
 project(':ijkplayer-arm64').projectDir = new File('ijkplayer/ijkplayer-arm64')
 project(':ijkplayer-exo').projectDir = new File('ijkplayer/ijkplayer-exo')
 project(':ijkplayer-armv7a').projectDir = new File('ijkplayer/ijkplayer-armv7a')
+//

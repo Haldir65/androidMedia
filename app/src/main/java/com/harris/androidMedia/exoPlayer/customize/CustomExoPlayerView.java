@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -33,6 +34,7 @@ import com.harris.androidMedia.util.LogUtil;
 import com.harris.androidMedia.util.Utils;
 
 import java.util.List;
+
 
 /**
  * Created by Harris on 2017/2/25.
@@ -74,17 +76,17 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
         int controllerShowTimeoutMs = CustomPlaybackControlView.DEFAULT_SHOW_TIMEOUT_MS;
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                    com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView, 0, 0);
+                   R.styleable.PlayerView, 0, 0);
             try {
-                useController = a.getBoolean(com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView_use_controller, useController);
-                /* useTextureView = a.getBoolean(com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView_use_texture_view,
+                useController = a.getBoolean(R.styleable.PlayerView_use_controller, useController);
+                /* useTextureView = a.getBoolean(R.styleable.SimpleExoPlayerView_use_texture_view,
                          useTextureView);*/
-                resizeMode = a.getInt(com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView_resize_mode,
+                resizeMode = a.getInt(R.styleable.PlayerView_resize_mode,
                         AspectRatioFrameLayout.RESIZE_MODE_FIT);
-                rewindMs = a.getInt(com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView_rewind_increment, rewindMs);
-                fastForwardMs = a.getInt(com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView_fastforward_increment,
+                rewindMs = a.getInt(R.styleable.PlayerView_rewind_increment, rewindMs);
+                fastForwardMs = a.getInt(R.styleable.PlayerView_fastforward_increment,
                         fastForwardMs);
-                controllerShowTimeoutMs = a.getInt(com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView_show_timeout,
+                controllerShowTimeoutMs = a.getInt(R.styleable.PlayerView_show_timeout,
                         controllerShowTimeoutMs);
             } finally {
                 a.recycle();
@@ -443,18 +445,39 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
         }
 
         @Override
+        public void onRepeatModeChanged(int repeatMode) {
+
+        }
+
+        @Override
+        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+        }
+
+        @Override
         public void onPlayerError(ExoPlaybackException e) {
             // Do nothing.
         }
 
         @Override
-        public void onPositionDiscontinuity() {
-            // Do nothing.
+        public void onPositionDiscontinuity(int reason) {
+
         }
 
         @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
-            // Do nothing.
+        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+        }
+
+        @Override
+        public void onSeekProcessed() {
+
+        }
+
+
+        @Override
+        public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
+
         }
 
         @Override

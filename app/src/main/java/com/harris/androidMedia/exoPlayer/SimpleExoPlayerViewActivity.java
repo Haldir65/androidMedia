@@ -16,9 +16,11 @@ import android.widget.Toast;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -29,12 +31,14 @@ import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.ads.AdsMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -43,6 +47,7 @@ import com.google.android.exoplayer2.ui.DebugTextViewHelper;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.harris.androidMedia.App;
 import com.harris.androidMedia.R;
@@ -84,14 +89,13 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
     private DataSource.Factory mediaDataSourceFactory;
     private SimpleExoPlayer player;
     private DefaultTrackSelector trackSelector;
-    private TrackSelectionHelper trackSelectionHelper;
+//    private TrackSelectionHelper trackSelectionHelper;
     private DebugTextViewHelper debugViewHelper;
     private boolean playerNeedsSource;
 
     private boolean shouldAutoPlay;
     private int resumeWindow;
     private long resumePosition;
-    private EventLogger eventLogger;
 
 
     // Normal ActivityPlayer LifeCycle
@@ -175,24 +179,24 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
             boolean preferExtensionDecoders = intent.getBooleanExtra(PREFER_EXTENSION_DECODERS, false);
 
 
-            @SimpleExoPlayer.ExtensionRendererMode int extensionRendererMode =
+            @DefaultRenderersFactory.ExtensionRendererMode int extensionRendererMode =
                     ((App) getApplication()).useExtensionRenderers()
-                            ? (preferExtensionDecoders ? SimpleExoPlayer.EXTENSION_RENDERER_MODE_PREFER
-                            : SimpleExoPlayer.EXTENSION_RENDERER_MODE_ON)
-                            : SimpleExoPlayer.EXTENSION_RENDERER_MODE_OFF;
+                            ? (preferExtensionDecoders ? DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER
+                            : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
+                            : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
             TrackSelection.Factory videoTrackSelectionFactory =
-                    new AdaptiveVideoTrackSelection.Factory(BANDWIDTH_METER);
+                    new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
             trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-            trackSelectionHelper = new TrackSelectionHelper(trackSelector, videoTrackSelectionFactory);
+//            trackSelectionHelper = new TrackSelectionHelper(trackSelector, videoTrackSelectionFactory);
             player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, new DefaultLoadControl(),
                     null, extensionRendererMode);
             player.addListener(this);
-
-            eventLogger = new EventLogger(trackSelector);
-            player.addListener(eventLogger);
-            player.setAudioDebugListener(eventLogger);
-            player.setVideoDebugListener(eventLogger);
-            player.setMetadataOutput(eventLogger);
+//
+//            eventLogger = new EventLogger(trackSelector);
+//            player.addListener(eventLogger);
+//            player.setAudioDebugListener(eventLogger);
+//            player.setVideoDebugListener(eventLogger);
+//            player.setMetadataOutput(eventLogger);
 
             binding.playerView.setPlayer(player);
             player.setPlayWhenReady(shouldAutoPlay);
@@ -294,8 +298,8 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
             player.release();
             player = null;
             trackSelector = null;
-            trackSelectionHelper = null;
-            eventLogger = null;
+//            trackSelectionHelper = null;
+//            eventLogger = null;
         }
     }
 
@@ -303,17 +307,16 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
         int type = Util.inferContentType(!TextUtils.isEmpty(overrideExtension) ? "." + overrideExtension
                 : uri.getLastPathSegment());
         switch (type) {
-            case C.TYPE_SS:
-                return new SsMediaSource(uri, buildDataSourceFactory(false),
-                        new DefaultSsChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
-            case C.TYPE_DASH:
-                return new DashMediaSource(uri, buildDataSourceFactory(false),
-                        new DefaultDashChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
-            case C.TYPE_HLS:
-                return new HlsMediaSource(uri, mediaDataSourceFactory, mainHandler, eventLogger);
+//            case C.TYPE_SS:
+//                return new SsMediaSource(uri, buildDataSourceFactory(false),
+//                        new DefaultSsChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
+//            case C.TYPE_DASH:
+//                return new DashMediaSource(uri, buildDataSourceFactory(false),
+//                        new DefaultDashChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
+//            case C.TYPE_HLS:
+//                return new HlsMediaSource.Factory().createMediaSource(UR)
             case C.TYPE_OTHER:
-                return new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
-                        mainHandler, eventLogger);
+                return  new  ExtractorMediaSource.Factory(new FileDataSourceFactory()).createMediaSource(uri);
             default: {
                 throw new IllegalStateException("Unsupported type: " + type);
             }
@@ -325,8 +328,10 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
                 .buildDataSourceFactory(useBandwidthMeter ? BANDWIDTH_METER : null);
     }
 
+
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
+    public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
+
     }
 
     @Override
@@ -355,6 +360,16 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
             showControls();
         }
         updateButtonVisibilities();
+    }
+
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
+
+    }
+
+    @Override
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
     }
 
     private void showControls() {
@@ -402,7 +417,7 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
     }
 
     @Override
-    public void onPositionDiscontinuity() {
+    public void onPositionDiscontinuity(int reason) {
         if (playerNeedsSource) {
             // This will only occur if the user has performed a seek whilst in the error state. Update the
             // resume position so that if the user then retries, playback will resume from the position to
@@ -412,15 +427,25 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
     }
 
     @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+    }
+
+    @Override
+    public void onSeekProcessed() {
+
+    }
+
+    @Override
     public void onClick(View v) {
         if (v == binding.retryButton) {
             initializePlayer();
         } else if (v.getParent() == binding.controlsRoot) {
             MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
-            if (mappedTrackInfo != null) {
-                trackSelectionHelper.showSelectionDialog(this, ((Button) v).getText(),
-                        trackSelector.getCurrentMappedTrackInfo(), (int) v.getTag());
-            }
+//            if (mappedTrackInfo != null) {
+//                trackSelectionHelper.showSelectionDialog(this, ((Button) v).getText(),
+//                        trackSelector.getCurrentMappedTrackInfo(), (int) v.getTag());
+//            }
         }
     }
 

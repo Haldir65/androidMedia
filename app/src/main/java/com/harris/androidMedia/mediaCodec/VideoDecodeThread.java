@@ -72,7 +72,17 @@ public class VideoDecodeThread extends Thread {
                         e.printStackTrace();
                     }
                 }
+                // https://stackoverflow.com/questions/17233835/illegalstateexception-when-mediacodec-configure-android/17243175#17243175
                 mediaCodec.configure(format, surface, null, 0);
+                //
+                //There are some mandatory values that must be set in the format. If you look at the docs for MediaFormat, it says "all keys not marked optional are mandatory". If you fail to set a mandatory key, MediaCodec throws an error because it has been left in an illegal state.
+                //
+                //Add:
+                //
+                //mMediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, <bit rate>);
+                //mMediaFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, <sample rate>);
+                //mMediaFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
+                //KEY_MIME should have been set for you by createEncoderByType().
                 break;
             }
 
