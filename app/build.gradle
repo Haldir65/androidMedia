@@ -65,18 +65,18 @@ dependencies {
     implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     //    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
-    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.8.4'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.8.4'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.4'
-    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.8.4'
+    implementation "com.google.android.exoplayer:exoplayer:${rootProject.ext.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-core:${rootProject.ext.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-dash:${rootProject.ext.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-ui:${rootProject.ext.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:${rootProject.ext.exoplayer}"
 //    implementation project(':exoplayer-library-core')
 //    implementation project(':exoplayer-library-dash')
 //    implementation project(':exoplayer-library-ui')
 //    implementation project(':exoplayer-library-hls')
 //    implementation project(':exoplayer-library-smoothstreaming')
 
-    implementation 'com.google.android.exoplayer:extension-okhttp:2.9.2'
+    implementation 'com.google.android.exoplayer:extension-okhttp:2.9.6'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'

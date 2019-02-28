@@ -52,4 +52,6 @@
         <attr name="subTitlePaddingRight" />
         <attr name="subTitlePaddingBottom" />
     </declare-styleable>
+
+
 </resources>

@@ -79,7 +79,7 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
             public List<VideoInfo> call() throws Exception {
                 return UtilVideosKt.
                         getAllVideoUnderCertainDirNonRecrusive
-                                (Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+Environment.DIRECTORY_MOVIES, list);
+                                (Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Environment.DIRECTORY_MOVIES, list);
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +90,7 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
                     }
                 });
         compositeDisposable.add(subscribe);
-        mAdapter = new VideoAdapter(list,this);
+        mAdapter = new VideoAdapter(list, this);
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.addItemDecoration(new VideoItemDecoration(this));
 //        binding.image.setImageBitmap(ThumbnailUtils.createVideoThumbnail(list.get(0).path,MINI_KIND));
@@ -101,15 +101,16 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
         VideoInfo info = list.get(position);
         ToastUtil.showTextShort(this, info.getName());
         Intent intent;
-        if (getIntent().getBooleanExtra(FLAG_CHOOSE_AND_RETURN_URL,false)){
+        if (getIntent().getBooleanExtra(FLAG_CHOOSE_AND_RETURN_URL, false)) {
             intent = new Intent();
-            intent.putExtra(CUSTOM_PLAYER_VIEW_URL_STRING,info.getPath());
-            setResult(RESULT_OK,intent);
-            finish();
-        }else {
-            intent = new Intent(this, CustomPlayerViewActivity.class);
             intent.putExtra(CUSTOM_PLAYER_VIEW_URL_STRING, info.getPath());
-            startActivityForResult(intent, -1);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+//            intent = new Intent(this, CustomPlayerViewActivity.class);
+//            intent.putExtra(CUSTOM_PLAYER_VIEW_URL_STRING, info.getPath());
+//            startActivityForResult(intent, -1);
+            PlayerActivity.Companion.go(this, info.getPath());
             finish();
         }
     }
@@ -127,7 +128,7 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
         @Override
         public VideoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video_info, parent, false);
-            return new VideoHolder(itemView,mListener);
+            return new VideoHolder(itemView, mListener);
         }
 
         @Override
@@ -144,10 +145,10 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
 
     static class VideoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         OnItemClickListener mListener;
-         CardView mCardView;
-         LinearLayout mLinearLayout;
-         ImageView mImageView;
-         TextView mTextView;
+        CardView mCardView;
+        LinearLayout mLinearLayout;
+        ImageView mImageView;
+        TextView mTextView;
 
         public VideoHolder(View itemView, OnItemClickListener mListener) {
             super(itemView);
@@ -159,7 +160,6 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
             mTextView = (TextView) itemView.findViewById(R.id.textView);
 
         }
-
 
 
         public void bindData(@NonNull VideoInfo videoInfo) {

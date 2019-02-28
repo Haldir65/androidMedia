@@ -57,7 +57,9 @@ import static com.harris.androidMedia.exoPlayer.SurfaceViewPlayerActivity.REQUES
 
 /**
  * Created by Harris on 2017/3/4. support swipe left or right to change the track
+ * unuseable now
  */
+
 
 public class CustomPlayerViewActivity extends AppCompatActivity {
 

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.harris.androidMedia">
+    package="com.harris.androidMedia">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false"/>
+        android:required="false" />
 
     <application
         android:name="com.harris.androidMedia.App"
@@ -27,16 +27,16 @@
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name="com.harris.androidMedia.camera2.basic.ui.SurfaceActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
 
         <activity
@@ -49,27 +49,23 @@
 
         <activity
             android:name=".camera2.Camera2MainActivity"
-            android:parentActivityName=".MainActivity"
-            />
+            android:parentActivityName=".MainActivity" />
 
-        <activity android:name=".camera2.basic.ui.Camera2BasicActivity"/>
-        <activity android:name=".camera2.basic.project.Camera2Activity"/>
-        <activity android:name=".camera2.video.Camera2VideoActivity"/>
-        <activity android:name=".camera2.raw.Camera2RawActivity"/>
+        <activity android:name=".camera2.basic.ui.Camera2BasicActivity" />
+        <activity android:name=".camera2.basic.project.Camera2Activity" />
+        <activity android:name=".camera2.video.Camera2VideoActivity" />
+        <activity android:name=".camera2.raw.Camera2RawActivity" />
         <activity
             android:name=".camera2.album.AlbumActivity"
-            android:parentActivityName=".camera2.Camera2MainActivity"
-            />
+            android:parentActivityName=".camera2.Camera2MainActivity" />
 
         <activity
             android:name=".exoPlayer.ExoPlayerMainActivity"
-            android:theme="@style/RippleSelectTheme"
-            />
+            android:theme="@style/RippleSelectTheme" />
 
         <activity
             android:name=".exoPlayer.SimpleExoPlayerViewActivity"
-            android:theme="@style/PlayerTheme"
-            />
+            android:theme="@style/PlayerTheme" />
 
         <activity
             android:name=".exoPlayer.SurfaceViewPlayerActivity"
@@ -82,52 +78,68 @@
             android:theme="@style/PlayerTheme"
 
             />
-        <activity android:name=".exoPlayer.customize.ChooseLocalVideoActivity"
-            />
+        <activity android:name=".exoPlayer.customize.ChooseLocalVideoActivity" />
 
         <activity
             android:name=".exoPlayer.customize.CustomPlayerViewActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/PlayerTheme"
-            />
+            android:theme="@style/PlayerTheme" />
 
-        <activity android:name=".mediaPlayBack.MediaPlayBackActivity"/>
+        <activity android:name=".mediaPlayBack.MediaPlayBackActivity" />
 
-        <activity android:name=".mediaPlayBack.LockScreenNotificationControl"
-            />
+        <activity android:name=".mediaPlayBack.LockScreenNotificationControl" />
 
         <activity
             android:name=".album.AlbumMainActivity"
-            android:parentActivityName=".MainActivity"
-            />
+            android:parentActivityName=".MainActivity" />
 
-        <activity android:name=".filter.CameraFilterActivity"/>
+        <activity android:name=".filter.CameraFilterActivity" />
 
-        <activity android:name=".filter.PictureFilterActivity"/>
-        <activity android:name=".ijkPlayers.IjkPlayerDemoActivity"/>
+        <activity android:name=".filter.PictureFilterActivity" />
+        <activity android:name=".ijkPlayers.IjkPlayerDemoActivity" />
         <activity android:name=".mediaCodec.CodecMainActivity" />
-        <activity android:name=".mediaCodec.H256VideoPlayerActivity"
+
+
+        <activity
+            android:name=".mediaCodec.H256VideoPlayerActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/PlayerTheme"
-            />
+            android:theme="@style/PlayerTheme" />
         <activity android:name=".mediaCodec.CameraToMpegTestActivity" />
 
 
-        <service android:name=".mediaPlayBack.MediaPlayerService"/>
+        <activity
+            android:name=".exoPlayer.customize.PlayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:launchMode="singleTop"
+            android:theme="@style/PlayerTheme">
+            <intent-filter>
+                <action android:name="com.me.harris.androidMedia.exoplayer.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.me.harris.androidMedia.exoplayer.action.VIEW_LIST"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+
+        <!--start of services-->
+
+        <service android:name=".mediaPlayBack.MediaPlayerService" />
 
         <service
             android:name=".mediaPlayBack.MediaPlaybackService"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService"/>
+                <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
 
-        <service android:name="com.harris.starry.ijkplayer.widget.MediaPlayerService"
+        <service
+            android:name="com.harris.starry.ijkplayer.widget.MediaPlayerService"
             android:enabled="true"
-            android:exported="true"
-            />
+            android:exported="true" />
 
 
     </application>

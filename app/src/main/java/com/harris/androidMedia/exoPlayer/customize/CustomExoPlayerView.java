@@ -1,5 +1,6 @@
 package com.harris.androidMedia.exoPlayer.customize;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -7,6 +8,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.PlaybackPreparer;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -28,10 +31,9 @@ import com.google.android.exoplayer2.text.TextRenderer;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SubtitleView;
+import com.google.android.exoplayer2.ui.spherical.SphericalSurfaceView;
+import com.google.android.exoplayer2.util.Assertions;
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.util.AudioUtil;
-import com.harris.androidMedia.util.LogUtil;
-import com.harris.androidMedia.util.Utils;
 
 import java.util.List;
 
@@ -69,7 +71,7 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
 
     public CustomExoPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        boolean useTextureView = false;
+        boolean useTextureView = true;
         int resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT;
         int rewindMs = CustomPlaybackControlView.DEFAULT_REWIND_MS;
         int fastForwardMs = CustomPlaybackControlView.DEFAULT_FAST_FORWARD_MS;
@@ -93,14 +95,14 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
             }
             LayoutInflater.from(context).inflate(R.layout.exo_simple_player_view, this);
             componentListener = new CustomExoPlayerView.ComponentListener();
-            layout = (AspectRatioFrameLayout) findViewById(R.id.video_frame);
-            controlView = (ImageView) findViewById(R.id.play);
+            layout = findViewById(R.id.video_frame);
+            controlView = findViewById(R.id.play);
             layout.setResizeMode(resizeMode);
             shutterView = findViewById(R.id.shutter);
-            subtitleLayout = (SubtitleView) findViewById(R.id.subtitles);
+            subtitleLayout = findViewById(R.id.subtitles);
             subtitleLayout.setUserDefaultStyle();
             subtitleLayout.setUserDefaultTextSize();
-            controller = (CustomPlaybackControlView) findViewById(R.id.control);
+            controller = findViewById(R.id.control);
             controller.hide();
             controller.setRewindIncrementMs(rewindMs);
             controller.setFastForwardIncrementMs(fastForwardMs);
@@ -231,6 +233,17 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
         controller.setVisibilityListener(listener);
     }
 
+
+    /**
+     * Sets the {@link PlaybackPreparer}.
+     *
+     * @param playbackPreparer The {@link PlaybackPreparer}.
+     */
+    public void setPlaybackPreparer(@Nullable PlaybackPreparer playbackPreparer) {
+        Assertions.checkState(controller != null);
+        controller.setPlaybackPreparer(playbackPreparer);
+    }
+
     /**
      * Sets the rewind increment in milliseconds.
      *
@@ -259,6 +272,50 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
         return surfaceView;
     }
 
+    public void onResume(){
+        if (surfaceView instanceof SphericalSurfaceView) {
+            ((SphericalSurfaceView) surfaceView).onResume();
+        }
+    }
+
+    public void onPause() {
+        if (surfaceView instanceof SphericalSurfaceView) {
+            ((SphericalSurfaceView) surfaceView).onPause();
+        }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (player != null && player.isPlayingAd()) {
+            return super.dispatchKeyEvent(event);
+        }
+        boolean isDpadWhenControlHidden =
+                isDpadKey(event.getKeyCode()) && useController && !controller.isVisible();
+        boolean handled =
+                isDpadWhenControlHidden || dispatchMediaKeyEvent(event) || super.dispatchKeyEvent(event);
+        if (handled) {
+            maybeShowController(true);
+        }
+        return handled;
+    }
+
+    public boolean dispatchMediaKeyEvent(KeyEvent event) {
+        return useController && controller.dispatchMediaKeyEvent(event);
+    }
+
+    @SuppressLint("InlinedApi")
+    private boolean isDpadKey(int keyCode) {
+        return keyCode == KeyEvent.KEYCODE_DPAD_UP
+                || keyCode == KeyEvent.KEYCODE_DPAD_UP_RIGHT
+                || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
+                || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_RIGHT
+                || keyCode == KeyEvent.KEYCODE_DPAD_DOWN
+                || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_LEFT
+                || keyCode == KeyEvent.KEYCODE_DPAD_LEFT
+                || keyCode == KeyEvent.KEYCODE_DPAD_UP_LEFT
+                || keyCode == KeyEvent.KEYCODE_DPAD_CENTER;
+    }
+
 
 
     @Override
@@ -272,87 +329,85 @@ public class CustomExoPlayerView extends FrameLayout implements CustomPlaybackCo
 
 
 
-
-
     float currentVolumeY = 0;
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (player != null) {
-            /*int playbackState = player.getPlaybackState();
-            boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
-                    || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
-            if (showIndefinitely) {
-                controller.show();
-            }*/
-            Context context = getContext();
-            if (screenWidth == 0) {
-                screenWidth = Utils.getScreenWidth(context);
-            }
-            if (screenHeight == 0) {
-                screenWidth = Utils.getScreenHeight(context);
-            }
-
-            ExoPlayer player = controller.getPlayer();
-            switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    currentX = ev.getX();
-                    currentVolumeY = currentY = ev.getY();
-                    if (!player.getPlayWhenReady()) {
-                        controller.hide();
-                        player.setPlayWhenReady(true);
-                    } else {
-                        controller.show();
-                    }
-                    controller.curPosition = player.getCurrentPosition();
-                    return true; // critical , only in this way can we accept ongoing events
-                case MotionEvent.ACTION_MOVE:
-                    float x = ev.getX();
-                    float y = ev.getY();
-                    if (Math.abs(x - currentX) >= Math.abs(y - currentY)) {
-                        if (x - currentX > 0) {
-                            controller.fastFoward((long) ((x - currentX) * player.getDuration() / screenWidth));
-                        } else {
-                            controller.rewind((long) ((currentX - x) * player.getDuration() / screenWidth));
-                        }
-                        LogUtil.d("this is horizontal scroll"+(x - currentX));
-                    } else {
-                        // TODO: 2019/2/26 use simpleMexoplayer setVolume instead of framework api
-                        LogUtil.d("this is vertical scroll"+(y - currentY));// y-currentY < 0 手指往上走
-                        float VERTICAL_THRESHHOLD = screenHeight;
-                        if (Math.abs(y - currentVolumeY) > 0) {
-                            if (y < currentVolumeY) { //手指往上走，调大音量
-                                int CurVolume = AudioUtil.getInstance(context).getMediaVolume();
-                                int MaxVolume = AudioUtil.getInstance(context).getMediaMaxVolume();
-                                if (CurVolume < MaxVolume) {
-                                    AudioUtil.getInstance(context).setMediaVolume((CurVolume + 1) > MaxVolume ? MaxVolume : CurVolume + 1);
-                                }
-                                currentVolumeY+=VERTICAL_THRESHHOLD;
-                                LogUtil.d("CurVolume " + CurVolume + " MaxV" + MaxVolume);
-                            } else {
-                                int CurVolume = AudioUtil.getInstance(context).getMediaVolume();
-                                int MaxVolume = AudioUtil.getInstance(context).getMediaMaxVolume();
-                                if (CurVolume > 0) {
-                                    AudioUtil.getInstance(context).setMediaVolume((CurVolume - 1) > 0 ? CurVolume - 1 : 0);
-                                }
-                                currentVolumeY-=VERTICAL_THRESHHOLD;
-                                LogUtil.d("CurVolume " + CurVolume);
-                            }
-                        }
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    currentVolumeY= currentX = currentY = 0;
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    currentVolumeY = currentX = currentY = 0;
-                    break;
-                default:
-                    break;
-            }
-        }
-        return super.onTouchEvent(ev);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        if (player != null) {
+//            /*int playbackState = player.getPlaybackState();
+//            boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
+//                    || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
+//            if (showIndefinitely) {
+//                controller.show();
+//            }*/
+//            Context context = getContext();
+//            if (screenWidth == 0) {
+//                screenWidth = Utils.getScreenWidth(context);
+//            }
+//            if (screenHeight == 0) {
+//                screenWidth = Utils.getScreenHeight(context);
+//            }
+//
+//            ExoPlayer player = (ExoPlayer) controller.getPlayer();
+//            switch (ev.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    currentX = ev.getX();
+//                    currentVolumeY = currentY = ev.getY();
+//                    if (!player.getPlayWhenReady()) {
+//                        controller.hide();
+//                        player.setPlayWhenReady(true);
+//                    } else {
+//                        controller.show();
+//                    }
+//                    controller.curPosition = player.getCurrentPosition();
+//                    return true; // critical , only in this way can we accept ongoing events
+//                case MotionEvent.ACTION_MOVE:
+//                    float x = ev.getX();
+//                    float y = ev.getY();
+//                    if (Math.abs(x - currentX) >= Math.abs(y - currentY)) {
+//                        if (x - currentX > 0) {
+//                            controller.fastFoward((long) ((x - currentX) * player.getDuration() / screenWidth));
+//                        } else {
+//                            controller.rewind((long) ((currentX - x) * player.getDuration() / screenWidth));
+//                        }
+//                        LogUtil.d("this is horizontal scroll"+(x - currentX));
+//                    } else {
+//                        // TODO: 2019/2/26 use simpleMexoplayer setVolume instead of framework api
+//                        LogUtil.d("this is vertical scroll"+(y - currentY));// y-currentY < 0 手指往上走
+//                        float VERTICAL_THRESHHOLD = screenHeight;
+//                        if (Math.abs(y - currentVolumeY) > 0) {
+//                            if (y < currentVolumeY) { //手指往上走，调大音量
+//                                int CurVolume = AudioUtil.getInstance(context).getMediaVolume();
+//                                int MaxVolume = AudioUtil.getInstance(context).getMediaMaxVolume();
+//                                if (CurVolume < MaxVolume) {
+//                                    AudioUtil.getInstance(context).setMediaVolume((CurVolume + 1) > MaxVolume ? MaxVolume : CurVolume + 1);
+//                                }
+//                                currentVolumeY+=VERTICAL_THRESHHOLD;
+//                                LogUtil.d("CurVolume " + CurVolume + " MaxV" + MaxVolume);
+//                            } else {
+//                                int CurVolume = AudioUtil.getInstance(context).getMediaVolume();
+//                                int MaxVolume = AudioUtil.getInstance(context).getMediaMaxVolume();
+//                                if (CurVolume > 0) {
+//                                    AudioUtil.getInstance(context).setMediaVolume((CurVolume - 1) > 0 ? CurVolume - 1 : 0);
+//                                }
+//                                currentVolumeY-=VERTICAL_THRESHHOLD;
+//                                LogUtil.d("CurVolume " + CurVolume);
+//                            }
+//                        }
+//                    }
+//                    break;
+//                case MotionEvent.ACTION_UP:
+//                    currentVolumeY= currentX = currentY = 0;
+//                    break;
+//                case MotionEvent.ACTION_CANCEL:
+//                    currentVolumeY = currentX = currentY = 0;
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//        return super.onTouchEvent(ev);
+//    }
 
 
 

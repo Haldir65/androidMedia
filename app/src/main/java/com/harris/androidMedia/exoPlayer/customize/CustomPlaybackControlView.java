@@ -1,44 +1,55 @@
 package com.harris.androidMedia.exoPlayer.customize;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.os.Looper;
 import android.os.SystemClock;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
+import com.google.android.exoplayer2.PlaybackPreparer;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.ui.PlayerControlView;
+import com.google.android.exoplayer2.ui.TimeBar;
+import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.RepeatModeUtil;
 import com.google.android.exoplayer2.util.Util;
 import com.harris.androidMedia.R;
 
+
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
 /**
  * Created by Harris on 2017/2/25.
+ *  update : copy paste from exoplayer.ui.PlayerControlView, just change the name
  */
 
 public class CustomPlaybackControlView extends FrameLayout {
 
     private static final String TAG = "CustomVideoPlaybackCont";
 
-    /**
-     * Listener to be notified about changes of the visibility of the UI control.
-     */
+    static {
+        ExoPlayerLibraryInfo.registerModule("goog.exo.ui");
+    }
+
+    /** Listener to be notified about changes of the visibility of the UI control. */
     public interface VisibilityListener {
+
         /**
          * Called when the visibility changes.
          *
@@ -47,97 +58,200 @@ public class CustomPlaybackControlView extends FrameLayout {
         void onVisibilityChange(int visibility);
     }
 
+    /** The default fast forward increment, in milliseconds. */
     public static final int DEFAULT_FAST_FORWARD_MS = 15000;
-    public static final int DEFAULT_REWIND_MS = 15000;
+    /** The default rewind increment, in milliseconds. */
+    public static final int DEFAULT_REWIND_MS = 5000;
+    /** The default show timeout, in milliseconds. */
     public static final int DEFAULT_SHOW_TIMEOUT_MS = 5000;
+    /** The default repeat toggle modes. */
+    public static final @RepeatModeUtil.RepeatToggleModes int DEFAULT_REPEAT_TOGGLE_MODES =
+            RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE;
 
-    private static final int PROGRESS_BAR_MAX = 1000;
+    /** The maximum number of windows that can be shown in a multi-window time bar. */
+    public static final int MAX_WINDOWS_FOR_MULTI_WINDOW_TIME_BAR = 100;
+
     private static final long MAX_POSITION_FOR_SEEK_TO_PREVIOUS = 3000;
 
     private final CustomPlaybackControlView.ComponentListener componentListener;
-    private final ImageView playButton;
-    private final TextView timeCurrent;
-    public final SeekBar progressBar;
+    private final View previousButton;
+    private final View nextButton;
+    private final View playButton;
+    private final View pauseButton;
+    private final View fastForwardButton;
+    private final View rewindButton;
+    private final ImageView repeatToggleButton;
+    private final View shuffleButton;
+    private final TextView durationView;
+    private final TextView positionView;
+    private final TimeBar timeBar;
     private final StringBuilder formatBuilder;
     private final Formatter formatter;
-    private final Timeline.Window currentWindow;
+    private final Timeline.Period period;
+    private final Timeline.Window window;
+    private final Runnable updateProgressAction;
+    private final Runnable hideAction;
 
-    private ExoPlayer player;
+    private final Drawable repeatOffButtonDrawable;
+    private final Drawable repeatOneButtonDrawable;
+    private final Drawable repeatAllButtonDrawable;
+    private final String repeatOffButtonContentDescription;
+    private final String repeatOneButtonContentDescription;
+    private final String repeatAllButtonContentDescription;
+
+    private Player player;
+    private com.google.android.exoplayer2.ControlDispatcher controlDispatcher;
     private CustomPlaybackControlView.VisibilityListener visibilityListener;
+    private @Nullable PlaybackPreparer playbackPreparer;
 
     private boolean isAttachedToWindow;
-    private boolean dragging;
-    public int rewindMs;
-    public int fastForwardMs;
+    private boolean showMultiWindowTimeBar;
+    private boolean multiWindowTimeBar;
+    private boolean scrubbing;
+    private int rewindMs;
+    private int fastForwardMs;
     private int showTimeoutMs;
+    private @RepeatModeUtil.RepeatToggleModes int repeatToggleModes;
+    private boolean showShuffleButton;
     private long hideAtMs;
-    long curPosition;
+    private long[] adGroupTimesMs;
+    private boolean[] playedAdGroups;
+    private long[] extraAdGroupTimesMs;
+    private boolean[] extraPlayedAdGroups;
 
-    private final Runnable updateProgressAction = new Runnable() {
-        @Override
-        public void run() {
-            updateProgress();
-        }
-    };
-
-    private final Runnable hideAction = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-
-    public CustomPlaybackControlView(@NonNull Context context) {
+    public CustomPlaybackControlView(Context context) {
         this(context, null);
     }
 
-    public CustomPlaybackControlView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CustomPlaybackControlView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CustomPlaybackControlView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public CustomPlaybackControlView(Context context, AttributeSet attrs, int defStyleAttr) {
+        this(context, attrs, defStyleAttr, attrs);
+    }
+
+    public CustomPlaybackControlView(
+            Context context, AttributeSet attrs, int defStyleAttr, AttributeSet playbackAttrs) {
         super(context, attrs, defStyleAttr);
+//        int controllerLayoutId = com.google.android.exoplayer2.ui.R.layout.exo_player_control_view;
+        int controllerLayoutId = com.harris.androidMedia.R.layout.exo_playback_control_view_copy;
         rewindMs = DEFAULT_REWIND_MS;
         fastForwardMs = DEFAULT_FAST_FORWARD_MS;
         showTimeoutMs = DEFAULT_SHOW_TIMEOUT_MS;
-        if (attrs != null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                    R.styleable.PlayerControlView, 0, 0);
+        repeatToggleModes = DEFAULT_REPEAT_TOGGLE_MODES;
+        hideAtMs = C.TIME_UNSET;
+        showShuffleButton = false;
+        if (playbackAttrs != null) {
+            TypedArray a =
+                    context
+                            .getTheme()
+                            .obtainStyledAttributes(playbackAttrs, com.google.android.exoplayer2.ui.R.styleable.PlayerControlView, 0, 0);
             try {
-                rewindMs = a.getInt(R.styleable.PlayerControlView_rewind_increment, rewindMs);
-                fastForwardMs = a.getInt(R.styleable.PlayerControlView_fastforward_increment,
-                        fastForwardMs);
-                showTimeoutMs = a.getInt(R.styleable.PlayerControlView_show_timeout, showTimeoutMs);
+                rewindMs = a.getInt(com.google.android.exoplayer2.ui.R.styleable.PlayerControlView_rewind_increment, rewindMs);
+                fastForwardMs =
+                        a.getInt(com.google.android.exoplayer2.ui.R.styleable.PlayerControlView_fastforward_increment, fastForwardMs);
+                showTimeoutMs = a.getInt(com.google.android.exoplayer2.ui.R.styleable.PlayerControlView_show_timeout, showTimeoutMs);
+                controllerLayoutId =
+                        a.getResourceId(com.google.android.exoplayer2.ui.R.styleable.PlayerControlView_controller_layout_id, controllerLayoutId);
+                repeatToggleModes = getRepeatToggleModes(a, repeatToggleModes);
+                showShuffleButton =
+                        a.getBoolean(com.google.android.exoplayer2.ui.R.styleable.PlayerControlView_show_shuffle_button, showShuffleButton);
             } finally {
                 a.recycle();
             }
         }
-        currentWindow = new Timeline.Window();
+        period = new Timeline.Period();
+        window = new Timeline.Window();
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
+        adGroupTimesMs = new long[0];
+        playedAdGroups = new boolean[0];
+        extraAdGroupTimesMs = new long[0];
+        extraPlayedAdGroups = new boolean[0];
         componentListener = new CustomPlaybackControlView.ComponentListener();
-        LayoutInflater.from(context).inflate(R.layout.exo_playback_control_view, this);
-        timeCurrent = (TextView) findViewById(R.id.time_current);
-        progressBar = (SeekBar) findViewById(R.id.mediacontroller_progress);
-        progressBar.setOnSeekBarChangeListener(componentListener);
-        progressBar.setMax(PROGRESS_BAR_MAX);
-        playButton = (ImageView) findViewById(R.id.play);
-        playButton.setOnClickListener(componentListener);
+        controlDispatcher = new com.google.android.exoplayer2.DefaultControlDispatcher();
+        updateProgressAction = this::updateProgress;
+        hideAction = this::hide;
+
+        LayoutInflater.from(context).inflate(controllerLayoutId, this);
+        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+
+        durationView = findViewById(com.google.android.exoplayer2.ui.R.id.exo_duration);
+        positionView = findViewById(com.google.android.exoplayer2.ui.R.id.exo_position);
+        timeBar = findViewById(com.google.android.exoplayer2.ui.R.id.exo_progress);
+        if (timeBar != null) {
+            timeBar.addListener(componentListener);
+        }
+        playButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_play);
+        if (playButton != null) {
+            playButton.setOnClickListener(componentListener);
+        }
+        pauseButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_pause);
+        if (pauseButton != null) {
+            pauseButton.setOnClickListener(componentListener);
+        }
+        previousButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_prev);
+        if (previousButton != null) {
+            previousButton.setOnClickListener(componentListener);
+        }
+        nextButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_next);
+        if (nextButton != null) {
+            nextButton.setOnClickListener(componentListener);
+        }
+        rewindButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_rew);
+        if (rewindButton != null) {
+            rewindButton.setOnClickListener(componentListener);
+        }
+        fastForwardButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_ffwd);
+        if (fastForwardButton != null) {
+            fastForwardButton.setOnClickListener(componentListener);
+        }
+        repeatToggleButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_repeat_toggle);
+        if (repeatToggleButton != null) {
+            repeatToggleButton.setOnClickListener(componentListener);
+        }
+        shuffleButton = findViewById(com.google.android.exoplayer2.ui.R.id.exo_shuffle);
+        if (shuffleButton != null) {
+            shuffleButton.setOnClickListener(componentListener);
+        }
+        Resources resources = context.getResources();
+        repeatOffButtonDrawable = resources.getDrawable(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_off);
+        repeatOneButtonDrawable = resources.getDrawable(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_one);
+        repeatAllButtonDrawable = resources.getDrawable(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_all);
+        repeatOffButtonContentDescription =
+                resources.getString(com.google.android.exoplayer2.ui.R.string.exo_controls_repeat_off_description);
+        repeatOneButtonContentDescription =
+                resources.getString(com.google.android.exoplayer2.ui.R.string.exo_controls_repeat_one_description);
+        repeatAllButtonContentDescription =
+                resources.getString(com.google.android.exoplayer2.ui.R.string.exo_controls_repeat_all_description);
+    }
+
+    @SuppressWarnings("ResourceType")
+    private static @RepeatModeUtil.RepeatToggleModes int getRepeatToggleModes(
+            TypedArray a, @RepeatModeUtil.RepeatToggleModes int repeatToggleModes) {
+        return a.getInt(com.google.android.exoplayer2.ui.R.styleable.PlayerControlView_repeat_toggle_modes, repeatToggleModes);
     }
 
     /**
-     * Returns the player currently being controlled by this view, or null if no player is set.
+     * Returns the {@link Player} currently being controlled by this view, or null if no player is
+     * set.
      */
-    public ExoPlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
     /**
-     * Sets the {@link ExoPlayer} to control.
+     * Sets the {@link Player} to control.
      *
-     * @param player the {@code ExoPlayer} to control.
+     * @param player The {@link Player} to control, or {@code null} to detach the current player. Only
+     *     players which are accessed on the main thread are supported ({@code
+     *     player.getApplicationLooper() == Looper.getMainLooper()}).
      */
-    public void setPlayer(ExoPlayer player) {
+    public void setPlayer(@Nullable Player player) {
+        Assertions.checkState(Looper.myLooper() == Looper.getMainLooper());
+        Assertions.checkArgument(
+                player == null || player.getApplicationLooper() == Looper.getMainLooper());
         if (this.player == player) {
             return;
         }
@@ -152,7 +266,43 @@ public class CustomPlaybackControlView extends FrameLayout {
     }
 
     /**
-     * Sets the {@link CustomPlaybackControlView.VisibilityListener}.
+     * Sets whether the time bar should show all windows, as opposed to just the current one. If the
+     * timeline has a period with unknown duration or more than {@link
+     * #MAX_WINDOWS_FOR_MULTI_WINDOW_TIME_BAR} windows the time bar will fall back to showing a single
+     * window.
+     *
+     * @param showMultiWindowTimeBar Whether the time bar should show all windows.
+     */
+    public void setShowMultiWindowTimeBar(boolean showMultiWindowTimeBar) {
+        this.showMultiWindowTimeBar = showMultiWindowTimeBar;
+        updateTimeBarMode();
+    }
+
+    /**
+     * Sets the millisecond positions of extra ad markers relative to the start of the window (or
+     * timeline, if in multi-window mode) and whether each extra ad has been played or not. The
+     * markers are shown in addition to any ad markers for ads in the player's timeline.
+     *
+     * @param extraAdGroupTimesMs The millisecond timestamps of the extra ad markers to show, or
+     *     {@code null} to show no extra ad markers.
+     * @param extraPlayedAdGroups Whether each ad has been played, or {@code null} to show no extra ad
+     *     markers.
+     */
+    public void setExtraAdGroupMarkers(
+            @Nullable long[] extraAdGroupTimesMs, @Nullable boolean[] extraPlayedAdGroups) {
+        if (extraAdGroupTimesMs == null) {
+            this.extraAdGroupTimesMs = new long[0];
+            this.extraPlayedAdGroups = new boolean[0];
+        } else {
+            Assertions.checkArgument(extraAdGroupTimesMs.length == extraPlayedAdGroups.length);
+            this.extraAdGroupTimesMs = extraAdGroupTimesMs;
+            this.extraPlayedAdGroups = extraPlayedAdGroups;
+        }
+        updateProgress();
+    }
+
+    /**
+     * Sets the {@link PlayerControlView.VisibilityListener}.
      *
      * @param listener The listener to be notified about visibility changes.
      */
@@ -161,9 +311,33 @@ public class CustomPlaybackControlView extends FrameLayout {
     }
 
     /**
+     * Sets the {@link PlaybackPreparer}.
+     *
+     * @param playbackPreparer The {@link PlaybackPreparer}.
+     */
+    public void setPlaybackPreparer(@Nullable PlaybackPreparer playbackPreparer) {
+        this.playbackPreparer = playbackPreparer;
+    }
+
+    /**
+     * Sets the {@link com.google.android.exoplayer2.ControlDispatcher}.
+     *
+     * @param controlDispatcher The {@link com.google.android.exoplayer2.ControlDispatcher}, or null
+     *     to use {@link com.google.android.exoplayer2.DefaultControlDispatcher}.
+     */
+    public void setControlDispatcher(
+            @Nullable com.google.android.exoplayer2.ControlDispatcher controlDispatcher) {
+        this.controlDispatcher =
+                controlDispatcher == null
+                        ? new com.google.android.exoplayer2.DefaultControlDispatcher()
+                        : controlDispatcher;
+    }
+
+    /**
      * Sets the rewind increment in milliseconds.
      *
-     * @param rewindMs The rewind increment in milliseconds.
+     * @param rewindMs The rewind increment in milliseconds. A non-positive value will cause the
+     *     rewind button to be disabled.
      */
     public void setRewindIncrementMs(int rewindMs) {
         this.rewindMs = rewindMs;
@@ -173,7 +347,8 @@ public class CustomPlaybackControlView extends FrameLayout {
     /**
      * Sets the fast forward increment in milliseconds.
      *
-     * @param fastForwardMs The fast forward increment in milliseconds.
+     * @param fastForwardMs The fast forward increment in milliseconds. A non-positive value will
+     *     cause the fast forward button to be disabled.
      */
     public void setFastForwardIncrementMs(int fastForwardMs) {
         this.fastForwardMs = fastForwardMs;
@@ -185,7 +360,7 @@ public class CustomPlaybackControlView extends FrameLayout {
      * this duration of time has elapsed without user input.
      *
      * @return The duration in milliseconds. A non-positive value indicates that the controls will
-     * remain visible indefinitely.
+     *     remain visible indefinitely.
      */
     public int getShowTimeoutMs() {
         return showTimeoutMs;
@@ -196,10 +371,61 @@ public class CustomPlaybackControlView extends FrameLayout {
      * duration of time has elapsed without user input.
      *
      * @param showTimeoutMs The duration in milliseconds. A non-positive value will cause the controls
-     *                      to remain visible indefinitely.
+     *     to remain visible indefinitely.
      */
     public void setShowTimeoutMs(int showTimeoutMs) {
         this.showTimeoutMs = showTimeoutMs;
+        if (isVisible()) {
+            // Reset the timeout.
+            hideAfterTimeout();
+        }
+    }
+
+    /**
+     * Returns which repeat toggle modes are enabled.
+     *
+     * @return The currently enabled {@link RepeatModeUtil.RepeatToggleModes}.
+     */
+    public @RepeatModeUtil.RepeatToggleModes int getRepeatToggleModes() {
+        return repeatToggleModes;
+    }
+
+    /**
+     * Sets which repeat toggle modes are enabled.
+     *
+     * @param repeatToggleModes A set of {@link RepeatModeUtil.RepeatToggleModes}.
+     */
+    public void setRepeatToggleModes(@RepeatModeUtil.RepeatToggleModes int repeatToggleModes) {
+        this.repeatToggleModes = repeatToggleModes;
+        if (player != null) {
+            @Player.RepeatMode int currentMode = player.getRepeatMode();
+            if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE
+                    && currentMode != Player.REPEAT_MODE_OFF) {
+                controlDispatcher.dispatchSetRepeatMode(player, Player.REPEAT_MODE_OFF);
+            } else if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_ONE
+                    && currentMode == Player.REPEAT_MODE_ALL) {
+                controlDispatcher.dispatchSetRepeatMode(player, Player.REPEAT_MODE_ONE);
+            } else if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_ALL
+                    && currentMode == Player.REPEAT_MODE_ONE) {
+                controlDispatcher.dispatchSetRepeatMode(player, Player.REPEAT_MODE_ALL);
+            }
+        }
+        updateRepeatModeButton();
+    }
+
+    /** Returns whether the shuffle button is shown. */
+    public boolean getShowShuffleButton() {
+        return showShuffleButton;
+    }
+
+    /**
+     * Sets whether the shuffle button is shown.
+     *
+     * @param showShuffleButton Whether the shuffle button is shown.
+     */
+    public void setShowShuffleButton(boolean showShuffleButton) {
+        this.showShuffleButton = showShuffleButton;
+        updateShuffleButton();
     }
 
     /**
@@ -213,14 +439,13 @@ public class CustomPlaybackControlView extends FrameLayout {
                 visibilityListener.onVisibilityChange(getVisibility());
             }
             updateAll();
+            requestPlayPauseFocus();
         }
         // Call hideAfterTimeout even if already visible to reset the timeout.
         hideAfterTimeout();
     }
 
-    /**
-     * Hides the controller.
-     */
+    /** Hides the controller. */
     public void hide() {
         if (isVisible()) {
             setVisibility(GONE);
@@ -233,9 +458,7 @@ public class CustomPlaybackControlView extends FrameLayout {
         }
     }
 
-    /**
-     * Returns whether the controller is currently visible.
-     */
+    /** Returns whether the controller is currently visible. */
     public boolean isVisible() {
         return getVisibility() == VISIBLE;
     }
@@ -255,6 +478,8 @@ public class CustomPlaybackControlView extends FrameLayout {
     private void updateAll() {
         updatePlayPauseButton();
         updateNavigation();
+        updateRepeatModeButton();
+        updateShuffleButton();
         updateProgress();
     }
 
@@ -262,58 +487,202 @@ public class CustomPlaybackControlView extends FrameLayout {
         if (!isVisible() || !isAttachedToWindow) {
             return;
         }
-        boolean playing = player != null && player.getPlayWhenReady();
-        String contentDescription = getResources().getString(
-                playing ? R.string.exo_controls_pause_description :R.string.exo_controls_play_description);
-        playButton.setContentDescription(contentDescription);
-        playButton.setImageResource(
-                playing ? R.drawable.pausecontrol : R.drawable.playcontrol);
+        boolean requestPlayPauseFocus = false;
+        boolean playing = isPlaying();
+        if (playButton != null) {
+            requestPlayPauseFocus |= playing && playButton.isFocused();
+            playButton.setVisibility(playing ? View.GONE : View.VISIBLE);
+        }
+        if (pauseButton != null) {
+            requestPlayPauseFocus |= !playing && pauseButton.isFocused();
+            pauseButton.setVisibility(!playing ? View.GONE : View.VISIBLE);
+        }
+        if (requestPlayPauseFocus) {
+            requestPlayPauseFocus();
+        }
     }
 
     private void updateNavigation() {
-        /*if (!isVisible() || !isAttachedToWindow) {
+        if (!isVisible() || !isAttachedToWindow) {
             return;
         }
-        Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
-        boolean haveTimeline = currentTimeline != null;
+        Timeline timeline = player != null ? player.getCurrentTimeline() : null;
+        boolean haveNonEmptyTimeline = timeline != null && !timeline.isEmpty();
         boolean isSeekable = false;
         boolean enablePrevious = false;
         boolean enableNext = false;
-        if (haveTimeline) {
-            int currentWindowIndex = player.getCurrentWindowIndex();
-            currentTimeline.getWindow(currentWindowIndex, currentWindow);
-            isSeekable = currentWindow.isSeekable;
-            enablePrevious = currentWindowIndex > 0 || isSeekable || !currentWindow.isDynamic;
-            enableNext = (currentWindowIndex < currentTimeline.getWindowCount() - 1)
-                    || currentWindow.isDynamic;
+        if (haveNonEmptyTimeline && !player.isPlayingAd()) {
+            int windowIndex = player.getCurrentWindowIndex();
+            timeline.getWindow(windowIndex, window);
+            isSeekable = window.isSeekable;
+            enablePrevious = isSeekable || !window.isDynamic || player.hasPrevious();
+            enableNext = window.isDynamic || player.hasNext();
         }
-        progressBar.setEnabled(isSeekable);*/
+        setButtonEnabled(enablePrevious, previousButton);
+        setButtonEnabled(enableNext, nextButton);
+        setButtonEnabled(fastForwardMs > 0 && isSeekable, fastForwardButton);
+        setButtonEnabled(rewindMs > 0 && isSeekable, rewindButton);
+        if (timeBar != null) {
+            timeBar.setEnabled(isSeekable);
+        }
+    }
+
+    private void updateRepeatModeButton() {
+        if (!isVisible() || !isAttachedToWindow || repeatToggleButton == null) {
+            return;
+        }
+        if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE) {
+            repeatToggleButton.setVisibility(View.GONE);
+            return;
+        }
+        if (player == null) {
+            setButtonEnabled(false, repeatToggleButton);
+            return;
+        }
+        setButtonEnabled(true, repeatToggleButton);
+        switch (player.getRepeatMode()) {
+            case Player.REPEAT_MODE_OFF:
+                repeatToggleButton.setImageDrawable(repeatOffButtonDrawable);
+                repeatToggleButton.setContentDescription(repeatOffButtonContentDescription);
+                break;
+            case Player.REPEAT_MODE_ONE:
+                repeatToggleButton.setImageDrawable(repeatOneButtonDrawable);
+                repeatToggleButton.setContentDescription(repeatOneButtonContentDescription);
+                break;
+            case Player.REPEAT_MODE_ALL:
+                repeatToggleButton.setImageDrawable(repeatAllButtonDrawable);
+                repeatToggleButton.setContentDescription(repeatAllButtonContentDescription);
+                break;
+            default:
+                // Never happens.
+        }
+        repeatToggleButton.setVisibility(View.VISIBLE);
+    }
+
+    private void updateShuffleButton() {
+        if (!isVisible() || !isAttachedToWindow || shuffleButton == null) {
+            return;
+        }
+        if (!showShuffleButton) {
+            shuffleButton.setVisibility(View.GONE);
+        } else if (player == null) {
+            setButtonEnabled(false, shuffleButton);
+        } else {
+            shuffleButton.setAlpha(player.getShuffleModeEnabled() ? 1f : 0.3f);
+            shuffleButton.setEnabled(true);
+            shuffleButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updateTimeBarMode() {
+        if (player == null) {
+            return;
+        }
+        multiWindowTimeBar =
+                showMultiWindowTimeBar && canShowMultiWindowTimeBar(player.getCurrentTimeline(), window);
     }
 
     private void updateProgress() {
         if (!isVisible() || !isAttachedToWindow) {
             return;
         }
-        long duration = player == null ? 0 : player.getDuration();
-        long position = player == null ? 0 : player.getCurrentPosition();
-        if (!dragging) {
-            timeCurrent.setText(stringForTime(position));
+
+        long position = 0;
+        long bufferedPosition = 0;
+        long duration = 0;
+        if (player != null) {
+            long currentWindowTimeBarOffsetMs = 0;
+            long durationUs = 0;
+            int adGroupCount = 0;
+            Timeline timeline = player.getCurrentTimeline();
+            if (!timeline.isEmpty()) {
+                int currentWindowIndex = player.getCurrentWindowIndex();
+                int firstWindowIndex = multiWindowTimeBar ? 0 : currentWindowIndex;
+                int lastWindowIndex =
+                        multiWindowTimeBar ? timeline.getWindowCount() - 1 : currentWindowIndex;
+                for (int i = firstWindowIndex; i <= lastWindowIndex; i++) {
+                    if (i == currentWindowIndex) {
+                        currentWindowTimeBarOffsetMs = C.usToMs(durationUs);
+                    }
+                    timeline.getWindow(i, window);
+                    if (window.durationUs == C.TIME_UNSET) {
+                        Assertions.checkState(!multiWindowTimeBar);
+                        break;
+                    }
+                    for (int j = window.firstPeriodIndex; j <= window.lastPeriodIndex; j++) {
+                        timeline.getPeriod(j, period);
+                        int periodAdGroupCount = period.getAdGroupCount();
+                        for (int adGroupIndex = 0; adGroupIndex < periodAdGroupCount; adGroupIndex++) {
+                            long adGroupTimeInPeriodUs = period.getAdGroupTimeUs(adGroupIndex);
+                            if (adGroupTimeInPeriodUs == C.TIME_END_OF_SOURCE) {
+                                if (period.durationUs == C.TIME_UNSET) {
+                                    // Don't show ad markers for postrolls in periods with unknown duration.
+                                    continue;
+                                }
+                                adGroupTimeInPeriodUs = period.durationUs;
+                            }
+                            long adGroupTimeInWindowUs = adGroupTimeInPeriodUs + period.getPositionInWindowUs();
+                            if (adGroupTimeInWindowUs >= 0 && adGroupTimeInWindowUs <= window.durationUs) {
+                                if (adGroupCount == adGroupTimesMs.length) {
+                                    int newLength = adGroupTimesMs.length == 0 ? 1 : adGroupTimesMs.length * 2;
+                                    adGroupTimesMs = Arrays.copyOf(adGroupTimesMs, newLength);
+                                    playedAdGroups = Arrays.copyOf(playedAdGroups, newLength);
+                                }
+                                adGroupTimesMs[adGroupCount] = C.usToMs(durationUs + adGroupTimeInWindowUs);
+                                playedAdGroups[adGroupCount] = period.hasPlayedAdGroup(adGroupIndex);
+                                adGroupCount++;
+                            }
+                        }
+                    }
+                    durationUs += window.durationUs;
+                }
+            }
+            duration = C.usToMs(durationUs);
+            position = currentWindowTimeBarOffsetMs + player.getContentPosition();
+            bufferedPosition = currentWindowTimeBarOffsetMs + player.getContentBufferedPosition();
+            if (timeBar != null) {
+                int extraAdGroupCount = extraAdGroupTimesMs.length;
+                int totalAdGroupCount = adGroupCount + extraAdGroupCount;
+                if (totalAdGroupCount > adGroupTimesMs.length) {
+                    adGroupTimesMs = Arrays.copyOf(adGroupTimesMs, totalAdGroupCount);
+                    playedAdGroups = Arrays.copyOf(playedAdGroups, totalAdGroupCount);
+                }
+                System.arraycopy(extraAdGroupTimesMs, 0, adGroupTimesMs, adGroupCount, extraAdGroupCount);
+                System.arraycopy(extraPlayedAdGroups, 0, playedAdGroups, adGroupCount, extraAdGroupCount);
+                timeBar.setAdGroupTimesMs(adGroupTimesMs, playedAdGroups, totalAdGroupCount);
+            }
         }
-        if (!dragging) {
-            progressBar.setProgress(progressBarValue(position));
+        if (durationView != null) {
+            durationView.setText(Util.getStringForTime(formatBuilder, formatter, duration));
         }
-        long bufferedPosition = player == null ? 0 : player.getBufferedPosition();
-        progressBar.setSecondaryProgress(progressBarValue(bufferedPosition));
-        // Remove scheduled updates.
+        if (positionView != null && !scrubbing) {
+            positionView.setText(Util.getStringForTime(formatBuilder, formatter, position));
+        }
+        if (timeBar != null) {
+            timeBar.setPosition(position);
+            timeBar.setBufferedPosition(bufferedPosition);
+            timeBar.setDuration(duration);
+        }
+
+        // Cancel any pending updates and schedule a new one if necessary.
         removeCallbacks(updateProgressAction);
-        // Schedule an update if necessary.
-        int playbackState = player == null ? ExoPlayer.STATE_IDLE : player.getPlaybackState();
-        if (playbackState != ExoPlayer.STATE_IDLE && playbackState != ExoPlayer.STATE_ENDED) {
+        int playbackState = player == null ? Player.STATE_IDLE : player.getPlaybackState();
+        if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED) {
             long delayMs;
-            if (player.getPlayWhenReady() && playbackState == ExoPlayer.STATE_READY) {
-                delayMs = 1000 - (position % 1000);
-                if (delayMs < 200) {
-                    delayMs += 1000;
+            if (player.getPlayWhenReady() && playbackState == Player.STATE_READY) {
+                float playbackSpeed = player.getPlaybackParameters().speed;
+                if (playbackSpeed <= 0.1f) {
+                    delayMs = 1000;
+                } else if (playbackSpeed <= 5f) {
+                    long mediaTimeUpdatePeriodMs = 1000 / Math.max(1, Math.round(1 / playbackSpeed));
+                    long mediaTimeDelayMs = mediaTimeUpdatePeriodMs - (position % mediaTimeUpdatePeriodMs);
+                    if (mediaTimeDelayMs < (mediaTimeUpdatePeriodMs / 5)) {
+                        mediaTimeDelayMs += mediaTimeUpdatePeriodMs;
+                    }
+                    delayMs =
+                            playbackSpeed == 1 ? mediaTimeDelayMs : (long) (mediaTimeDelayMs / playbackSpeed);
+                } else {
+                    delayMs = 200;
                 }
             } else {
                 delayMs = 1000;
@@ -322,93 +691,109 @@ public class CustomPlaybackControlView extends FrameLayout {
         }
     }
 
+    private void requestPlayPauseFocus() {
+        boolean playing = isPlaying();
+        if (!playing && playButton != null) {
+            playButton.requestFocus();
+        } else if (playing && pauseButton != null) {
+            pauseButton.requestFocus();
+        }
+    }
+
     private void setButtonEnabled(boolean enabled, View view) {
+        if (view == null) {
+            return;
+        }
         view.setEnabled(enabled);
-        if (Util.SDK_INT >= 11) {
-            setViewAlphaV11(view, enabled ? 1f : 0.3f);
-            view.setVisibility(VISIBLE);
-        } else {
-            view.setVisibility(enabled ? VISIBLE : INVISIBLE);
-        }
-    }
-
-    @TargetApi(11)
-    private void setViewAlphaV11(View view, float alpha) {
-        view.setAlpha(alpha);
-    }
-
-    private String stringForTime(long timeMs) {
-        if (timeMs == C.TIME_UNSET) {
-            timeMs = 0;
-        }
-        long totalSeconds = (timeMs + 500) / 1000;
-        long seconds = totalSeconds % 60;
-        long minutes = (totalSeconds / 60) % 60;
-        long hours = totalSeconds / 3600;
-        formatBuilder.setLength(0);
-        return hours > 0 ? formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
-                : formatter.format("%02d:%02d", minutes, seconds).toString();
-    }
-
-    private int progressBarValue(long position) {
-        long duration = player == null ? C.TIME_UNSET : player.getDuration();
-        return duration == C.TIME_UNSET || duration == 0 ? 0
-                : (int) ((position * PROGRESS_BAR_MAX) / duration);
-    }
-
-    private long positionValue(int progress) {
-        long duration = player == null ? C.TIME_UNSET : player.getDuration();
-        return duration == C.TIME_UNSET ? 0 : ((duration * progress) / PROGRESS_BAR_MAX);
+        view.setAlpha(enabled ? 1f : 0.3f);
+        view.setVisibility(VISIBLE);
     }
 
     private void previous() {
-        Timeline currentTimeline = player.getCurrentTimeline();
-        if (currentTimeline == null) {
+        Timeline timeline = player.getCurrentTimeline();
+        if (timeline.isEmpty() || player.isPlayingAd()) {
             return;
         }
-        int currentWindowIndex = player.getCurrentWindowIndex();
-        currentTimeline.getWindow(currentWindowIndex, currentWindow);
-        if (currentWindowIndex > 0 && (player.getCurrentPosition() <= MAX_POSITION_FOR_SEEK_TO_PREVIOUS
-                || (currentWindow.isDynamic && !currentWindow.isSeekable))) {
-            player.seekToDefaultPosition(currentWindowIndex - 1);
+        int windowIndex = player.getCurrentWindowIndex();
+        timeline.getWindow(windowIndex, window);
+        int previousWindowIndex = player.getPreviousWindowIndex();
+        if (previousWindowIndex != C.INDEX_UNSET
+                && (player.getCurrentPosition() <= MAX_POSITION_FOR_SEEK_TO_PREVIOUS
+                || (window.isDynamic && !window.isSeekable))) {
+            seekTo(previousWindowIndex, C.TIME_UNSET);
         } else {
-            player.seekTo(0);
+            seekTo(0);
         }
     }
 
-    public void next() {
-        Timeline currentTimeline = player.getCurrentTimeline();
-        if (currentTimeline == null) {
+    private void next() {
+        Timeline timeline = player.getCurrentTimeline();
+        if (timeline.isEmpty() || player.isPlayingAd()) {
             return;
         }
-        int currentWindowIndex = player.getCurrentWindowIndex();
-        if (currentWindowIndex < currentTimeline.getWindowCount() - 1) {
-            player.seekToDefaultPosition(currentWindowIndex + 1);
-        } else if (currentTimeline.getWindow(currentWindowIndex, currentWindow, false).isDynamic) {
-            player.seekToDefaultPosition();
+        int windowIndex = player.getCurrentWindowIndex();
+        int nextWindowIndex = player.getNextWindowIndex();
+        if (nextWindowIndex != C.INDEX_UNSET) {
+            seekTo(nextWindowIndex, C.TIME_UNSET);
+        } else if (timeline.getWindow(windowIndex, window).isDynamic) {
+            seekTo(windowIndex, C.TIME_UNSET);
         }
     }
 
-    public void rewind() {
+    private void rewind() {
         if (rewindMs <= 0) {
             return;
         }
-        player.seekTo(Math.max(player.getCurrentPosition() - rewindMs, 0));
+        seekTo(Math.max(player.getCurrentPosition() - rewindMs, 0));
     }
 
-    public void fastForward() {
+    private void fastForward() {
         if (fastForwardMs <= 0) {
             return;
         }
-        player.seekTo(Math.min(player.getCurrentPosition() + fastForwardMs, player.getDuration()));
+        long durationMs = player.getDuration();
+        long seekPositionMs = player.getCurrentPosition() + fastForwardMs;
+        if (durationMs != C.TIME_UNSET) {
+            seekPositionMs = Math.min(seekPositionMs, durationMs);
+        }
+        seekTo(seekPositionMs);
     }
 
-    public void fastFoward(long position) {
-        player.seekTo(Math.min(curPosition + position, player.getDuration()));
+    private void seekTo(long positionMs) {
+        seekTo(player.getCurrentWindowIndex(), positionMs);
     }
 
-    public void rewind(long position) {
-        player.seekTo(Math.max(curPosition - position, 0));
+    private void seekTo(int windowIndex, long positionMs) {
+        boolean dispatched = controlDispatcher.dispatchSeekTo(player, windowIndex, positionMs);
+        if (!dispatched) {
+            // The seek wasn't dispatched. If the progress bar was dragged by the user to perform the
+            // seek then it'll now be in the wrong position. Trigger a progress update to snap it back.
+            updateProgress();
+        }
+    }
+
+    private void seekToTimeBarPosition(long positionMs) {
+        int windowIndex;
+        Timeline timeline = player.getCurrentTimeline();
+        if (multiWindowTimeBar && !timeline.isEmpty()) {
+            int windowCount = timeline.getWindowCount();
+            windowIndex = 0;
+            while (true) {
+                long windowDurationMs = timeline.getWindow(windowIndex, window).getDurationMs();
+                if (positionMs < windowDurationMs) {
+                    break;
+                } else if (windowIndex == windowCount - 1) {
+                    // Seeking past the end of the last window should seek to the end of the timeline.
+                    positionMs = windowDurationMs;
+                    break;
+                }
+                positionMs -= windowDurationMs;
+                windowIndex++;
+            }
+        } else {
+            windowIndex = player.getCurrentWindowIndex();
+        }
+        seekTo(windowIndex, positionMs);
     }
 
     @Override
@@ -422,6 +807,8 @@ public class CustomPlaybackControlView extends FrameLayout {
             } else {
                 postDelayed(hideAction, delayMs);
             }
+        } else if (isVisible()) {
+            hideAfterTimeout();
         }
         updateAll();
     }
@@ -434,65 +821,122 @@ public class CustomPlaybackControlView extends FrameLayout {
         removeCallbacks(hideAction);
     }
 
-
-
-  /*  @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (player == null || event.getAction() != KeyEvent.ACTION_DOWN) {
-            return super.dispatchKeyEvent(event);
-        }
-        switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                fastForward();
-                break;
-            case KeyEvent.KEYCODE_MEDIA_REWIND:
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                rewind();
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                player.setPlayWhenReady(!player.getPlayWhenReady());
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PLAY:
-                player.setPlayWhenReady(true);
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                player.setPlayWhenReady(false);
-                break;
-            case KeyEvent.KEYCODE_MEDIA_NEXT:
-                next();
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                previous();
-                break;
-            default:
-                return false;
-        }
-        show();
-        return true;
-    }*/
-
-    private final class ComponentListener implements ExoPlayer.EventListener,
-            SeekBar.OnSeekBarChangeListener, View.OnClickListener {
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
+    @Override
+    public final boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             removeCallbacks(hideAction);
-            dragging = true;
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            hideAfterTimeout();
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return dispatchMediaKeyEvent(event) || super.dispatchKeyEvent(event);
+    }
+
+    /**
+     * Called to process media key events. Any {@link KeyEvent} can be passed but only media key
+     * events will be handled.
+     *
+     * @param event A key event.
+     * @return Whether the key event was handled.
+     */
+    public boolean dispatchMediaKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        if (player == null || !isHandledMediaKey(keyCode)) {
+            return false;
+        }
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (keyCode == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD) {
+                fastForward();
+            } else if (keyCode == KeyEvent.KEYCODE_MEDIA_REWIND) {
+                rewind();
+            } else if (event.getRepeatCount() == 0) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                        controlDispatcher.dispatchSetPlayWhenReady(player, !player.getPlayWhenReady());
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_PLAY:
+                        controlDispatcher.dispatchSetPlayWhenReady(player, true);
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                        controlDispatcher.dispatchSetPlayWhenReady(player, false);
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_NEXT:
+                        next();
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                        previous();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isPlaying() {
+        return player != null
+                && player.getPlaybackState() != Player.STATE_ENDED
+                && player.getPlaybackState() != Player.STATE_IDLE
+                && player.getPlayWhenReady();
+    }
+
+    @SuppressLint("InlinedApi")
+    private static boolean isHandledMediaKey(int keyCode) {
+        return keyCode == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD
+                || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE
+                || keyCode == KeyEvent.KEYCODE_MEDIA_NEXT
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS;
+    }
+
+    /**
+     * Returns whether the specified {@code timeline} can be shown on a multi-window time bar.
+     *
+     * @param timeline The {@link Timeline} to check.
+     * @param window A scratch {@link Timeline.Window} instance.
+     * @return Whether the specified timeline can be shown on a multi-window time bar.
+     */
+    private static boolean canShowMultiWindowTimeBar(Timeline timeline, Timeline.Window window) {
+        if (timeline.getWindowCount() > MAX_WINDOWS_FOR_MULTI_WINDOW_TIME_BAR) {
+            return false;
+        }
+        int windowCount = timeline.getWindowCount();
+        for (int i = 0; i < windowCount; i++) {
+            if (timeline.getWindow(i, window).durationUs == C.TIME_UNSET) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private final class ComponentListener
+            implements Player.EventListener, TimeBar.OnScrubListener, OnClickListener {
+
+        @Override
+        public void onScrubStart(TimeBar timeBar, long position) {
+            scrubbing = true;
         }
 
         @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (fromUser) {
-                timeCurrent.setText(stringForTime(positionValue(progress)));
+        public void onScrubMove(TimeBar timeBar, long position) {
+            if (positionView != null) {
+                positionView.setText(Util.getStringForTime(formatBuilder, formatter, position));
             }
         }
 
         @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            dragging = false;
-            player.seekTo(positionValue(seekBar.getProgress()));
-            hideAfterTimeout();
+        public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
+            scrubbing = false;
+            if (!canceled && player != null) {
+                seekToTimeBarPosition(position);
+            }
         }
 
         @Override
@@ -501,39 +945,61 @@ public class CustomPlaybackControlView extends FrameLayout {
             updateProgress();
         }
 
-//        @Override
-//        public void onPositionDiscontinuity() {
-//            updateNavigation();
-//            updateProgress();
-//        }
-//
-//        @Override
-//        public void onTimelineChanged(Timeline timeline, Object manifest) {
-//            updateNavigation();
-//            updateProgress();
-//        }
-
         @Override
-        public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+        public void onRepeatModeChanged(int repeatMode) {
+            updateRepeatModeButton();
+            updateNavigation();
         }
 
         @Override
-        public void onLoadingChanged(boolean isLoading) {
-            // Do nothing.
+        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+            updateShuffleButton();
+            updateNavigation();
         }
 
         @Override
-        public void onPlayerError(ExoPlaybackException error) {
-            // Do nothing.
+        public void onPositionDiscontinuity(@Player.DiscontinuityReason int reason) {
+            updateNavigation();
+            updateProgress();
+        }
+
+        @Override
+        public void onTimelineChanged(
+                Timeline timeline, @Nullable Object manifest, @Player.TimelineChangeReason int reason) {
+            updateNavigation();
+            updateTimeBarMode();
+            updateProgress();
         }
 
         @Override
         public void onClick(View view) {
-            Timeline currentTimeline = player.getCurrentTimeline();
-            if (playButton == view) {
-                player.setPlayWhenReady(!player.getPlayWhenReady());
+            if (player != null) {
+                if (nextButton == view) {
+                    next();
+                } else if (previousButton == view) {
+                    previous();
+                } else if (fastForwardButton == view) {
+                    fastForward();
+                } else if (rewindButton == view) {
+                    rewind();
+                } else if (playButton == view) {
+                    if (player.getPlaybackState() == Player.STATE_IDLE) {
+                        if (playbackPreparer != null) {
+                            playbackPreparer.preparePlayback();
+                        }
+                    } else if (player.getPlaybackState() == Player.STATE_ENDED) {
+                        controlDispatcher.dispatchSeekTo(player, player.getCurrentWindowIndex(), C.TIME_UNSET);
+                    }
+                    controlDispatcher.dispatchSetPlayWhenReady(player, true);
+                } else if (pauseButton == view) {
+                    controlDispatcher.dispatchSetPlayWhenReady(player, false);
+                } else if (repeatToggleButton == view) {
+                    controlDispatcher.dispatchSetRepeatMode(
+                            player, RepeatModeUtil.getNextRepeatMode(player.getRepeatMode(), repeatToggleModes));
+                } else if (shuffleButton == view) {
+                    controlDispatcher.dispatchSetShuffleModeEnabled(player, !player.getShuffleModeEnabled());
+                }
             }
-            hideAfterTimeout();
         }
     }
 }
