@@ -22,6 +22,8 @@ cache:
 
 
 before_install:
+  - yes | sdkmanager "platforms;android-29"
+  - yes | sdkmanager "build-tools;29.0.3"
   - chmod +x gradlew
 
 
@@ -55,7 +57,7 @@ android:
     - google-gdk-license-.+
 
 before_script:
-  - cd opengl
+  - cd DroidMedia
   - chmod +x gradlew
 
 script:
