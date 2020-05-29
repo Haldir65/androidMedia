@@ -24,7 +24,6 @@ cache:
 before_install:
   - yes | sdkmanager "platforms;android-29"
   - yes | sdkmanager "build-tools;29.0.3"
-  - chmod +x gradlew
 
 
 android:
@@ -58,8 +57,9 @@ android:
 
 before_script:
   - cd DroidMedia
-  - chmod +x gradlew
+
 
 script:
   # - "./gradlew clean assembleRelease --stacktrace --daemon"
+  - chmod +x gradlew
   - "./gradlew clean assembleDebug --stacktrace --daemon"
