@@ -1,6 +1,7 @@
 language: android
-sudo: required
 jdk: oraclejdk8
+os: linux
+dist: bionic
 env:
   global:
     - ANDROID_API_LEVEL=29
@@ -55,6 +56,7 @@ android:
 
 before_script:
   - cd opengl
+  - chmod +x gradlew
 
 script:
   # - "./gradlew clean assembleRelease --stacktrace --daemon"
