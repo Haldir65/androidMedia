@@ -25,16 +25,13 @@ import com.harris.androidMedia.util.ToastUtil;
  * Created by Harris on 2017/2/18.
  */
 
-public class MainActivity extends AppCompatActivity implements ActionCallBack {
+public class MainActivity extends AppCompatActivity {
     public static final String TRANSIT_FAB = "transit_fab";
-    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        setSupportActionBar(binding.toolbar);
-        binding.setCallback(this);
+        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements ActionCallBack {
         }
         if (intent != null) {
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(this, binding.fab, TRANSIT_FAB);
+                    makeSceneTransitionAnimation(this, fab, TRANSIT_FAB);
             ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
         }
     }

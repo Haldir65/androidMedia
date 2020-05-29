@@ -83,7 +83,6 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
         DEFAULT_COOKIE_MANAGER.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
     }
 
-    ActivityPlayerBinding binding;
 
     private Handler mainHandler;
     private DataSource.Factory mediaDataSourceFactory;
@@ -109,10 +108,9 @@ public class SimpleExoPlayerViewActivity extends AppCompatActivity implements Ex
         if (CookieHandler.getDefault() != DEFAULT_COOKIE_MANAGER) {
             CookieHandler.setDefault(DEFAULT_COOKIE_MANAGER);
         }
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_player);
-        binding.retryButton.setOnClickListener(this);
-        binding.controlsRoot.setOnClickListener(this);
-
+        setContentView( R.layout.activity_player);
+        retryButton.setOnClickListener(this);
+        controlsRoot.setOnClickListener(this);
 
     }
 

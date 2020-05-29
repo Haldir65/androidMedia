@@ -246,7 +246,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, CustomPlayback
             val extensions: Array<String>?
             when (action) {
                 ACTION_VIEW -> {
-                    uris = arrayOf(intent.data)
+                    uris = arrayOf(intent.data).filterNotNull().toTypedArray()
                 }
                 ACTION_VIEW_LIST -> {
                     showToast("not implemented!")

@@ -66,7 +66,6 @@ public class CustomPlayerViewActivity extends AppCompatActivity {
     public static final String TAG = CustomPlayerViewActivity.class.getSimpleName();
     public static final String CUSTOM_PLAYER_VIEW_URL_STRING = "custom_layer_view_url";
 
-    ActivityCustomizePlayerViewBinding binding;
 
     private Handler mainHandler;
     private Timeline.Window window;

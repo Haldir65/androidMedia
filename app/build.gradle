@@ -37,9 +37,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
-    dataBinding {
-        enabled = true
-    }
+
    /* productFlavors {
         crazyFlavor {  *//*from shell run gradle assembleCrazyFlavorDebug*//*
             minSdkVersion 19

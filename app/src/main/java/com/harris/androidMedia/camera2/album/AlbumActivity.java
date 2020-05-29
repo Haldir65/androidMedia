@@ -2,16 +2,16 @@ package com.harris.androidMedia.camera2.album;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.harris.androidMedia.R;
-import com.harris.androidMedia.databinding.ActivityAlbumScanBinding;
 import com.harris.androidMedia.recyclerView.itemDecoration.AlbumItemDecoration;
 import com.harris.androidMedia.util.GenericCallBack;
 import com.harris.androidMedia.util.ToastUtil;
@@ -33,25 +33,28 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AlbumActivity extends AppCompatActivity implements GenericCallBack<UtilImage.ImageInfo> {
 
-    ActivityAlbumScanBinding binding;
 
-    AlbumBindAdapter mAdapter;
+    AlbumAdapter mAdapter;
     List<UtilImage.ImageInfo> mList;
+    RecyclerView recyclerView;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_album_scan);
-        setSupportActionBar(binding.toolbar);
+        setContentView( R.layout.activity_album_scan);
+        recyclerView = findViewById(R.id.recyclerView);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mList = new ArrayList<>();
-        mAdapter = new AlbumBindAdapter(R.layout.item_image_card);
+        mAdapter = new AlbumAdapter(R.layout.item_image_card);
         mAdapter.mList = mList;
         mAdapter.callBack = this;
-        binding.recyclerView.setAdapter(mAdapter);
-        binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        binding.recyclerView.addItemDecoration(new AlbumItemDecoration(this));
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.addItemDecoration(new AlbumItemDecoration(this));
         Observable.create(new ObservableOnSubscribe<List<UtilImage.ImageInfo>>() {
             @Override
             public void subscribe(ObservableEmitter<List<UtilImage.ImageInfo>> e) throws Exception {

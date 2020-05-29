@@ -1,73 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/md_white_1000"
+    app:cardCornerRadius="4dp">
 
-    <data>
-        <variable
-            name="data"
-            type="com.harris.androidMedia.util.UtilImage.ImageInfo"/>
-        <variable
-            name="callback"
-            type="com.harris.androidMedia.util.GenericCallBack"/>
-        <import type="com.harris.androidMedia.R"/>
-
-
-
-    </data>
-
-    <android.support.v7.widget.CardView
-        android:orientation="vertical"
+    <LinearLayout
+        android:id="@+id/ll_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/md_white_1000"
-        app:cardCornerRadius="4dp">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/ll_container"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_pic"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/img_05" />
+
+        <TextView
+            android:id="@+id/tv_filename"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:padding="5dp"
+            android:textColor="@color/md_black_1000"
+            tools:text="这是文件的Name" />
 
-            <ImageView
-                android:id="@+id/iv_pic"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/img_05"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                app:imgUrl="@{data.path}"
-                app:placeHolder="@{R.drawable.img_05}"
-                android:onClick="@{(view) -> callback.onClick(view,data)}"
-                />
+        <TextView
+            android:id="@+id/tv_file_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/md_black_1000"
+            tools:text="这是文件的绝对地址" />
 
-            <TextView
-                android:id="@+id/tv_filename"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="这是文件的Name"
-                android:textColor="@color/md_black_1000"
-                android:padding="5dp"
-                android:text="@{data.name}"
-                />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_file_path"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="这是文件的绝对地址"
-                android:textColor="@color/md_black_1000"
-                android:padding="5dp"
-                android:text="@{data.path}"
-                />
-
-        </LinearLayout>
-
-
-
-
-
-    </android.support.v7.widget.CardView>
-</layout>
+</android.support.v7.widget.CardView>

@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,16 +51,18 @@ public class ChooseLocalVideoActivity extends AppCompatActivity implements OnIte
 
 
     public static final String FLAG_CHOOSE_AND_RETURN_URL = "choose_and_return";
-    ActivityChooseLocalVideoBinding binding;
     List<VideoInfo> list;
     VideoAdapter mAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_choose_local_video);
-        setSupportActionBar(binding.toolbar);
+       setContentView(R.layout.activity_choose_local_video);
+       toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

@@ -1,57 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="callback"
-            type="com.harris.androidMedia.util.ActionCallBack"/>
-    </data>
-
-    <LinearLayout
-        android:id="@+id/relativeLayout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
+        android:background="?attr/colorPrimaryDark">
+    </android.support.v7.widget.Toolbar>
 
-        <FrameLayout
-            android:id="@+id/fl_container"
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="LinearLayoutManager"
-                >
-            </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"
+            app:layoutManager="LinearLayoutManager"></android.support.v7.widget.RecyclerView>
 
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                app:backgroundTint="@android:color/transparent"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                android:src="@drawable/camera"
-                app:backgroundTintMode="src_over"
-                />
-        </FrameLayout>
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="top"
-            android:background="?attr/colorPrimaryDark"
-            >
-        </android.support.v7.widget.Toolbar>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/camera"
+            app:backgroundTint="@android:color/transparent"
+            app:backgroundTintMode="src_over" />
+    </FrameLayout>
 
 
-    </LinearLayout>
 
-</layout>
+
+</LinearLayout>

@@ -15,13 +15,12 @@ import com.harris.androidMedia.databinding.ActivityLockScreenControlBinding;
  */
 
 public class LockScreenNotificationControl extends AppCompatActivity implements View.OnClickListener {
-    ActivityLockScreenControlBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_lock_screen_control);
-        binding.button.setOnClickListener(this);
+       setContentView( R.layout.activity_lock_screen_control);
+       button.setOnClickListener(this);
 
     }
 

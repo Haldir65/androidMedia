@@ -3,7 +3,6 @@ package com.harris.androidMedia.exoPlayer;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,7 +46,6 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class SurfaceViewPlayerActivity extends AppCompatActivity {
     public static final String TAG = SurfaceViewPlayerActivity.class.getSimpleName();
-    ActivitySurfaceViewPlayerBinding binding;
     private SimpleExoPlayer player;
     private Handler mHandler;
     private Uri resourceUri;
@@ -56,7 +54,7 @@ public class SurfaceViewPlayerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_surface_view_player);
+        setContentView(R.layout.activity_surface_view_player);
 //        resourceUri = Uri.parse(UriRepositories.flvString);
         checkPermissions();
     }

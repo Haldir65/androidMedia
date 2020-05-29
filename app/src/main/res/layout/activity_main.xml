@@ -1,146 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-        <variable
-        name="callback"
-            type="com.harris.androidMedia.util.ActionCallBack"/>
 
-
-    </data>
-    <LinearLayout
-        android:id="@+id/ll_root"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
+        android:background="?attr/colorPrimaryDark"></android.support.v7.widget.Toolbar>
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="top"
-            android:background="?attr/colorPrimaryDark"
-            >
-        </android.support.v7.widget.Toolbar>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
+            <android.support.v7.widget.CardView
+                android:id="@+id/card2"
+                style="@style/card_view_style"
+                android:onClick="@{(v) -> callback.onClickView(v)}"
+                app:cardElevation="5dp">
+
+                <Button
+                    style="@style/text_style_main"
+                    android:text="ExoPlayer" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card1"
+                style="@style/card_view_style"
+                android:onClick="@{(v) -> callback.onClickView(v)}"
+                app:cardElevation="5dp">
+
+                <Button
+                    style="@style/text_style_main"
+                    android:text="camera2" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card3"
+                style="@style/card_view_style"
+                android:onClick="@{(v) -> callback.onClickView(v)}"
+                app:cardElevation="5dp">
+
+                <Button
+                    style="@style/text_style_main"
+                    android:text="MediaPlayBack" />
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card4"
+                style="@style/card_view_style"
+                android:onClick="@{(v) -> callback.onClickView(v)}"
+                app:cardElevation="5dp">
+
+                <Button
+                    style="@style/text_style_main"
+                    android:text="Album" />
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card5"
+                style="@style/card_view_style"
+                android:onClick="@{(v) -> callback.onClickView(v)}"
+                app:cardElevation="5dp">
+
+                <Button
+                    style="@style/text_style_main"
+                    android:text="ijkPlayer" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card6"
+                style="@style/card_view_style"
+                android:onClick="@{(v) -> callback.onClickView(v)}"
+                app:cardElevation="5dp">
+
+                <Button
+                    style="@style/text_style_main"
+                    android:text="MediaCodec" />
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="end"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:onClick="@{(v) -> callback.onClickView(v)}"
+                android:src="@drawable/camera"
+                app:backgroundTintMode="screen"
+                app:borderWidth="10dp"
+                app:elevation="6dp"
+                app:fabSize="normal" />
+        </LinearLayout>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/card2"
-                    style="@style/card_view_style"
-                    android:onClick="@{(v) -> callback.onClickView(v)}"
-                    app:cardElevation="5dp"
-                    >
+    </ScrollView>
 
-                    <Button
-                        style="@style/text_style_main"
-                        android:text="ExoPlayer"
-                        />
-                </android.support.v7.widget.CardView>
+</LinearLayout>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/card1"
-                    style="@style/card_view_style"
-                    android:onClick="@{(v) -> callback.onClickView(v)}"
-                    app:cardElevation="5dp"
-                    >
-
-                    <Button
-                        style="@style/text_style_main"
-                        android:text="camera2"
-                        />
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/card3"
-                    style="@style/card_view_style"
-                    android:onClick="@{(v) -> callback.onClickView(v)}"
-                    app:cardElevation="5dp"
-                    >
-
-                    <Button
-                        style="@style/text_style_main"
-                        android:text="MediaPlayBack"
-                        />
-                </android.support.v7.widget.CardView>
-
-
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/card4"
-                    style="@style/card_view_style"
-                    android:onClick="@{(v) -> callback.onClickView(v)}"
-                    app:cardElevation="5dp"
-                    >
-
-                    <Button
-                        style="@style/text_style_main"
-                        android:text="Album"
-                        />
-                </android.support.v7.widget.CardView>
-
-
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/card5"
-                    style="@style/card_view_style"
-                    android:onClick="@{(v) -> callback.onClickView(v)}"
-                    app:cardElevation="5dp"
-                    >
-
-                    <Button
-                        style="@style/text_style_main"
-                        android:text="ijkPlayer"
-                        />
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/card6"
-                    style="@style/card_view_style"
-                    android:onClick="@{(v) -> callback.onClickView(v)}"
-                    app:cardElevation="5dp"
-                    >
-
-                    <Button
-                        style="@style/text_style_main"
-                        android:text="MediaCodec"
-                        />
-                </android.support.v7.widget.CardView>
-
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_gravity="end"
-                    android:onClick="@{(v) -> callback.onClickView(v)}"
-                    android:src="@drawable/camera"
-                    app:backgroundTintMode="screen"
-                    app:borderWidth="10dp"
-                    app:elevation="6dp"
-                    app:fabSize="normal"
-                    />
-            </LinearLayout>
-
-        </ScrollView>
-
-
-    </LinearLayout>
-
-
-</layout>

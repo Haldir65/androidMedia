@@ -35,7 +35,6 @@ import com.harris.androidMedia.util.Constants;
 public class TextureViewActivity extends AppCompatActivity {
     public static final String TAG = TextureViewActivity.class.getSimpleName();
 
-    ActivityTextureViewPlayerBinding binding;
 
     private SimpleExoPlayer player;
     private Handler mHandler;
@@ -45,7 +44,6 @@ public class TextureViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_texture_view_player);
         mp4VideoUri = Uri.parse(Constants.Mp4Url3);
     }
 
@@ -98,7 +96,7 @@ public class TextureViewActivity extends AppCompatActivity {
                 ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
 
         // Attaching the player to a view
-        player.setVideoTextureView(binding.textureView);
+        player.setVideoTextureView(textureView);
         player.setPlayWhenReady(true);
 
 // Measures bandwidth during playback. Can be null if not required.

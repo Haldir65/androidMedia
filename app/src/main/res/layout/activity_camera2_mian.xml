@@ -1,109 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    <data>
-
-        <variable
-            name="callback"
-            type="com.harris.androidMedia.util.ActionCallBack"/>
-
-
-    </data>
-
-    <ScrollView
-        android:id="@+id/scrollView"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="?attr/actionBarSize">
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card1"
+            style="@style/camera_main_cards_style"
+           >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:padding="20dp"
+                android:text="Camera2Basic"
+                android:textAllCaps="false" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card2"
+            style="@style/camera_main_cards_style"
+           >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:padding="20dp"
+                android:text="Camera2Video"
+                android:textAllCaps="false" />
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card3"
+            style="@style/camera_main_cards_style"
             >
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                >
-
-            </android.support.v7.widget.Toolbar>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/card1"
-                style="@style/camera_main_cards_style"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:text="Camera2Basic"
-                    android:textAllCaps="false"
-                    android:padding="20dp"
-                    android:clickable="false"
-                    />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/card2"
-                style="@style/camera_main_cards_style"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:text="Camera2Video"
-                    android:textAllCaps="false"
-                    android:padding="20dp"
-                    android:clickable="false"
-                    />
-            </android.support.v7.widget.CardView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:padding="20dp"
+                android:text="Camera2Raw"
+                android:textAllCaps="false" />
+        </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card3"
-                style="@style/camera_main_cards_style"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                >
+        <android.support.v7.widget.CardView
+            android:id="@+id/card4"
+            style="@style/camera_main_cards_style"
+           >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:text="Camera2Raw"
-                    android:textAllCaps="false"
-                    android:clickable="false"
-                    android:padding="20dp"
-                    />
-            </android.support.v7.widget.CardView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:padding="20dp"
+                android:text="LocalAlbum"
+                android:textAllCaps="false" />
+        </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card4"
-                style="@style/camera_main_cards_style"
-                android:onClick="@{(v) -> callback.onClickView(v)}"
-                >
+    </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:text="LocalAlbum"
-                    android:textAllCaps="false"
-                    android:clickable="false"
-                    android:padding="20dp"
-                    />
-            </android.support.v7.widget.CardView>
-
-
-
-        </LinearLayout>
-
-    </ScrollView>
-</layout>
+</ScrollView>

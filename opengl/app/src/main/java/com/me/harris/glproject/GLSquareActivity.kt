@@ -1,7 +1,7 @@
 package com.me.harris.glproject
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.glproject.view.FGLView
 
 class GLSquareActivity:AppCompatActivity() {
