@@ -3,6 +3,9 @@ package com.me.harris.droidmedia.video;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +20,18 @@ public class MediaCodecVideoMainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_media_codec_video_player);
 		playView = findViewById(R.id.player);
+		int[] arr = VideoInfoHelper.queryVideoInfo(VideoPlayView.strVideo);
+		ViewGroup.LayoutParams params = playView.getLayoutParams();
+
+
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		float height = displayMetrics.heightPixels;
+		float width = displayMetrics.widthPixels;
+
+		params.width = (int) width;
+		params.height = (int) (width*((float) arr[1]/(float) arr[0]));
+
 		//获取所支持的编码信息的方法
 		HashMap<String, MediaCodecInfo.CodecCapabilities> mEncoderInfos = new HashMap<>();
 		for(int i = MediaCodecList.getCodecCount() - 1; i >= 0; i--){

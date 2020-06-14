@@ -97,7 +97,6 @@ public class VideoDecodeThread extends Thread {
 					}
 				}
 			}
-
 			int outIndex = mediaCodec.dequeueOutputBuffer(info, 0);
 			switch (outIndex) {
 				case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:

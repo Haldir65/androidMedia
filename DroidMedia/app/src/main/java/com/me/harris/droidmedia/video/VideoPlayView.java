@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  * Created by xiaoqi on 2018/1/5.
@@ -15,17 +16,29 @@ import java.io.File;
 
 public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback {
 
-	private static  String strVideo ;
-	static {
-		if (strVideo==null){
-			File dir = new File(Environment.getExternalStorageDirectory().getPath()+
-					File.separator+Environment.DIRECTORY_MOVIES);
-			strVideo = dir.listFiles()[0].getAbsolutePath();
-		}
-//		private static final String strVideo = Environment.getExternalStorageDirectory().getPath()+
-//				File.separator+Environment.DIRECTORY_MOVIES+File.separator + "/h265.mp4";
-	}
+	public static  String strVideo ;
+//	static {
+//		if (strVideo==null){
+//			File dir = new File(Environment.getExternalStorageDirectory().getPath()+
+//					File.separator+Environment.DIRECTORY_MOVIES);
+//			strVideo = dir.listFiles()[1].getAbsolutePath();
+//		}
+////		private static final String strVideo = Environment.getExternalStorageDirectory().getPath()+
+////				File.separator+Environment.DIRECTORY_MOVIES+File.separator + "/h265.mp4";
+//	}
 
+
+	public static void setUrl(){
+		File dir = new File(Environment.getExternalStorageDirectory().getPath()+
+				File.separator+Environment.DIRECTORY_MOVIES);
+		File[] fs = dir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".mp4");
+			}
+		});
+		strVideo = fs[0].getAbsolutePath();
+	}
 
 
 	private VideoDecodeThread thread;

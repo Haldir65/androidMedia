@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.me.harris.droidmedia.video.MediaCodecVideoMainActivity
+import com.me.harris.droidmedia.video.VideoPlayView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btn?.setOnClickListener {
+            VideoPlayView.setUrl()
             startActivity(Intent(this,MediaCodecVideoMainActivity::class.java))
         }
     }
