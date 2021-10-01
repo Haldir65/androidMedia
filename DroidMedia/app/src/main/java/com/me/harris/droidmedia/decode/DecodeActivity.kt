@@ -8,12 +8,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.mediakit.video.decode.VideoDecoder
 import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.video.VideoPlayView
 import kotlinx.android.synthetic.main.activity_decode.*
 import java.io.File
 
 class DecodeActivity : AppCompatActivity() {
-    private val decodeMP4Path = TextUtils.concat(Environment.getExternalStorageDirectory().path,
-        "/yazi.mp4").toString()
+//    private val decodeMP4Path = TextUtils.concat(Environment.getExternalStorageDirectory().path,
+//        "/yazi.mp4").toString()
+
+
+
+    private val decodeMP4Path = VideoPlayView.strVideo
+
 
     private var videoDecoder: VideoDecoder? = null
 
@@ -109,7 +115,7 @@ class DecodeActivity : AppCompatActivity() {
     }
 
     private fun resetOutputEt() {
-        output_et.setText(TextUtils.concat(Environment.getExternalStorageDirectory().path, "/"))
+        output_et.setText(TextUtils.concat(Environment.getExternalStorageDirectory().path, Environment.DIRECTORY_MOVIES))
         output_et.setSelection(output_et.text.toString().length)
     }
 

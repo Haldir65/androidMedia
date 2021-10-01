@@ -18,14 +18,16 @@
             android:layout_height="wrap_content"
             android:text="click me to MediaCodecVideoPlayer"
             android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"
             />
 
         <Button
             android:id="@+id/btn1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DecodeActivity"
+            android:text="DecodeFrame play on imageView or SurfaceView"
             android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"
             />
 
         <Button
@@ -34,17 +36,17 @@
             android:layout_height="wrap_content"
             android:text="DecodeFrameActivity"
             android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"
             />
 
         <Button
             android:id="@+id/btn3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DecodeFrameActivity"
+            android:text="DecodeActivity"
             android:textAllCaps="false"
             android:layout_gravity="center_horizontal"
             />
-
 
     </LinearLayout>
 

@@ -9,6 +9,7 @@ import android.view.SurfaceView;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Random;
 
 /**
  * Created by xiaoqi on 2018/1/5.
@@ -31,8 +32,9 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 	public static void setUrl(){
 		File dir = new File(Environment.getExternalStorageDirectory().getPath()+
 				File.separator+Environment.DIRECTORY_MOVIES);
-		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4"));
-		strVideo = fs[0].getAbsolutePath();
+		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4") || name.endsWith(".mkv"));
+		assert fs != null;
+		strVideo = fs[new Random().nextInt(fs.length)].getAbsolutePath();
 	}
 
 

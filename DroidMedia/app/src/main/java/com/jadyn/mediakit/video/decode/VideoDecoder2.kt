@@ -29,7 +29,7 @@ class VideoDecoder2(private val dataSource: String) {
         VideoAnalyze(dataSource)
     }
 
-    private val DEF_TIME_OUT = 2000L
+    private val DEF_TIME_OUT = 10_000L
     private val defDecoderColorFormat = MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible
 
     private val frameCache by lazy {

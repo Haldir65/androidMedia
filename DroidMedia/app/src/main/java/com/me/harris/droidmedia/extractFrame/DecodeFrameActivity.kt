@@ -3,6 +3,7 @@ package com.me.harris.droidmedia.extractFrame
 import android.app.ActivityManager
 import android.content.Context
 import android.content.pm.ConfigurationInfo
+import android.graphics.Bitmap
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.os.Environment
@@ -13,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.extractFrame.render.JavaRenderer
+import com.me.harris.droidmedia.video.VideoPlayView
 import java.io.File
 import java.nio.IntBuffer
 import kotlin.concurrent.thread
@@ -56,9 +58,8 @@ class DecodeFrameActivity:AppCompatActivity()
     var decoder: VideoDecoder? = null
 
     private fun startDecode(){
-        val firsVideoFile = File(Environment.getExternalStorageDirectory(),Environment.DIRECTORY_MOVIES).listFiles { f ->
-            f.name.endsWith(".webm") || f.name.endsWith(".mkv") || f.name.endsWith(".mp4")
-        }.random().absolutePath
+        val firsVideoFile =  VideoPlayView.strVideo
+
 
         val mVideoDecoder = VideoDecoder().also { decoder = it }
         mVideoDecoder.outputFormat = VideoDecoder.COLOR_FORMAT_NV21// 设置输出nv21的数据
@@ -87,16 +88,16 @@ class DecodeFrameActivity:AppCompatActivity()
                     val bmp2  = renderScriptConverter.nv21ToBitmap(yuv,finalWidth,finalHeight)
 
 
-                    // 3. 使用yuv to rgb, 可用，但是卡
+//                     3. 使用yuv to rgb, 可用，但是卡
 //                    if (glRgbBuffer==null){
 //                        glRgbBuffer = IntBuffer.allocate(width*height)
 //                    }
 //                    GPUImageNativeLibrary.YUVtoRBGA(yuv,width,height,glRgbBuffer!!.array())
 //                    // NI critical lock held for 45.303ms on Thread block
-//                    val bm3 = Bitmap.createBitmap(finalWidth,finalHeight,Bitmap.Config.ARGB_8888)
-//                    bm3.copyPixelsFromBuffer(glRgbBuffer)
+//                    val bmp3 = Bitmap.createBitmap(finalWidth,finalHeight,Bitmap.Config.ARGB_8888)
+//                    bmp3.copyPixelsFromBuffer(glRgbBuffer)
 //                    glRgbBuffer?.rewind()
-                    //
+
 
 
                     // 4. render onGLSurfaceView

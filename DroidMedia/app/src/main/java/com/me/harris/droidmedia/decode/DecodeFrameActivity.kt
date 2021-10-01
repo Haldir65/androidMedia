@@ -10,13 +10,15 @@ import com.jadyn.mediakit.function.durationSecond
 import com.jadyn.mediakit.video.decode.VideoAnalyze
 import com.jadyn.mediakit.video.decode.VideoDecoder2
 import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.video.VideoPlayView
 import kotlinx.android.synthetic.main.activity_decode_frame.*
+import java.io.File
 
 class DecodeFrameActivity : AppCompatActivity() {
 
-    private val decodeMP4Path = TextUtils.concat(
-        Environment.getExternalStorageDirectory().path,
-        "/yazi.mp4").toString()
+    private val decodeMP4Path = VideoPlayView.strVideo
+
+
 
     private var videoAnalyze: VideoAnalyze? = null
 

@@ -78,6 +78,7 @@ public class VideoDecoder {
             int height = mediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
             Log.d(TAG,"decode video width : "+ width + " , height: "+ height);
             int yuvLength = width*height*3/2;
+            // width * height * ImageFormat.getBitsPerPixel(format) / 8
             if (mYuvBuffer ==null || mYuvBuffer.length!= yuvLength){
                 mYuvBuffer = new byte[yuvLength];
             }

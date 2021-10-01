@@ -6,6 +6,7 @@ import android.media.MediaFormat
 import androidx.annotation.IntRange
 import android.util.Log
 import android.util.Size
+import java.lang.IllegalStateException
 import java.nio.ByteBuffer
 
 /**
@@ -40,7 +41,13 @@ fun MediaCodec.disposeOutput(bufferInfo: MediaCodec.BufferInfo, defTimeOut: Long
 }
 
 fun MediaCodec.dequeueValidInputBuffer(timeOutUs: Long): InputCodeCData {
-    val inputBufferId = dequeueInputBuffer(timeOutUs)
+    val inputBufferId = try {
+        dequeueInputBuffer(timeOutUs)
+    }catch (e: MediaCodec.CodecException ) {
+        -109
+    }catch (e:IllegalStateException){
+        -110
+    }
     if (inputBufferId >= 0) {
         return InputCodeCData(inputBufferId, getInputBuffer(inputBufferId))
     }

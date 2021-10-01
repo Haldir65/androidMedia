@@ -22,13 +22,17 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, MediaCodecVideoMainActivity::class.java))
         }
         btn1?.setOnClickListener {
-            startActivity(Intent(this, DecodeActivity::class.java))
+            VideoPlayView.setUrl()
+            startActivity(Intent(this, com.me.harris.droidmedia.extractFrame.DecodeFrameActivity::class.java))
         }
         btn2?.setOnClickListener {
+            VideoPlayView.setUrl()
             startActivity(Intent(this, DecodeFrameActivity::class.java))
         }
         btn3?.setOnClickListener {
-            startActivity(Intent(this, com.me.harris.droidmedia.extractFrame.DecodeFrameActivity::class.java))
+            VideoPlayView.setUrl()
+            startActivity(Intent(this, DecodeActivity::class.java))
+
         }
     }
 
