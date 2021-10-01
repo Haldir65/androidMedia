@@ -19,20 +19,36 @@ class MainActivity : AppCompatActivity() {
             VideoPlayView.setUrl()
             startActivity(Intent(this,MediaCodecVideoMainActivity::class.java))
         }
+
+
     }
+
+
+
+
 
     override fun onResume() {
         super.onResume()
+        checkPermissions()
+    }
+
+    private fun checkPermissions(){
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
-               arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                   Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 1098
             )
         }

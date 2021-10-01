@@ -80,62 +80,71 @@ public class VideoDecodeThread extends Thread {
 
 		// ==========开始解码=============
 		while (!Thread.interrupted()) {
-
-			if (!bIsEos) {
-				int inIndex = mediaCodec.dequeueInputBuffer(0);
-				if (inIndex >= 0) {
-					ByteBuffer buffer = inputBuffers[inIndex];
-					int nSampleSize = mediaExtractor.readSampleData(buffer, 0); // 读取一帧数据至buffer中
-					if (nSampleSize < 0) {
-						Log.d(TAG, "InputBuffer BUFFER_FLAG_END_OF_STREAM");
-						mediaCodec.queueInputBuffer(inIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-						bIsEos = true;
-					} else {
-						// 填数据
-						mediaCodec.queueInputBuffer(inIndex, 0, nSampleSize, mediaExtractor.getSampleTime(), 0); // 通知MediaDecode解码刚刚传入的数据
-						mediaExtractor.advance(); // 继续下一取样
-					}
-				}
-			}
-			int outIndex = mediaCodec.dequeueOutputBuffer(info, 0);
-			switch (outIndex) {
-				case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
-					Log.d(TAG, "INFO_OUTPUT_BUFFERS_CHANGED");
-					outputBuffers = mediaCodec.getOutputBuffers();
-					break;
-				case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
-					Log.d(TAG, "New format " + mediaCodec.getOutputFormat());
-					break;
-				case MediaCodec.INFO_TRY_AGAIN_LATER:
-					Log.d(TAG, "dequeueOutputBuffer timed out!");
-					break;
-				default:
-					ByteBuffer buffer = outputBuffers[outIndex];
-					Log.v(TAG, "We can't use this buffer but render it due to the API limit, " + buffer);
-
-					//防止视频播放过快
-					long diff = info.presentationTimeUs/1000-(SystemClock.uptimeMillis() - startMs);
-					while (diff>0) {
-						try {
-							Log.e("=A=", "sleep "+diff+ " ms");
-							sleep(diff);
-							diff = info.presentationTimeUs/1000-(SystemClock.uptimeMillis() - startMs);
-
-//							sleep(10);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-							break;
+			try {
+				if (!bIsEos) {
+					int inIndex = mediaCodec.dequeueInputBuffer(0);
+					if (inIndex >= 0) {
+						ByteBuffer buffer = inputBuffers[inIndex];
+						int nSampleSize = mediaExtractor.readSampleData(buffer, 0); // 读取一帧数据至buffer中
+						if (nSampleSize < 0) {
+							Log.d(TAG, "InputBuffer BUFFER_FLAG_END_OF_STREAM");
+							mediaCodec.queueInputBuffer(inIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+							bIsEos = true;
+						} else {
+							// 填数据
+							try {
+								mediaCodec.queueInputBuffer(inIndex, 0, nSampleSize, mediaExtractor.getSampleTime(), 0); // 通知MediaDecode解码刚刚传入的数据
+							}catch (IllegalStateException e){
+								e.printStackTrace();
+							}
+							mediaExtractor.advance(); // 继续下一取样
 						}
 					}
-					mediaCodec.releaseOutputBuffer(outIndex, true);
+				}
+
+				int outIndex =  mediaCodec.dequeueOutputBuffer(info, 0);
+				switch (outIndex) {
+					case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
+						Log.d(TAG, "INFO_OUTPUT_BUFFERS_CHANGED");
+						outputBuffers = mediaCodec.getOutputBuffers();
+						break;
+					case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
+						Log.d(TAG, "New format " + mediaCodec.getOutputFormat());
+						break;
+					case MediaCodec.INFO_TRY_AGAIN_LATER:
+						Log.d(TAG, "dequeueOutputBuffer timed out!");
+						break;
+					default:
+						ByteBuffer buffer = outputBuffers[outIndex];
+						Log.v(TAG, "We can't use this buffer but render it due to the API limit, " + buffer);
+
+						//防止视频播放过快
+						long diff = info.presentationTimeUs/1000-(SystemClock.uptimeMillis() - startMs);
+						while (diff>0) {
+							try {
+								Log.e("=A=", "sleep "+diff+ " ms");
+								sleep(diff);
+								diff = info.presentationTimeUs/1000-(SystemClock.uptimeMillis() - startMs);
+
+//							sleep(10);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								break;
+							}
+						}
+						mediaCodec.releaseOutputBuffer(outIndex, true);
+						break;
+				}
+
+				// All decoded frames have been rendered, we can stop playing
+				// now
+				if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
 					break;
+				}
+			}catch (IllegalStateException e){
+				e.printStackTrace();
 			}
 
-			// All decoded frames have been rendered, we can stop playing
-			// now
-			if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-				break;
-			}
 		}
 
 		mediaCodec.stop();
