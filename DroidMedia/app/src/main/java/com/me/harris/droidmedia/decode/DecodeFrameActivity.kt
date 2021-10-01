@@ -10,8 +10,9 @@ import com.jadyn.mediakit.function.durationSecond
 import com.jadyn.mediakit.video.decode.VideoAnalyze
 import com.jadyn.mediakit.video.decode.VideoDecoder2
 import com.me.harris.droidmedia.R
+import kotlinx.android.synthetic.main.activity_decode_frame.*
 
-class DecodeFrameActivity class DecodeFrameActivity : AppCompatActivity() {
+class DecodeFrameActivity : AppCompatActivity() {
 
     private val decodeMP4Path = TextUtils.concat(
         Environment.getExternalStorageDirectory().path,

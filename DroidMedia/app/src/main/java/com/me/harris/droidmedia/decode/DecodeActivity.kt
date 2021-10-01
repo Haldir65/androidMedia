@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.load.resource.bitmap.VideoDecoder
+import com.jadyn.mediakit.video.decode.VideoDecoder
 import com.me.harris.droidmedia.R
+import kotlinx.android.synthetic.main.activity_decode.*
 import java.io.File
 
 class DecodeActivity : AppCompatActivity() {
@@ -67,6 +69,10 @@ class DecodeActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun toast(s: String) {
+        Toast.makeText(this,s,Toast.LENGTH_SHORT).show()
     }
 
     private fun checkOutputPath() {
