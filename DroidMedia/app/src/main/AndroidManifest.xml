@@ -45,6 +45,46 @@
             android:name=".extractFrame.DecodeFrameActivity"
             android:screenOrientation="portrait" />
 
+
+        <activity android:name=".EntryActivity"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            >
+        </activity>
+
+        <activity android:name=".CameraV1TextureView.CameraV1TextureViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN"/>-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--            </intent-filter>-->
+        </activity>
+
+        <activity android:name=".CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN"/>-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--            </intent-filter>-->
+        </activity>
+        <activity android:name="com.liubing.filtertestbed.CameraEntryActivity" />
+        <activity android:name="com.filtertestbed.CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity" />
+        <activity android:name="com.filtertestbed.CameraV1TextureView.CameraV1TextureViewActivity" />
+        <activity android:name="com.filtertestbed.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity" />
+
     </application>
 
 </manifest>

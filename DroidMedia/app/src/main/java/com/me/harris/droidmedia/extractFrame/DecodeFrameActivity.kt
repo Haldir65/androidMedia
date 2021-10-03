@@ -3,19 +3,17 @@ package com.me.harris.droidmedia.extractFrame
 import android.app.ActivityManager
 import android.content.Context
 import android.content.pm.ConfigurationInfo
-import android.graphics.Bitmap
 import android.opengl.GLSurfaceView
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
-import com.me.harris.droidmedia.extractFrame.render.JavaRenderer
+import com.me.harris.droidmedia.extractFrame.render.JavaRendererGL30
+import com.me.harris.droidmedia.extractFrame.render.YUVRender
 import com.me.harris.droidmedia.video.VideoPlayView
-import java.io.File
 import java.nio.IntBuffer
 import kotlin.concurrent.thread
 
@@ -27,14 +25,18 @@ class DecodeFrameActivity:AppCompatActivity()
     companion object {
         const val TAG = "DecodeFrameActivity"
 
-        const val GL_SURFACEVIEW_ENABLED = true
+        const val GL_SURFACEVIEW_2_ENABLED = true //是否用gl 2.0渲染
+        const val GL_SURFACEVIEW_3_ENABLED = true//是否用gl 3.0渲染
+
     }
 
     lateinit var mButton:Button
     lateinit var mImageView1:ImageView
     lateinit var mImageView2:ImageView
-    lateinit var mGlSurfaceView:GLSurfaceView
-    lateinit var mRenderer: JavaRenderer
+    lateinit var mGlSurfaceViewv3:GLSurfaceView
+    lateinit var mGlSurfaceViewv2:GLSurfaceView
+    lateinit var mRendererGL30: JavaRendererGL30
+    lateinit var mRendererGL20: YUVRender
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,13 +45,25 @@ class DecodeFrameActivity:AppCompatActivity()
         mButton = findViewById(R.id.button1)
         mImageView1 = findViewById(R.id.image1)
         mImageView2 = findViewById(R.id.image2)
-        mGlSurfaceView = findViewById(R.id.glsurfaceView)
-        if (GL_SURFACEVIEW_ENABLED){
-            mGlSurfaceView.setEGLContextClientVersion(3); // 设置OpenGL版本号
-            mRenderer = JavaRenderer(this)
-            mGlSurfaceView.setRenderer(mRenderer);
-            mGlSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        mGlSurfaceViewv2 = findViewById(R.id.glsurfaceView2)
+        mGlSurfaceViewv3 = findViewById(R.id.glsurfaceView3)
+        if (GL_SURFACEVIEW_3_ENABLED){
+            mGlSurfaceViewv3.setEGLContextClientVersion(3); // 设置OpenGL版本号
+            mRendererGL30 =
+                JavaRendererGL30(
+                    this
+                )
+            mGlSurfaceViewv3.setRenderer(mRendererGL30);
+            mGlSurfaceViewv3.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY;
         }
+
+        if (GL_SURFACEVIEW_2_ENABLED){
+            mGlSurfaceViewv2.setEGLContextClientVersion(2); // 设置OpenGL版本号
+            mRendererGL20 = YUVRender(this)
+            mGlSurfaceViewv2.setRenderer(mRendererGL20);
+            mGlSurfaceViewv2.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY;
+        }
+
         mButton.setOnClickListener {
             startDecode()
         }
@@ -101,10 +115,12 @@ class DecodeFrameActivity:AppCompatActivity()
 
 
                     // 4. render onGLSurfaceView
-                    if (GL_SURFACEVIEW_ENABLED){
-                        renderOnGLSurfaceView(yuv,width,height)
+                    if (GL_SURFACEVIEW_3_ENABLED){
+                        renderOnGLSurfaceViewv3(yuv,width,height)
                     }
-
+                    if (GL_SURFACEVIEW_2_ENABLED){
+                        renderOnGLSurfaceViewV2(yuv,width,height)
+                    }
                     runOnUiThread {
                         mImageView1.setImageBitmap(bmp1)
                         mImageView2.setImageBitmap(bmp2)
@@ -128,18 +144,25 @@ class DecodeFrameActivity:AppCompatActivity()
     }
 
 
-    private fun renderOnGLSurfaceView(yuv:ByteArray?,width:Int ,height:Int){
+    private fun renderOnGLSurfaceViewv3(yuv:ByteArray?, width:Int, height:Int){
         if (checkOpenGLES30()){
-            mGlSurfaceView.queueEvent {
-                mRenderer.setYuvData(yuv, width, height);
+            mGlSurfaceViewv3.queueEvent {
+                mRendererGL30.setYuvData(yuv, width, height);
             }
-            mGlSurfaceView.requestRender(); // 手动触发渲染
+            mGlSurfaceViewv3.requestRender(); // 手动触发渲染
         }else{
             runOnUiThread {
                 Toast.makeText(this,"con't support OpenGL ES 3.0!",Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
+
+    private fun renderOnGLSurfaceViewV2(yuv:ByteArray?, width:Int, height:Int){
+        mGlSurfaceViewv2.queueEvent {
+            mRendererGL20.setYuvData(yuv, width, height);
+        }
+        mGlSurfaceViewv2.requestRender(); // 手动触发渲染
     }
 
     private fun checkOpenGLES30(): Boolean {
@@ -150,13 +173,24 @@ class DecodeFrameActivity:AppCompatActivity()
 
     override fun onPause() {
         super.onPause()
-        mGlSurfaceView.onPause();
+        if (GL_SURFACEVIEW_2_ENABLED){
+            mGlSurfaceViewv2.onPause();
+        }
+        if (GL_SURFACEVIEW_3_ENABLED) {
+            mGlSurfaceViewv3.onPause();
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        mGlSurfaceView.onResume();
+        if (GL_SURFACEVIEW_2_ENABLED){
+            mGlSurfaceViewv2.onResume();
+        }
+        if (GL_SURFACEVIEW_3_ENABLED) {
+            mGlSurfaceViewv3.onResume();
+        }
     }
+
 
 
 }

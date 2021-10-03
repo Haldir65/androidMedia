@@ -32,7 +32,7 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 	public static void setUrl(){
 		File dir = new File(Environment.getExternalStorageDirectory().getPath()+
 				File.separator+Environment.DIRECTORY_MOVIES);
-		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4") || name.endsWith(".mkv"));
+		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4") || name.endsWith(".webm") || name.endsWith(".mkv"));
 		assert fs != null;
 		strVideo = fs[new Random().nextInt(fs.length)].getAbsolutePath();
 	}
@@ -80,9 +80,11 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 		Log.e("VideoPlayView", "surfaceDestroyed");
 		isCreate = false;
 		if (thread != null) {
+			thread.stop = true;
 			thread.interrupt();
 		}
 		if (soundDecodeThread != null) {
+			soundDecodeThread.stop = true;
 			soundDecodeThread.interrupt();
 		}
 	}
@@ -97,6 +99,8 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 
 	public void stop(){
 		thread.interrupt();
+		thread.stop = true;
+		soundDecodeThread.stop = true;
 		soundDecodeThread.interrupt();
 	}
 }

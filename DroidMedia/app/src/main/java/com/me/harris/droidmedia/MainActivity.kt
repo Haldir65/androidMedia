@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.liubing.filtertestbed.CameraEntryActivity
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
 import com.me.harris.droidmedia.video.MediaCodecVideoMainActivity
@@ -32,7 +33,11 @@ class MainActivity : AppCompatActivity() {
         btn3?.setOnClickListener {
             VideoPlayView.setUrl()
             startActivity(Intent(this, DecodeActivity::class.java))
+        }
 
+        btn4?.setOnClickListener {
+            VideoPlayView.setUrl()
+            startActivity(Intent(this, CameraEntryActivity::class.java))
         }
     }
 

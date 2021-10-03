@@ -18,6 +18,9 @@ public class VideoDecodeThread extends Thread {
 
 	private final static String TAG = "VideoDecodeThread";
 
+
+	public volatile boolean stop = false;
+
 	/** 用来读取音視频文件 提取器 */
 	private MediaCodec mediaCodec;
 	/** 用来解码 解碼器 */
@@ -79,7 +82,7 @@ public class VideoDecodeThread extends Thread {
 		long startMs = SystemClock.uptimeMillis();
 
 		// ==========开始解码=============
-		while (!Thread.interrupted()) {
+		while (!stop&&!Thread.interrupted()) {
 			try {
 				if (!bIsEos) {
 					int inIndex = mediaCodec.dequeueInputBuffer(0);

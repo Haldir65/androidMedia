@@ -11,9 +11,9 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class JavaRenderer implements GLSurfaceView.Renderer {
+public class JavaRendererGL30 implements GLSurfaceView.Renderer {
 
-    private static final String TAG = "JavaRenderer";
+    private static final String TAG = JavaRendererGL30.class.getSimpleName();
     private Context mContext;
 
     private int mProgram;
@@ -26,7 +26,7 @@ public class JavaRenderer implements GLSurfaceView.Renderer {
     private ByteBuffer vBuffer;
     protected FloatBuffer mVertexBuffer;
 
-    public JavaRenderer(Context context) {
+    public JavaRendererGL30(Context context) {
         mContext = context;
     }
 
@@ -43,7 +43,7 @@ public class JavaRenderer implements GLSurfaceView.Renderer {
 
     private void init() {
         String vertexSource = ShaderUtil.loadFromAssets("vertex.glsl", mContext.getResources());
-        String fragmentSource = ShaderUtil.loadFromAssets("fragment_sh.glsl", mContext.getResources());
+        String fragmentSource = ShaderUtil.loadFromAssets("fragment_v3.glsl", mContext.getResources());
         mProgram = ShaderUtil.createProgram(vertexSource, fragmentSource);
         //创建纹理
         mTextureIds = new int[3];
@@ -62,13 +62,13 @@ public class JavaRenderer implements GLSurfaceView.Renderer {
         float[] vertices = new float[]{
                 // 前三个数字为顶点坐标(x, y, z)，后两个数字为纹理坐标(s, t)
                 // 第一个三角形
-                1f,  1f,  0f,       1f, 0f,
-                1f,  -1f, 0f,       1f, 1f,
-                -1f, -1f, 0f,       0f, 1f,
+                1f, 1f, 0f, 1f, 0f,
+                1f, -1f, 0f, 1f, 1f,
+                -1f, -1f, 0f, 0f, 1f,
                 // 第二个三角形
-                1f,  1f,  0f,       1f, 0f,
-                -1f, -1f, 0f,       0f, 1f,
-                -1f, 1f,  0f,       0f, 0f
+                1f, 1f, 0f, 1f, 0f,
+                -1f, -1f, 0f, 0f, 1f,
+                -1f, 1f, 0f, 0f, 0f
         };
         ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4); // 一个 float 是四个字节
         vbb.order(ByteOrder.nativeOrder()); // 必须要是 native order
@@ -76,15 +76,27 @@ public class JavaRenderer implements GLSurfaceView.Renderer {
         mVertexBuffer.put(vertices);
     }
 
+
+    byte[] y = null;
+    byte[] u = null;
+    byte[] v = null;
+
+
     public void setYuvData(byte[] i420, int width, int height) {
         if (yBuffer != null) yBuffer.clear();
         if (uBuffer != null) uBuffer.clear();
         if (vBuffer != null) vBuffer.clear();
 
         // 该函数多次被调用的时，不要每次都new，可以设置为全局变量缓存起来
-        byte[] y = new byte[width * height];
-        byte[] u = new byte[width * height / 4];
-        byte[] v = new byte[width * height / 4];
+        if (y == null || y.length != width * height) {
+            y = new byte[width * height];
+        }
+        if (u == null || u.length != width * height / 4) {
+            u = new byte[width * height / 4];
+        }
+        if (v == null || v.length != width * height / 4) {
+            v = new byte[width * height / 4];
+        }
         System.arraycopy(i420, 0, y, 0, y.length);
         System.arraycopy(i420, y.length, u, 0, u.length);
         System.arraycopy(i420, y.length + u.length, v, 0, v.length);

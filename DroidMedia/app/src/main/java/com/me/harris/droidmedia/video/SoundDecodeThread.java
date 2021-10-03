@@ -19,6 +19,8 @@ public class SoundDecodeThread extends Thread {
 
 	private MediaCodec mediaCodec;
 
+	public volatile boolean stop = false;
+
 	private AudioPlayer mPlayer;
 	private String path;
 
@@ -68,7 +70,7 @@ public class SoundDecodeThread extends Thread {
 		long startMs = System.currentTimeMillis();
 
 		// ==========开始解码=============
-		while (!Thread.interrupted()) {
+		while (!stop&&!Thread.interrupted()) {
 
 			if (!bIsEos) {
 				int inIndex = mediaCodec.dequeueInputBuffer(0);
