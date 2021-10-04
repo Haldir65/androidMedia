@@ -84,6 +84,7 @@
         <activity android:name="com.filtertestbed.CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity" />
         <activity android:name="com.filtertestbed.CameraV1TextureView.CameraV1TextureViewActivity" />
         <activity android:name="com.filtertestbed.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity" />
+        <activity android:name=".openglplayvideo.MediaPlayerSurfaceStubActivity" />
 
     </application>
 

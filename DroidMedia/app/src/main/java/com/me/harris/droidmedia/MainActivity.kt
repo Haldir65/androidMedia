@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import com.liubing.filtertestbed.CameraEntryActivity
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
+import com.me.harris.droidmedia.openglplayvideo.MediaPlayerSurfaceStubActivity
 import com.me.harris.droidmedia.video.MediaCodecVideoMainActivity
 import com.me.harris.droidmedia.video.VideoPlayView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,6 +39,11 @@ class MainActivity : AppCompatActivity() {
         btn4?.setOnClickListener {
             VideoPlayView.setUrl()
             startActivity(Intent(this, CameraEntryActivity::class.java))
+        }
+
+        btn5?.setOnClickListener {
+            VideoPlayView.setUrl()
+            startActivity(Intent(this, MediaPlayerSurfaceStubActivity::class.java))
         }
     }
 

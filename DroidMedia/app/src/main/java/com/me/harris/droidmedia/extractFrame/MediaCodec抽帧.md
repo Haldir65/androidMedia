@@ -6,4 +6,7 @@
 [opengl3.0 渲染yuv数据到GLSurfaceView上](https://blog.csdn.net/afei__/article/details/109031907)
 速度排名:
 libyuv(汇编了都) > ndk > renderScript > java
+
+
 opengl应该也可以
+https://github.com/dingjikerbo/Android-Camera  yuv to rgb
