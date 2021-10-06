@@ -42,7 +42,7 @@ public class JavaRendererGL30 implements GLSurfaceView.Renderer {
     }
 
     private void init() {
-        String vertexSource = ShaderUtil.loadFromAssets("vertex.glsl", mContext.getResources());
+        String vertexSource = ShaderUtil.loadFromAssets("vertex_v3.glsl", mContext.getResources());
         String fragmentSource = ShaderUtil.loadFromAssets("fragment_v3.glsl", mContext.getResources());
         mProgram = ShaderUtil.createProgram(vertexSource, fragmentSource);
         //创建纹理

@@ -1,17 +1,23 @@
 #version 300 es
 precision mediump float;
-in vec2 v_texCoord;
-layout(location = 0) out vec4 outColor;
-uniform sampler2D y_texture;
-uniform sampler2D uv_texture;
+
+in vec2 texture_coord;
+layout(location = 0) uniform sampler2D sample_y;
+layout(location = 1) uniform sampler2D sample_u;
+layout(location = 2) uniform sampler2D sample_v;
+
+out vec4 out_color;
+
+
 void main()
 {
-vec3 yuv;
-yuv.x = texture(y_texture, v_texCoord).r;
-yuv.y = texture(uv_texture, v_texCoord).a-0.5;
-yuv.z = texture(uv_texture, v_texCoord).r-0.5;
-vec3 rgb =mat3( 1.0,       1.0,           1.0,
-                0.0,         -0.344,     1.770,
-                1.403,  -0.714,       0.0) * yuv;
-outColor = vec4(rgb, 1);
+    float y = texture(sample_y, texture_coord).x;
+    float u = texture(sample_u, texture_coord).x- 0.5;
+    float v = texture(sample_v, texture_coord).x- 0.5;
+
+    vec3 rgb;
+    rgb.r = y + 1.4022 * v;
+    rgb.g = y - 0.3456 * u - 0.7145 * v;
+    rgb.b = y + 1.771 * u;
+    out_color = vec4(rgb, 1);
 }

@@ -11,6 +11,7 @@ import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
 import com.me.harris.droidmedia.openglplayvideo.MediaPlayerSurfaceStubActivity
 import com.me.harris.droidmedia.video.MediaCodecVideoMainActivity
+import com.me.harris.droidmedia.video.VideoPlayExtryActivity
 import com.me.harris.droidmedia.video.VideoPlayView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -19,10 +20,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        btn?.setOnClickListener {
-            VideoPlayView.setUrl()
-            startActivity(Intent(this, MediaCodecVideoMainActivity::class.java))
-        }
+
         btn1?.setOnClickListener {
             VideoPlayView.setUrl()
             startActivity(Intent(this, com.me.harris.droidmedia.extractFrame.DecodeFrameActivity::class.java))
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         btn5?.setOnClickListener {
             VideoPlayView.setUrl()
-            startActivity(Intent(this, MediaPlayerSurfaceStubActivity::class.java))
+            startActivity(Intent(this, VideoPlayExtryActivity::class.java))
         }
     }
 

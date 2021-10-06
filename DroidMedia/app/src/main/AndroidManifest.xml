@@ -49,11 +49,6 @@
         <activity android:name=".EntryActivity"
             android:screenOrientation="portrait"
             >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <activity android:name=".CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity"
@@ -85,6 +80,8 @@
         <activity android:name="com.filtertestbed.CameraV1TextureView.CameraV1TextureViewActivity" />
         <activity android:name="com.filtertestbed.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity" />
         <activity android:name=".openglplayvideo.MediaPlayerSurfaceStubActivity" />
+        <activity android:name=".textureview.TextureViewMediaCodecVideoPlayerActivity" />
+        <activity android:name=".video.VideoPlayExtryActivity" />
 
     </application>
 

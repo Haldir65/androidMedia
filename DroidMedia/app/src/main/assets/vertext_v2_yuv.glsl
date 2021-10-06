@@ -1,11 +1,7 @@
-attribute vec4 aPosition;
-attribute vec2 aTexCoord;
-
-uniform mat4 matrix;
-
-varying vec2 vTexCoord;
-
+attribute vec4 av_Position;
+attribute vec2 af_Position;
+varying vec2 v_texPosition;
 void main() {
-    vTexCoord = aTexCoord;
-    gl_Position = matrix * aPosition;
+    v_texPosition = af_Position;
+    gl_Position = av_Position;
 }

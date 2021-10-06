@@ -32,9 +32,11 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 	public static void setUrl(){
 		File dir = new File(Environment.getExternalStorageDirectory().getPath()+
 				File.separator+Environment.DIRECTORY_MOVIES);
-		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4") || name.endsWith(".webm") || name.endsWith(".mkv"));
+		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4"));
+//		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4") || name.endsWith(".webm") || name.endsWith(".mkv"));
 		assert fs != null;
 		strVideo = fs[new Random().nextInt(fs.length)].getAbsolutePath();
+		strVideo = fs[4].getAbsolutePath();
 	}
 
 

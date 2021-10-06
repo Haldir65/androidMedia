@@ -28,6 +28,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YUVImage 渲染yuv nv21 " />
+
             <ImageView
                 android:id="@+id/image1"
                 android:layout_width="wrap_content"
@@ -36,6 +41,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/button1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RenderScript 渲染yuv nv21 " />
 
             <ImageView
                 android:id="@+id/image2"
@@ -66,6 +76,13 @@
                 android:id="@+id/glsurfaceView3"
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="没有更多了"
+                android:layout_marginTop="200dp"
+                />
 
         </LinearLayout>
 

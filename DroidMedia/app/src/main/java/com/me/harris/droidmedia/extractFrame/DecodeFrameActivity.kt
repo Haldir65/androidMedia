@@ -3,18 +3,26 @@ package com.me.harris.droidmedia.extractFrame
 import android.app.ActivityManager
 import android.content.Context
 import android.content.pm.ConfigurationInfo
+import android.graphics.Bitmap
+import android.media.MediaCodecInfo
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
+import android.view.TextureView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.jadyn.mediakit.gl.Texture2dProgram
+import com.jadyn.mediakit.video.decode.VideoDecoder2
 import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.common.CodecUtils
 import com.me.harris.droidmedia.extractFrame.render.JavaRendererGL30
+import com.me.harris.droidmedia.extractFrame.render.JfRender
 import com.me.harris.droidmedia.extractFrame.render.YUVRender
 import com.me.harris.droidmedia.video.VideoPlayView
 import java.nio.IntBuffer
+import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -35,8 +43,9 @@ class DecodeFrameActivity:AppCompatActivity()
     lateinit var mImageView2:ImageView
     lateinit var mGlSurfaceViewv3:GLSurfaceView
     lateinit var mGlSurfaceViewv2:GLSurfaceView
+    lateinit var mGlTextureView:TextureView
     lateinit var mRendererGL30: JavaRendererGL30
-    lateinit var mRendererGL20: YUVRender
+    lateinit var mRendererGL20: JfRender
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,17 +58,14 @@ class DecodeFrameActivity:AppCompatActivity()
         mGlSurfaceViewv3 = findViewById(R.id.glsurfaceView3)
         if (GL_SURFACEVIEW_3_ENABLED){
             mGlSurfaceViewv3.setEGLContextClientVersion(3); // 设置OpenGL版本号
-            mRendererGL30 =
-                JavaRendererGL30(
-                    this
-                )
+            mRendererGL30 = JavaRendererGL30(this)
             mGlSurfaceViewv3.setRenderer(mRendererGL30);
             mGlSurfaceViewv3.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY;
         }
 
         if (GL_SURFACEVIEW_2_ENABLED){
             mGlSurfaceViewv2.setEGLContextClientVersion(2); // 设置OpenGL版本号
-            mRendererGL20 = YUVRender(this)
+            mRendererGL20 = JfRender(this)
             mGlSurfaceViewv2.setRenderer(mRendererGL20);
             mGlSurfaceViewv2.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY;
         }
@@ -89,17 +95,18 @@ class DecodeFrameActivity:AppCompatActivity()
                     width: Int,
                     height: Int,
                     formatCount: Int,
-                    presentationTimeUs: Long
+                    presentationTimeUs: Long,
+                    format: Int
                 ) {
 
                     Log.d(TAG,"frameCount : ${formatCount} , presentationTimeUs: ${presentationTimeUs} ")
                     val finalWidth = Math.min(screenHeight,width)
                     val finalHeight = Math.min(screenWidth,width)
 
-                    val bmp1  = ImageUtil.yuvDataToBitMap(yuv,Math.max(width,finalWidth),Math.max(height,finalHeight),finalWidth,finalHeight)
+                    val bmp1  = ImageUtil.yuvDataToBitMap(yuv,width,height,width,height)
 
                     // 2. 使用renderScript
-                    val bmp2  = renderScriptConverter.nv21ToBitmap(yuv,finalWidth,finalHeight)
+                    val bmp2  = renderScriptConverter.nv21ToBitmap(yuv,width,height)
 
 
 //                     3. 使用yuv to rgb, 可用，但是卡
@@ -116,10 +123,10 @@ class DecodeFrameActivity:AppCompatActivity()
 
                     // 4. render onGLSurfaceView
                     if (GL_SURFACEVIEW_3_ENABLED){
-                        renderOnGLSurfaceViewv3(yuv,width,height)
+                        renderOnGLSurfaceViewv3(CodecUtils.nv21ToI420(yuv!!,width, height),width,height)
                     }
                     if (GL_SURFACEVIEW_2_ENABLED){
-                        renderOnGLSurfaceViewV2(yuv,width,height)
+                        renderOnGLSurfaceViewV2((yuv!!).copyOf(yuv.size),width,height)
                     }
                     runOnUiThread {
                         mImageView1.setImageBitmap(bmp1)
@@ -160,7 +167,7 @@ class DecodeFrameActivity:AppCompatActivity()
 
     private fun renderOnGLSurfaceViewV2(yuv:ByteArray?, width:Int, height:Int){
         mGlSurfaceViewv2.queueEvent {
-            mRendererGL20.setYuvData(yuv, width, height);
+            mRendererGL20.setYuvData(CodecUtils.nv21ToI420(yuv!!,width, height), width, height);
         }
         mGlSurfaceViewv2.requestRender(); // 手动触发渲染
     }
@@ -190,6 +197,8 @@ class DecodeFrameActivity:AppCompatActivity()
             mGlSurfaceViewv3.onResume();
         }
     }
+
+
 
 
 

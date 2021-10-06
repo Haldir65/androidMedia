@@ -36,7 +36,7 @@ public class AudioPlayer {
 	/**
 	 * 释放资源
 	 */
-	private void release() {
+	public void release() {
 		if (mAudioTrack != null) {
 			mAudioTrack.stop();
 			mAudioTrack.release();

@@ -8,10 +8,13 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.util.Log;
 
+import com.me.harris.droidmedia.common.CodecUtils;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class VideoDecoder {
+@Deprecated // 无效
+public class VideoDecoderV2 {
     private static String TAG = "VideoDecoder";
 
     public static final int COLOR_FORMAT_I420 = 1;
@@ -45,7 +48,16 @@ public class VideoDecoder {
     }
 
     public interface DecodeCallback {
-        void onDecode(byte[] yuv, int width, int height ,int formatCount, long presentationTimeUs,int format);
+        /**
+         *
+         * @param yuv
+         * @param width
+         * @param height
+         * @param formatCount
+         * @param presentationTimeUs
+         * @param format  @MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV411Planar
+         */
+        void onDecode(byte[] yuv, int width, int height ,int formatCount, long presentationTimeUs, int format);
 
 
         void onFinish();
@@ -77,18 +89,6 @@ public class VideoDecoder {
             int width = mediaFormat.getInteger(MediaFormat.KEY_WIDTH);
             int height = mediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
             Log.d(TAG,"decode video width : "+ width + " , height: "+ height);
-
-//            MediaFormat format = mediaFormat;
-//             width = format.getInteger(MediaFormat.KEY_WIDTH);
-//            if (format.containsKey("crop-left") && format.containsKey("crop-right")) {
-//                width = format.getInteger("crop-right") + 1 - format.getInteger("crop-left");
-//            }
-//             height = format.getInteger(MediaFormat.KEY_HEIGHT);
-//            if (format.containsKey("crop-top") && format.containsKey("crop-bottom")) {
-//                height = format.getInteger("crop-bottom") + 1 - format.getInteger("crop-top");
-//            }
-//
-//            Log.d(TAG,"decode video width : "+ width + " , height: "+ height);
             int yuvLength = width*height*3/2;
             // width * height * ImageFormat.getBitsPerPixel(format) / 8
             if (mYuvBuffer ==null || mYuvBuffer.length!= yuvLength){
@@ -135,6 +135,8 @@ public class VideoDecoder {
     }
 
     private void decodeFramesToImage(MediaCodec decoder,MediaExtractor extractor, int width , int height,DecodeCallback decodeCallback){
+
+
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
@@ -164,15 +166,21 @@ public class VideoDecoder {
                 }
                 if (info.size>0){
                     outputFrameCount++;
-                    int format = decoder.getOutputFormat().getInteger(MediaFormat.KEY_COLOR_FORMAT);
-                    Image image = decoder.getOutputImage(outputBufferId);
-                    getDataFromImage(image,mOutputFormat,width,height);
-                    image.close();
-                    decoder.releaseOutputBuffer(outputBufferId,false);
-                    //callback
-                    sleepRender(info,startMs);
-                    if (decodeCallback!=null){
-                        decodeCallback.onDecode(mYuvBuffer,width,height,outputFrameCount,info.presentationTimeUs,format);
+                    ByteBuffer outputBuffer  = decoder.getOutputBuffer(outputBufferId);
+                    if (outputBuffer!=null){
+                        outputBuffer.position(0);
+                        outputBuffer.limit(info.offset+info.size);
+                        byte[] yuvData = new byte[outputBuffer.remaining()];
+                        outputBuffer.get(yuvData);
+                        int outFormat = decoder.getOutputFormat().getInteger(MediaFormat.KEY_COLOR_FORMAT);
+                        if (decodeCallback!=null){
+                            CodecUtils.logColorFormat(outFormat);
+                            decodeCallback.onDecode(yuvData, width,height,outputFrameCount,info.presentationTimeUs,outFormat);
+                        }
+//                        sleepRender(info,startMs);
+                        //callback
+                        decoder.releaseOutputBuffer(outputBufferId,false);
+                        outputBuffer.clear();
                     }
                 }
             }
@@ -188,14 +196,14 @@ public class VideoDecoder {
     }
 
     private void getDataFromImage(Image image, int colorFormat, int width , int height){
-        if (colorFormat != COLOR_FORMAT_I420 && colorFormat != COLOR_FORMAT_NV21 && colorFormat!= COLOR_FORMAT_NV12) {
+        if (colorFormat != COLOR_FORMAT_I420 && colorFormat != COLOR_FORMAT_NV21) {
             throw new IllegalArgumentException("only support COLOR_FormatI420 " + "and COLOR_FormatNV21");
         }
         Rect crop = image.getCropRect();
-        Log.v(TAG,"crop width: " + crop.width() + " ,height: "+ crop.height() + " format = "+ image.getFormat() );
-        // image.getFormat()  == ImageFormat.YUV_420_888
+        Log.v(TAG,"crop width: " + crop.width() + " ,height: "+ crop.height());
         Image.Plane[] planes = image.getPlanes();
         byte[] rowData = new byte[planes[0].getRowStride()];
+
         int channelOffset = 0;
         int outputStride = 1;
         for (int i =0 ;i<planes.length;i++){
@@ -278,6 +286,8 @@ public class VideoDecoder {
             }
         }
     }
+
+
 
 
 
