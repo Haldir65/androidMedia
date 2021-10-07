@@ -10,6 +10,7 @@ import android.view.TextureView
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.VideoPlayView
 import kotlin.concurrent.thread
 
@@ -34,8 +35,8 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
     }
 
     private fun startPlay(){
-        VideoPlayView.setUrl()
-        val url = VideoPlayView.strVideo
+        VideoUtil.setUrl()
+        val url = VideoUtil.strVideo
         thread {
             mVideoDecoder = VideoDecoder(mSurface!!)
             mVideoDecoder?.start(url)

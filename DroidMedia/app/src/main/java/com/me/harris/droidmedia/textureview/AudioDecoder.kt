@@ -2,7 +2,6 @@ package com.me.harris.droidmedia.textureview
 
 import android.media.*
 import android.util.Log
-import com.me.harris.droidmedia.video.AudioPlayer
 
 class AudioDecoder:TypicalDecoder {
 

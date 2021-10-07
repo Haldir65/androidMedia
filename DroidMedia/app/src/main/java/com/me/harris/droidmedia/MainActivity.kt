@@ -9,7 +9,9 @@ import androidx.core.app.ActivityCompat
 import com.liubing.filtertestbed.CameraEntryActivity
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
+import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
 import com.me.harris.droidmedia.openglplayvideo.MediaPlayerSurfaceStubActivity
+import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.MediaCodecVideoMainActivity
 import com.me.harris.droidmedia.video.VideoPlayExtryActivity
 import com.me.harris.droidmedia.video.VideoPlayView
@@ -22,26 +24,31 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         btn1?.setOnClickListener {
-            VideoPlayView.setUrl()
+            VideoUtil.setUrl()
             startActivity(Intent(this, com.me.harris.droidmedia.extractFrame.DecodeFrameActivity::class.java))
         }
         btn2?.setOnClickListener {
-            VideoPlayView.setUrl()
+            VideoUtil.setUrl()
             startActivity(Intent(this, DecodeFrameActivity::class.java))
         }
         btn3?.setOnClickListener {
-            VideoPlayView.setUrl()
+            VideoUtil.setUrl()
             startActivity(Intent(this, DecodeActivity::class.java))
         }
 
         btn4?.setOnClickListener {
-            VideoPlayView.setUrl()
+            VideoUtil.setUrl()
             startActivity(Intent(this, CameraEntryActivity::class.java))
         }
 
         btn5?.setOnClickListener {
-            VideoPlayView.setUrl()
+            VideoUtil.setUrl()
             startActivity(Intent(this, VideoPlayExtryActivity::class.java))
+        }
+
+        btn6?.setOnClickListener {
+            VideoUtil.setUrl()
+            startActivity(Intent(this, VideoPlayFilterActivity::class.java))
         }
     }
 

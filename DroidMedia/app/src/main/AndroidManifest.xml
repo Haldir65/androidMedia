@@ -82,6 +82,7 @@
         <activity android:name=".openglplayvideo.MediaPlayerSurfaceStubActivity" />
         <activity android:name=".textureview.TextureViewMediaCodecVideoPlayerActivity" />
         <activity android:name=".video.VideoPlayExtryActivity" />
+        <activity android:name=".filter.VideoPlayFilterActivity" />
 
     </application>
 

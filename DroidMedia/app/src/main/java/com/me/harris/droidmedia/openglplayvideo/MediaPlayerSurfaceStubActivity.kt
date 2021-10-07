@@ -6,6 +6,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.utils.Utils
+import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.VideoPlayView
 
 class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
@@ -16,7 +17,7 @@ class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mediaplayer_glsurfaceview)
         mVideoView = VideoSurfaceView(this,MediaPlayer().apply {
-            setDataSource(VideoPlayView.strVideo)
+            setDataSource(VideoUtil.strVideo)
         })
         findViewById<FrameLayout>(R.id.container)?.addView(mVideoView,
             FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,Utils.dip2px(this,200F)))

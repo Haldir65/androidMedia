@@ -19,7 +19,8 @@ import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.common.CodecUtils
 import com.me.harris.droidmedia.extractFrame.render.JavaRendererGL30
 import com.me.harris.droidmedia.extractFrame.render.JfRender
-import com.me.harris.droidmedia.extractFrame.render.YUVRender
+import com.me.harris.droidmedia.extractFrame.render.MyGLRenderer
+import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.VideoPlayView
 import java.nio.IntBuffer
 import java.util.*
@@ -43,9 +44,11 @@ class DecodeFrameActivity:AppCompatActivity()
     lateinit var mImageView2:ImageView
     lateinit var mGlSurfaceViewv3:GLSurfaceView
     lateinit var mGlSurfaceViewv2:GLSurfaceView
+    lateinit var mGlSurfaceViewv21:GLSurfaceView
     lateinit var mGlTextureView:TextureView
     lateinit var mRendererGL30: JavaRendererGL30
     lateinit var mRendererGL20: JfRender
+    lateinit var mRendererGL21: MyGLRenderer
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +58,7 @@ class DecodeFrameActivity:AppCompatActivity()
         mImageView1 = findViewById(R.id.image1)
         mImageView2 = findViewById(R.id.image2)
         mGlSurfaceViewv2 = findViewById(R.id.glsurfaceView2)
+        mGlSurfaceViewv21 = findViewById(R.id.glsurfaceView21)
         mGlSurfaceViewv3 = findViewById(R.id.glsurfaceView3)
         if (GL_SURFACEVIEW_3_ENABLED){
             mGlSurfaceViewv3.setEGLContextClientVersion(3); // 设置OpenGL版本号
@@ -70,6 +74,13 @@ class DecodeFrameActivity:AppCompatActivity()
             mGlSurfaceViewv2.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY;
         }
 
+        if (GL_SURFACEVIEW_2_ENABLED){
+            mGlSurfaceViewv21.setEGLContextClientVersion(2); // 设置OpenGL版本号
+            mRendererGL21 = MyGLRenderer()
+            mGlSurfaceViewv21.setRenderer(mRendererGL21);
+            mGlSurfaceViewv21.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY;
+        }
+
         mButton.setOnClickListener {
             startDecode()
         }
@@ -78,7 +89,7 @@ class DecodeFrameActivity:AppCompatActivity()
     var decoder: VideoDecoder? = null
 
     private fun startDecode(){
-        val firsVideoFile =  VideoPlayView.strVideo
+        val firsVideoFile =  VideoUtil.strVideo
 
 
         val mVideoDecoder = VideoDecoder().also { decoder = it }
@@ -127,6 +138,7 @@ class DecodeFrameActivity:AppCompatActivity()
                     }
                     if (GL_SURFACEVIEW_2_ENABLED){
                         renderOnGLSurfaceViewV2((yuv!!).copyOf(yuv.size),width,height)
+                        renderOnGLSurfaceViewV21((yuv!!).copyOf(yuv.size),width,height)
                     }
                     runOnUiThread {
                         mImageView1.setImageBitmap(bmp1)
@@ -167,9 +179,24 @@ class DecodeFrameActivity:AppCompatActivity()
 
     private fun renderOnGLSurfaceViewV2(yuv:ByteArray?, width:Int, height:Int){
         mGlSurfaceViewv2.queueEvent {
-            mRendererGL20.setYuvData(CodecUtils.nv21ToI420(yuv!!,width, height), width, height);
+            if (yuv != null) {
+                mRendererGL20.setYuvData(CodecUtils.nv21ToI420(yuv!!,width, height), width, height);
+            };
         }
         mGlSurfaceViewv2.requestRender(); // 手动触发渲染
+    }
+
+
+    private fun renderOnGLSurfaceViewV21(yuv:ByteArray?, width:Int, height:Int){
+        mGlSurfaceViewv21.queueEvent {
+            if (yuv != null) {
+                mRendererGL21.setYuvDataSize(width,height)
+                mRendererGL21.setDisplayOrientation(270)
+                // YUV数据的格式 0 -> I420  1 -> NV12  2 -> NV21
+                mRendererGL21.feedData(yuv,2)
+            };
+        }
+        mGlSurfaceViewv21.requestRender(); // 手动触发渲染
     }
 
     private fun checkOpenGLES30(): Boolean {

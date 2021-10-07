@@ -177,6 +177,7 @@ public class JfRender implements GLSurfaceView.Renderer {
     }
 
     // https://www.jianshu.com/p/741466b8f67c
+    // https://www.codenong.com/cs109031907/
     public void setYuvData(@Nullable byte[] i420, int width, int height) {
         if (i420!=null){
             this.width_yuv = width;

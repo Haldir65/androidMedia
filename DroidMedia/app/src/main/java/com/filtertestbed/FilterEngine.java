@@ -8,27 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import static android.opengl.GLES20.GL_FLOAT;
-import static android.opengl.GLES20.GL_FRAGMENT_SHADER;
-import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.GL_VERTEX_SHADER;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glAttachShader;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glCompileShader;
-import static android.opengl.GLES20.glCreateProgram;
-import static android.opengl.GLES20.glCreateShader;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
-import static android.opengl.GLES20.glGetAttribLocation;
-import static android.opengl.GLES20.glGetError;
-import static android.opengl.GLES20.glGetUniformLocation;
-import static android.opengl.GLES20.glLinkProgram;
-import static android.opengl.GLES20.glShaderSource;
-import static android.opengl.GLES20.glUniform1i;
-import static android.opengl.GLES20.glUniformMatrix4fv;
-import static android.opengl.GLES20.glUseProgram;
-import static android.opengl.GLES20.glVertexAttribPointer;
+
 
 import com.me.harris.droidmedia.R;
 
@@ -57,8 +37,8 @@ public class FilterEngine {
         mContext = context;
         mOESTextureId = OESTextureId;
         mBuffer = createBuffer(vertexData);
-        vertexShader = loadShader(GL_VERTEX_SHADER, Utils.readShaderFromResource(mContext, R.raw.base_vertex_shader));
-        fragmentShader = loadShader(GL_FRAGMENT_SHADER, Utils.readShaderFromResource(mContext, R.raw.base_fragment_shader));
+        vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, Utils.readShaderFromResource(mContext, R.raw.base_vertex_shader));
+        fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, Utils.readShaderFromResource(mContext, R.raw.base_fragment_shader));
         mShaderProgram = linkProgram(vertexShader, fragmentShader);
     }
 
@@ -95,49 +75,49 @@ public class FilterEngine {
     }
 
     public int loadShader(int type, String shaderSource) {
-        int shader = glCreateShader(type);
+        int shader = GLES20.glCreateShader(type);
         if (shader == 0) {
-            throw new RuntimeException("Create Shader Failed!" + glGetError());
+            throw new RuntimeException("Create Shader Failed!" + GLES20.glGetError());
         }
-        glShaderSource(shader, shaderSource);
-        glCompileShader(shader);
+        GLES20.glShaderSource(shader, shaderSource);
+        GLES20.glCompileShader(shader);
         return shader;
     }
 
     public int linkProgram(int verShader, int fragShader) {
-        int program = glCreateProgram();
+        int program = GLES20.glCreateProgram();
         if (program == 0) {
-            throw new RuntimeException("Create Program Failed!" + glGetError());
+            throw new RuntimeException("Create Program Failed!" + GLES20.glGetError());
         }
-        glAttachShader(program, verShader);
-        glAttachShader(program, fragShader);
-        glLinkProgram(program);
+        GLES20.glAttachShader(program, verShader);
+        GLES20. glAttachShader(program, fragShader);
+        GLES20.glLinkProgram(program);
 
-        glUseProgram(program);
+        GLES20.glUseProgram(program);
         return program;
     }
 
     public void drawTexture(float[] transformMatrix) {
-        aPositionLocation = glGetAttribLocation(mShaderProgram, FilterEngine.POSITION_ATTRIBUTE);
-        aTextureCoordLocation = glGetAttribLocation(mShaderProgram, FilterEngine.TEXTURE_COORD_ATTRIBUTE);
-        uTextureMatrixLocation = glGetUniformLocation(mShaderProgram, FilterEngine.TEXTURE_MATRIX_UNIFORM);
-        uTextureSamplerLocation = glGetUniformLocation(mShaderProgram, FilterEngine.TEXTURE_SAMPLER_UNIFORM);
+        aPositionLocation = GLES20.glGetAttribLocation(mShaderProgram, FilterEngine.POSITION_ATTRIBUTE);
+        aTextureCoordLocation = GLES20.glGetAttribLocation(mShaderProgram, FilterEngine.TEXTURE_COORD_ATTRIBUTE);
+        uTextureMatrixLocation = GLES20.glGetUniformLocation(mShaderProgram, FilterEngine.TEXTURE_MATRIX_UNIFORM);
+        uTextureSamplerLocation = GLES20.glGetUniformLocation(mShaderProgram, FilterEngine.TEXTURE_SAMPLER_UNIFORM);
 
-        glActiveTexture(GLES20.GL_TEXTURE0);
-        glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mOESTextureId);
-        glUniform1i(uTextureSamplerLocation, 0);
-        glUniformMatrix4fv(uTextureMatrixLocation, 1, false, transformMatrix, 0);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mOESTextureId);
+        GLES20.glUniform1i(uTextureSamplerLocation, 0);
+        GLES20.glUniformMatrix4fv(uTextureMatrixLocation, 1, false, transformMatrix, 0);
 
         if (mBuffer != null) {
             mBuffer.position(0);
-            glEnableVertexAttribArray(aPositionLocation);
-            glVertexAttribPointer(aPositionLocation, 2, GL_FLOAT, false, 16, mBuffer);
+            GLES20.glEnableVertexAttribArray(aPositionLocation);
+            GLES20.glVertexAttribPointer(aPositionLocation, 2, GLES20.GL_FLOAT, false, 16, mBuffer);
 
             mBuffer.position(2);
-            glEnableVertexAttribArray(aTextureCoordLocation);
-            glVertexAttribPointer(aTextureCoordLocation, 2, GL_FLOAT, false, 16, mBuffer);
+            GLES20.glEnableVertexAttribArray(aTextureCoordLocation);
+            GLES20. glVertexAttribPointer(aTextureCoordLocation, 2, GLES20.GL_FLOAT, false, 16, mBuffer);
 
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
         }
     }
 

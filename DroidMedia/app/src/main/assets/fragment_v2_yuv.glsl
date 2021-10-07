@@ -10,9 +10,15 @@ void main() {
     v = texture2D(sampler_v,v_texPosition).r- 0.5;
 
     vec3 rgb;
-    rgb.r = y + 1.403 * v;
-    rgb.g = y - 0.344 * u - 0.714 * v;
-    rgb.b = y + 1.770 * u;
+    rgb.r = y + 1.402 * v;
+    rgb.g = y - 0.34414 * u - 0.71414 * v;
+    rgb.b = y + 1.772 * u;
 
-    gl_FragColor = vec4(rgb,1);
+
+    if(v_texPosition.x > 0.5) {
+        gl_FragColor = vec4(vec3(rgb.r*0.299 + rgb.g*0.587 + rgb.b*0.114), 1.0);
+        //将输出视频帧的一半渲染成经典黑白风格的图像
+    }else {
+        gl_FragColor = vec4(rgb,1.0);
+    }
 }

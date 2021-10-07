@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.mediakit.video.decode.VideoDecoder
 import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.VideoPlayView
 import kotlinx.android.synthetic.main.activity_decode.*
 import java.io.File
@@ -18,7 +19,7 @@ class DecodeActivity : AppCompatActivity() {
 
 
 
-    private val decodeMP4Path = VideoPlayView.strVideo
+    private val decodeMP4Path = VideoUtil.strVideo
 
 
     private var videoDecoder: VideoDecoder? = null

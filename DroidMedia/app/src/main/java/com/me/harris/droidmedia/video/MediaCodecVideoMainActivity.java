@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.me.harris.droidmedia.R;
+import com.me.harris.droidmedia.utils.VideoUtil;
 
 import java.util.HashMap;
 
@@ -20,7 +21,7 @@ public class MediaCodecVideoMainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_media_codec_video_player);
 		playView = findViewById(R.id.player);
-		int[] arr = VideoInfoHelper.queryVideoInfo(VideoPlayView.strVideo);
+		int[] arr = VideoInfoHelper.queryVideoInfo(VideoUtil.strVideo);
 		ViewGroup.LayoutParams params = playView.getLayoutParams();
 
 
