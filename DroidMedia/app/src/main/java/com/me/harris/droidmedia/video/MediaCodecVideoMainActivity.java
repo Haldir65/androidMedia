@@ -21,6 +21,8 @@ public class MediaCodecVideoMainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_media_codec_video_player);
 		playView = findViewById(R.id.player);
+		VideoUtil.setUrl();
+		VideoPlayView.strVideo = VideoUtil.strVideo;
 		int[] arr = VideoInfoHelper.queryVideoInfo(VideoUtil.strVideo);
 		ViewGroup.LayoutParams params = playView.getLayoutParams();
 
