@@ -25,7 +25,7 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
     }
 
 
-    private val DEFAULT_TIME_OUT = 10_000L
+    private val DEFAULT_TIME_OUT = 10_000L * 2
 
     fun startExtract(url: String) {
         val str = url
@@ -84,7 +84,7 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
                     Log.d("VideoDecoder", "INFO_OUTPUT_BUFFERS_CHANGED")
                 }
                 MediaCodec.INFO_TRY_AGAIN_LATER -> {
-                    Log.d("VideoDecoder", "dequeueOutputBuffer timed out!")
+                    Log.v("VideoDecoder", "dequeueOutputBuffer timed out!")
                 }
                 else -> {
                     decoder.releaseOutputBuffer(outIndex, true)

@@ -37,9 +37,9 @@ object VideoUtil {
         val fs = dir.listFiles { dir1: File?, name: String ->
             name.endsWith(
                 ".mp4"
-            )
+            ) || name.endsWith(".mkv") || name.endsWith("webm")
         }!!
         strVideo = fs[Random().nextInt(fs.size)].absolutePath
-        strVideo = fs[4].absolutePath
+//        strVideo = fs[4].absolutePath
     }
 }
