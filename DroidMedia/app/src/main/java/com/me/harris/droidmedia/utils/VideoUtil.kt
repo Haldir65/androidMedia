@@ -40,6 +40,6 @@ object VideoUtil {
             ) || name.endsWith(".mkv") || name.endsWith("webm")
         }!!
         strVideo = fs[Random().nextInt(fs.size)].absolutePath
-//        strVideo = fs[4].absolutePath
+        strVideo = fs[4].absolutePath
     }
 }

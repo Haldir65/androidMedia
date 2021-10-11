@@ -22,7 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,14 +77,14 @@
             <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
             <!--            </intent-filter>-->
         </activity>
-        <activity android:name="com.liubing.filtertestbed.CameraEntryActivity" />
-        <activity android:name="com.filtertestbed.CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity" />
-        <activity android:name="com.filtertestbed.CameraV1TextureView.CameraV1TextureViewActivity" />
-        <activity android:name="com.filtertestbed.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity" />
-        <activity android:name=".openglplayvideo.MediaPlayerSurfaceStubActivity" />
-        <activity android:name=".textureview.TextureViewMediaCodecVideoPlayerActivity" />
-        <activity android:name=".video.VideoPlayExtryActivity" />
-        <activity android:name=".filter.VideoPlayFilterActivity" />
+        <activity android:name="com.liubing.filtertestbed.CameraEntryActivity" android:screenOrientation="portrait" />
+        <activity android:name="com.filtertestbed.CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity"  android:screenOrientation="portrait"/>
+        <activity android:name="com.filtertestbed.CameraV1TextureView.CameraV1TextureViewActivity" android:screenOrientation="portrait" />
+        <activity android:name="com.filtertestbed.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity" android:screenOrientation="portrait" />
+        <activity android:name=".openglplayvideo.MediaPlayerSurfaceStubActivity" android:screenOrientation="portrait" />
+        <activity android:name=".textureview.TextureViewMediaCodecVideoPlayerActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".video.VideoPlayExtryActivity" android:screenOrientation="portrait" />
+        <activity android:name=".filter.VideoPlayFilterActivity"  android:screenOrientation="portrait"/>
 
     </application>
 
