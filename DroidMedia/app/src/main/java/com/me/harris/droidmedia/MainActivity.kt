@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import com.liubing.filtertestbed.CameraEntryActivity
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
+import com.me.harris.droidmedia.encode.MediaCodecEncodeActivity
 import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
 import com.me.harris.droidmedia.openglplayvideo.MediaPlayerSurfaceStubActivity
 import com.me.harris.droidmedia.utils.VideoUtil
@@ -49,6 +50,10 @@ class MainActivity : AppCompatActivity() {
         btn6?.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, VideoPlayFilterActivity::class.java))
+        }
+        btn7?.setOnClickListener {
+            VideoUtil.setUrl()
+            startActivity(Intent(this, MediaCodecEncodeActivity::class.java))
         }
     }
 
