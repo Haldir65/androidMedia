@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.openglplayvideo.MediaPlayerSurfaceStubActivity
 import com.me.harris.droidmedia.textureview.TextureViewMediaCodecVideoPlayerActivity
+import com.me.harris.droidmedia.video.sharedSurface.SharedSurfaceTextureListActivity
 
 class VideoPlayExtryActivity:AppCompatActivity() {
 
@@ -21,6 +22,12 @@ class VideoPlayExtryActivity:AppCompatActivity() {
         }
         findViewById<Button>(R.id.btn3)?.setOnClickListener {
             startActivity(Intent(this, MediaPlayerSurfaceStubActivity::class.java))
+        }
+        findViewById<Button>(R.id.btn3)?.setOnClickListener {
+            startActivity(Intent(this, MediaPlayerSurfaceStubActivity::class.java))
+        }
+        findViewById<Button>(R.id.btn4)?.setOnClickListener {
+            startActivity(Intent(this, SharedSurfaceTextureListActivity::class.java))
         }
     }
 }
