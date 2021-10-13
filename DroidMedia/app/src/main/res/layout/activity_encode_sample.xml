@@ -11,6 +11,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:text="src path"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
         />
 
     <TextView
@@ -20,6 +23,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_src"
+        android:text="dst path"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
         />
 
     <Button
@@ -29,6 +35,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_dst"
+        android:text="startEncode"
+        android:textAllCaps="false"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

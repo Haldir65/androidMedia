@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:text="DecodeFrame play on imageView or SurfaceView"
+                android:text="TextureView and egl setup"
                 android:textAllCaps="false" />
 
         </androidx.cardview.widget.CardView>
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="DecodeFrameActivity"
+                android:text=""
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="DecodeActivity"
+                android:text=""
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="click me to CameraActivity"
+                android:text=""
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="click me to all kinds of VideoPlay Activity"
+                android:text=""
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="all kinds of filter"
+                android:text=""
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -131,25 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="Encode Activity"
-                android:textAllCaps="false" />
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView
-            style="@style/CardStyleButton"
-            app:contentPadding="4dp"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="6dp"
-            app:cardElevation="3dp">
-
-            <Button
-                android:id="@+id/btn8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/white"
-                android:text="OpenGL Entrance Activity"
+                android:text=""
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 

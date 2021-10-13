@@ -1,5 +1,6 @@
 package com.me.harris.droidmedia.utils
 
+import android.os.Build
 import android.os.Environment
 import java.io.File
 import java.util.*
@@ -40,6 +41,7 @@ object VideoUtil {
             ) || name.endsWith(".mkv") || name.endsWith("webm")
         }!!
         strVideo = fs[Random().nextInt(fs.size)].absolutePath
-        strVideo = fs[4].absolutePath
+//        strVideo = fs[4].absolutePath
+//        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
     }
 }

@@ -30,6 +30,17 @@ public static int createOESTextureObject() {
     }
 ```
 
+- 思路就是camera预览不采用直接到View和数据回调的方式，而是采用setPreviewTexture方式，
+将camera数据预览到surfaceTexture，surfaceTexture由于opengl 中texture关联，
+数据准备好后surfaceTexture中onFrameAvailable回调通知Render开始处理，
+通过updateImage将surfaceTexture数据更新到texture，然后进行处理，
+最后显示到glSurfaceView上。
+
+GLSurfaceView rendermode为RENDERMODE_WHEN_DITY，靠onFrameAvailable中调用requestRender驱动，
+texture绑定需要GLES11Ext.GL_TEXTURE_EXTERNAL_OES类型，
+Fragement中需要声明extension GL_OES_EGL_image_external : require。
+
+
 - 播放器这边的api
     ExoPlayer.setVideoSurface(Surface surface);
     MediaPlayer.setSurface(Surface surface);

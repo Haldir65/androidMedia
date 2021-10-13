@@ -11,6 +11,7 @@ import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
 import com.me.harris.droidmedia.encode.MediaCodecEncodeActivity
 import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
+import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.droidmedia.openglplayvideo.MediaPlayerSurfaceStubActivity
 import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.MediaCodecVideoMainActivity
@@ -54,6 +55,10 @@ class MainActivity : AppCompatActivity() {
         btn7?.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, MediaCodecEncodeActivity::class.java))
+        }
+        btn8?.setOnClickListener {
+            VideoUtil.setUrl()
+            startActivity(Intent(this, OpenGlEntryActivity::class.java))
         }
     }
 

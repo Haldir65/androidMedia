@@ -85,7 +85,15 @@
         <activity android:name=".textureview.TextureViewMediaCodecVideoPlayerActivity"  android:screenOrientation="portrait"/>
         <activity android:name=".video.VideoPlayExtryActivity" android:screenOrientation="portrait" />
         <activity android:name=".filter.VideoPlayFilterActivity"  android:screenOrientation="portrait"/>
-        <activity android:name=".encode.MediaCodecEncodeActivity" />
+        <activity android:name=".encode.MediaCodecEncodeActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".opengl.OpenGlEntryActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".opengl.egl.TextureViewRenderViaEglActivity"
+            android:screenOrientation="portrait"
+            />
 
     </application>
 

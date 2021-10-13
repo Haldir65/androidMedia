@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.extractFrame.VideoDecoder
+import com.me.harris.droidmedia.utils.ToastUtils
 import com.me.harris.droidmedia.utils.VideoUtil
 import java.io.File
 import kotlin.concurrent.thread
@@ -17,7 +18,7 @@ import kotlin.concurrent.thread
 class MediaCodecEncodeActivity : AppCompatActivity() {
 
     companion object {
-        const val TAG = "MediaCodecEncodeActivity"
+        const val TAG = "VideoEncoder"
     }
 
     lateinit var mButtonStartEncode: Button
@@ -44,7 +45,10 @@ class MediaCodecEncodeActivity : AppCompatActivity() {
         if (!outPutDir.exists()){
             outPutDir.mkdirs()
         }
-
+        val destFilePath = File(outPutDir,"${System.currentTimeMillis()}.mp4").absolutePath
+        mTextSrcPath.text = "src文件路径${src}"
+        mTextDstPath.text = "dst文件路径${destFilePath}"
+        ToastUtils.showTextShort(this,"开始编码！")
         thread {
             val videoDecoder = VideoDecoder()
             videoDecoder.outputFormat = VideoDecoder.COLOR_FORMAT_NV12
@@ -54,22 +58,28 @@ class MediaCodecEncodeActivity : AppCompatActivity() {
                     Log.v(TAG,"formatCount : ${formatCount} presentationTimeUs : ${presentationTimeUs/1000_000}")
                     if (mVideoEncoder ==null ){
                         mVideoEncoder = VideoEncoder().also {
-                            it.init(File(outPutDir,"${System.currentTimeMillis()}.mp4").absolutePath,width, height)
+                            it.init(destFilePath,width, height)
                         }
                     }
                     mVideoEncoder?.encode(yuv,presentationTimeUs)
-
                 }
 
                 override fun onFinish() {
                     Log.i(TAG,"onFinish")
                     mVideoEncoder?.release()
+                    this@MediaCodecEncodeActivity.runOnUiThread {
+                        ToastUtils.showTextShort(this@MediaCodecEncodeActivity,"编码完成！")
+                        mTextDstPath.text = "dst文件路径${destFilePath}已经生成"
+                    }
                     mVideoEncoder = null
                 }
 
                 override fun onStop() {
                     Log.i(TAG,"onStop")
                     mVideoEncoder?.release()
+                    this@MediaCodecEncodeActivity.runOnUiThread {
+                        ToastUtils.showTextShort(this@MediaCodecEncodeActivity,"编码终止！")
+                    }
                     mVideoEncoder = null
                 }
             })
