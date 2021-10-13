@@ -25,6 +25,8 @@ class SharedSurfaceTextureListActivity : AppCompatActivity() {
 
     private var mMediaPlayer: MediaPlayer? = null
 
+    private var mSurfaceTexture:SurfaceTexture? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +35,7 @@ class SharedSurfaceTextureListActivity : AppCompatActivity() {
         mTextView = findViewById(R.id.player_text_view_list)
         mButton = findViewById(R.id.player_list_to_detail_button)
         mButton.setOnClickListener {
-            mMediaPlayer?.stop()
+//            mMediaPlayer?.stop()
             startActivity(Intent(this,SharedSurfaceTextureDetailActivity::class.java))
         }
         initTexture()
@@ -48,9 +50,10 @@ class SharedSurfaceTextureListActivity : AppCompatActivity() {
                 height: Int
             ) {
                 Log.e(TAG,"onSurfaceTextureAvailable $surface")
-                if (SharedSurfaceManager.mPlayer==null){
+                if (SharedSurfaceManager.mPlayer==null || SharedSurfaceManager.mSurfaceTexture == null){
                     initPlayer(surface)
                     SharedSurfaceManager.mSurfaceTexture = surface
+                    mSurfaceTexture = surface
                 }
             }
 
@@ -70,6 +73,13 @@ class SharedSurfaceTextureListActivity : AppCompatActivity() {
             override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
 //                Log.v(TAG,"onSurfaceTextureUpdated $surface")
             }
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mSurfaceTexture?.let {
+            mMediaPlayer?.setSurface(Surface(it))
         }
     }
 
@@ -102,6 +112,7 @@ class SharedSurfaceTextureListActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         SharedSurfaceManager.mPlayer = null
+        mSurfaceTexture = null
         SharedSurfaceManager.mSurfaceTexture?.release()
         SharedSurfaceManager.mSurfaceTexture = null
     }

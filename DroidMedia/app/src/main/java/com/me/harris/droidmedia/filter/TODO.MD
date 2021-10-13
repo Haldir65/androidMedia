@@ -75,5 +75,20 @@ EGL主要需要四个对象，一个EGLDisplay描述EGL显示屏，一个EGLConf
 [iOS上的滤镜实现]https://www.jianshu.com/p/1b5c90df5829
 
 
+1.GLSurfaceView介绍
+GLSurfaceView从Android 1.5(API level 3)开始加入，继承自SurfaceView，实现了SurfaceHolder.Callback2接口，拥有SurfaceView的全部特性，也有view所有的功能和属性，特别是处理事件的能力，它主要是在SurfaceView的基础上它加入了EGL的管理，并自带了一个GLThread绘制线程（EGLContext创建GL环境所在线程即为GL线程），绘制的工作直接通过OpenGL在绘制线程进行，不会阻塞主线程，绘制的结果输出到SurfaceView所提供的Surface上，这使得GLSurfaceView也拥有了OpenGlES所提供的图形处理能力，通过它定义的Render接口，使更改具体的Render的行为非常灵活性，只需要将实现了渲染函数的Renderer的实现类设置给GLSurfaceView即可。
 
+GLSurfaceView提供了下列特性：
+
+1.提供并且管理一个独立的Surface。
+2.提供并且管理一个EGL display，它能让opengl把内容渲染到上述的Surface上。
+3.支持用户自定义渲染器(Render)，通过setRenderer设置一个自定义的Renderer。
+4.让渲染器在独立的GLThread线程里运作，和UI线程分离。
+5.支持按需渲染(on-demand)和连续渲染(continuous)两种模式。
+6.GPU加速：GLSurfaceView的效率是SurfaceView的30倍以上，SurfaceView使用画布进行绘制，GLSurfaceView利用GPU加速提高了绘制效率
+7.View的绘制onDraw(Canvas canvas)使用Skia渲染引擎渲染，而GLSurfaceView的渲染器Renderer的onDrawFrame(GL10 gl)使用opengl绘制引擎进行渲染。
+
+
+
+https://www.codenong.com/jsb36b6e17e818/
 

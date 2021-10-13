@@ -31,34 +31,34 @@ class SharedSurfaceTextureDetailActivity:AppCompatActivity() {
     }
 
     private fun initTexture(){
-        mTextureView.setSurfaceTexture(SharedSurfaceManager.mSurfaceTexture!!)
+//        mTextureView.setSurfaceTexture(SharedSurfaceManager.mSurfaceTexture!!)
         initPlayer(SharedSurfaceManager.mSurfaceTexture!!)
 
-//        mTextureView.surfaceTextureListener = object :TextureView.SurfaceTextureListener{
-//            override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
-//
+        mTextureView.surfaceTextureListener = object :TextureView.SurfaceTextureListener{
+            override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                mMediaPlayer?.setSurface(Surface(surface))
 //                if (SharedSurfaceManager.mSurfaceTexture!=null ){
 //                    mTextureView.setSurfaceTexture(SharedSurfaceManager.mSurfaceTexture!!)
 //                }else{
 //                }
 //                Log.e(TAG,"onSurfaceTextureAvailable ${mTextureView.surfaceTexture}")
-//
-//
-//            }
-//
-//            override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-//
-//            }
-//
-//            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture) :Boolean{
-//
-//                return false
-//            }
-//
-//            override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
-//
-//            }
-//        }
+
+
+            }
+
+            override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+
+            }
+
+            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture) :Boolean{
+
+                return true
+            }
+
+            override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+
+            }
+        }
     }
 
 
