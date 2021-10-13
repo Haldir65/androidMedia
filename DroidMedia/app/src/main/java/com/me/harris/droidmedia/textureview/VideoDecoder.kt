@@ -36,6 +36,8 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
             val format = extractor.getTrackFormat(i)
             val mime = format.getString(MediaFormat.KEY_MIME)
             if (mime?.startsWith("video/") == true) {
+                val keyFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE) // 1s 30帧左右
+                Log.e("VideoDecoder", " keyFrameRate =  ${keyFrameRate} ") // 5s 一个关键帧
                 extractor.selectTrack(i)
                 decoder = MediaCodec.createDecoderByType(mime)
                 decoder.configure(format, mSurface, null, 0)
@@ -45,6 +47,7 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
         if (decoder == null) throw IllegalStateException("unable to initiate codec")
         decoder.start()
         var sawEOS = false
+        var keyFrameCount = 0
         val info = MediaCodec.BufferInfo()
         val startMs = System.currentTimeMillis()
         while (!isStopped()) {
@@ -90,6 +93,9 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
                     decoder.releaseOutputBuffer(outIndex, true)
                     sleepRender(info, startMs)
                 }
+            }
+            if ((info.flags and MediaCodec.BUFFER_FLAG_KEY_FRAME) == MediaCodec.BUFFER_FLAG_KEY_FRAME ){
+                Log.v("VideoDecoder", "${++keyFrameCount} key frame 关键帧 found ")
             }
             if ((info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                 sawEOS = true
