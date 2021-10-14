@@ -33,6 +33,23 @@ public class VideoEncoder {
             mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, width * height * 6);
             mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
             mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
+            mediaFormat.setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileHigh);
+            mediaFormat.setInteger(MediaFormat.KEY_LEVEL, MediaCodecInfo.CodecProfileLevel.AVCLevel41);
+            MediaCodecInfo.EncoderCapabilities caps =  mEncoder.getCodecInfo().getCapabilitiesForType(mediaFormat.getString(MediaFormat.KEY_MIME)).getEncoderCapabilities();
+            if (caps.isBitrateModeSupported(MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CQ)){
+                mediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE,MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CQ);
+                // BITRATE_MODE_CQ: 表示完全不控制码率，尽最大可能保证图像质量
+                Log.e("VideoEncoder","apply MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CQ ");
+            }else if (caps.isBitrateModeSupported(MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR)){
+                mediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE,MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR);
+                // BITRATE_MODE_CBR: 表示编码器会尽量把输出码率控制为设定值
+                Log.e("VideoEncoder","apply MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR ");
+            }
+            else {
+                // 默认是这个值 .绝大多数手机上述两种无效
+                //BITRATE_MODE_VBR: 表示编码器会根据图像内容的复杂度（实际上是帧间变化量的大小）来动态调整输出码率，图像复杂则码率高，图像简单则码率低；
+                Log.e("VideoEncoder","unable to apply KEY_BITRATE_MODE ");
+            }
             mEncoder.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
             mEncoder.start();
         } catch (IOException e) {

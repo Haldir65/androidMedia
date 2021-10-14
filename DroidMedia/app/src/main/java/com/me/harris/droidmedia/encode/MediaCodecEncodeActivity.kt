@@ -47,7 +47,7 @@ class MediaCodecEncodeActivity : AppCompatActivity() {
         }
         val destFilePath = File(outPutDir,"${System.currentTimeMillis()}.mp4").absolutePath
         mTextSrcPath.text = "src文件路径${src}"
-        mTextDstPath.text = "dst文件路径${destFilePath}"
+        mTextDstPath.text = "dst文件路径${destFilePath}正在生成"
         ToastUtils.showTextShort(this,"开始编码！")
         thread {
             val videoDecoder = VideoDecoder()
