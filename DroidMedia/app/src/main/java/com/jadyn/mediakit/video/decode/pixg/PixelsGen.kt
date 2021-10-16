@@ -109,7 +109,9 @@ class FBOPixelsGen(private val size: Size,
         Log.d(TAG, "PBO read: ")
         GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, pboIds[index])
         // 2019-08-18-14:29 数据复制到缓冲区
-        GLJni.glReadPixels(0, 0, size.width, size.height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE)
+//        GLJni.glReadPixels(0, 0, size.width, size.height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE)
+        GLES30.glReadPixels(0, 0, size.width, size.height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE,0)
+// added in api 24  https://developer.android.com/reference/android/opengl/GLES30#glReadPixels(int,%20int,%20int,%20int,%20int,%20int,%20int)
 
         GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, pboIds[nextIndex])
 

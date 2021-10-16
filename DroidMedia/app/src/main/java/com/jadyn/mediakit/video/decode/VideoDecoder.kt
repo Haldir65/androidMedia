@@ -39,7 +39,7 @@ class VideoDecoder(private val dataSource: String?,
     }
 
     fun release() {
-        executors.shutdown()
+        executors.shutdownNow()
     }
 }
 
@@ -49,7 +49,7 @@ class VideoDecoder(private val dataSource: String?,
  * @param callBack : decode video frame callbacks in call thread
  * */
 class VideoDecoderRunnable(
-        private val isRunning: ArrayList<Any>,
+         val isRunning: ArrayList<Any>,
         private val dataSource: String?,
         private var maxDecodeNum: Int = -1,
         private val observer: (Any) -> Unit = {},

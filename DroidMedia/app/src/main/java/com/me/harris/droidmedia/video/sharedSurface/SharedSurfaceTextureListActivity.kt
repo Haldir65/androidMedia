@@ -87,6 +87,7 @@ class SharedSurfaceTextureListActivity : AppCompatActivity() {
     private fun initPlayer(surfaceTexture: SurfaceTexture) {
         MediaPlayer().also {
             mMediaPlayer = it
+            it.isLooping = true
             SharedSurfaceManager.mPlayer = it
             VideoUtil.setUrl()
             SharedSurfaceManager.playingUrl = VideoUtil.strVideo

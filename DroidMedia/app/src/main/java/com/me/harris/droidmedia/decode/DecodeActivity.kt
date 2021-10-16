@@ -116,7 +116,11 @@ class DecodeActivity : AppCompatActivity() {
     }
 
     private fun resetOutputEt() {
-        output_et.setText(TextUtils.concat(Environment.getExternalStorageDirectory().path, Environment.DIRECTORY_MOVIES))
+        val path = TextUtils.concat(Environment.getExternalStorageDirectory().path,File.separator, Environment.DIRECTORY_MOVIES,File.separator,"Droidmedia").toString()
+        if (!File(path).exists()){
+            File(path).mkdirs()
+        }
+        output_et.setText(path)
         output_et.setSelection(output_et.text.toString().length)
     }
 
