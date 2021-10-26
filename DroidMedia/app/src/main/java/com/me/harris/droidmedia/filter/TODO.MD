@@ -2,6 +2,12 @@
 [Android音视频编码那点破事](https://www.jianshu.com/p/aac2f8699735) 推荐了https://github.com/imalimin/HardwareVideoCodec
 [设置模糊图片主要是通过修改某一个像素点的颜色来实现的，就是将某一个像素点上下左右四个像素点的颜色算一下平均值作为当前像素的最终颜色。所有的颜色都这样处理就会出现模糊的效果了。](https://www.jianshu.com/p/5d69d93f95de)
 
+[OpenGL ES滤镜](https://github.com/CharonChui/AndroidNote/blob/master/VideoDevelopment/OpenGL/11.OpenGL%20ES%E6%BB%A4%E9%95%9C.md)
+给图像添加滤镜本质就是图片处理，也就是对图片的像素进行计算，简单来说，图像处理的方法可以分为三类:
+点算:当前像素的处理只和自身的像素值有关，和其他像素无关，比如灰度处理。
+领域算:当前像素的处理需要和相邻的一定范围内的像素有关，比如高斯模糊。
+全局算:在全局上对所有像素进行统一变换，比如几何变换。
+
 
 - 滤镜都是通过SurfaceTexture（先生成一个GLES20.glGenTextures的纹理，然后用这个纹理new一个SurfaceTexture，
 再用这个new出来的SurfaceTexture创建一个Surface，交给播放器）来做的，
