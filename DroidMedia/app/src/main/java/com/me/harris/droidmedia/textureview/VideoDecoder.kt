@@ -9,9 +9,12 @@ import com.me.harris.droidmedia.video.VideoPlayView
 
 class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
 
+    private var extractor:MediaExtractor? = null
+
 
     @Volatile
     var mStop: Boolean = false
+
 
     override fun isStopped(): Boolean = mStop
 
@@ -24,21 +27,25 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
         mStop = true
     }
 
+    var timBase:Long = 0
+
+    override fun extractor() = extractor
+
 
     private val DEFAULT_TIME_OUT = 10_000L * 2
 
     fun startExtract(url: String) {
         val str = url
-        val extractor = MediaExtractor()
+         extractor = MediaExtractor()
         var decoder: MediaCodec? = null
-        extractor.setDataSource(str)
-        for (i in 0 until extractor.trackCount) {
-            val format = extractor.getTrackFormat(i)
+        extractor?.setDataSource(str)
+        for (i in 0 until extractor!!.trackCount) {
+            val format = extractor!!.getTrackFormat(i)
             val mime = format.getString(MediaFormat.KEY_MIME)
             if (mime?.startsWith("video/") == true) {
                 val keyFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE) // 1s 30帧左右
                 Log.e("VideoDecoder", " keyFrameRate =  ${keyFrameRate} ") // 5s 一个关键帧
-                extractor.selectTrack(i)
+                extractor?.selectTrack(i)
                 decoder = MediaCodec.createDecoderByType(mime)
                 decoder.configure(format, mSurface, null, 0)
                 break
@@ -55,7 +62,7 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
                 val inputBufferId = decoder.dequeueInputBuffer(DEFAULT_TIME_OUT)
                 if (inputBufferId >= 0) {
                     val inputBuffer = decoder.getInputBuffer(inputBufferId)
-                    val sampleSize = inputBuffer?.let { extractor.readSampleData(it, 0) } ?: -1
+                    val sampleSize = inputBuffer?.let { extractor!!.readSampleData(it, 0) } ?: -1
                     if (sampleSize < 0) {
                         decoder.queueInputBuffer(
                             inputBufferId,
@@ -70,10 +77,10 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
                             inputBufferId,
                             0,
                             sampleSize,
-                            extractor.sampleTime,
+                            extractor!!.sampleTime,
                             0
                         )
-                        extractor.advance()
+                        extractor!!.advance()
                     }
                 }
             }
@@ -91,7 +98,7 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
                 }
                 else -> {
                     decoder.releaseOutputBuffer(outIndex, true)
-                    sleepRender(info, startMs)
+                    sleepRender(info, startMs-timBase)
                 }
             }
             if ((info.flags and MediaCodec.BUFFER_FLAG_KEY_FRAME) == MediaCodec.BUFFER_FLAG_KEY_FRAME ){
@@ -107,11 +114,16 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
             decoder?.stop()
             decoder?.release()
             extractor?.release()
+            extractor = null
         }catch (e:Exception){
 
         }
 
     }
+    override fun decoderName(): String {
+        return "VideoDecoder"
+    }
+
 
 
 }

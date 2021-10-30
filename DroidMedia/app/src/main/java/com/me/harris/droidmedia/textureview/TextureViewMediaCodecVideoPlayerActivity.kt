@@ -1,9 +1,7 @@
 package com.me.harris.droidmedia.textureview
 
 import android.graphics.SurfaceTexture
-import android.media.MediaCodec
 import android.media.MediaExtractor
-import android.media.MediaFormat
 import android.os.Bundle
 import android.view.Surface
 import android.view.TextureView
@@ -11,7 +9,6 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.utils.VideoUtil
-import com.me.harris.droidmedia.video.VideoPlayView
 import kotlin.concurrent.thread
 
 
@@ -21,17 +18,55 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
 
     lateinit var mTextureView:TextureView
     lateinit var mButton: Button
+    lateinit var mButtonForward: Button
+    lateinit var mButtonBackward: Button
+
+    companion object {
+        const val TIME_1_MINUTES =  1*60*1000*1000
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_textureview_mediacodec)
         mButton = findViewById(R.id.button)
         mTextureView = findViewById(R.id.textureView)
-
+        mButtonForward = findViewById(R.id.button_forward)
+        mButtonBackward = findViewById(R.id.button_backward)
         mButton.setOnClickListener {
             startPlay()
         }
+        mButtonForward.setOnClickListener {
+            navigateForward()
+        }
+        mButtonBackward.setOnClickListener {
+            navigateBackward()
+        }
         mTextureView.surfaceTextureListener = this
+    }
+
+    private fun navigateBackward() {
+        mVideoDecoder?.extractor()?.let {
+            val cur = it.sampleTime
+            mVideoDecoder!!.timBase-=TIME_1_MINUTES/1000
+            it.seekTo(cur- TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+        }
+        mAudioDecoder?.extractor()?.let {
+            val cur = it.sampleTime
+            mAudioDecoder!!.timBase-=TIME_1_MINUTES/1000
+            it.seekTo(cur- TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+        }
+    }
+        private fun navigateForward() {
+        mVideoDecoder?.extractor()?.let {
+            val cur = it.sampleTime
+            mVideoDecoder!!.timBase+=TIME_1_MINUTES/1000
+            it.seekTo(cur+ TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+        }
+        mAudioDecoder?.extractor()?.let {
+            val cur = it.sampleTime
+            mAudioDecoder!!.timBase+=TIME_1_MINUTES/1000
+            it.seekTo(cur+ TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+        }
     }
 
     private fun startPlay(){

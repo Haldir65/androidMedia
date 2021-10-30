@@ -42,6 +42,7 @@ object VideoUtil {
         }!!
         strVideo = fs[Random().nextInt(fs.size)].absolutePath
 //        strVideo = fs[4].absolutePath
+        strVideo = fs[8].absolutePath
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
     }
 }

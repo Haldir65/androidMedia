@@ -9,6 +9,9 @@ class AudioDecoder:TypicalDecoder {
         const val TAG = "AudioDecoder"
     }
 
+    private var extractor:MediaExtractor? = null
+
+
     @Volatile
     var mStop:Boolean = false
     override fun isStopped():Boolean = mStop
@@ -23,24 +26,30 @@ class AudioDecoder:TypicalDecoder {
         mStop = true
     }
 
+    var timBase:Long = 0
+
+
 
     private val DEFAULT_TIME_OUT = 10_000L
+
+    override fun extractor() = extractor
 
 
 
     private fun decodeAndPlayAudio(url:String){
         val info = MediaCodec.BufferInfo()
-        val extractor = MediaExtractor()
+        extractor = MediaExtractor()
+        if (extractor==null) return
         var decoder: MediaCodec? = null
-        extractor.setDataSource(url)
+        extractor?.setDataSource(url)
         var audioTrack:AudioTrack? = null
-        for(i in 0 until extractor.trackCount){
-            val format = extractor.getTrackFormat(i)
+        for(i in 0 until extractor!!.trackCount){
+            val format = extractor!!.getTrackFormat(i)
             val mime = format.getString(MediaFormat.KEY_MIME)
             if(mime?.startsWith("audio/")==true){
                 val sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE)
                 val bufferSize = AudioTrack.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT)
-                extractor.selectTrack(i)
+                extractor!!.selectTrack(i)
                 decoder = MediaCodec.createDecoderByType(mime)
                 decoder.configure(format,null,null,0)
                 audioTrack = AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,AudioFormat.CHANNEL_OUT_STEREO,AudioFormat.ENCODING_PCM_16BIT,bufferSize,AudioTrack.MODE_STREAM)
@@ -58,13 +67,13 @@ class AudioDecoder:TypicalDecoder {
                 val inIndex = decoder.dequeueInputBuffer(DEFAULT_TIME_OUT)
                 if (inIndex>=0){
                     val inputBuffer = decoder.getInputBuffer(inIndex)
-                    val sampleSize = inputBuffer?.let { extractor.readSampleData(it,0) }?:-1
+                    val sampleSize = inputBuffer?.let { extractor!!.readSampleData(it,0) }?:-1
                     if (sampleSize<0){
                         decoder.queueInputBuffer(inIndex,0,0,0,MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                         sawEOS = true
                     }else{
-                        decoder.queueInputBuffer(inIndex,0,sampleSize,extractor.sampleTime,0)
-                        extractor.advance()
+                        decoder.queueInputBuffer(inIndex,0,sampleSize,extractor!!.sampleTime,0)
+                        extractor!!.advance()
                     }
                 }
             }
@@ -88,7 +97,7 @@ class AudioDecoder:TypicalDecoder {
                     outBuffer?.clear() // MUST DO ! OtherWise next time you get this same buffer, bad things will happen!
                     audioTrack?.write(chunk,info.offset,info.size)
                     decoder.releaseOutputBuffer(outIndex,false)
-                    sleepRender(info,startMs)
+                    sleepRender(info,startMs-timBase)
                 }
             }
             if ((info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM)!=0){
@@ -100,10 +109,15 @@ class AudioDecoder:TypicalDecoder {
             decoder?.stop()
             decoder?.release()
             extractor?.release()
+            extractor = null
         }catch (e:Exception){
             e.printStackTrace()
         }
 
+    }
+
+    override fun decoderName(): String {
+        return "AudioDecoder"
     }
 
 }
