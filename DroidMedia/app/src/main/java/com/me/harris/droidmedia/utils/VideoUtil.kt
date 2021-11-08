@@ -31,18 +31,19 @@ object VideoUtil {
     //	}
     @JvmStatic
     fun setUrl() {
-        val dir = File(
+        val dir :File = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1)
+            File(Environment.getExternalStorageDirectory().absolutePath).parentFile.parentFile.listFiles()[0] else  File(
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES
         )
         val fs = dir.listFiles { dir1: File?, name: String ->
-            name.endsWith(
+            dir1?.isDirectory != true && name.endsWith(
                 ".mp4"
             ) || name.endsWith(".mkv") || name.endsWith("webm")
         }!!
         strVideo = fs[Random().nextInt(fs.size)].absolutePath
 //        strVideo = fs[4].absolutePath
-        strVideo = fs[8].absolutePath
+        strVideo = fs[0].absolutePath
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
     }
 }

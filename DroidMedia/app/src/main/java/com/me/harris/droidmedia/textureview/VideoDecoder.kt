@@ -6,6 +6,7 @@ import android.media.MediaFormat
 import android.util.Log
 import android.view.Surface
 import com.me.harris.droidmedia.video.VideoPlayView
+import java.lang.NullPointerException
 
 class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
 
@@ -43,8 +44,12 @@ class VideoDecoder(val mSurface: Surface) : TypicalDecoder {
             val format = extractor!!.getTrackFormat(i)
             val mime = format.getString(MediaFormat.KEY_MIME)
             if (mime?.startsWith("video/") == true) {
-                val keyFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE) // 1s 30帧左右
-                Log.e("VideoDecoder", " keyFrameRate =  ${keyFrameRate} ") // 5s 一个关键帧
+                try {
+                    val keyFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE) // 1s 30帧左右
+                    Log.e("VideoDecoder", " keyFrameRate =  ${keyFrameRate} ") // 5s 一个关键帧
+                }catch (e:NullPointerException){
+                    e.printStackTrace()
+                }
                 extractor?.selectTrack(i)
                 decoder = MediaCodec.createDecoderByType(mime)
                 decoder.configure(format, mSurface, null, 0)
