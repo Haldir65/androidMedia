@@ -36,11 +36,7 @@ object VideoUtil {
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES
         )
-        val fs = dir.listFiles { dir1: File?, name: String ->
-            dir1?.isDirectory != true && name.endsWith(
-                ".mp4"
-            ) || name.endsWith(".mkv") || name.endsWith("webm")
-        }!!
+        val fs = dir.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".mkv") || f.name.endsWith(".webm")  }
         strVideo = fs[Random().nextInt(fs.size)].absolutePath
 //        strVideo = fs[4].absolutePath
         strVideo = fs[0].absolutePath

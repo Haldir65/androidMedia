@@ -153,6 +153,24 @@
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
+
+        <androidx.cardview.widget.CardView
+            style="@style/CardStyleButton"
+            app:contentPadding="4dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="3dp">
+
+            <Button
+                android:id="@+id/btn9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/white"
+                android:text="Coroutine test Activity"
+                android:textAllCaps="false" />
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
 

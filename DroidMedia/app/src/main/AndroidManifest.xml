@@ -119,6 +119,9 @@
         <activity
             android:name=".video.sharedSurface.SharedSurfaceTextureDetailActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".coroutine.CoroutinePlayActivity"
+            android:screenOrientation="portrait"
+            />
 
     </application>
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.liubing.filtertestbed.CameraEntryActivity
+import com.me.harris.droidmedia.coroutine.CoroutinePlayActivity
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
 import com.me.harris.droidmedia.encode.MediaCodecEncodeActivity
@@ -59,6 +60,10 @@ class MainActivity : AppCompatActivity() {
         btn8?.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, OpenGlEntryActivity::class.java))
+        }
+        btn9?.setOnClickListener {
+            VideoUtil.setUrl()
+            startActivity(Intent(this, CoroutinePlayActivity::class.java))
         }
     }
 

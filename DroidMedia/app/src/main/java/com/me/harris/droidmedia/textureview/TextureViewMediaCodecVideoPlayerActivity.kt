@@ -9,6 +9,10 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.utils.VideoUtil
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 
@@ -72,16 +76,29 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
     private fun startPlay(){
         VideoUtil.setUrl()
         val url = VideoUtil.strVideo
-        thread {
+
+        GlobalScope.launch(Dispatchers.IO) {
             mVideoDecoder = VideoDecoder(mSurface!!)
             mVideoDecoder?.start(url)
         }
 
-        thread {
+        GlobalScope.launch(Dispatchers.IO) {
             mAudioDecoder = AudioDecoder()
             mAudioDecoder?.start(url)
         }
+//
+//
+//        thread {
+//            mVideoDecoder = VideoDecoder(mSurface!!)
+//            mVideoDecoder?.start(url)
+//        }
+//
+//        thread {
+//            mAudioDecoder = AudioDecoder()
+//            mAudioDecoder?.start(url)
+//        }
     }
+
 
 
     private var mVideoDecoder:VideoDecoder? = null

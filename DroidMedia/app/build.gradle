@@ -53,8 +53,15 @@ android {
         }
     }
 
-
-
+    dexOptions {
+        jumboMode = true
+        javaMaxHeapSize "4g"
+        keepRuntimeAnnotatedClasses false
+        // 优化transformClassDexBuilderForDebug
+        maxProcessCount 12
+        threadCount =  12
+        // https://blog.csdn.net/weixin_45583158/article/details/121368947
+    }
 
     externalNativeBuild {
         cmake {
