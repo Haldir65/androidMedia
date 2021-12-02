@@ -11,13 +11,13 @@ import com.me.harris.droidmedia.coroutine.CoroutinePlayActivity
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
 import com.me.harris.droidmedia.encode.MediaCodecEncodeActivity
+import com.me.harris.droidmedia.entity.JUserInfo
 import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
 import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
-import com.me.harris.droidmedia.openglplayvideo.MediaPlayerSurfaceStubActivity
+import com.me.harris.droidmedia.entity.SubUserInfo
+import com.me.harris.droidmedia.entity.UserInfo
 import com.me.harris.droidmedia.utils.VideoUtil
-import com.me.harris.droidmedia.video.MediaCodecVideoMainActivity
 import com.me.harris.droidmedia.video.VideoPlayExtryActivity
-import com.me.harris.droidmedia.video.VideoPlayView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -63,7 +63,14 @@ class MainActivity : AppCompatActivity() {
         }
         btn9?.setOnClickListener {
             VideoUtil.setUrl()
-            startActivity(Intent(this, CoroutinePlayActivity::class.java))
+            val user1 = UserInfo("john",100L, arrayListOf())
+            val user2 = SubUserInfo("john2",101L, arrayListOf(), arrayOf("SubJohn"))
+            val user3 = JUserInfo("john3",101L, arrayListOf("aff1","aff2"))
+            startActivity(Intent(this, CoroutinePlayActivity::class.java).apply {
+                putExtra("user1",user1)
+                putExtra("user2",user2)
+                putExtra("user3",user3)
+            })
         }
     }
 
