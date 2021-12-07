@@ -122,6 +122,7 @@
         <activity android:name=".coroutine.CoroutinePlayActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".audioPlayer.MyAudioPlayerActivity" />
 
     </application>
 

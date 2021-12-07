@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.liubing.filtertestbed.CameraEntryActivity
+import com.me.harris.droidmedia.audioPlayer.MyAudioPlayerActivity
 import com.me.harris.droidmedia.coroutine.CoroutinePlayActivity
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
@@ -63,14 +64,15 @@ class MainActivity : AppCompatActivity() {
         }
         btn9?.setOnClickListener {
             VideoUtil.setUrl()
-            val user1 = UserInfo("john",100L, arrayListOf())
-            val user2 = SubUserInfo("john2",101L, arrayListOf(), arrayOf("SubJohn"))
-            val user3 = JUserInfo("john3",101L, arrayListOf("aff1","aff2"))
-            startActivity(Intent(this, CoroutinePlayActivity::class.java).apply {
-                putExtra("user1",user1)
-                putExtra("user2",user2)
-                putExtra("user3",user3)
-            })
+//            val user1 = UserInfo("john",100L, arrayListOf("user1","user2"))
+//            val user2 = SubUserInfo("john2",101L, arrayListOf("subaffs"), arrayOf("SubJohn"))
+//            val user3 = JUserInfo("john3",101L, arrayListOf("aff1","aff2"))
+//            startActivity(Intent(this, CoroutinePlayActivity::class.java).apply {
+//                putExtra("user3",user3)
+//                putExtra("user1",user1)
+//                putExtra("user2",user2)
+//            })
+            startActivity(Intent(this,MyAudioPlayerActivity::class.java))
         }
     }
 

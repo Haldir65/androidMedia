@@ -51,17 +51,12 @@ class CoroutinePlayActivity:AppCompatActivity() {
     }
 
     private fun test3(){
-        val user3 = intent.getParcelableExtra<JUserInfo?>("user3")?.let {
-            Log.e("=A=","user3 ${it.name}")
-        }
-        val user1 = intent.getParcelableExtra<UserInfo?>("user1")?.let {
-            Log.e("=A=","user1 ${it.name}")
-        }
-        val user2 = intent.getParcelableExtra<SubUserInfo?>("user2")?.let {
-            Log.e("=A=","user2 ${it.name}")
-        }
+        try {
+            val user3 = intent.getParcelableExtra<JUserInfo?>("user3")
+            val user1 = intent.getParcelableExtra<UserInfo?>("user1")
+            val user2 = intent.getParcelableExtra<SubUserInfo?>("user2")
+        }catch (e:Exception){
 
-
-
+        }
     }
 }

@@ -10,7 +10,7 @@ open class UserInfo() :Parcelable{
 //        this.name = name
 //    }
 
-    constructor(name:String,age:Long,affs:ArrayList<String>):this(){
+    constructor(name:String?,age:Long,affs:ArrayList<String>?):this(){
         this.name = name
         this.age = age;
         this.affilates = affs
