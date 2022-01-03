@@ -64,15 +64,15 @@ class MainActivity : AppCompatActivity() {
         }
         btn9?.setOnClickListener {
             VideoUtil.setUrl()
-//            val user1 = UserInfo("john",100L, arrayListOf("user1","user2"))
-//            val user2 = SubUserInfo("john2",101L, arrayListOf("subaffs"), arrayOf("SubJohn"))
-//            val user3 = JUserInfo("john3",101L, arrayListOf("aff1","aff2"))
-//            startActivity(Intent(this, CoroutinePlayActivity::class.java).apply {
-//                putExtra("user3",user3)
-//                putExtra("user1",user1)
-//                putExtra("user2",user2)
-//            })
-            startActivity(Intent(this,MyAudioPlayerActivity::class.java))
+            val user1 = UserInfo("john",100L, arrayListOf("user1","user2"))
+            val user2 = SubUserInfo("john2",101L, arrayListOf("subaffs"), arrayOf("SubJohn"))
+            val user3 = JUserInfo("john3",101L, arrayListOf("aff1","aff2"))
+            startActivity(Intent(this, CoroutinePlayActivity::class.java).apply {
+                putExtra("user3",user3)
+                putExtra("user1",user1)
+                putExtra("user2",user2)
+            })
+//            startActivity(Intent(this,MyAudioPlayerActivity::class.java))
         }
     }
 

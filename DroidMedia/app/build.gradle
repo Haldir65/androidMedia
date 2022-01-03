@@ -5,16 +5,19 @@ apply plugin: 'kotlin-android-extensions'
 
 def SUPPORTED_ABI = ['arm64-v8a', 'x86', 'x86_64','armeabi-v7a'] as String[]
 
+def SUPPORT_NATIVE_BUILD = false
+
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    compileSdkVersion 31
+    buildToolsVersion '31.0.0'
     ndkVersion '22.1.7171670'
 
     sourceSets {
-        main {
-            jniLibs.srcDirs = ['src/main/jniLibs']
-        }
+//        main {
+//            jniLibs.srcDirs = ['src/main/jniLibs']
+//        }  、、 External native build now automatically packages those libraries, so explicitly packaging the library with jniLibs results in a duplicate.
+//        To avoid the build error, move the prebuilt library to a location outside jniLibs or remove the jniLibs configuration from your build.gradle file.
     }
 
     defaultConfig {
@@ -28,29 +31,36 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        externalNativeBuild {
-            cmake {
-                abiFilters SUPPORTED_ABI //只帮我打这个架构的就好了
-                cppFlags "-g -std=c++11 -frtti -fexceptions"
-                arguments '-DANDROID_PLATFORM=android-21',
-                        '-DANDROID_TOOLCHAIN=clang',
-                        '-DANDROID_CPP_FEATURES=rtti exceptions'
+        if(SUPPORT_NATIVE_BUILD){
+            externalNativeBuild {
+                cmake {
+                    abiFilters SUPPORTED_ABI //只帮我打这个架构的就好了
+                    cppFlags "-g -std=c++11 -frtti -fexceptions"
+                    arguments '-DANDROID_PLATFORM=android-21',
+                            '-DANDROID_TOOLCHAIN=clang',
+                            '-DANDROID_CPP_FEATURES=rtti exceptions'
 //                arguments  "-DANDROID_STL=stlport_static"
-                "-DANDROID_ARM_NEON=true"
+                    "-DANDROID_ARM_NEON=true"
+                }
             }
-        }
-        ndk {
-            abiFilters  SUPPORTED_ABI
+            ndk {
+                abiFilters  SUPPORTED_ABI
+            }
+
+            splits {
+                abi {
+                    enable true
+                    reset()
+                    include  SUPPORTED_ABI
+                    universalApk true
+                }
+            }
+
+            packagingOptions {
+                pickFirst "lib/arm64-v8a/*.so"
+            }
         }
 
-        splits {
-            abi {
-                enable true
-                reset()
-                include  SUPPORTED_ABI
-                universalApk true
-            }
-        }
     }
 
     dexOptions {
@@ -63,12 +73,14 @@ android {
         // https://blog.csdn.net/weixin_45583158/article/details/121368947
     }
 
-    externalNativeBuild {
+    if (SUPPORT_NATIVE_BUILD){
+        externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
-
         }
     }
+    }
+
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -90,14 +102,14 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
     testImplementation 'junit:junit:4.13.2'
 
     // App compat and UI things
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
