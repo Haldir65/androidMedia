@@ -38,3 +38,13 @@ private inline fun <T> FutureTask<T>.getOrThrow(): T {
         throw IllegalStateException(e)
     }
 }
+
+class Book{
+    var saveInt = 0
+
+}
+
+////定义Book类的扩展方法
+//fun Book.noBook(){
+//    arrayListOf<StackOverflowError>().slice()
+//}
