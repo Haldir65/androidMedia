@@ -58,6 +58,7 @@ public class CameraV2 {
                 if (characteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT) {
                     continue;
                 }
+                Log.e(TAG,"INFO_SUPPORTED_HARDWARE_LEVEL "+characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL));
                 StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                 mPreviewSize = getOptimalSize(map.getOutputSizes(SurfaceTexture.class), width, height);
                 mCameraId = id;

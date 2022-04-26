@@ -162,8 +162,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava3
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
     //exoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:r2.5.2'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:r2.5.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 }
