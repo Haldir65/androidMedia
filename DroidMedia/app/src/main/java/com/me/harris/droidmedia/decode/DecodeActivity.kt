@@ -8,9 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.mediakit.video.decode.VideoDecoder
 import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.databinding.ActivityDecodeBinding
 import com.me.harris.droidmedia.utils.VideoUtil
-import com.me.harris.droidmedia.video.VideoPlayView
-import kotlinx.android.synthetic.main.activity_decode.*
 import java.io.File
 
 class DecodeActivity : AppCompatActivity() {
@@ -28,34 +27,37 @@ class DecodeActivity : AppCompatActivity() {
 
     private var outputPath = ""
 
+    lateinit var binding:ActivityDecodeBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_decode)
-
+        binding = ActivityDecodeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         // 2019/2/14-16:25 设置一个默认的测试视频地址
-        file_et.setText(decodeMP4Path)
+        binding.fileEt.setText(decodeMP4Path)
         resetOutputEt()
 
-        sure_file_tv.setOnClickListener {
+        binding.sureFileTv.setOnClickListener {
             checkFile()
         }
 
-        sure_output_tv.setOnClickListener {
+
+        binding.sureOutputTv.setOnClickListener {
             checkOutputPath()
         }
 
 
-        switch_iv.setOnClickListener {
+        binding.switchIv.setOnClickListener {
             if (videoDecoder != null) {
                 toast("正在解码中")
                 return@setOnClickListener
             }
 
-            switch_iv.isSelected = !switch_iv.isSelected
-            switch_iv.setImageResource(if (switch_iv.isSelected) R.drawable.p else R.drawable.c)
+            binding.switchIv.isSelected = !binding.switchIv.isSelected
+            binding.switchIv.setImageResource(if (binding.switchIv.isSelected) R.drawable.p else R.drawable.c)
         }
 
-        start_tv.setOnClickListener {
+        binding.startTv.setOnClickListener {
             checkFile()
             checkOutputPath()
             if (videoDecoder != null) {
@@ -71,8 +73,8 @@ class DecodeActivity : AppCompatActivity() {
                 videoDecoder = null
             }, {
                 this@DecodeActivity.runOnUiThread {
-                    val s = if (switch_iv.isSelected) "OpenGL渲染" else "YUV存储"
-                    output_loading_tv.text = TextUtils.concat(s, "解码中，第${it}张")
+                    val s = if (binding.switchIv.isSelected) "OpenGL渲染" else "YUV存储"
+                    binding.outputLoadingTv.text = TextUtils.concat(s, "解码中，第${it}张")
                 }
             })
         }
@@ -83,7 +85,7 @@ class DecodeActivity : AppCompatActivity() {
     }
 
     private fun checkOutputPath() {
-        val f = output_et.text.toString()
+        val f = binding.outputEt.text.toString()
         if (f.isBlank()) {
             toast("不能为空")
             return
@@ -101,7 +103,7 @@ class DecodeActivity : AppCompatActivity() {
     }
 
     private fun checkFile() {
-        val f = file_et.text.toString()
+        val f = binding.fileEt.text.toString()
         if (f.isBlank()) {
             toast("不能为空")
             return
@@ -109,7 +111,7 @@ class DecodeActivity : AppCompatActivity() {
         val file = File(f)
         if (!file.exists() || !file.isFile) {
             toast("文件错误")
-            file_et.setText("")
+            binding.fileEt.setText("")
             return
         }
         filePath = f
@@ -120,8 +122,8 @@ class DecodeActivity : AppCompatActivity() {
         if (!File(path).exists()){
             File(path).mkdirs()
         }
-        output_et.setText(path)
-        output_et.setSelection(output_et.text.toString().length)
+        binding.outputEt.setText(path)
+        binding.outputEt.setSelection(binding.outputEt.text.toString().length)
     }
 
     override fun onDestroy() {

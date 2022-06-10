@@ -10,8 +10,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import com.me.harris.droidmedia.utils.LogUtil
 import com.me.harris.droidmedia.utils.VideoUtil
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -24,20 +26,20 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (checkSelfPermission(Manifest.permission_group.STORAGE)!=PackageManager.PERMISSION_GRANTED){
 
+//        thread {
+//            val fPath = VideoUtil.strVideo
+//            getKeyFrames(fPath,filesDir.absolutePath)
+//            Log.e("=A=","all Completed!")
+//        }
+        lifecycleScope.launch {
+            VideoTranscodingUtils.transcoding2Mp4(VideoUtil.strVideo,this@ExtractFrameAndSaveKeyFrameToFileActivity)
         }
-        thread {
-            val fPath = VideoUtil.strVideo
-            getKeyFrames(fPath)
-            Log.e("=A=","all Completed!")
-        }
-
 
     }
 
     @Throws(IOException::class)
-    fun getKeyFrames(inputPath: String?): Boolean {
+    fun getKeyFrames(inputPath: String?,saveDir:String?): Boolean {
         val mRetriever = MediaMetadataRetriever()
         mRetriever.setDataSource(inputPath)
         val mediaExtractor = MediaExtractor()
@@ -64,14 +66,17 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity() {
             mediaExtractor.advance()
         }
         LogUtil.d("getKeyFrames keyFrameCount = " + frameTimeList.size)
-        val parentPath: String = File(inputPath).getParent() + File.separator
-        LogUtil.d("getKeyFrames parent Path=$parentPath")
+//        val parentPath: String = File(inputPath).getParent() + File.separator
+        LogUtil.d("getKeyFrames parent Path=$saveDir")
+        if (!File("${saveDir}${File.separator}photos").exists()){
+            File("${saveDir}${File.separator}photos").mkdirs()
+        }
         for (index in frameTimeList.indices) {
             val bitmap = mRetriever.getFrameAtTime(
                 frameTimeList[index],
                 MediaMetadataRetriever.OPTION_CLOSEST_SYNC
             )
-            savePicFile(bitmap, parentPath + "test_pic_" + index + ".jpg")
+            savePicFile(bitmap, "${saveDir}${File.separator}photos${File.separator}"+ "test_pic_" + index + ".jpg")
         }
         return true
     }
@@ -93,5 +98,9 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity() {
         outputStream.close()
     }
 
+
+    private fun videoTransCoding(){
+
+    }
 
 }

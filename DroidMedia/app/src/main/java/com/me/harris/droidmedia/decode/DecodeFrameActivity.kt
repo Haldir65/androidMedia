@@ -1,19 +1,14 @@
 package com.me.harris.droidmedia.decode
 
 import android.os.Bundle
-import android.os.Environment
-import android.text.TextUtils
 import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.mediakit.function.durationSecond
 import com.jadyn.mediakit.video.decode.VideoAnalyze
 import com.jadyn.mediakit.video.decode.VideoDecoder2
-import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.databinding.ActivityDecodeFrameBinding
 import com.me.harris.droidmedia.utils.VideoUtil
-import com.me.harris.droidmedia.video.VideoPlayView
-import kotlinx.android.synthetic.main.activity_decode_frame.*
-import java.io.File
 
 class DecodeFrameActivity : AppCompatActivity() {
 
@@ -25,35 +20,38 @@ class DecodeFrameActivity : AppCompatActivity() {
 
     private var videoDecoder2: VideoDecoder2? = null
 
+    lateinit var binding: ActivityDecodeFrameBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_decode_frame)
-        file_frame_et.setText(decodeMP4Path)
+        binding = ActivityDecodeFrameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.fileFrameEt.setText(decodeMP4Path)
 
-        sure_video.setOnClickListener {
-            val dataSource = file_frame_et.text.toString()
+        binding.sureVideo.setOnClickListener {
+            val dataSource = binding.fileFrameEt.text.toString()
             if (videoAnalyze != null && videoAnalyze!!.dataSource.equals(dataSource)) {
                 return@setOnClickListener
             }
             videoAnalyze = VideoAnalyze(dataSource)
-            video_seek.max = videoAnalyze!!.mediaFormat.durationSecond
-            video_seek.progress = 0
+            binding.videoSeek.max = videoAnalyze!!.mediaFormat.durationSecond
+            binding.videoSeek.progress = 0
 
-            ms_video_seek.max = videoAnalyze!!.mediaFormat.durationSecond * 1000
-            ms_video_seek.progress = 0
+            binding.msVideoSeek.max = videoAnalyze!!.mediaFormat.durationSecond * 1000
+            binding.msVideoSeek.progress = 0
 
             videoDecoder2 = VideoDecoder2(dataSource)
-            updateTime(0, video_seek.max)
+            updateTime(0, binding.videoSeek.max)
         }
 
-        video_seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.videoSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 videoAnalyze?.apply {
                     updateTime(progress, mediaFormat.durationSecond)
                 }
                 videoDecoder2?.apply {
                     getFrame(seekBar.progress.toFloat(), {
-                        frame_img.setImageBitmap(it)
+                        binding.frameImg.setImageBitmap(it)
                     }, {
                         Log.d("cece", "throwable ${it.message}: ")
                     })
@@ -67,14 +65,14 @@ class DecodeFrameActivity : AppCompatActivity() {
             }
         })
 
-        ms_video_seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.msVideoSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 videoAnalyze?.apply {
                     updateTime(seekBar.progress, mediaFormat.durationSecond * 1000)
                 }
                 videoDecoder2?.apply {
                     getFrameMs(seekBar.progress.toLong(), {
-                        frame_img.setImageBitmap(it)
+                        binding.frameImg.setImageBitmap(it)
                     }, {
                         Log.d("cece", "throwable ${it.message}: ")
                     })
@@ -90,7 +88,7 @@ class DecodeFrameActivity : AppCompatActivity() {
     }
 
     private fun updateTime(progress: Int, max: Int) {
-        time.text = "现在 : $progress 总时长为 : $max"
+        binding.time.text = "现在 : $progress 总时长为 : $max"
     }
 
     override fun onDestroy() {

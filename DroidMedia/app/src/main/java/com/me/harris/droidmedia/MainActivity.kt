@@ -8,6 +8,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.liubing.filtertestbed.CameraEntryActivity
+import com.me.harris.droidmedia.audiorecord.MediaCodecForAACActivity
+import com.me.harris.droidmedia.databinding.ActivityMainBinding
 import com.me.harris.droidmedia.decode.DecodeActivity
 import com.me.harris.droidmedia.decode.DecodeFrameActivity
 import com.me.harris.droidmedia.encode.MediaCodecEncodeActivity
@@ -19,50 +21,52 @@ import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
 import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.VideoPlayExtryActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var binding:ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        btn1?.setOnClickListener {
+        binding.btn1.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, com.me.harris.droidmedia.extractFrame.DecodeFrameActivity::class.java))
         }
-        btn2?.setOnClickListener {
+        binding.btn2.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, DecodeFrameActivity::class.java))
         }
-        btn3?.setOnClickListener {
+        binding.btn3.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, DecodeActivity::class.java))
         }
 
-        btn4?.setOnClickListener {
+        binding.btn4.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, CameraEntryActivity::class.java))
         }
 
-        btn5?.setOnClickListener {
+        binding.btn5.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, VideoPlayExtryActivity::class.java))
         }
 
-        btn6?.setOnClickListener {
+        binding.btn6.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, VideoPlayFilterActivity::class.java))
         }
-        btn7?.setOnClickListener {
+        binding.btn7.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, MediaCodecEncodeActivity::class.java))
         }
-        btn8?.setOnClickListener {
+        binding.btn8.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, OpenGlEntryActivity::class.java))
         }
-        btn9?.setOnClickListener {
+        binding.btn9.setOnClickListener {
             VideoUtil.setUrl()
             val user1 = UserInfo("john",100L, arrayListOf("user1","user2"))
             val user2 = SubUserInfo("john2",101L, arrayListOf("subaffs"), arrayOf("SubJohn"))
@@ -74,6 +78,9 @@ class MainActivity : AppCompatActivity() {
             })
 //            startActivity(Intent(this,MyAudioPlayerActivity::class.java))
         }
+        binding.btn10.setOnClickListener {
+            startActivity(Intent(this,MediaCodecForAACActivity::class.java))
+        }
     }
 
 
@@ -83,18 +90,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission_group.CAMERA
-            )
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
-                    Manifest.permission_group.STORAGE,
-                    Manifest.permission_group.CAMERA
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
                 ),
                 1098
             )
