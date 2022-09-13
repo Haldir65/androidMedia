@@ -11,7 +11,7 @@ def SUPPORT_NATIVE_BUILD = false
 android {
     compileSdkVersion 33
     buildToolsVersion '33.0.0'
-    ndkVersion '23.1.7779620'
+    ndkVersion '25.1.8937393'
 
     sourceSets {
 //        main {
@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId "com.me.harris.droidmedia"
-        minSdkVersion 23
+        minSdkVersion 27
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -113,8 +113,12 @@ android {
 
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
     }
 
     buildTypes {
@@ -140,7 +144,7 @@ dependencies {
     // ViewModelScope
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     // LifecycleScope
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     // LiveData
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
 
@@ -155,7 +159,7 @@ dependencies {
     // EXIF Interface
     implementation 'androidx.exifinterface:exifinterface:1.3.3'
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
     // okhttp
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
@@ -174,6 +178,6 @@ dependencies {
     //exoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:r2.5.2'
     implementation 'com.google.android.exoplayer:exoplayer-ui:r2.5.2'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 }

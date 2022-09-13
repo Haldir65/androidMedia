@@ -17,15 +17,15 @@ fun blockOnMainThread(action: Runnable) {
     }
 }
 
-//fun <T> blockOnMainThread(block:() -> T): T {
-//    return if (Looper.myLooper() == Looper.getMainLooper()){
-//        block()
-//    }else ({
-//        FutureTask<T>(Callable { block() }).also {
-//            Handler(Looper.getMainLooper()).post(it)
-//        }.getOrThrow()
-//    })!!
-//}
+fun <T> blockOnMainThread(block:() -> T): T {
+    return if (Looper.myLooper() == Looper.getMainLooper()){
+        block()
+    }else {
+        FutureTask<T>(Callable { block() }).also {
+            Handler(Looper.getMainLooper()).post(it)
+        }.getOrThrow()
+    }
+}
 
 
 @Suppress("NOTHING_TO_INLINE")
