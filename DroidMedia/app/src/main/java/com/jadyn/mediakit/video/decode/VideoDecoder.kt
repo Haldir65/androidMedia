@@ -5,7 +5,6 @@ import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import android.util.Log
-import com.jadyn.ai.kotlind.utils.getReal
 import com.jadyn.mediakit.function.*
 import java.io.File
 import java.util.concurrent.Executors
@@ -59,6 +58,13 @@ class VideoDecoderRunnable(
 
     override fun run() {
         val decodeCore = GLCore()
+        fun String?.getReal(def: String = ""): String {
+            if (isNullOrBlank()) {
+                return def
+            }
+            return this!!
+        }
+
         try {
             isRunning.add(1)
             val startTime = System.currentTimeMillis()

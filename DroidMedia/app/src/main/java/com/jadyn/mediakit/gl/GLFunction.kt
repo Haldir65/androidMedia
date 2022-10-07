@@ -5,7 +5,7 @@ import android.content.Context
 import android.opengl.EGL14
 import android.opengl.GLES20
 import android.util.Log
-import com.jadyn.ai.kotlind.base.BaseApplication
+import com.me.harris.droidmedia.BaseApplication
 
 /**
  *@version:

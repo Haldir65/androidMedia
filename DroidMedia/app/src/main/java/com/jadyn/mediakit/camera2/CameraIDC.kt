@@ -7,7 +7,6 @@ import android.hardware.camera2.CameraMetadata
 import androidx.annotation.IntRange
 import android.util.ArrayMap
 import android.util.Size
-import com.jadyn.ai.kotlind.utils.isValid
 
 /**
  *@version:
@@ -72,5 +71,17 @@ class CameraIDC(cameraMgr: CameraManager,
 
     fun getCameraSizeInfo(@IntRange(from = 0L, to = 1L) index: Int): Array<Size> {
         return idData.getOrDefault(ids[index], arrayOf())
+    }
+
+    private fun <T> List<T>?.isValid(): Boolean {
+        return !isNullOrEmpty()
+    }
+
+    private fun <T> Array<T>?.isValid(): Boolean {
+        return !isNullOrEmpty()
+    }
+
+    private fun String?.isValid(): Boolean {
+        return this != null && isNotBlank()
     }
 }

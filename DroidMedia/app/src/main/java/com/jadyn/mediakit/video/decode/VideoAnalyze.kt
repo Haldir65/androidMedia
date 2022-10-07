@@ -3,7 +3,6 @@ package com.jadyn.mediakit.video.decode
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.util.Log
-import com.jadyn.ai.kotlind.utils.minDifferenceValue
 import com.jadyn.mediakit.function.duration
 import com.jadyn.mediakit.function.fps
 import com.jadyn.mediakit.function.getSafeTimeUS
@@ -112,6 +111,8 @@ class VideoAnalyze(val dataSource: String) {
         return sampleTime
     }
 
+
+
     /*
     * time是一个精确的帧，所以使用closest_sync
     * */
@@ -136,6 +137,21 @@ class VideoAnalyze(val dataSource: String) {
     fun release() {
         mediaExtractor.release()
         checkExtractor.release()
+    }
+
+    /*
+    * 选取两个值中，差值绝对值小的那个数字
+    * */
+    fun Long.minDifferenceValue(a: Long, b: Long): Long {
+        if (a == b) {
+            return Math.min(a, this)
+        }
+        val f_a = Math.abs(a - this)
+        val f_b = Math.abs(b - this)
+        if (f_a == f_b) {
+            return Math.min(a, b)
+        }
+        return if (f_a < f_b) a else b
     }
 
 }

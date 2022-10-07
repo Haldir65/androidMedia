@@ -4,7 +4,6 @@ import android.hardware.Camera
 import android.util.Log
 import android.util.Size
 import android.view.Surface
-import com.jadyn.ai.kotlind.utils.swap
 import java.lang.Long
 import java.util.*
 
@@ -112,4 +111,8 @@ internal class CompareSizesByArea : Comparator<Size> {
     override fun compare(lhs: Size, rhs: Size) =
             Long.signum(lhs.width.toLong() * lhs.height - rhs.width.toLong() * rhs.height)
 
+}
+
+fun Size.swap(): Size {
+    return Size(height, width)
 }

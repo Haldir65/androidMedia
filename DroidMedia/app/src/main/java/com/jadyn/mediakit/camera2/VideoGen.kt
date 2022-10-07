@@ -3,7 +3,6 @@ package com.jadyn.mediakit.camera2
 import android.media.MediaFormat
 import android.util.Log
 import android.view.Surface
-import com.jadyn.ai.kotlind.utils.safeList
 import com.jadyn.mediakit.audio.AudioEncoder
 import com.jadyn.mediakit.audio.AudioPacket
 import com.jadyn.mediakit.audio.AudioRecorder
@@ -12,6 +11,7 @@ import com.jadyn.mediakit.function.createAACFormat
 import com.jadyn.mediakit.function.genData
 import com.jadyn.mediakit.mux.Muxer
 import com.jadyn.mediakit.video.encode.VideoRecorder
+import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executors
 
@@ -23,7 +23,7 @@ import java.util.concurrent.Executors
  *@ChangeList:
  */
 
-
+fun <D> safeList() = Collections.synchronizedList(arrayListOf<D>())
 class VideoGen {
 
     private val TAG = "Camera2Recorder"

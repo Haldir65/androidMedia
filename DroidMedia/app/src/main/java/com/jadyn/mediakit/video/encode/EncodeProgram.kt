@@ -4,8 +4,10 @@ import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLUtils
 import android.util.Size
-import com.jadyn.ai.kotlind.utils.createFloatBuffer
 import com.jadyn.mediakit.gl.*
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import javax.microedition.khronos.opengles.GL10
 
@@ -147,4 +149,7 @@ class EncodeProgram(private val size: Size) {
     fun release() {
         releaseTexture(intArrayOf(textureID))
     }
+
+
+
 }

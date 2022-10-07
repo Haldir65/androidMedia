@@ -6,8 +6,10 @@ import android.opengl.GLES20
 import android.opengl.Matrix
 import android.util.Log
 import android.view.Surface
-import com.jadyn.ai.kotlind.utils.createFloatBuffer
 import com.jadyn.mediakit.gl.*
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
@@ -219,5 +221,19 @@ class Camera2Draw(program: Int) {
         disableVertexAttrib(texCoordHandle)
 
         unBindTexture()
+    }
+
+    fun createFloatBuffer(array: FloatArray): FloatBuffer {
+        val buffer = ByteBuffer
+            // 分配顶点坐标分量个数 * Float占的Byte位数
+            .allocateDirect(array.size * 4)
+            // 按照本地字节序排序
+            .order(ByteOrder.nativeOrder())
+            // Byte类型转Float类型
+            .asFloatBuffer()
+
+        // 将Dalvik的内存数据复制到Native内存中
+        buffer.put(array).position(0)
+        return buffer
     }
 }

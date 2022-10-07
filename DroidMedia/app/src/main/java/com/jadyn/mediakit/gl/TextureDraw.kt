@@ -3,7 +3,7 @@ package com.jadyn.mediakit.gl
 import android.graphics.SurfaceTexture
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
-import com.jadyn.ai.kotlind.utils.createFloatBuffer
+import com.jadyn.mediakit.video.encode.createFloatBuffer
 import java.nio.ShortBuffer
 
 
