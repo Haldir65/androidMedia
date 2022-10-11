@@ -13,11 +13,12 @@ import android.os.Looper
 import android.util.Log
 import android.util.Size
 import android.view.Surface
-import com.jadyn.ai.kotlind.utils.*
 import com.jadyn.mediakit.function.CompareSizesByArea
 import com.jadyn.mediakit.function.areDimensionsSwapped
 import com.jadyn.mediakit.function.chooseOptimalSize
+import com.me.harris.droidmedia.utils.Utils
 import java.io.FileOutputStream
+import java.lang.Integer.max
 import java.lang.ref.SoftReference
 import java.util.*
 
@@ -140,7 +141,8 @@ class CameraMgr(private var activity: SoftReference<Activity>, size: Size) {
             val displayRotation = act.windowManager.defaultDisplay.rotation
             sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION)!!
             val swappedDimensions = areDimensionsSwapped(displayRotation, sensorOrientation)
-
+            val screenWidth = Utils.getScreenWidth(act)
+            val screenHeight = Utils.getScreenHeight(act)
             val displaySize = Point(screenWidth, screenHeight)
             val rotatedPreviewSize = if (swappedDimensions) size.swap() else size
             val displaySize1 = Size(displaySize.x, displaySize.y)
@@ -160,6 +162,14 @@ class CameraMgr(private var activity: SoftReference<Activity>, size: Size) {
             e.printStackTrace()
         }
         return true
+    }
+
+    fun Size.swap(): Size {
+        return Size(height, width)
+    }
+
+    fun Size.maxChoose(other: Size): Size {
+        return Size(max(width, other.width), max(height, other.height))
     }
 
     private var previewStarted: () -> Unit = {}
@@ -218,7 +228,7 @@ class CameraMgr(private var activity: SoftReference<Activity>, size: Size) {
                         CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE)
                 builder.set(CaptureRequest.JPEG_ORIENTATION, sensorOrientation)      //根据摄像头方向对保存的照片进行旋转，使其为"自然方向"
                 cameraSession?.capture(builder.build(), null, Handler(Looper.getMainLooper()))
-                        ?: toastS("拍照异常")
+                        ?: Error("拍照异常")
             }
         } catch (e: CameraAccessException) {
 
