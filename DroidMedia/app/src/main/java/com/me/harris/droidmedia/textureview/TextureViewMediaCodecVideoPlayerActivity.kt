@@ -7,8 +7,10 @@ import android.view.Surface
 import android.view.TextureView
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.utils.VideoUtil
+import com.me.harris.droidmedia.utils.VideoUtil.adjustPlayerViewPerVideoAspectRation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -76,15 +78,17 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
     private fun startPlay(){
         VideoUtil.setUrl()
         val url = VideoUtil.strVideo
+        mTextureView.adjustPlayerViewPerVideoAspectRation(url)
+        lifecycleScope.launch {
+            launch(Dispatchers.IO) {
+                mVideoDecoder = VideoDecoder(mSurface!!)
+                mVideoDecoder?.start(url)
+            }
 
-        GlobalScope.launch(Dispatchers.IO) {
-            mVideoDecoder = VideoDecoder(mSurface!!)
-            mVideoDecoder?.start(url)
-        }
-
-        GlobalScope.launch(Dispatchers.IO) {
-            mAudioDecoder = AudioDecoder()
-            mAudioDecoder?.start(url)
+            launch(Dispatchers.IO) {
+                mAudioDecoder = AudioDecoder()
+                mAudioDecoder?.start(url)
+            }
         }
 //
 //

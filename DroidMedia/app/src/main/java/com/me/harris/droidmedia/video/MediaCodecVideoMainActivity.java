@@ -24,7 +24,7 @@ public class MediaCodecVideoMainActivity extends AppCompatActivity {
 		VideoUtil.setUrl();
 		VideoPlayView.strVideo = VideoUtil.strVideo;
 		int[] arr = VideoInfoHelper.queryVideoInfo(VideoUtil.strVideo);
-		ViewGroup.LayoutParams params = playView.getLayoutParams();
+		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) playView.getLayoutParams();
 
 
 		DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -34,6 +34,7 @@ public class MediaCodecVideoMainActivity extends AppCompatActivity {
 
 		params.width = (int) width;
 		params.height = (int) (width*((float) arr[1]/(float) arr[0]));
+
 
 		//获取所支持的编码信息的方法
 		HashMap<String, MediaCodecInfo.CodecCapabilities> mEncoderInfos = new HashMap<>();

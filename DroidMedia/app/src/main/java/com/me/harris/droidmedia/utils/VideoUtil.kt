@@ -1,7 +1,14 @@
 package com.me.harris.droidmedia.utils
 
+import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Environment
+import android.util.DisplayMetrics
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.updateLayoutParams
+import com.me.harris.droidmedia.video.VideoInfoHelper
 import java.io.File
 import java.util.*
 
@@ -41,5 +48,24 @@ object VideoUtil {
 //        strVideo = fs[4].absolutePath
         strVideo = fs[2].absolutePath
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
+    }
+
+
+    @JvmStatic
+    fun View.adjustPlayerViewPerVideoAspectRation(url:String){
+        val activity = context as Activity
+
+        val arr = VideoInfoHelper.queryVideoInfo(url)
+        val params = layoutParams
+
+        val displayMetrics = DisplayMetrics()
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+//        val height = displayMetrics.heightPixels.toFloat()
+        val width = displayMetrics.widthPixels.toFloat()
+
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            this.width = width.toInt()
+            this.height = (width * (arr[1].toFloat() / arr[0].toFloat())).toInt()
+        }
     }
 }

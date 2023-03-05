@@ -144,9 +144,9 @@ class VideoDecoder2(private val dataSource: String) {
 
     class Info(val time: Long, val bitmap: Bitmap?)
 
-    inner class DecoderCallable(private val target: Long) : Callable<Info?> {
+    inner class DecoderCallable(private val target: Long) : Callable<Info> {
 
-        override fun call(): Info? {
+        override fun call(): Info {
             Log.d(TAG, "decoder2 thread is ${Thread.currentThread().name}")
             val s = System.currentTimeMillis()
             prepareCodec()
