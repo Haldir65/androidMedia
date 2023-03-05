@@ -3,10 +3,14 @@ package com.me.harris.droidmedia
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.os.EnvironmentCompat
 import com.liubing.filtertestbed.CameraEntryActivity
 import com.me.harris.droidmedia.audiorecord.MediaCodecForAACActivity
 import com.me.harris.droidmedia.databinding.ActivityMainBinding
@@ -19,6 +23,7 @@ import com.me.harris.droidmedia.entity.UserInfo
 import com.me.harris.droidmedia.extractFrame.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
 import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
+import com.me.harris.droidmedia.utils.StoragePermissSucks
 import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.VideoPlayExtryActivity
 
@@ -104,6 +109,11 @@ class MainActivity : AppCompatActivity() {
                 ),
                 1098
             )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()){
+                StoragePermissSucks.grantManageExternalStoragePermission(this)
+            }
         }
     }
 

@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId "com.me.harris.droidmedia"
         minSdkVersion 27
-        targetSdkVersion 29
+        targetSdkVersion 29 // target api 29及以上，只能访问部分存储
         versionCode 1
         versionName "1.0"
 
