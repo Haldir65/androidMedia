@@ -134,7 +134,13 @@
         <activity android:name=".audioPlayer.MyAudioPlayerActivity" />
         <activity android:name=".extractFrame.ExtractFrameAndSaveKeyFrameToFileActivity" />
         <activity android:name=".audiorecord.MediaCodecForAACActivity" />
+        <activity android:name="com.me.harris.ui.SendSSurfaceToAnotherProcessSenderActivity"
+            android:screenOrientation="portrait"
+            />
 
+        <service android:name="com.me.harris.ipc.ConsumingSurfaceService"
+            android:process=":playerService"
+            />
     </application>
 
 </manifest>
