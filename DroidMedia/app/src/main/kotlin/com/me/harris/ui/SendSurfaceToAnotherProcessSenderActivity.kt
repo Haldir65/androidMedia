@@ -21,7 +21,7 @@ class SendSurfaceToAnotherProcessSenderActivity:AppCompatActivity(R.layout.activ
 
 
     private fun startRemotePlayerService(){
-        
+
     }
 
 
