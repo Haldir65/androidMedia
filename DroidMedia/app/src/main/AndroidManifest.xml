@@ -138,7 +138,7 @@
             android:screenOrientation="portrait"
             />
 
-        <service android:name="com.me.harris.ipc.ConsumingSurfaceService"
+        <service android:name="com.me.harris.ipc.RemoteMediaPlayerBackEndService"
             android:process=":playerService"
             />
     </application>

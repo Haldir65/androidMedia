@@ -188,6 +188,24 @@
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
+
+
+        <androidx.cardview.widget.CardView
+            style="@style/CardStyleButton"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6dp"
+            app:contentPadding="4dp"
+            app:cardElevation="3dp">
+
+            <Button
+                android:id="@+id/btn11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/white"
+                android:text="将Surface 通过aidl传到另一个process实现视频播放"
+                android:textAllCaps="false" />
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
 

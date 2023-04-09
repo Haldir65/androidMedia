@@ -26,6 +26,7 @@ import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.droidmedia.utils.StoragePermissSucks
 import com.me.harris.droidmedia.utils.VideoUtil
 import com.me.harris.droidmedia.video.VideoPlayExtryActivity
+import com.me.harris.ui.SendSurfaceToAnotherProcessSenderActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -85,6 +86,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.btn10.setOnClickListener {
             startActivity(Intent(this,MediaCodecForAACActivity::class.java))
+        }
+
+        binding.btn11.setOnClickListener {
+            startActivity(Intent(this,SendSurfaceToAnotherProcessSenderActivity::class.java))
         }
     }
 

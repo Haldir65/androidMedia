@@ -143,7 +143,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.7.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     testImplementation 'junit:junit:4.13.2'
     // App compat and UI things
     implementation 'androidx.appcompat:appcompat:1.6.1'
