@@ -15,13 +15,18 @@ android {
     buildToolsVersion '33.0.2'
     ndkVersion '25.1.8937393'
 
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+        aidl true
+    }
+
     sourceSets {
 //        main {
 //            jniLibs.srcDirs = ['src/main/jniLibs']
 //        }  、、 External native build now automatically packages those libraries, so explicitly packaging the library with jniLibs results in a duplicate.
 //        To avoid the build error, move the prebuilt library to a location outside jniLibs or remove the jniLibs configuration from your build.gradle file.
     }
-    viewBinding { enabled = true }
 
     defaultConfig {
         applicationId "com.me.harris.droidmedia"
@@ -115,16 +120,16 @@ android {
         }
     }
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     buildTypes {
@@ -136,6 +141,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.me.harris.droidmedia'
 
 }
 
@@ -170,7 +176,12 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
     // okhttp
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.9'
+
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp-bom
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -183,8 +194,11 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava3
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-bom
+    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4')
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
 
     implementation files('somelibs/jetified-exoplayer-core-r2.5.2.aar')
     implementation files('somelibs/jetified-exoplayer-ui-r2.5.2.aar')
