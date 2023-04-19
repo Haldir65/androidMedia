@@ -120,7 +120,11 @@ android {
         }
     }
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+            vendor = JvmVendorSpec.ORACLE
+            implementation = JvmImplementation.VENDOR_SPECIFIC
+        }
     }
 
     compileOptions {
