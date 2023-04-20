@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
 }
 
 def SUPPORTED_ABI = ['arm64-v8a', 'x86', 'x86_64','armeabi-v7a'] as String[]
@@ -30,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId "com.me.harris.droidmedia"
-        minSdkVersion 27
-        targetSdkVersion 29
+        minSdk 27
+        targetSdk 29
         versionCode 1
         versionName "1.0"
 
@@ -187,7 +189,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
 //    implementation group: 'com.jadynai.ai.kotlind', name: 'KotlinD', version: '1.0.5'
@@ -198,6 +200,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava3
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
 
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-bom
     implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4')
@@ -207,5 +210,9 @@ dependencies {
     implementation files('somelibs/jetified-exoplayer-core-r2.5.2.aar')
     implementation files('somelibs/jetified-exoplayer-ui-r2.5.2.aar')
     implementation project(":awesomelib")
+
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
 
 }
