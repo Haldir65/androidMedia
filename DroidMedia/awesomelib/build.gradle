@@ -6,6 +6,12 @@ plugins {
 android {
     namespace 'com.me.harris.awesomelib'
     compileSdkVersion 33
+
+    
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    }
+
     buildToolsVersion '33.0.2'
     ndkVersion '25.1.8937393'
 
@@ -53,13 +59,13 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity-ktx:1.7.0'
+    implementation 'androidx.activity:activity-ktx:1.7.1'
     implementation 'androidx.cardview:cardview:1.0.0'
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-bom
     implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4')
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
 
     implementation 'androidx.core:core-ktx:1.10.0'
