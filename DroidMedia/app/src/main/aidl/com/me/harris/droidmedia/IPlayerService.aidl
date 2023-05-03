@@ -23,6 +23,7 @@ interface IPlayerService {
     void setSurface(in Surface surface);
     void start();
     void stop();
+    void pause();
     void setOnErrorListener();
 //    void setOnPreparedListener(MediaPlayer.OnPreparedListener listener);
 

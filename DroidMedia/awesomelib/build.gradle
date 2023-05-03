@@ -7,10 +7,6 @@ android {
     namespace 'com.me.harris.awesomelib'
     compileSdkVersion 33
 
-    
-    java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-    }
 
     buildToolsVersion '33.0.2'
     ndkVersion '25.1.8937393'
@@ -29,9 +25,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            debuggable true
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

@@ -94,6 +94,10 @@ class RemoteMediaPlayerBackEndService:Service() {
                 player.stop()
             }
 
+            override fun pause(){
+                player.pause()
+            }
+
             override fun setOnErrorListener() {
 //                player.setOnErrorListener()
             }

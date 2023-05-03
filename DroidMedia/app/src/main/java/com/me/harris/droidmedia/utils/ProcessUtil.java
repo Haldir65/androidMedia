@@ -1,4 +1,4 @@
-package com.me.harris.ipc;
+package com.me.harris.droidmedia.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;

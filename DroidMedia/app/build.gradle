@@ -39,8 +39,8 @@ android {
         targetSdk 29
         versionCode 1
         versionName "1.0"
+        resourceConfigurations += ['zh', 'zh-rCN']
 
-        resConfigs "zh", "zh-rCN"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -74,21 +74,8 @@ android {
             }
         }
 
-
-
-
     }
 
-    java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-    }
-
-    lintOptions {
-        checkReleaseBuilds true
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 
     //https://stackoverflow.com/a/40276710 每次换机器编译都要重新安装太费事了
     signingConfigs {
@@ -157,6 +144,10 @@ android {
         }
     }
     namespace 'com.me.harris.droidmedia'
+    lint {
+        abortOnError false
+        checkReleaseBuilds true
+    }
 
 }
 

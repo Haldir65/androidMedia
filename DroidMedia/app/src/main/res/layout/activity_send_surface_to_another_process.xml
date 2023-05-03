@@ -36,7 +36,7 @@
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/btn1"
         app:layout_constraintTop_toTopOf="@id/btn1"
-        android:text="Stop"
+        android:text="pause"
         android:textAllCaps="false"
         />
 
@@ -47,7 +47,7 @@
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/btn2"
         app:layout_constraintTop_toTopOf="@id/btn1"
-        android:text="Release"
+        android:text="Resume"
         android:textAllCaps="false"
         />
 

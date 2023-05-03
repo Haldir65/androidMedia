@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.view.Surface
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.addCallback
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.droidmedia.IPlayerService
 import com.me.harris.droidmedia.R
@@ -33,7 +34,25 @@ class SendSurfaceToAnotherProcessSenderActivity:AppCompatActivity(R.layout.activ
             configurePlayerInAnotherProcess()
         }
         binding.btn2.setOnClickListener {
+            playerService?.run {
+                pause()
+            }
+        }
 
+        binding.btn3.setOnClickListener {
+            playerService?.run {
+                start()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */) {
+            // onBackPressed deprecated?
+            //
+            playerService?.run {
+                stop()
+                release()
+            }
+            finish()
         }
     }
 
@@ -82,7 +101,6 @@ class SendSurfaceToAnotherProcessSenderActivity:AppCompatActivity(R.layout.activ
     private fun startRemotePlayerService(){
 
     }
-
 
 
 
