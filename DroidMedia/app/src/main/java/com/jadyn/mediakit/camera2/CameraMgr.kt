@@ -16,7 +16,7 @@ import android.view.Surface
 import com.jadyn.mediakit.function.CompareSizesByArea
 import com.jadyn.mediakit.function.areDimensionsSwapped
 import com.jadyn.mediakit.function.chooseOptimalSize
-import com.me.harris.droidmedia.utils.Utils
+import com.me.harris.awesomelib.utils.Utils
 import java.io.FileOutputStream
 import java.lang.Integer.max
 import java.lang.ref.SoftReference

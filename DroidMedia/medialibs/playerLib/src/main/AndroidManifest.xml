@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+
+        <activity
+            android:name="com.me.harris.playerLibrary.video.MediaCodecVideoMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.me.harris.playerLibrary.openglplayvideo.MediaPlayerSurfaceStubActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.me.harris.playerLibrary.textureview.TextureViewMediaCodecVideoPlayerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.me.harris.playerLibrary.VideoPlayExtryActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.me.harris.playerLibrary.video.sharedSurface.SharedSurfaceTextureListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.me.harris.playerLibrary.video.sharedSurface.SharedSurfaceTextureDetailActivity"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.mediakit.video.decode.VideoDecoder
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.databinding.ActivityDecodeBinding
-import com.me.harris.droidmedia.utils.VideoUtil
+import com.me.harris.awesomelib.utils.VideoUtil
 import java.io.File
 
 class DecodeActivity : AppCompatActivity() {

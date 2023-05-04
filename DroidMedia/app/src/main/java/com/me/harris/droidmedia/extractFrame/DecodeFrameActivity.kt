@@ -3,8 +3,6 @@ package com.me.harris.droidmedia.extractFrame
 import android.app.ActivityManager
 import android.content.Context
 import android.content.pm.ConfigurationInfo
-import android.graphics.Bitmap
-import android.media.MediaCodecInfo
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
@@ -13,17 +11,13 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.jadyn.mediakit.gl.Texture2dProgram
-import com.jadyn.mediakit.video.decode.VideoDecoder2
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.common.CodecUtils
 import com.me.harris.droidmedia.extractFrame.render.JavaRendererGL30
 import com.me.harris.droidmedia.extractFrame.render.JfRender
 import com.me.harris.droidmedia.extractFrame.render.MyGLRenderer
-import com.me.harris.droidmedia.utils.VideoUtil
-import com.me.harris.droidmedia.video.VideoPlayView
+import com.me.harris.awesomelib.utils.VideoUtil
 import java.nio.IntBuffer
-import java.util.*
 import kotlin.concurrent.thread
 
 

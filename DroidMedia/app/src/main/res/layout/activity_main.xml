@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="all kinds of filter"
+                android:text="VideoPlayerFilterEntry"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -167,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text="Coroutine test Activity"
+                android:text="extract frame and save to file"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 

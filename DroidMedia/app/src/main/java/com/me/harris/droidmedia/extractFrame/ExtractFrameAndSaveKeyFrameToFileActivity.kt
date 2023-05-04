@@ -1,7 +1,5 @@
 package com.me.harris.droidmedia.extractFrame
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.MediaExtractor
 import android.media.MediaFormat
@@ -9,32 +7,47 @@ import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
-import com.me.harris.droidmedia.utils.LogUtil
-import com.me.harris.droidmedia.utils.VideoUtil
+import com.me.harris.awesomelib.viewBinding
+import com.me.harris.droidmedia.R
+import com.me.harris.droidmedia.databinding.ActivityExtractFrameToFileBinding
+import com.me.harris.awesomelib.utils.LogUtil
+import com.me.harris.awesomelib.utils.VideoUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
-import kotlin.concurrent.thread
 
 
-class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity() {
+class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activity_extract_frame_to_file) {
 
 
+    private val binding by viewBinding<ActivityExtractFrameToFileBinding>(ActivityExtractFrameToFileBinding::bind)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        thread {
-//            val fPath = VideoUtil.strVideo
-//            getKeyFrames(fPath,filesDir.absolutePath)
-//            Log.e("=A=","all Completed!")
-//        }
         lifecycleScope.launch {
-            VideoTranscodingUtils.transcoding2Mp4(VideoUtil.strVideo,this@ExtractFrameAndSaveKeyFrameToFileActivity)
+            val fPath = VideoUtil.strVideo
+            withContext(Dispatchers.IO){
+                getKeyFrames(fPath,filesDir.absolutePath)
+            }
+            binding.text.text = "all frames done ,saved to ${filesDir.absolutePath}"
+            Log.e("=A=","all Completed!")
         }
+
+
+        if (false){
+            lifecycleScope.launch {
+                val savedPath = VideoTranscodingUtils.transcoding2Mp4(VideoUtil.strVideo,this@ExtractFrameAndSaveKeyFrameToFileActivity).orEmpty()
+                withContext(Dispatchers.Main.immediate){
+                    binding.text.text = "重新合成视频到$savedPath"
+                }
+            }
+        }
+
 
     }
 
@@ -43,12 +56,14 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity() {
         val mRetriever = MediaMetadataRetriever()
         mRetriever.setDataSource(inputPath)
         val mediaExtractor = MediaExtractor()
+        LogUtil.d("getKeyFrames keyFrameCount = setDataSource ${inputPath}" )
         mediaExtractor.setDataSource(inputPath!!)
         var sourceVideoTrack = -1
         for (index in 0 until mediaExtractor.trackCount) {
             val format = mediaExtractor.getTrackFormat(index)
             val mime = format.getString(MediaFormat.KEY_MIME)
             if (mime!!.startsWith("video/")) {
+                format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 65536)
                 sourceVideoTrack = index
                 break
             }
@@ -58,12 +73,18 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity() {
         val buffer: ByteBuffer = ByteBuffer.allocate(500 * 1024)
         val frameTimeList: MutableList<Long> = ArrayList()
         var sampleSize = 0
-        while (mediaExtractor.readSampleData(buffer, 0).also { sampleSize = it } > 0) {
-            val flags = mediaExtractor.sampleFlags
-            if (flags > 0 && flags and MediaExtractor.SAMPLE_FLAG_SYNC != 0) {
-                frameTimeList.add(mediaExtractor.sampleTime)
+        kotlin.runCatching {
+            // todo readSampleData throws java.lang.IllegalArgumentException sometimes
+            while (mediaExtractor.readSampleData(buffer, 0).also { sampleSize = it } > 0) {
+                buffer.clear() // Note:As of API 21, on success the position and limit of byteBuf is updated to point to the data just read.
+                val flags = mediaExtractor.sampleFlags
+                if (flags > 0 && flags and MediaExtractor.SAMPLE_FLAG_SYNC != 0) {
+                    frameTimeList.add(mediaExtractor.sampleTime)
+                }
+                mediaExtractor.advance()
             }
-            mediaExtractor.advance()
+        }.onFailure {
+           LogUtil.w("ExtractFrameAndSaveKeyFrameToFileActivity", it.stackTraceToString())
         }
         LogUtil.d("getKeyFrames keyFrameCount = " + frameTimeList.size)
 //        val parentPath: String = File(inputPath).getParent() + File.separator

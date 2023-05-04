@@ -11,9 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
-import com.me.harris.droidmedia.utils.ToastUtils
-import com.me.harris.droidmedia.utils.VideoUtil
-import com.me.harris.droidmedia.video.VideoPlayView
+import com.me.harris.awesomelib.utils.ToastUtils
+import com.me.harris.awesomelib.utils.VideoUtil
 import com.pinssible.librecorder.filter.Filters
 
 import com.pinssible.librecorder.player.PinMediaPlayer

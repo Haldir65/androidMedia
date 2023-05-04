@@ -77,3 +77,7 @@
         callback.invoke(true, sampleRate.toString())
     }
 ```
+
+
+[MediaEditSDK](https://github.com/JeffMony/MediaEditSDK)
+[VideoClipEditViewTest](https://github.com/shaopx/VideoClipEditViewTest)

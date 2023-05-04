@@ -8,7 +8,7 @@ import com.jadyn.mediakit.function.durationSecond
 import com.jadyn.mediakit.video.decode.VideoAnalyze
 import com.jadyn.mediakit.video.decode.VideoDecoder2
 import com.me.harris.droidmedia.databinding.ActivityDecodeFrameBinding
-import com.me.harris.droidmedia.utils.VideoUtil
+import com.me.harris.awesomelib.utils.VideoUtil
 
 class DecodeFrameActivity : AppCompatActivity() {
 

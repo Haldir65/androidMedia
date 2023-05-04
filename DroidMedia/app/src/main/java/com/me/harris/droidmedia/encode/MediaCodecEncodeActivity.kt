@@ -3,14 +3,13 @@ package com.me.harris.droidmedia.encode
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.SurfaceView
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.extractFrame.VideoDecoder
-import com.me.harris.droidmedia.utils.ToastUtils
-import com.me.harris.droidmedia.utils.VideoUtil
+import com.me.harris.awesomelib.utils.ToastUtils
+import com.me.harris.awesomelib.utils.VideoUtil
 import java.io.File
 import kotlin.concurrent.thread
 

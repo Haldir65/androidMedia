@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
-import com.me.harris.droidmedia.utils.VideoUtil
+import com.me.harris.awesomelib.utils.VideoUtil
 
 class MyAudioPlayerActivity:AppCompatActivity() {
 

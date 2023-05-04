@@ -42,10 +42,7 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:name=".video.MediaCodecVideoMainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+
 
         <activity
             android:name=".decode.DecodeActivity"
@@ -100,15 +97,7 @@
         <activity
             android:name="com.filtertestbed.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".openglplayvideo.MediaPlayerSurfaceStubActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".textureview.TextureViewMediaCodecVideoPlayerActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".video.VideoPlayExtryActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".filter.VideoPlayFilterActivity"
             android:screenOrientation="portrait" />
@@ -121,12 +110,7 @@
         <activity
             android:name=".opengl.egl.TextureViewRenderViaEglActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".video.sharedSurface.SharedSurfaceTextureListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".video.sharedSurface.SharedSurfaceTextureDetailActivity"
-            android:screenOrientation="portrait" />
+
         <activity android:name=".coroutine.CoroutinePlayActivity"
             android:screenOrientation="portrait"
             />
@@ -136,6 +120,7 @@
         <activity android:name="com.me.harris.ui.SendSurfaceToAnotherProcessSenderActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name="com.me.harris.droidmedia.filter.PlayVideoWithFilterAppliedActivity" />
 
         <service android:name="com.me.harris.ipc.RemoteMediaPlayerBackEndService"
             android:process=":playerService"

@@ -1,0 +1,62 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.daasuu.epf'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 27
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+//        buildConfig = true
+        viewBinding = true
+//        aidl true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // ViewModelScope
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    // LifecycleScope
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    // LiveData
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-bom
+    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4')
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    implementation project(":awesomelib")
+
+}
