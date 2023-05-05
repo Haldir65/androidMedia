@@ -12,6 +12,7 @@ interface IPlayerService {
      */
     void sendMessage(in MessageModel messageModel);
     int getDuration();
+    int getCurrentPosition();
     boolean isPlaying();
     void setLooping(boolean looping);
     void setDataSource(String path);
@@ -23,6 +24,7 @@ interface IPlayerService {
     void setSurface(in Surface surface);
     void start();
     void stop();
+    void resume();
     void pause();
     void setOnErrorListener();
 //    void setOnPreparedListener(MediaPlayer.OnPreparedListener listener);

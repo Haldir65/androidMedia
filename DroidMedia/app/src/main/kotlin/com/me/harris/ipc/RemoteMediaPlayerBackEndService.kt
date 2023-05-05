@@ -62,6 +62,7 @@ class RemoteMediaPlayerBackEndService:Service() {
             }
 
             override fun prepare() {
+                logCurrentProcess()
                 player.prepare()
             }
 
@@ -70,7 +71,13 @@ class RemoteMediaPlayerBackEndService:Service() {
                 player.prepareAsync()
             }
 
+
+            override fun getCurrentPosition():Int{
+                return player.currentPosition
+            }
+
             override fun release() {
+                logCurrentProcess()
                 player.release()
             }
 
@@ -79,23 +86,33 @@ class RemoteMediaPlayerBackEndService:Service() {
             }
 
             override fun seekTo(millsec: Int) {
+                logCurrentProcess()
                 player.seekTo(millsec)
             }
 
             override fun setSurface(surface: Surface?) {
+                logCurrentProcess()
                 player.setSurface(surface)
             }
 
             override fun start() {
+                logCurrentProcess()
                 player.start()
             }
 
             override fun stop() {
+                logCurrentProcess()
                 player.stop()
             }
 
             override fun pause() {
+                logCurrentProcess()
                 player.pause()
+            }
+
+            override fun resume() {
+                logCurrentProcess()
+                player.start()
             }
 
             override fun setOnErrorListener() {

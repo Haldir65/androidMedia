@@ -5,8 +5,12 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.widget.SeekBar
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.droidmedia.IPlayerService
@@ -14,6 +18,10 @@ import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.databinding.ActivitySendSurfaceToAnotherProcessBinding
 import com.me.harris.ipc.RemoteMediaPlayerBackEndService
 import com.me.harris.viewmodels.SendSurfaceToAnotherProcessViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 class SendSurfaceToAnotherProcessSenderActivity:AppCompatActivity(R.layout.activity_send_surface_to_another_process) {
 
@@ -31,7 +39,56 @@ class SendSurfaceToAnotherProcessSenderActivity:AppCompatActivity(R.layout.activ
             configurePlayerInAnotherProcess()
         }
         binding.btn2.setOnClickListener {
+            playerService?.pause()
+        }
 
+        binding.btn3.setOnClickListener {
+            playerService?.resume()
+        }
+
+        val callback = object :OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                playerService?.stop()
+                playerService?.release() // crash?
+                playerService?.let {
+                    unbindService(connnection)
+                }
+                playerService = null
+                isEnabled = false // 1. step 1
+                onBackPressedDispatcher.onBackPressed() // 2. step 2
+            }
+        }
+        onBackPressedDispatcher.addCallback(callback)
+        binding.seekbar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                playerService?.run {
+                    val duration = this.duration
+                    val targetDuration = duration * (seekBar.progress*1.0f/seekBar.max)
+                    seekTo(targetDuration.toInt())
+                }
+            }
+        })
+
+        lifecycleScope.launch {
+            while (isActive){
+                delay(1000)
+                playerService?.let { player ->
+                    if (player.isPlaying){
+                        val currentProgress = player.currentPosition
+                        val duration = player.duration
+                        val percentage = currentProgress.toFloat()/duration
+                        binding.seekbar.progress = (binding.seekbar.max*percentage).toInt()
+                    }
+                }
+            }
         }
     }
 

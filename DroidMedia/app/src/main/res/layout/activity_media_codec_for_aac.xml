@@ -10,7 +10,6 @@
         android:id="@+id/btn_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="startRecord"
         android:text="开始录制音频材料"
         app:layout_constraintTop_toTopOf="parent" />
 

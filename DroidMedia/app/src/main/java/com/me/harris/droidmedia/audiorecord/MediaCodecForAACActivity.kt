@@ -50,7 +50,7 @@ class MediaCodecForAACActivity : AppCompatActivity() {
         if (!file.exists())
             file.createNewFile()
         if (file.isDirectory) {
-
+            file.deleteRecursively()
         } else {
             outputStream = FileOutputStream(file, true)
             bufferedOutputStream = BufferedOutputStream(outputStream, 4096)
@@ -89,7 +89,9 @@ class MediaCodecForAACActivity : AppCompatActivity() {
             AudioConfig.SAMPLE_RATE, AudioConfig.CHANNEL_CONFIG, AudioConfig.AUDIO_FORMAT,
             minBufferSize
         )
-
+        binding.btnRecord.setOnClickListener {
+            startRecord(it)
+        }
     }
 
     /**
