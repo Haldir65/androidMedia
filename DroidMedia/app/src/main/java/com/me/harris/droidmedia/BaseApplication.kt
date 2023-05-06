@@ -1,6 +1,8 @@
 package com.me.harris.droidmedia
 
 import android.app.Application
+import com.jadyn.mediakit.MediaKitApplication
+import com.jadyn.mediakit.gl.GLJni
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -13,6 +15,8 @@ class BaseApplication:Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        MediaKitApplication.instance = this
+       val a =  GLJni // eagerly laad jni
 //        com.jadyn.ai.kotlind.base.BaseApplication.instance = this
     }
 }

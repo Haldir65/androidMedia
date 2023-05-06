@@ -23,6 +23,10 @@
         <activity
             android:name="com.me.harris.playerLibrary.video.sharedSurface.SharedSurfaceTextureDetailActivity"
             android:screenOrientation="portrait" />
+
+        <service android:name="com.me.harris.playerLibrary.process.ipc.RemoteMediaPlayerBackEndService"
+            android:process=":playerService"
+            />
     </application>
 
 </manifest>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name=".CameraEntryActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+
+        <activity
+            android:name="com.me.harris.cameralib.CameraV1TextureView.CameraV1TextureViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.me.harris.cameralib.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity"
+            android:screenOrientation="portrait" />
+    </application>
+</manifest>

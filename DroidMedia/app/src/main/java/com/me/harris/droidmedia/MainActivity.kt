@@ -9,7 +9,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.liubing.filtertestbed.CameraEntryActivity
+import com.me.harris.cameralib.CameraEntryActivity
 import com.me.harris.droidmedia.audiorecord.MediaCodecForAACActivity
 import com.me.harris.droidmedia.databinding.ActivityMainBinding
 import com.me.harris.droidmedia.decode.DecodeActivity
@@ -23,18 +23,17 @@ import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
 import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.awesomelib.utils.StoragePermissSucks
 import com.me.harris.awesomelib.utils.VideoUtil
+import com.me.harris.awesomelib.viewBinding
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
-import com.me.harris.ui.SendSurfaceToAnotherProcessSenderActivity
+import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-    lateinit var binding:ActivityMainBinding
+    private val binding by viewBinding(ActivityMainBinding::bind)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         binding.btn1.setOnClickListener {
             VideoUtil.setUrl()
             startActivity(Intent(this, com.me.harris.droidmedia.extractFrame.DecodeFrameActivity::class.java))
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btn11.setOnClickListener {
-            startActivity(Intent(this,SendSurfaceToAnotherProcessSenderActivity::class.java))
+            startActivity(Intent(this, SendSurfaceToAnotherProcessSenderActivity::class.java))
         }
     }
 
