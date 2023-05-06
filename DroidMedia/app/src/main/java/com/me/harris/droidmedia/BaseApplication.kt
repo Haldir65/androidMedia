@@ -15,7 +15,7 @@ class BaseApplication:Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        MediaKitApplication.instance = this
+        MediaKitApplication.instance = this // TDDO : USE DI TO Supply application context in another library module?
        val a =  GLJni // eagerly laad jni
 //        com.jadyn.ai.kotlind.base.BaseApplication.instance = this
     }

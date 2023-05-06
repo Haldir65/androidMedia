@@ -116,10 +116,10 @@ android {
 
     if (SUPPORT_NATIVE_BUILD){
         externalNativeBuild {
-        cmake {
-            version "3.22.1"
-            path "src/main/cpp/CMakeLists.txt"
-        }
+            cmake {
+                version "3.22.1"
+                path "src/main/cpp/CMakeLists.txt"
+            }
         }
     }
     java {
@@ -209,8 +209,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
-    implementation files('somelibs/jetified-exoplayer-core-r2.5.2.aar')
-    implementation files('somelibs/jetified-exoplayer-ui-r2.5.2.aar')
+//    implementation files('somelibs/jetified-exoplayer-core-r2.5.2.aar')
+//    implementation files('somelibs/jetified-exoplayer-ui-r2.5.2.aar')
     implementation project(":awesomelib")
     implementation project(":medialibs:filterLibrary")
     implementation project(":medialibs:playerLib")

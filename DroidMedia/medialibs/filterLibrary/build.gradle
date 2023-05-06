@@ -3,6 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def SUPPORTED_ABI = ['arm64-v8a', 'x86', 'x86_64','armeabi-v7a'] as String[]
+
+
 android {
     namespace 'com.me.harris.filterlibrary'
     compileSdk 33
@@ -19,6 +22,36 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        if(SUPPORT_NATIVE_BUILD){
+            externalNativeBuild {
+                cmake {
+                    abiFilters SUPPORTED_ABI //只帮我打这个架构的就好了
+                    cppFlags "-g -std=c++11 -frtti -fexceptions"
+                    arguments '-DANDROID_PLATFORM=android-21',
+                            '-DANDROID_TOOLCHAIN=clang',
+                            '-DANDROID_CPP_FEATURES=rtti exceptions'
+//                arguments  "-DANDROID_STL=stlport_static"
+                    "-DANDROID_ARM_NEON=true"
+                }
+            }
+            ndk {
+                abiFilters  SUPPORTED_ABI
+            }
+
+            splits {
+                abi {
+                    enable true
+                    reset()
+                    include  SUPPORTED_ABI
+                    universalApk true
+                }
+            }
+
+//        packagingOptions {
+//            pickFirst "lib/arm64-v8a/*.so"
+//        }
+        }
     }
 
     buildTypes {
@@ -31,8 +64,18 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17
+    }
+
+    if (SUPPORT_NATIVE_BUILD){
+        externalNativeBuild {
+            cmake {
+                version "3.22.1"
+                path "CMakeLists.txt"
+            }
+        }
     }
 }
 
@@ -45,7 +88,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-
     // ViewModelScope
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     // LifecycleScope
@@ -57,4 +99,11 @@ dependencies {
     implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4')
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+
+    compileOnly 'com.google.android.exoplayer:exoplayer-core:2.17.1'
+    compileOnly 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
+
+    implementation project(":medialibs:epf")
+
 }
