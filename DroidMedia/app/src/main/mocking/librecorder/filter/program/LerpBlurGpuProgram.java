@@ -83,7 +83,7 @@ public class LerpBlurGpuProgram extends GpuImageProgram {
         //scale program
         mScaleProgramId = GlUtil.createProgram(vshUpScale, fshUpScale);
         //get vPosition in scale program
-        GLES20.glBindAttribLocation(mScaleProgramId, maPositionLoc, POSITION_NAME);
+        GLES20.glBindAttribLocation(mScaleProgramId, maPositionLoc, GpuImageProgram.POSITION_NAME);
     }
 
     @Override

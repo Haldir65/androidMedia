@@ -81,28 +81,28 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation libs.androidx.core.core.ktx
+    implementation libs.androidx.appcompat.appcompat
+    implementation libs.google.android.material.material
+    implementation libs.androidx.lifecycle.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.lifecycle.runtime.ktx
+    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    implementation libs.coroutines.core
+    implementation libs.coroutines.android
+    compileOnly libs.exoplayer.core
+    compileOnly libs.exoplayer.ui
+
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    // ViewModelScope
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
-    // LifecycleScope
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    // LiveData
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-bom
-    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4')
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+//    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4')
 
 
-    compileOnly 'com.google.android.exoplayer:exoplayer-core:2.17.1'
-    compileOnly 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
+
 
     implementation project(":medialibs:epf")
 

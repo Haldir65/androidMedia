@@ -19,7 +19,6 @@ import com.me.harris.droidmedia.entity.JUserInfo
 import com.me.harris.droidmedia.entity.SubUserInfo
 import com.me.harris.droidmedia.entity.UserInfo
 import com.me.harris.droidmedia.extractFrame.ExtractFrameAndSaveKeyFrameToFileActivity
-import com.me.harris.droidmedia.filter.VideoPlayFilterActivity
 import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.awesomelib.utils.StoragePermissSucks
 import com.me.harris.awesomelib.utils.VideoUtil
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         binding.btn6.setOnClickListener {
             VideoUtil.setUrl()
-            startActivity(Intent(this, VideoPlayFilterActivity::class.java))
+//            startActivity(Intent(this, VideoPlayFilterActivity::class.java))
         }
         binding.btn7.setOnClickListener {
             VideoUtil.setUrl()

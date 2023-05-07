@@ -22,14 +22,14 @@ import java.lang.Exception
 class VideoPlayFilterActivity:AppCompatActivity() {
 
     //view
-    private  lateinit var previewSurface: SimplePinPlayerView
+    private  lateinit var previewSurface: com.pinssible.librecorder.player.SimplePinPlayerView
     private  lateinit var filterBtn: Button
     private lateinit var mBtn2: Button
     private lateinit var mTextView:TextView
     private lateinit var mImageView:ImageView
 
     //player
-    private var player: PinMediaPlayer? = null
+    private var player: com.pinssible.librecorder.player.PinMediaPlayer? = null
 
     private var filterType = 1
 
@@ -55,7 +55,11 @@ class VideoPlayFilterActivity:AppCompatActivity() {
         val outputPath: String = VideoUtil.strVideo
         val source = Uri.parse(outputPath)
         try {
-            player = PinMediaPlayer(this, source, true)
+            player = com.pinssible.librecorder.player.PinMediaPlayer(
+                this,
+                source,
+                true
+            )
             previewSurface?.setPlayer(player)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -92,23 +96,23 @@ class VideoPlayFilterActivity:AppCompatActivity() {
     fun filterTypeToText(type:Int):String{
         // Camera filters; must match up with camera_filter_names in strings.xml
         return when(type){
-            Filters.FILTER_NONE -> "FILTER_NONE"
-            Filters.FILTER_BLACK_WHITE -> "FILTER_BLACK_WHITE"
-            Filters.FILTER_NIGHT -> "FILTER_NIGHT"
-            Filters.FILTER_CHROMA_KEY -> "FILTER_CHROMA_KEY"
-            Filters.FILTER_BLUR -> "FILTER_BLUR"
-            Filters.FILTER_SHARPEN -> "FILTER_SHARPEN"
-            Filters.FILTER_EDGE_DETECT -> "FILTER_EDGE_DETECT"
-            Filters.FILTER_EMBOSS -> "FILTER_EMBOSS"
-            Filters.FILTER_SQUEEZE -> "FILTER_SQUEEZE"
-            Filters.FILTER_TWIRL -> "FILTER_TWIRL"
-            Filters.FILTER_TUNNEL -> "FILTER_TUNNEL"
-            Filters.FILTER_BULGE -> "FILTER_BULGE"
-            Filters.FILTER_DENT -> "FILTER_DENT"
-            Filters.FILTER_FISHEYE -> "FILTER_FISHEYE"
-            Filters.FILTER_STRETCH -> "FILTER_STRETCH"
-            Filters.FILTER_MIRROR -> "FILTER_MIRROR"
-            Filters.FILTER_GPU_LERP_BLUR -> "FILTER_GPU_LERP_BLUR"
+            com.pinssible.librecorder.filter.Filters.FILTER_NONE -> "FILTER_NONE"
+            com.pinssible.librecorder.filter.Filters.FILTER_BLACK_WHITE -> "FILTER_BLACK_WHITE"
+            com.pinssible.librecorder.filter.Filters.FILTER_NIGHT -> "FILTER_NIGHT"
+            com.pinssible.librecorder.filter.Filters.FILTER_CHROMA_KEY -> "FILTER_CHROMA_KEY"
+            com.pinssible.librecorder.filter.Filters.FILTER_BLUR -> "FILTER_BLUR"
+            com.pinssible.librecorder.filter.Filters.FILTER_SHARPEN -> "FILTER_SHARPEN"
+            com.pinssible.librecorder.filter.Filters.FILTER_EDGE_DETECT -> "FILTER_EDGE_DETECT"
+            com.pinssible.librecorder.filter.Filters.FILTER_EMBOSS -> "FILTER_EMBOSS"
+            com.pinssible.librecorder.filter.Filters.FILTER_SQUEEZE -> "FILTER_SQUEEZE"
+            com.pinssible.librecorder.filter.Filters.FILTER_TWIRL -> "FILTER_TWIRL"
+            com.pinssible.librecorder.filter.Filters.FILTER_TUNNEL -> "FILTER_TUNNEL"
+            com.pinssible.librecorder.filter.Filters.FILTER_BULGE -> "FILTER_BULGE"
+            com.pinssible.librecorder.filter.Filters.FILTER_DENT -> "FILTER_DENT"
+            com.pinssible.librecorder.filter.Filters.FILTER_FISHEYE -> "FILTER_FISHEYE"
+            com.pinssible.librecorder.filter.Filters.FILTER_STRETCH -> "FILTER_STRETCH"
+            com.pinssible.librecorder.filter.Filters.FILTER_MIRROR -> "FILTER_MIRROR"
+            com.pinssible.librecorder.filter.Filters.FILTER_GPU_LERP_BLUR -> "FILTER_GPU_LERP_BLUR"
             else -> "unknown"
         }
     }

@@ -87,7 +87,7 @@ class RemoteMediaPlayerBackEndService:Service() {
 
             override fun seekTo(millsec: Int) {
                 logCurrentProcess()
-                player.seekTo(millsec)
+                player.seekTo(millsec.toLong(), MediaPlayer.SEEK_CLOSEST_SYNC)
             }
 
             override fun setSurface(surface: Surface?) {

@@ -80,8 +80,17 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation libs.androidx.core.core.ktx
+    implementation libs.androidx.appcompat.appcompat
+    implementation libs.google.android.material.material
+
+    implementation libs.coroutines.core
+    implementation libs.coroutines.android
+    implementation libs.androidx.lifecycle.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.lifecycle.runtime.ktx
+    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

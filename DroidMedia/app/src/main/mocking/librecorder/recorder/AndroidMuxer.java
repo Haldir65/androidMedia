@@ -25,7 +25,7 @@ public class AndroidMuxer extends Muxer {
         Log.e(TAG, "AndroidMuxer create path = " + outputFile);
         try {
             switch (format) {
-                case MPEG4:
+                case FORMAT.MPEG4:
                     mMuxer = new MediaMuxer(outputFile, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
                     break;
                 default:

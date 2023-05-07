@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.me.harris.playerLibrary.exoplayer.ExoplayerSampleActivity
 import com.me.harris.playerLibrary.openglplayvideo.MediaPlayerSurfaceStubActivity
 import com.me.harris.playerLibrary.textureview.TextureViewMediaCodecVideoPlayerActivity
 import com.me.harris.playerLibrary.video.MediaCodecVideoMainActivity
@@ -23,11 +24,8 @@ class VideoPlayExtryActivity:AppCompatActivity() {
         findViewById<Button>(R.id.btn3)?.setOnClickListener {
             startActivity(Intent(this, MediaPlayerSurfaceStubActivity::class.java))
         }
-        findViewById<Button>(R.id.btn3)?.setOnClickListener {
-            startActivity(Intent(this, MediaPlayerSurfaceStubActivity::class.java))
-        }
-        findViewById<Button>(R.id.btn4)?.setOnClickListener {
-            startActivity(Intent(this, SharedSurfaceTextureListActivity::class.java))
+        findViewById<Button>(R.id.btn5)?.setOnClickListener {
+            startActivity(Intent(this, ExoplayerSampleActivity::class.java))
         }
     }
 }

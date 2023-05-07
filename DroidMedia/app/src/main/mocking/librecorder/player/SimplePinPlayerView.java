@@ -132,7 +132,7 @@ public class SimplePinPlayerView extends FrameLayout {
 
         LayoutInflater.from(context).inflate(playerLayoutId, this);
         componentListener = new SimplePinPlayerView.ComponentListener();
-        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+        setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
         // Content frame.
         contentFrame = (AspectRatioFrameLayout) findViewById(com.google.android.exoplayer2.ui.R.id.exo_content_frame);
@@ -252,7 +252,7 @@ public class SimplePinPlayerView extends FrameLayout {
             controller.setPlayer(getPlayer());
         }
         if (shutterView != null) {
-            shutterView.setVisibility(VISIBLE);
+            shutterView.setVisibility(View.VISIBLE);
         }
 
         player.setPreview(surfaceView);
@@ -626,7 +626,7 @@ public class SimplePinPlayerView extends FrameLayout {
         }
         // Video disabled so the shutter must be closed.
         if (shutterView != null) {
-            shutterView.setVisibility(VISIBLE);
+            shutterView.setVisibility(View.VISIBLE);
         }
         // Display artwork if enabled and available, else hide it.
         if (useArtwork) {
@@ -670,7 +670,7 @@ public class SimplePinPlayerView extends FrameLayout {
                     contentFrame.setAspectRatio((float) bitmapWidth / bitmapHeight);
                 }
                 artworkView.setImageBitmap(bitmap);
-                artworkView.setVisibility(VISIBLE);
+                artworkView.setVisibility(View.VISIBLE);
                 return true;
             }
         }
@@ -680,7 +680,7 @@ public class SimplePinPlayerView extends FrameLayout {
     private void hideArtwork() {
         if (artworkView != null) {
             artworkView.setImageResource(android.R.color.transparent); // Clears any bitmap reference.
-            artworkView.setVisibility(INVISIBLE);
+            artworkView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -728,7 +728,7 @@ public class SimplePinPlayerView extends FrameLayout {
         @Override
         public void onRenderedFirstFrame() {
             if (shutterView != null) {
-                shutterView.setVisibility(INVISIBLE);
+                shutterView.setVisibility(View.INVISIBLE);
             }
         }
 
