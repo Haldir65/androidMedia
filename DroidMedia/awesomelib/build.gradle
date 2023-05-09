@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -54,10 +56,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity-ktx:1.7.1'
+    implementation libs.androidx.activity.ktx
     implementation 'androidx.cardview:cardview:1.0.0'
-
-
     implementation libs.androidx.core.core.ktx
     implementation libs.androidx.appcompat.appcompat
     implementation libs.google.android.material.material
@@ -70,4 +70,11 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+//    implementation "com.google.dagger:hilt-android:$hilt_version"
+//    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    implementation libs.google.dagger.hilt.android
+    kapt libs.google.dagger.hilt.android.compiler
+
 }

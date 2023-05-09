@@ -80,9 +80,11 @@ android {
 
 dependencies {
 
+    implementation libs.androidx.activity.ktx
     implementation libs.androidx.core.core.ktx
     implementation libs.androidx.appcompat.appcompat
     implementation libs.google.android.material.material
+    implementation libs.androidx.cardview.cardview
 
     implementation libs.coroutines.core
     implementation libs.coroutines.android
@@ -102,7 +104,7 @@ dependencies {
 
 
     // we want to access application context in library module
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation libs.google.dagger.hilt.android
+    kapt libs.google.dagger.hilt.android.compiler
 
 }

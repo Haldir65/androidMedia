@@ -32,9 +32,12 @@ android {
 
 dependencies {
 
+    implementation libs.androidx.activity.ktx
     implementation libs.androidx.core.core.ktx
     implementation libs.androidx.appcompat.appcompat
     implementation libs.google.android.material.material
+    implementation libs.androidx.cardview.cardview
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -46,7 +49,7 @@ dependencies {
     implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
     implementation libs.coroutines.core
     implementation libs.coroutines.android
-//    compileOnly libs.exoplayer.core
-//    compileOnly libs.exoplayer.ui
+    compileOnly libs.exoplayer.core
+    compileOnly libs.exoplayer.ui
 
 }
