@@ -1,6 +1,6 @@
 [versions]
 arrow = "1.2.0-RC"
-androidGradlePlugin = "7.4.1"
+androidGradlePlugin = "8.0.1"
 kotlin_verison = "1.8.10"
 gson = "2.8.6"
 retrofit = "2.9.0"

@@ -10,6 +10,8 @@ import android.opengl.Matrix;
 import android.util.Log;
 import android.view.Surface;
 
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -22,7 +24,9 @@ import javax.microedition.khronos.opengles.GL10;
 public class GLVideoSurfaceView extends GLSurfaceView {
 
     VideoRender mRenderer;
-    private MediaPlayer mMediaPlayer = null;
+
+    @Nullable
+    private MediaPlayer mMediaPlayer;
 
     public GLVideoSurfaceView(Context context, MediaPlayer mp) {
         super(context);

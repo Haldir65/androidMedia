@@ -1,64 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".video.VideoPlayExtryActivity">
+    android:layout_height="match_parent">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <Button
-            android:id="@+id/btn1"
+        android:orientation="vertical">
+
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MediaCodecVideoMainActivity"
-            android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"
-            />
-
-        <Button
-            android:id="@+id/btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextureViewMediaCodecVideoPlayerActivity"
-            android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"
-            />
-
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:text="Basics"
+            android:textAllCaps="false" />
 
 
         <Button
             android:id="@+id/btn3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MediaPlayerSurfaceStubActivity"
-            android:textAllCaps="false"
             android:layout_gravity="center_horizontal"
-            />
+            android:text="MediaPlayerSurfaceStubActivity"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btn4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Shared SurfaceTexture"
             android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"
-            />
+            android:text="Shared SurfaceTexture"
+            android:textAllCaps="false" />
 
 
         <Button
             android:id="@+id/btn5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exoplayer Sample"
             android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"
-            />
+            android:text="Exoplayer Sample"
+            android:textAllCaps="false" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#27000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:text="Medium Level"
+            android:textAllCaps="false" />
+
+
+        <Button
+            android:id="@+id/btn6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="FFMediaplayer Sample"
+            android:textAllCaps="false" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="#27000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:text="High Level"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="MediaCodecVideoMainActivity"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="TextureViewMediaCodecVideoPlayerActivity"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 

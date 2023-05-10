@@ -65,4 +65,8 @@ dependencies {
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
+
+    implementation 'com.github.wseemann:FFmpegMediaPlayer-core:1.0.5'
+//    implementation 'com.github.wseemann:FFmpegMediaPlayer-native:1.0.5'
+    implementation 'com.github.wseemann:FFmpegMediaPlayer-native-arm64-v8a:1.0.5'
 }

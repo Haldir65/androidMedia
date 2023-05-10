@@ -10,19 +10,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.utils.VideoUtil.adjustPlayerViewPerVideoAspectRation
+import com.me.harris.awesomelib.viewBinding
+import com.me.harris.awesomelib.withSurfaceAvailable
 import com.me.harris.playerLibrary.R
+import com.me.harris.playerLibrary.databinding.ActivityTextureviewMediacodecBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 // https://blog.csdn.net/King1425/article/details/81263327
-class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
-    TextureView.SurfaceTextureListener {
+class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(R.layout.activity_textureview_mediacodec)
+{
 
-    lateinit var mTextureView:TextureView
-    lateinit var mButton: Button
-    lateinit var mButtonForward: Button
-    lateinit var mButtonBackward: Button
+    private val binding by viewBinding(ActivityTextureviewMediacodecBinding::bind)
+
 
     companion object {
         const val TIME_1_MINUTES =  1*60*1000*1000
@@ -30,21 +32,16 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_textureview_mediacodec)
-        mButton = findViewById(R.id.button)
-        mTextureView = findViewById(R.id.textureView)
-        mButtonForward = findViewById(R.id.button_forward)
-        mButtonBackward = findViewById(R.id.button_backward)
-        mButton.setOnClickListener {
-            startPlay()
+        binding.button.setOnClickListener {
+
         }
-        mButtonForward.setOnClickListener {
+        binding.buttonForward.setOnClickListener {
             navigateForward()
         }
-        mButtonBackward.setOnClickListener {
+        binding.button.setOnClickListener {
             navigateBackward()
         }
-        mTextureView.surfaceTextureListener = this
+        binding.textureView.withSurfaceAvailable(::startPlay)
     }
 
     private fun navigateBackward() {
@@ -59,7 +56,7 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
             it.seekTo(cur- TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
         }
     }
-        private fun navigateForward() {
+    private fun navigateForward() {
         mVideoDecoder?.extractor()?.let {
             val cur = it.sampleTime
             mVideoDecoder!!.timBase+= TIME_1_MINUTES /1000
@@ -72,17 +69,15 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
         }
     }
 
-    private fun startPlay(){
-        VideoUtil.setUrl()
+    private fun startPlay(surfaceTexture: SurfaceTexture){
         val url = VideoUtil.strVideo
-        mTextureView.adjustPlayerViewPerVideoAspectRation(url)
+        binding.textureView.adjustPlayerViewPerVideoAspectRation(url)
         lifecycleScope.launch {
-            launch(Dispatchers.IO) {
-                mVideoDecoder = VideoDecoder(mSurface!!)
+            withContext(Dispatchers.IO) {
+                mVideoDecoder = VideoDecoder(Surface(surfaceTexture))
                 mVideoDecoder?.start(url)
             }
-
-            launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 mAudioDecoder = AudioDecoder()
                 mAudioDecoder?.start(url)
             }
@@ -106,22 +101,6 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(),
     private var mAudioDecoder: AudioDecoder? = null
 
 
-    private var mSurface:Surface? = null
-
-    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
-        mSurface = Surface(surface)
-    }
-
-    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-
-    }
-
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
-        return true
-    }
-
-    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
-    }
 
     override fun onDestroy() {
         super.onDestroy()
