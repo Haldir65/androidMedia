@@ -39,7 +39,7 @@ public class EPlayerView extends GLSurfaceView implements Player.Listener {
 
     }
 
-    public EPlayerView setSimpleExoPlayer(SimpleExoPlayer player) {
+    public EPlayerView setSimpleExoPlayer(ExoPlayer player) {
         if (this.player != null) {
             this.player.release();
             this.player = null;

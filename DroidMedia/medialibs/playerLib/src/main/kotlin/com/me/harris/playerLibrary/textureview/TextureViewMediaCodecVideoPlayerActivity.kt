@@ -73,11 +73,11 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(R.layout.activi
         val url = VideoUtil.strVideo
         binding.textureView.adjustPlayerViewPerVideoAspectRation(url)
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
+            launch(Dispatchers.IO)  {
                 mVideoDecoder = VideoDecoder(Surface(surfaceTexture))
                 mVideoDecoder?.start(url)
             }
-            withContext(Dispatchers.IO) {
+            launch(Dispatchers.IO)  {
                 mAudioDecoder = AudioDecoder()
                 mAudioDecoder?.start(url)
             }

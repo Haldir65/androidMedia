@@ -16,6 +16,7 @@ import android.view.Surface;
 import com.daasuu.epf.filter.GlFilter;
 import com.daasuu.epf.filter.GlLookUpTableFilter;
 import com.daasuu.epf.filter.GlPreviewFilter;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -42,7 +43,7 @@ public class EPlayerRenderer extends EFrameBufferObjectRenderer implements Surfa
     private final GLSurfaceView glPreview;
 
 
-    private SimpleExoPlayer simpleExoPlayer;
+    private ExoPlayer simpleExoPlayer;
 
     public interface RenderCallback {
         void onRenderCreated(SurfaceTexture surfaceTexture, int width, int height);
@@ -193,7 +194,7 @@ public class EPlayerRenderer extends EFrameBufferObjectRenderer implements Surfa
         glPreview.requestRender();
     }
 
-    void setSimpleExoPlayer(SimpleExoPlayer simpleExoPlayer) {
+    void setSimpleExoPlayer(ExoPlayer simpleExoPlayer) {
         this.simpleExoPlayer = simpleExoPlayer;
     }
 
