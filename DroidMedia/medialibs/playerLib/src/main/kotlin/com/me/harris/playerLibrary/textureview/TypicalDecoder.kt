@@ -3,8 +3,9 @@ package com.me.harris.playerLibrary.textureview
 import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.util.Log
+import java.io.Closeable
 
-interface TypicalDecoder {
+interface TypicalDecoder :Closeable{
 
     fun decoderName():String
 
@@ -27,5 +28,11 @@ interface TypicalDecoder {
                 break
             }
         }
+    }
+
+    val closeFunction: (()->Unit)
+
+    override fun close() {
+        closeFunction()
     }
 }

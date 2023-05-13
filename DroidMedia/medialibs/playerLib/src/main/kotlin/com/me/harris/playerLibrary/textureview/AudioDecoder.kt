@@ -2,8 +2,11 @@ package com.me.harris.playerLibrary.textureview
 
 import android.media.*
 import android.util.Log
+import java.io.Closeable
 
-class AudioDecoder: TypicalDecoder {
+
+
+class AudioDecoder() : TypicalDecoder {
 
     companion object {
         const val TAG = "AudioDecoder"
@@ -27,13 +30,16 @@ class AudioDecoder: TypicalDecoder {
     }
 
     var timBase:Long = 0
+    var duration:Long = 0 // micromilliseconds
 
 
 
     private val DEFAULT_TIME_OUT = 10_000L
 
-    override fun extractor() = extractor
-
+     override fun extractor() = extractor
+    override fun close() {
+        stop()
+    }
 
 
     private fun decodeAndPlayAudio(url:String){
@@ -48,6 +54,7 @@ class AudioDecoder: TypicalDecoder {
             val mime = format.getString(MediaFormat.KEY_MIME)
             if(mime?.startsWith("audio/")==true){
                 val sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE)
+                duration = format.getLong(MediaFormat.KEY_DURATION)
                 val bufferSize = AudioTrack.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT)
                 extractor!!.selectTrack(i)
                 decoder = MediaCodec.createDecoderByType(mime)
@@ -64,7 +71,11 @@ class AudioDecoder: TypicalDecoder {
         while (!isStopped()){
             if (!sawEOS)
             {
-                val inIndex = decoder.dequeueInputBuffer(DEFAULT_TIME_OUT)
+                val inIndex = try {
+                    decoder.dequeueInputBuffer(DEFAULT_TIME_OUT)
+                }catch (e:IllegalStateException){
+                    -1
+                }
                 if (inIndex>=0){
                     val inputBuffer = decoder.getInputBuffer(inIndex)
                     val sampleSize = inputBuffer?.let { extractor!!.readSampleData(it,0) }?:-1
@@ -77,7 +88,11 @@ class AudioDecoder: TypicalDecoder {
                     }
                 }
             }
-            val outIndex = decoder.dequeueOutputBuffer(info,DEFAULT_TIME_OUT)
+            val outIndex = try {
+                decoder.dequeueOutputBuffer(info,DEFAULT_TIME_OUT)
+            }catch (e:IllegalStateException){
+                Int.MIN_VALUE
+            }
             when(outIndex){
                 MediaCodec.INFO_OUTPUT_FORMAT_CHANGED ->{
                     val format = decoder.outputFormat
@@ -89,6 +104,10 @@ class AudioDecoder: TypicalDecoder {
                 }
                 MediaCodec.INFO_TRY_AGAIN_LATER -> {
                     Log.d(TAG,"dequeueOutputBuffer timed out!")
+                }
+                Int.MIN_VALUE -> {
+                    stop()
+                    break
                 }
                 else ->{
                     val outBuffer = decoder.getOutputBuffer(outIndex)
@@ -106,8 +125,8 @@ class AudioDecoder: TypicalDecoder {
             }
         }
         try {
-            decoder?.stop()
-            decoder?.release()
+            decoder.stop()
+            decoder.release()
             extractor?.release()
             extractor = null
         }catch (e:Exception){
@@ -119,5 +138,7 @@ class AudioDecoder: TypicalDecoder {
     override fun decoderName(): String {
         return "AudioDecoder"
     }
+
+    override val closeFunction = ::stop
 
 }

@@ -6,17 +6,21 @@ import android.os.Bundle
 import android.view.Surface
 import android.view.TextureView
 import android.widget.Button
+import android.widget.SeekBar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.utils.VideoUtil.adjustPlayerViewPerVideoAspectRation
 import com.me.harris.awesomelib.viewBinding
+import com.me.harris.awesomelib.whenProgressChanged
 import com.me.harris.awesomelib.withSurfaceAvailable
 import com.me.harris.playerLibrary.R
 import com.me.harris.playerLibrary.databinding.ActivityTextureviewMediacodecBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
 
 
 // https://blog.csdn.net/King1425/article/details/81263327
@@ -24,7 +28,7 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(R.layout.activi
 {
 
     private val binding by viewBinding(ActivityTextureviewMediacodecBinding::bind)
-
+    private val viewModel by viewModels<TextureViewMediaCodecViewModel>()
 
     companion object {
         const val TIME_1_MINUTES =  1*60*1000*1000
@@ -42,57 +46,50 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(R.layout.activi
             navigateBackward()
         }
         binding.textureView.withSurfaceAvailable(::startPlay)
+        binding.seekbar.whenProgressChanged(::seekWhenStopTracking)
+
     }
 
     private fun navigateBackward() {
-        mVideoDecoder?.extractor()?.let {
-            val cur = it.sampleTime
-            mVideoDecoder!!.timBase-= TIME_1_MINUTES /1000
-            it.seekTo(cur- TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
-        }
-        mAudioDecoder?.extractor()?.let {
-            val cur = it.sampleTime
-            mAudioDecoder!!.timBase-= TIME_1_MINUTES /1000
-            it.seekTo(cur- TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
-        }
+        mVideoDecoder?.backWard(TimeUnit.MILLISECONDS.toMillis(20 * 1000))
+//        mVideoDecoder?.extractor()?.let {
+//            val cur = it.sampleTime
+//            mVideoDecoder!!.timBase-= TIME_1_MINUTES /1000
+//            it.seekTo(cur- TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+//        }
+//        mAudioDecoder?.extractor()?.let {
+//            val cur = it.sampleTime
+//            mAudioDecoder!!.timBase-= TIME_1_MINUTES /1000
+//            it.seekTo(cur- TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+//        }
     }
     private fun navigateForward() {
-        mVideoDecoder?.extractor()?.let {
-            val cur = it.sampleTime
-            mVideoDecoder!!.timBase+= TIME_1_MINUTES /1000
-            it.seekTo(cur+ TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
-        }
-        mAudioDecoder?.extractor()?.let {
-            val cur = it.sampleTime
-            mAudioDecoder!!.timBase+= TIME_1_MINUTES /1000
-            it.seekTo(cur+ TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
-        }
+        mVideoDecoder?.forward(TimeUnit.MILLISECONDS.toMillis(20 * 1000))
+//        mVideoDecoder?.extractor()?.let {
+//            val cur = it.sampleTime
+//            mVideoDecoder!!.timBase+= TIME_1_MINUTES /1000
+//            it.seekTo(cur+ TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+//        }
+//        mAudioDecoder?.extractor()?.let {
+//            val cur = it.sampleTime
+//            mAudioDecoder!!.timBase+= TIME_1_MINUTES /1000
+//            it.seekTo(cur+ TIME_1_MINUTES,MediaExtractor.SEEK_TO_NEXT_SYNC)
+//        }
     }
 
     private fun startPlay(surfaceTexture: SurfaceTexture){
         val url = VideoUtil.strVideo
         binding.textureView.adjustPlayerViewPerVideoAspectRation(url)
         lifecycleScope.launch {
+            mVideoDecoder = VideoDecoder(Surface(surfaceTexture)).also { viewModel.addCloseable(it) }
+            mAudioDecoder = AudioDecoder().also { viewModel.addCloseable(it) }
             launch(Dispatchers.IO)  {
-                mVideoDecoder = VideoDecoder(Surface(surfaceTexture))
                 mVideoDecoder?.start(url)
             }
             launch(Dispatchers.IO)  {
-                mAudioDecoder = AudioDecoder()
                 mAudioDecoder?.start(url)
             }
         }
-//
-//
-//        thread {
-//            mVideoDecoder = VideoDecoder(mSurface!!)
-//            mVideoDecoder?.start(url)
-//        }
-//
-//        thread {
-//            mAudioDecoder = AudioDecoder()
-//            mAudioDecoder?.start(url)
-//        }
     }
 
 
@@ -101,12 +98,14 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(R.layout.activi
     private var mAudioDecoder: AudioDecoder? = null
 
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mVideoDecoder?.stop()
-        mAudioDecoder?.stop()
+    fun seekWhenStopTracking(seekBar: SeekBar){
+//        player?.run {
+//            val duration = this.duration
+//            val targetDuration = duration * (seekBar.progress*1.0f/seekBar.max)
+//            seekTo(targetDuration.toInt())
+//        }
     }
+
 
 
 }

@@ -4,7 +4,9 @@
 # Sets the minimum version of CMake required to build the native library.
 
 cmake_minimum_required(VERSION 3.4.1)
-
+## Q：相比与 Android.mk 方式，CMake 方式编译出的动态库体积很大，怎么办？
+#A：编译选项末尾加上 -s，形如： set(CMAKE_C_FLAGS_DEBUG “${cmake_c_flag_debug} -s”)，可去除冗余的二进制数据。
+#set(CMAKE_C_FLAGS_DEBUG “${cmake_c_flag_debug} -s”)
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.

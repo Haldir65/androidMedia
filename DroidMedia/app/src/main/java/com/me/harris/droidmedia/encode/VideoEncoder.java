@@ -4,6 +4,7 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -32,6 +33,9 @@ public class VideoEncoder {
             mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible);
             mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, width * height * 6);
             mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                mediaFormat.setInteger(MediaFormat.KEY_PREPEND_HEADER_TO_SYNC_FRAMES, 1);
+            }
             mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
             mediaFormat.setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileHigh);
             mediaFormat.setInteger(MediaFormat.KEY_LEVEL, MediaCodecInfo.CodecProfileLevel.AVCLevel41);
@@ -87,7 +91,7 @@ public class VideoEncoder {
         }
         ByteBuffer inputBuffer = mEncoder.getInputBuffer(inputBufferIndex);
         inputBuffer.put(yuv);
-        mEncoder.queueInputBuffer(inputBufferIndex, 0, yuv.length, presentationTimeUs, 0);
+        mEncoder.queueInputBuffer(inputBufferIndex, 0, yuv.length, presentationTimeUs, MediaCodec.CRYPTO_MODE_UNENCRYPTED);
         while (!mStop) {
             MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
             int outputBufferIndex = mEncoder.dequeueOutputBuffer(bufferInfo, DEFAULT_TIMEOUT_US);

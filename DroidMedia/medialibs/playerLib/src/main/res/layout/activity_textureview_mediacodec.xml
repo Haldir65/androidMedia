@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -35,4 +36,22 @@
         android:text="快退1分钟"
         android:layout_gravity="center_horizontal"
         />
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="2dp"
+        android:minHeight="2dp"
+        android:progressDrawable="@drawable/video_progress_thumb_drawable"
+        android:thumb="@drawable/video_progress_thumb_cubic"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
+        android:progress="0"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        tools:progress="10" />
+
+
+
 </LinearLayout>
