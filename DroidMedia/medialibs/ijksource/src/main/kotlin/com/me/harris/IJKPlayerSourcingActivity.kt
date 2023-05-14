@@ -14,6 +14,7 @@ import com.me.harris.awesomelib.withSurfaceAvailable
 import com.me.harris.ijksource.R
 import com.me.harris.ijksource.databinding.ActivityIjkSourcingBinding
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
+import tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT
 
 class IJKPlayerSourcingActivity:AppCompatActivity(R.layout.activity_ijk_sourcing) {
 
@@ -41,6 +42,11 @@ class IJKPlayerSourcingActivity:AppCompatActivity(R.layout.activity_ijk_sourcing
 
     private fun setUpplayerWithSurface(holder: SurfaceHolder){
         val player = IjkMediaPlayer()
+        // see ff_ffplay_options.h
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"opensles",1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"soundtouch",1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"mediacodec-all-videos",1)
+        player.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"start-on-prepared",1)
         player.setOnPreparedListener { pl ->
             Log.w("=A=","onPrepared")
             pl.start()
