@@ -153,6 +153,11 @@ android {
         checkReleaseBuilds true
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+        pickFirst 'lib/*/liblog.so'
+    }
+
 }
 
 dependencies {
@@ -218,7 +223,7 @@ dependencies {
     implementation project(":medialibs:epf")
     implementation project(":medialibs:mediakit")
     implementation project(":medialibs:cameraLib")
-
+    implementation project(":medialibs:ijksource")
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler

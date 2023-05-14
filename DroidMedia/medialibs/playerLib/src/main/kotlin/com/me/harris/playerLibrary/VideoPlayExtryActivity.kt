@@ -7,6 +7,8 @@ import androidx.activity.contextaware.withContextAvailable
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import bzijkplayer.IJKPlayerTestActivity
+import com.me.harris.IJKPlayerSourcingActivity
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.playerLibrary.exoplayer.ExoplayerSampleActivity
 import com.me.harris.playerLibrary.ffmediaplayer.FFMediaPlayerActivity
@@ -54,6 +56,9 @@ class VideoPlayExtryActivity:AppCompatActivity() {
         }
         findViewById<Button>(R.id.btn6)?.setOnClickListener {
             startActivity(Intent(this, FFMediaPlayerActivity::class.java))
+        }
+        findViewById<Button>(R.id.btn7)?.setOnClickListener {
+            startActivity(Intent(this, IJKPlayerSourcingActivity::class.java))
         }
         viewModel.doStuff()
     }

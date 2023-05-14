@@ -38,7 +38,7 @@ object VideoUtil {
     //	}
     @JvmStatic
     fun setUrl() {
-        val dir :File = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1)
+        val dir :File = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1 )
             File(Environment.getExternalStorageDirectory().absolutePath).parentFile.parentFile.listFiles()[0] else  File(
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES

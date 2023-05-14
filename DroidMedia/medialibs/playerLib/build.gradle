@@ -62,6 +62,7 @@ dependencies {
 
 
     implementation project(":awesomelib")
+    implementation project(":medialibs:ijksource")
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
