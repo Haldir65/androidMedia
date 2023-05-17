@@ -1,18 +1,27 @@
 package com.me.harris.droidmedia.extractFrame
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import coil.load
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.databinding.ActivityExtractFrameToFileBinding
 import com.me.harris.awesomelib.utils.LogUtil
 import com.me.harris.awesomelib.utils.VideoUtil
+import com.me.harris.droidmedia.databinding.ItemExtractingFrameNailBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,15 +35,35 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
 
 
     private val binding by viewBinding<ActivityExtractFrameToFileBinding>(ActivityExtractFrameToFileBinding::bind)
+    private val adapter = VideoFrameDisplayAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding.recyclerview.adapter = adapter
+        binding.recyclerview.layoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL,false)
+        binding.recyclerview.addItemDecoration(object : ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
+                outRect.set(10,10,10,10)
+            }
+        })
         lifecycleScope.launch {
+            val refreshUi = suspend {
+                withContext(Dispatchers.Main){
+                    val resultDir = "${filesDir.absolutePath}${File.separator}photos"
+                    val allFiles = File(resultDir).listFiles { f -> f.absolutePath.endsWith("jpg") }?.map { f -> f.absolutePath }.orEmpty()
+                    Log.w("=A=","allfiles ${allFiles.size}")
+                    showAllExtractedFrames(allFiles)
+                }
+            }
+
+            refreshUi()
             val fPath = VideoUtil.strVideo
             withContext(Dispatchers.IO){
                 getKeyFrames(fPath,filesDir.absolutePath)
             }
-            binding.text.text = "all frames done ,saved to ${filesDir.absolutePath}"
+            refreshUi()
+            binding.text.text = "all frames done ,saved to ${filesDir.absolutePath}, you should be able to see result"
             Log.e("=A=","all Completed!")
         }
 
@@ -49,6 +78,12 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
         }
 
 
+    }
+
+    private fun showAllExtractedFrames(allFiles: List<String>) {
+        adapter.list.clear()
+        adapter.list.addAll(allFiles)
+        adapter.notifyDataSetChanged()
     }
 
     @Throws(IOException::class)
@@ -124,4 +159,26 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
 
     }
 
+}
+
+
+private class VideoFrameDisplayViewHolder(val binding:ItemExtractingFrameNailBinding):RecyclerView.ViewHolder(binding.root) {
+    fun bindData(imageUrl:String,position:Int){
+        binding.image.load(File(imageUrl))
+        binding.desc.text = position.toString()
+    }
+}
+private class VideoFrameDisplayAdapter(): RecyclerView.Adapter<VideoFrameDisplayViewHolder>() {
+
+     val list = mutableListOf<String>()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoFrameDisplayViewHolder {
+        val binding = ItemExtractingFrameNailBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return VideoFrameDisplayViewHolder(binding)
+    }
+
+    override fun getItemCount() = list.size
+
+    override fun onBindViewHolder(holder: VideoFrameDisplayViewHolder, position: Int) {
+        holder.bindData(list[position],position)
+    }
 }
