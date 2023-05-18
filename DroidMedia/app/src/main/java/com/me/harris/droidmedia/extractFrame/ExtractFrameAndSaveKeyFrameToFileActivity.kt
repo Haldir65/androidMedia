@@ -30,7 +30,12 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
 
-
+/**
+ * todo
+ * 1， 使用com.me.harris.droidmedia.extractFrame.VideoDecoder抽帧
+ * 2. 用两个mediaCodec抽抽看，计时
+ * 3. 四个，8个呢？
+ */
 class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activity_extract_frame_to_file) {
 
 

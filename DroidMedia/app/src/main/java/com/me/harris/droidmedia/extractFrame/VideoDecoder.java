@@ -157,7 +157,7 @@ public class VideoDecoder {
                 }
             }
             int outputBufferId = decoder.dequeueOutputBuffer(info,DEFAULT_TIMEOUT_US);
-            if (outputBufferId>=0){
+            if (outputBufferId>=0 ){
                 if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) !=0){
                     sawOutputEOS = true;
                     Log.i(TAG,"sawOutputEOS is true");
@@ -170,8 +170,8 @@ public class VideoDecoder {
                     image.close();
                     decoder.releaseOutputBuffer(outputBufferId,false);
                     //callback
-                    sleepRender(info,startMs);
-                    if (decodeCallback!=null){
+//                    sleepRender(info,startMs);
+                    if (decodeCallback!=null && (info.flags & MediaCodec.BUFFER_FLAG_KEY_FRAME)!=0){
                         decodeCallback.onDecode(mYuvBuffer,width,height,outputFrameCount,info.presentationTimeUs,format);
                     }
                 }
