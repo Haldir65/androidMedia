@@ -28,71 +28,163 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="YUVImage 渲染yuv nv21 " />
-
-            <ImageView
-                android:id="@+id/image1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/button1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RenderScript 渲染yuv nv21 " />
-
-            <ImageView
-                android:id="@+id/image2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/image1" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OpenGL2.0 GLSurfaceView渲染yuv" />
-
-            <android.opengl.GLSurfaceView
-                android:id="@+id/glsurfaceView2"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OpenGL2.0 GLSurfaceView渲染yuv 21" />
+                android:layout_margin="12dp"
+                android:background="@android:color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                app:contentPadding="4dp">
 
-            <android.opengl.GLSurfaceView
-                android:id="@+id/glsurfaceView21"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="YUVImage 渲染yuv nv21 " />
+
+                    <ImageView
+                        android:id="@+id/image1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@mipmap/ic_launcher" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OpenGL3.0 GLSurfaceView渲染yuv" />
+                android:layout_margin="12dp"
+                android:background="@android:color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                app:contentPadding="4dp">
 
-            <android.opengl.GLSurfaceView
-                android:id="@+id/glsurfaceView3"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="RenderScript 渲染yuv nv21 " />
+
+                    <ImageView
+                        android:id="@+id/image2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@mipmap/ic_launcher" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@android:color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                app:contentPadding="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OpenGL2.0 GLSurfaceView渲染yuv" />
+
+                    <android.opengl.GLSurfaceView
+                        android:id="@+id/glsurfaceView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal" />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@android:color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                app:contentPadding="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OpenGL2.0 GLSurfaceView渲染yuv 21" />
+
+                    <android.opengl.GLSurfaceView
+                        android:id="@+id/glsurfaceView21"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@android:color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="3dp"
+                app:contentPadding="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OpenGL3.0 GLSurfaceView渲染yuv" />
+
+                    <android.opengl.GLSurfaceView
+                        android:id="@+id/glsurfaceView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="没有更多了"
                 android:layout_marginTop="200dp"
-                />
+                android:text="没有更多了" />
 
         </LinearLayout>
 

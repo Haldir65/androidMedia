@@ -10,13 +10,16 @@ import android.view.TextureView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.contextaware.withContextAvailable
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.common.CodecUtils
 import com.me.harris.droidmedia.extractFrame.render.JavaRendererGL30
 import com.me.harris.droidmedia.extractFrame.render.JfRender
 import com.me.harris.droidmedia.extractFrame.render.MyGLRenderer
 import com.me.harris.awesomelib.utils.VideoUtil
+import kotlinx.coroutines.launch
 import java.nio.IntBuffer
 import kotlin.concurrent.thread
 
@@ -27,6 +30,13 @@ class DecodeFrameActivity:AppCompatActivity()
 
     companion object {
         const val TAG = "DecodeFrameActivity"
+
+
+//        static boolean isLoggingEnabled(int level) {
+//            return DEBUG || Log.isLoggable(TAG, level);
+//        }
+
+//        adb shell setprop log.tag.FragmentManager Info
 
         const val GL_SURFACEVIEW_2_ENABLED = true //是否用gl 2.0渲染
         const val GL_SURFACEVIEW_3_ENABLED = true//是否用gl 3.0渲染
@@ -75,9 +85,13 @@ class DecodeFrameActivity:AppCompatActivity()
             mGlSurfaceViewv21.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY;
         }
 
-        mButton.setOnClickListener {
-            startDecode()
+
+        lifecycleScope.launch {
+            withContextAvailable {
+                startDecode()
+            }
         }
+
     }
 
     var decoder: VideoDecoder? = null

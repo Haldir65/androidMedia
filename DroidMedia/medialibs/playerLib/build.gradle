@@ -57,6 +57,7 @@ dependencies {
     implementation libs.coroutines.core
     implementation libs.coroutines.android
     implementation libs.exoplayer.core
+    implementation libs.exoplayer.hls
     implementation libs.exoplayer.ui
 
 

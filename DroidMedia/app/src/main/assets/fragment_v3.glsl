@@ -19,5 +19,10 @@ void main()
     rgb.r = y + 1.4022 * v;
     rgb.g = y - 0.3456 * u - 0.7145 * v;
     rgb.b = y + 1.771 * u;
-    out_color = vec4(rgb, 1);
+    if (texture_coord.x < 0.3){
+        out_color = vec4(vec3(rgb.r*0.299 + rgb.g*0.587 + rgb.b*0.114), 1.0);
+    }else {
+        out_color = vec4(rgb, 1);
+    }
+
 }

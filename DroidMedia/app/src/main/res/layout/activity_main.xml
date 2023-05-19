@@ -20,12 +20,13 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:layout_gravity="center"
+                android:textColor="@android:color/black"
                 android:text="DecodeFrame play on imageView or SurfaceView"
                 android:textAllCaps="false" />
 
@@ -38,13 +39,14 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
                 android:text="DecodeFrameActivity"
+                android:textColor="@android:color/black"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -55,11 +57,12 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="@android:color/black"
                 android:background="@android:color/white"
                 android:text="DecodeActivity"
                 android:textAllCaps="false" />
@@ -73,11 +76,12 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="@android:color/black"
                 android:background="@android:color/white"
                 android:text="click me to CameraActivity"
                 android:textAllCaps="false" />
@@ -91,11 +95,12 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="@android:color/black"
                 android:background="@android:color/white"
                 android:text="click me to all kinds of VideoPlay Activity"
                 android:textAllCaps="false" />
@@ -108,13 +113,14 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
                 android:text="VideoPlayerFilterEntry"
+                android:textColor="@android:color/black"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -126,12 +132,13 @@
             app:cardCornerRadius="6dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="Encode Activity"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
@@ -144,10 +151,11 @@
             app:cardCornerRadius="6dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
                 android:text="OpenGL Entrance Activity"
@@ -162,12 +170,13 @@
             app:cardCornerRadius="6dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="extract frame and save to file"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
@@ -179,11 +188,12 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="@android:color/black"
                 android:background="@android:color/white"
                 android:text="MediaCodec录音并编码为aac文件"
                 android:textAllCaps="false" />
@@ -198,12 +208,13 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="将Surface 通过aidl传到另一个process实现视频播放"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>

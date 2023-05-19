@@ -2,26 +2,33 @@ package com.me.harris.droidmedia.extractFrame
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
+import android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import coil.load
+import coil.transform.CircleCropTransformation
+import coil.transform.RoundedCornersTransformation
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.databinding.ActivityExtractFrameToFileBinding
 import com.me.harris.awesomelib.utils.LogUtil
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.droidmedia.databinding.ItemExtractingFrameNailBinding
+import com.me.harris.droidmedia.extractFrame.viewmodel.ExtractFrameViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,18 +36,23 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 
 /**
  * todo
- * 1， 使用com.me.harris.droidmedia.extractFrame.VideoDecoder抽帧
+ * 1， 使用com.me.harris.droidmedia.extractFrame.VideoDecoder抽帧  time cost is 65374 太慢
  * 2. 用两个mediaCodec抽抽看，计时
  * 3. 四个，8个呢？
+ * 4. https://android.googlesource.com/platform/cts/+/8797a6e061b264906f36f0f5f5d71f518cd25949/tests/tests/media/src/android/media/cts
  */
 class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activity_extract_frame_to_file) {
 
 
     private val binding by viewBinding<ActivityExtractFrameToFileBinding>(ActivityExtractFrameToFileBinding::bind)
     private val adapter = VideoFrameDisplayAdapter()
+    private val viewModel by viewModels<ExtractFrameViewModel>()
+    @OptIn(ExperimentalTime::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.recyclerview.adapter = adapter
@@ -49,13 +61,15 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
             ) {
                 super.getItemOffsets(outRect, view, parent, state)
-                outRect.set(10,10,10,10)
+                val position = parent.getChildAdapterPosition(view)
+                val isLastOne = position ==parent.adapter!!.itemCount-1
+                outRect.set(10,10,10,if (isLastOne)260 else 10)
             }
         })
         lifecycleScope.launch {
             val refreshUi = suspend {
                 withContext(Dispatchers.Main){
-                    val resultDir = "${filesDir.absolutePath}${File.separator}photos"
+                    val resultDir = viewModel.SAVE_EXTRACT_FRAME_DIR_PATH2
                     val allFiles = File(resultDir).listFiles { f -> f.absolutePath.endsWith("jpg") }?.map { f -> f.absolutePath }.orEmpty()
                     Log.w("=A=","allfiles ${allFiles.size}")
                     showAllExtractedFrames(allFiles)
@@ -65,7 +79,15 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
             refreshUi()
             val fPath = VideoUtil.strVideo
             withContext(Dispatchers.IO){
-                getKeyFrames(fPath,filesDir.absolutePath)
+                val time = measureTimedValue {
+//                    viewModel.getKeyFrames(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH)
+                    viewModel.getKeyFramesViaMediaCodec(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH2)
+                }
+                Log.w("=A=","time cost is ${time.duration.inWholeMilliseconds}")
+                // time cost is 9974, or 10797
+                // time cost is 12208
+
+                // time cost is 63755 mediaCodec
             }
             refreshUi()
             binding.text.text = "all frames done ,saved to ${filesDir.absolutePath}, you should be able to see result"
@@ -91,73 +113,7 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
         adapter.notifyDataSetChanged()
     }
 
-    @Throws(IOException::class)
-    fun getKeyFrames(inputPath: String?,saveDir:String?): Boolean {
-        val mRetriever = MediaMetadataRetriever()
-        mRetriever.setDataSource(inputPath)
-        val mediaExtractor = MediaExtractor()
-        LogUtil.d("getKeyFrames keyFrameCount = setDataSource ${inputPath}" )
-        mediaExtractor.setDataSource(inputPath!!)
-        var sourceVideoTrack = -1
-        for (index in 0 until mediaExtractor.trackCount) {
-            val format = mediaExtractor.getTrackFormat(index)
-            val mime = format.getString(MediaFormat.KEY_MIME)
-            if (mime!!.startsWith("video/")) {
-                format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 65536)
-                sourceVideoTrack = index
-                break
-            }
-        }
-        if (sourceVideoTrack == -1) return false
-        mediaExtractor.selectTrack(sourceVideoTrack)
-        val buffer: ByteBuffer = ByteBuffer.allocate(500 * 1024)
-        val frameTimeList: MutableList<Long> = ArrayList()
-        var sampleSize = 0
-        kotlin.runCatching {
-            // todo readSampleData throws java.lang.IllegalArgumentException sometimes
-            while (mediaExtractor.readSampleData(buffer, 0).also { sampleSize = it } > 0) {
-                buffer.clear() // Note:As of API 21, on success the position and limit of byteBuf is updated to point to the data just read.
-                val flags = mediaExtractor.sampleFlags
-                if (flags > 0 && flags and MediaExtractor.SAMPLE_FLAG_SYNC != 0) {
-                    frameTimeList.add(mediaExtractor.sampleTime)
-                }
-                mediaExtractor.advance()
-            }
-        }.onFailure {
-           LogUtil.w("ExtractFrameAndSaveKeyFrameToFileActivity", it.stackTraceToString())
-        }
-        LogUtil.d("getKeyFrames keyFrameCount = " + frameTimeList.size)
-//        val parentPath: String = File(inputPath).getParent() + File.separator
-        LogUtil.d("getKeyFrames parent Path=$saveDir")
-        if (!File("${saveDir}${File.separator}photos").exists()){
-            File("${saveDir}${File.separator}photos").mkdirs()
-        }
-        for (index in frameTimeList.indices) {
-            val bitmap = mRetriever.getFrameAtTime(
-                frameTimeList[index],
-                MediaMetadataRetriever.OPTION_CLOSEST_SYNC
-            )
-            savePicFile(bitmap, "${saveDir}${File.separator}photos${File.separator}"+ "test_pic_" + index + ".jpg")
-        }
-        return true
-    }
 
-    @Throws(IOException::class)
-    private fun savePicFile(bitmap: Bitmap?, savePath: String) {
-        if (bitmap == null) {
-            LogUtil.d("savePicFile failed, bitmap is null.")
-            return
-        }
-        LogUtil.d("savePicFile step 1, bitmap is not null.")
-        val file = File(savePath)
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-        outputStream.flush()
-        outputStream.close()
-    }
 
 
     private fun videoTransCoding(){
@@ -169,7 +125,14 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
 
 private class VideoFrameDisplayViewHolder(val binding:ItemExtractingFrameNailBinding):RecyclerView.ViewHolder(binding.root) {
     fun bindData(imageUrl:String,position:Int){
-        binding.image.load(File(imageUrl))
+        val ctx = binding.root.context.applicationContext
+        binding.image.load(File(imageUrl)){
+//            transformations(CircleCropTransformation())
+            transformations(RoundedCornersTransformation(25f))
+//            transformations(GrayscaleTransformation())
+//            transformations(BlurTransformation(ctx))
+//            transformations(BlurTransformation(ctx, 5f))
+        }
         binding.desc.text = position.toString()
     }
 }
