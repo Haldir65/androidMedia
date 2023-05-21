@@ -23,6 +23,7 @@ import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.awesomelib.utils.StoragePermissSucks
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
+import com.me.harris.filterlibrary.FilterEntryActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
 import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
 
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         binding.btn6.setOnClickListener {
             VideoUtil.setUrl()
+            startActivity(Intent(this, FilterEntryActivity::class.java))
 //            startActivity(Intent(this, VideoPlayFilterActivity::class.java))
         }
         binding.btn7.setOnClickListener {

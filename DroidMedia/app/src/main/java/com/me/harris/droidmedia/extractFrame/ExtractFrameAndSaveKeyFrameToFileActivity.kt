@@ -1,13 +1,6 @@
 package com.me.harris.droidmedia.extractFrame
 
-import android.graphics.Bitmap
 import android.graphics.Rect
-import android.media.MediaCodec
-import android.media.MediaExtractor
-import android.media.MediaFormat
-import android.media.MediaMetadataRetriever
-import android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,12 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import coil.load
-import coil.transform.CircleCropTransformation
 import coil.transform.RoundedCornersTransformation
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.databinding.ActivityExtractFrameToFileBinding
-import com.me.harris.awesomelib.utils.LogUtil
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.droidmedia.databinding.ItemExtractingFrameNailBinding
 import com.me.harris.droidmedia.extractFrame.viewmodel.ExtractFrameViewModel
@@ -33,9 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.nio.ByteBuffer
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
@@ -81,7 +69,13 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
             withContext(Dispatchers.IO){
                 val time = measureTimedValue {
 //                    viewModel.getKeyFrames(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH)
-                    viewModel.getKeyFramesViaMediaCodec(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH2)
+//                    viewModel.getKeyFramesViaMediaCodec(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH2)
+                    viewModel.extractFrameInterval(fPath,1000,4)
+                    Log.e("=A=","we have bitmap now")
+                    val bmp = viewModel.extractFrameAtTimeUs(fPath,6_000_000)
+                    withContext(Dispatchers.Main.immediate){
+                        binding.image.setImageBitmap(bmp)
+                    }
                 }
                 Log.w("=A=","time cost is ${time.duration.inWholeMilliseconds}")
                 // time cost is 9974, or 10797

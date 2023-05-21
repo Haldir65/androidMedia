@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.daasuu.epf.filter.GlFilter;
+import com.me.harris.awesomelib.utils.VideoUtil;
 import com.spx.library.player.mp.TextureSurfaceRenderer2;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public abstract class MPlayerView extends FrameLayout implements
     private Context mContext;
     private FrameLayout mContainer;
     private TextureView mTextureView;
-    protected MediaPlayer mMediaPlayer;
+    public MediaPlayer mMediaPlayer;
     private String mUrl;
 
     //    private TextureSurfaceRenderer2 videoRenderer;
@@ -169,7 +170,7 @@ public abstract class MPlayerView extends FrameLayout implements
                 decoderSurface = new DecoderOutputSurface(new GlFilter(), filterList);
 //        decoderSurface.setRotation(rotation);
                 decoderSurface.setOutputResolution(new Resolution(surfaceWidth, surfaceHeight));
-                decoderSurface.setInputResolution(new Resolution(540, 960));
+                decoderSurface.setInputResolution(new Resolution(1280, 720));
 //        decoderSurface.setFillMode(fillMode);
 //        decoderSurface.setFillModeCustomItem(fillModeCustomItem);
 //        decoderSurface.setFlipHorizontal(flipHorizontal);
@@ -229,6 +230,10 @@ public abstract class MPlayerView extends FrameLayout implements
     @Override
     public void onPrepared(MediaPlayer mp) {
         Log.d(TAG, "onPrepared: ...");
+        int width = mp.getVideoWidth();
+        int height = mp.getVideoHeight();
+        VideoUtil.adjustViewRatio(this.getWidth(),width,height,mContainer);
+        VideoUtil.adjustViewRatio(this.getWidth(),width,height,mTextureView);
         mp.start();
     }
 

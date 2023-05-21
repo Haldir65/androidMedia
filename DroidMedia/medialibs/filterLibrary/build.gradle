@@ -104,6 +104,7 @@ dependencies {
 
 
 
+    implementation project(":awesomelib")
 
     implementation project(":medialibs:epf")
 

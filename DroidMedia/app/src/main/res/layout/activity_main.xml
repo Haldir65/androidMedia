@@ -102,7 +102,7 @@
                 android:layout_gravity="center"
                 android:textColor="@android:color/black"
                 android:background="@android:color/white"
-                android:text="click me to all kinds of VideoPlay Activity"
+                android:text="VideoPlay Extry"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 

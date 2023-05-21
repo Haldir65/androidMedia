@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.daasuu.epf.filter.GlFilter;
+import com.daasuu.mp4compose.FillMode;
 import com.spx.library.player.mp.TextureSurfaceRenderer2;
 
 import java.io.IOException;
@@ -153,7 +154,7 @@ public abstract class MPlayerView extends FrameLayout implements
 
     @Override
     public void onSurfaceTextureAvailable(final SurfaceTexture surface, int width, int height) {
-        Log.d(TAG, "onSurfaceTextureAvailable: ...");
+        Log.d(TAG, "onSurfaceTextureAvailable: ... surfaceWidth = " +surfaceWidth + " surfaceHeight = "+ surfaceHeight );
         surfaceWidth = width;
         surfaceHeight = height;
 //        videoRenderer = getVideoRender(surface, surfaceWidth, surfaceHeight);
@@ -168,9 +169,9 @@ public abstract class MPlayerView extends FrameLayout implements
 
                 decoderSurface = new DecoderOutputSurface(new GlFilter(), filterList);
 //        decoderSurface.setRotation(rotation);
-                decoderSurface.setOutputResolution(new Resolution(surfaceWidth, surfaceHeight));
-                decoderSurface.setInputResolution(new Resolution(540, 960));
-//        decoderSurface.setFillMode(fillMode);
+                decoderSurface.setOutputResolution(new Resolution(1280, 720));
+                decoderSurface.setInputResolution(new Resolution(1280, 720));
+//        decoderSurface.setFillMode(FillMode.PRESERVE_ASPECT_CROP);
 //        decoderSurface.setFillModeCustomItem(fillModeCustomItem);
 //        decoderSurface.setFlipHorizontal(flipHorizontal);
 //        decoderSurface.setFlipVertical(flipVertical);

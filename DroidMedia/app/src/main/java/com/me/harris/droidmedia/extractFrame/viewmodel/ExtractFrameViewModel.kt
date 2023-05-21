@@ -5,33 +5,72 @@ import android.graphics.Bitmap
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
+import com.google.android.material.tabs.TabLayout.TabGravity
 import com.me.harris.awesomelib.utils.LogUtil
 import com.me.harris.droidmedia.extractFrame.ImageUtil
 import com.me.harris.droidmedia.extractFrame.VideoDecoder
+import com.me.harris.droidmedia.extractFrame.yuvrelated.MediaCodecFrameExtractor
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
+import kotlin.coroutines.resume
+
+//** ref : https://github.com/deepsadness/MediaMetadataRetrieverWrapper , 确实比MediaMetaDataRetriever快不少
 
 class ExtractFrameViewModel(application: Application) :AndroidViewModel(application){
 
     companion object CONST {
-
+        const val TAG = "ExtractFrameViewModel"
     }
 
 
     val SAVE_EXTRACT_FRAME_DIR_PATH = "${application.filesDir}${File.separator}photos"
     val SAVE_EXTRACT_FRAME_DIR_PATH2 = "${application.filesDir}${File.separator}photos2"
 
-    fun extractFrame(filePath:String){
-
-
+    suspend fun extractFrameAtTimeUs(filePath:String,timeUs:Long):Bitmap{
+        return suspendCancellableCoroutine { con ->
+            val ext = MediaCodecFrameExtractor()
+            ext.setDataSource(filePath)
+            ext.getFrameAtTime(timeUs = timeUs, scale = 1) {
+                con.resume(it)
+            }
+            con.invokeOnCancellation {
+                ext.release()
+            }
+        }
     }
 
+
+    private val saveBmpToDirCallback = { bitmap:Bitmap,index:Int ->
+        val saveDir = SAVE_EXTRACT_FRAME_DIR_PATH2
+        if (!File(saveDir).exists()){
+            File(saveDir).mkdirs()
+        }
+        savePicFile(bitmap, "${saveDir}${File.separator}"+ "test_pic_" + index + ".jpg")
+    }
+
+    suspend fun extractFrameInterval(filePath:String,intervalMs:Long,scale:Int,callback:((bmp:Bitmap,index:Int) -> Unit) = saveBmpToDirCallback ){
+        val ext = MediaCodecFrameExtractor()
+        ext.setDataSource(filePath)
+        var index = 0
+        ext.getFramesInterval(intervalMs = intervalMs,scale = scale) {
+            callback(it,++index)
+        }
+        while (currentCoroutineContext().isActive){
+            delay(1000)
+        }
+        Log.w(TAG,"release called")
+        ext.release()
+    }
 
     @Throws(IOException::class)
     suspend fun getKeyFrames(inputPath: String?,saveDir:String): Boolean {

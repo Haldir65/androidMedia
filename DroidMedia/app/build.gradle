@@ -225,6 +225,7 @@ dependencies {
     implementation project(":medialibs:mediakit")
     implementation project(":medialibs:cameraLib")
     implementation project(":medialibs:ijksource")
+    implementation project(":medialibs:yuv")
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
