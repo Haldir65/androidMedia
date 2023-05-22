@@ -320,3 +320,77 @@ Java_com_me_harris_libyuv_YuvUtils_convertToI420(JNIEnv *env, jobject thiz, jobj
                              vOutNative, v_out_stride,
                              width, height);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_me_harris_libyuv_YuvUtils_scale(JNIEnv *env, jobject thiz, jobject y, jobject u, jobject v,
+                                         jint y_stride, jint u_stride, jint v_stride, jobject y_out,
+                                         jobject u_out, jobject v_out, jint y_out_stride,
+                                         jint u_out_stride, jint v_out_stride, jint src_width,
+                                         jint src_height, jint dst_width, jint dst_height,
+                                         jint filter_mode) {
+    uint8_t *yNative = (uint8_t *) env->GetDirectBufferAddress(y);
+    uint8_t *uNative = (uint8_t *) env->GetDirectBufferAddress(u);
+    uint8_t *vNative = (uint8_t *) env->GetDirectBufferAddress(v);
+
+
+    uint8_t *yOutNative = (uint8_t *) env->GetDirectBufferAddress(y_out);
+    uint8_t *uOutNative = (uint8_t *) env->GetDirectBufferAddress(u_out);
+    uint8_t *vOutNative = (uint8_t *) env->GetDirectBufferAddress(v_out);
+
+    libyuv::I420Scale(yNative, y_stride,
+                      uNative, u_stride,
+                      vNative, v_stride,
+                      src_width, src_height,
+                      yOutNative, y_out_stride,
+                      uOutNative, u_out_stride,
+                      vOutNative, v_out_stride,
+                      dst_width, dst_width,
+                      libyuv::FilterMode(filter_mode));
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_me_harris_libyuv_YuvUtils_rotate(JNIEnv *env, jobject thiz, jobject y, jobject u,
+                                          jobject v, jint y_stride, jint u_stride, jint v_stride,
+                                          jobject y_out, jobject u_out, jobject v_out,
+                                          jint y_out_stride, jint u_out_stride, jint v_out_stride,
+                                          jint width, jint height, jint rotation_mode) {
+    uint8_t *yNative = (uint8_t *) env->GetDirectBufferAddress(y);
+    uint8_t *uNative = (uint8_t *) env->GetDirectBufferAddress(u);
+    uint8_t *vNative = (uint8_t *) env->GetDirectBufferAddress(v);
+
+    uint8_t *yOutNative = (uint8_t *) env->GetDirectBufferAddress(y_out);
+    uint8_t *uOutNative = (uint8_t *) env->GetDirectBufferAddress(u_out);
+    uint8_t *vOutNative = (uint8_t *) env->GetDirectBufferAddress(v_out);
+
+    libyuv::I420Rotate(yNative, y_stride,
+                       uNative, u_stride,
+                       vNative, v_stride,
+                       yOutNative, y_out_stride,
+                       uOutNative, u_out_stride,
+                       vOutNative, v_out_stride,
+                       width, height,
+                       libyuv::RotationMode(rotation_mode));
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_me_harris_libyuv_YuvUtils_mirrorH(JNIEnv *env, jobject thiz, jobject y, jobject u,
+                                           jobject v, jint y_stride, jint u_stride, jint v_stride,
+                                           jobject y_out, jobject u_out, jobject v_out,
+                                           jint y_out_stride, jint u_out_stride, jint v_out_stride,
+                                           jint width, jint height) {
+    uint8_t *yNative = (uint8_t *) env->GetDirectBufferAddress(y);
+    uint8_t *uNative = (uint8_t *) env->GetDirectBufferAddress(u);
+    uint8_t *vNative = (uint8_t *) env->GetDirectBufferAddress(v);
+
+    uint8_t *yOutNative = (uint8_t *) env->GetDirectBufferAddress(y_out);
+    uint8_t *uOutNative = (uint8_t *) env->GetDirectBufferAddress(u_out);
+    uint8_t *vOutNative = (uint8_t *) env->GetDirectBufferAddress(v_out);
+
+    libyuv::I420Mirror(yNative, y_stride,
+                       uNative, u_stride,
+                       vNative, v_stride,
+                       yOutNative, y_out_stride,
+                       uOutNative, u_out_stride,
+                       vOutNative, v_out_stride,
+                       width, height);
+}

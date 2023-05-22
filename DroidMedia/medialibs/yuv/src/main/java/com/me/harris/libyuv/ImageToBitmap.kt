@@ -14,7 +14,9 @@ object ImageToBitmap {
     // critical !!
      fun getBitmapFromImageUsingLibYUV(image: Image): Bitmap {
         require(image.format == ImageFormat.YUV_420_888)
-        val yuvFrame = YuvUtils.convertToI420(image)
+        var yuvFrame = YuvUtils.convertToI420(image)
+        yuvFrame = YuvUtils.scale(yuvFrame, image.width/4, image.height/4, Constants.FILTER_BOX)
+        yuvFrame = YuvUtils.rotate(yuvFrame, Constants.ROTATE_0)
         val argbFrame = YuvUtils.yuv420ToArgb(yuvFrame)
         val bm = Bitmap.createBitmap(argbFrame.width, argbFrame.height, Bitmap.Config.ARGB_8888)
         bm.copyPixelsFromBuffer(ByteBuffer.wrap(argbFrame.asArray())) // for displaying argb
