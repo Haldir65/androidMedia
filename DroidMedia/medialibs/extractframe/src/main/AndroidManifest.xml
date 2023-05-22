@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <activity android:name=".ExtractFrameAndSaveKeyFrameToFileActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity
+            android:name=".DecodeFrameActivity"
+            android:screenOrientation="portrait" />
+    </application>
+</manifest>

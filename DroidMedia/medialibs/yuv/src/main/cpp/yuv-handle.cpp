@@ -15,7 +15,7 @@ extern "C"
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_me_harris_libyuv_YuvUtils_yuvI420ToNV21(JNIEnv *env, jclass clazz, jbyteArray i420_src,
+Java_com_me_harris_libyuv_YuvUtils_yuvI420ToNV21(JNIEnv *env, jobject clazz, jbyteArray i420_src,
                                                  jbyteArray nv21_src, jint width, jint height) {
 
     jbyte *src_i420_data = env->GetByteArrayElements(i420_src, NULL);
@@ -48,7 +48,7 @@ Java_com_me_harris_libyuv_YuvUtils_yuvI420ToNV21(JNIEnv *env, jclass clazz, jbyt
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_me_harris_libyuv_YuvUtils_yuvI420ToNV212(JNIEnv *env, jclass type, jbyteArray nv21_,
+Java_com_me_harris_libyuv_YuvUtils_yuvI420ToNV212(JNIEnv *env, jobject type, jbyteArray nv21_,
 jobject y_buffer, jint y_rowStride, jobject u_buffer,
         jint u_rowStride, jobject v_buffer, jint v_rowStride,
 jint width, jint height) {
@@ -76,7 +76,7 @@ jint width, jint height) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_me_harris_libyuv_YuvUtils_yuvI420ToABGR(JNIEnv *env, jclass type, jbyteArray argb_,
+Java_com_me_harris_libyuv_YuvUtils_yuvI420ToABGR(JNIEnv *env, jobject type, jbyteArray argb_,
     jobject y_buffer, jint y_rowStride,
     jobject u_buffer, jint u_rowStride,
     jobject v_buffer, jint v_rowStride,
@@ -120,7 +120,7 @@ Java_com_me_harris_libyuv_YuvUtils_yuvI420ToABGR(JNIEnv *env, jclass type, jbyte
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_me_harris_libyuv_YuvUtils_yuvI420ToABGRWithScale(JNIEnv *env, jclass type, jbyteArray argb_,
+Java_com_me_harris_libyuv_YuvUtils_yuvI420ToABGRWithScale(JNIEnv *env, jobject type, jbyteArray argb_,
     jobject y_buffer, jint y_rowStride,
     jobject u_buffer, jint u_rowStride,
     jobject v_buffer, jint v_rowStride,
@@ -259,7 +259,7 @@ Java_com_me_harris_libyuv_YuvUtils_yuvI420ToABGRWithScale(JNIEnv *env, jclass ty
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_me_harris_libyuv_YuvUtils_NV21ToRGBA(JNIEnv *env, jclass clazz, jint width, jint height,
+Java_com_me_harris_libyuv_YuvUtils_NV21ToRGBA(JNIEnv *env, jobject clazz, jint width, jint height,
                                               jobject yuv, jint stride_y, jint stride_uv,
                                               jobject out) {
     auto src_y = (uint8_t *) env->GetDirectBufferAddress(yuv);
@@ -270,4 +270,53 @@ Java_com_me_harris_libyuv_YuvUtils_NV21ToRGBA(JNIEnv *env, jclass clazz, jint wi
     return libyuv::NV12ToABGR(src_y, stride_y, src_uv, stride_uv, dst_rgba, width * 4, width,
                               height);
 
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_me_harris_libyuv_YuvUtils_yuv420ToArgb(JNIEnv *env, jobject clazz, jobject y, jobject u,
+                                                jobject v, jint y_stride, jint u_stride,
+                                                jint v_stride, jobject out, jint out_stride,
+                                                jint width, jint height) {
+
+
+    uint8_t *yNative = (uint8_t *) env->GetDirectBufferAddress(y);
+    uint8_t *uNative = (uint8_t *) env->GetDirectBufferAddress(u);
+    uint8_t *vNative = (uint8_t *) env->GetDirectBufferAddress(v);
+
+    uint8_t *outNative = (uint8_t *) env->GetDirectBufferAddress(out);
+
+   return libyuv::I420ToARGB(yNative, y_stride,
+                       vNative, v_stride, // exactly this order "YVU" and not "YUV", otherwise the colors are inverted
+                       uNative, u_stride,
+                       outNative, out_stride,
+                       width, height);
+}
+
+
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_me_harris_libyuv_YuvUtils_convertToI420(JNIEnv *env, jobject thiz, jobject y, jobject u,
+                                                 jobject v, jint y_stride, jint u_stride,
+                                                 jint v_stride, jint src_pixel_stride_uv,
+                                                 jobject y_out, jobject u_out, jobject v_out,
+                                                 jint y_out_stride, jint u_out_stride,
+                                                 jint v_out_stride, jint width, jint height) {
+    uint8_t *yNative = (uint8_t *) env->GetDirectBufferAddress(y);
+    uint8_t *uNative = (uint8_t *) env->GetDirectBufferAddress(u);
+    uint8_t *vNative = (uint8_t *) env->GetDirectBufferAddress(v);
+
+    uint8_t *yOutNative = (uint8_t *) env->GetDirectBufferAddress(y_out);
+    uint8_t *uOutNative = (uint8_t *) env->GetDirectBufferAddress(u_out);
+    uint8_t *vOutNative = (uint8_t *) env->GetDirectBufferAddress(v_out);
+
+    libyuv::Android420ToI420(yNative, y_stride,
+                             uNative, u_stride,
+                             vNative, v_stride,
+                             src_pixel_stride_uv,
+                             yOutNative, y_out_stride,
+                             uOutNative, u_out_stride,
+                             vOutNative, v_out_stride,
+                             width, height);
 }

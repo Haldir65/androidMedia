@@ -43,11 +43,11 @@ object VideoUtil {
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES
         )
-        val fs = dir.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".mkv") || f.name.endsWith(".webm")  }
-//        val fs = dir.listFiles { f -> f.name.endsWith(".webm")  }
+//        val fs = dir.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".mkv") || f.name.endsWith(".webm")  }
+        val fs = dir.listFiles { f -> f.name.endsWith(".webm")  }
 //        strVideo = fs[Random().nextInt(fs.size)].absolutePath
-        strVideo = fs[1].absolutePath
-//        strVideo = fs[0].absolutePath
+//        strVideo = fs[1].absolutePath
+        strVideo = fs[0].absolutePath
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
     }
 

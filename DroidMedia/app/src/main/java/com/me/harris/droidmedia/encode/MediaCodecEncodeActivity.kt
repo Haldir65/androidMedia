@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
-import com.me.harris.droidmedia.extractFrame.VideoDecoder
 import com.me.harris.awesomelib.utils.ToastUtils
 import com.me.harris.awesomelib.utils.VideoUtil
+import com.me.harris.extractframe.VideoDecoder
 import java.io.File
 import kotlin.concurrent.thread
 

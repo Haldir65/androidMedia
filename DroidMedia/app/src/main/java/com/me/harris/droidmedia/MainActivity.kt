@@ -18,11 +18,11 @@ import com.me.harris.droidmedia.encode.MediaCodecEncodeActivity
 import com.me.harris.droidmedia.entity.JUserInfo
 import com.me.harris.droidmedia.entity.SubUserInfo
 import com.me.harris.droidmedia.entity.UserInfo
-import com.me.harris.droidmedia.extractFrame.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.awesomelib.utils.StoragePermissSucks
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
+import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
 import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         binding.btn1.setOnClickListener {
             VideoUtil.setUrl()
-            startActivity(Intent(this, com.me.harris.droidmedia.extractFrame.DecodeFrameActivity::class.java))
+            startActivity(Intent(this, com.me.harris.extractframe.DecodeFrameActivity::class.java))
         }
         binding.btn2.setOnClickListener {
             VideoUtil.setUrl()

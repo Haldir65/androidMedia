@@ -44,6 +44,9 @@
 
         </activity>
 
+
+
+
         <activity
             android:name=".decode.DecodeActivity"
             android:screenOrientation="portrait" />
@@ -51,13 +54,9 @@
         <activity
             android:name=".decode.DecodeFrameActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".extractFrame.DecodeFrameActivity"
-            android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".filter.VideoPlayFilterActivity"
-            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".encode.MediaCodecEncodeActivity"
             android:screenOrientation="portrait" />
@@ -72,7 +71,6 @@
             android:screenOrientation="portrait"
             />
         <activity android:name=".audioPlayer.MyAudioPlayerActivity" />
-        <activity android:name=".extractFrame.ExtractFrameAndSaveKeyFrameToFileActivity" />
         <activity android:name=".audiorecord.MediaCodecForAACActivity" />
 
 

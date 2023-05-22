@@ -81,3 +81,6 @@
 
 [MediaEditSDK](https://github.com/JeffMony/MediaEditSDK)
 [VideoClipEditViewTest](https://github.com/shaopx/VideoClipEditViewTest)
+
+export JAVA_HOME=`/usr/libexec/java_home -v 17`
+export https_proxy="http://127.0.0.1:6666" && export http_proxy=$https_proxy

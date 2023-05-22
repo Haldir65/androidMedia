@@ -79,12 +79,12 @@
             <TextView
                 android:id="@+id/btn4"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="15dp"
                 android:layout_gravity="center"
-                android:textColor="@android:color/black"
                 android:background="@android:color/white"
-                android:text="click me to CameraActivity"
-                android:textAllCaps="false" />
+                android:text="CameraActivity Entry"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black" />
         </androidx.cardview.widget.CardView>
 
 

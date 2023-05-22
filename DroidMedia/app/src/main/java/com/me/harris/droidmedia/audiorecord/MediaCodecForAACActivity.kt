@@ -40,7 +40,6 @@ class MediaCodecForAACActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityMediaCodecForAacBinding
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaCodecForAacBinding.inflate(layoutInflater)
