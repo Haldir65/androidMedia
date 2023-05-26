@@ -66,6 +66,7 @@ dependencies {
     implementation libs.androidx.lifecycle.lifecycle.viewmodel.ktx
     implementation libs.androidx.lifecycle.lifecycle.runtime.ktx
     implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    implementation libs.androidx.exfi.interface
     compileOnly libs.coil.kt
 
     testImplementation 'junit:junit:4.13.2'

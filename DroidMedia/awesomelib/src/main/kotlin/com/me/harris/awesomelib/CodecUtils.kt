@@ -1,5 +1,6 @@
 package com.me.harris.awesomelib
 
+import androidx.exifinterface.media.ExifInterface
 import android.media.MediaCodecInfo
 import android.util.Log
 import java.nio.ByteBuffer
@@ -86,5 +87,13 @@ object CodecUtils
        }
        return ret
    }
+
+    fun probeImageExfiInfo(path:String){
+        val gfgExif = androidx.exifinterface.media.ExifInterface(path)
+        val ll = gfgExif.latLong
+        Log.w("=A=","latitude = ${ll?.get(0)?.toString()} longitude ${ll?.get(1)?.toString()}")
+    }
+
+
 
 }
