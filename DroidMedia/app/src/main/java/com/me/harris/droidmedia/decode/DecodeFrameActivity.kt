@@ -26,10 +26,10 @@ class DecodeFrameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDecodeFrameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.fileFrameEt.setText(decodeMP4Path)
+//        binding.fileFrameEt.setText(decodeMP4Path)
 
         binding.sureVideo.setOnClickListener {
-            val dataSource = binding.fileFrameEt.text.toString()
+            val dataSource = decodeMP4Path
             if (videoAnalyze != null && videoAnalyze!!.dataSource.equals(dataSource)) {
                 return@setOnClickListener
             }

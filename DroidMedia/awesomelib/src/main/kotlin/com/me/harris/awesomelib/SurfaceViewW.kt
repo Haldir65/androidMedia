@@ -1,14 +1,18 @@
 package com.me.harris.awesomelib
 
 import android.graphics.SurfaceTexture
+import android.media.MediaPlayer
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.TextureView
 import android.widget.SeekBar
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.isActive
 
 fun SurfaceView.surfaceFlow(): Flow<SurfaceHolder> {
     return callbackFlow {
@@ -86,4 +90,15 @@ inline fun SeekBar.whenProgressChanged(crossinline action: (seekBar: SeekBar) ->
             action(seekBar)
         }
     })
+}
+
+suspend fun SeekBar.updateProgressWithMediaPlayer(player:MediaPlayer){
+    while (currentCoroutineContext().isActive){
+        val total = player.duration
+        val current = player.currentPosition
+        val thismax = max
+        val percentage = current.toFloat()/total.toFloat()
+        setProgress((thismax*percentage).toInt(),false)
+        delay(1000)
+    }
 }

@@ -6,6 +6,8 @@ plugins {
 android {
     namespace 'com.me.harris.libyuv'
     compileSdk 33
+    buildToolsVersion '33.0.2'
+
 
     defaultConfig {
         minSdk 27

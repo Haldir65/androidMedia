@@ -9,6 +9,8 @@ def SUPPORTED_ABI = ['arm64-v8a', 'x86', 'x86_64','armeabi-v7a'] as String[]
 android {
     namespace 'com.me.harris.filterlibrary'
     compileSdk 33
+    buildToolsVersion '33.0.2'
+
 
     buildFeatures {
 //        buildConfig = true
@@ -81,13 +83,15 @@ android {
 
 dependencies {
 
+
     implementation libs.androidx.core.core.ktx
-    implementation libs.androidx.cardview.cardview
+    implementation libs.androidx.activity.ktx
     implementation libs.androidx.appcompat.appcompat
     implementation libs.google.android.material.material
     implementation libs.androidx.lifecycle.lifecycle.viewmodel.ktx
     implementation libs.androidx.lifecycle.lifecycle.runtime.ktx
     implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    implementation libs.androidx.cardview.cardview
     implementation libs.coroutines.core
     implementation libs.coroutines.android
     compileOnly libs.exoplayer.core

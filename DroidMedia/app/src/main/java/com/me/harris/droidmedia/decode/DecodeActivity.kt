@@ -34,7 +34,6 @@ class DecodeActivity : AppCompatActivity() {
         binding = ActivityDecodeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // 2019/2/14-16:25 设置一个默认的测试视频地址
-        binding.fileEt.setText(decodeMP4Path)
         resetOutputEt()
 
         binding.sureFileTv.setOnClickListener {
@@ -85,45 +84,30 @@ class DecodeActivity : AppCompatActivity() {
     }
 
     private fun checkOutputPath() {
-        val f = binding.outputEt.text.toString()
-        if (f.isBlank()) {
-            toast("不能为空")
-            return
-        }
-        val file = File(f)
-        if (!file.exists()) {
-            file.mkdirs()
-        }
-        if (!file.isDirectory) {
-            toast("必须为文件夹")
-            resetOutputEt()
-            return
-        }
-        outputPath = f
+        outputPath = File(filesDir.absolutePath,"Decoding").also { if (!it.exists()) it.mkdirs() }.absolutePath
     }
 
     private fun checkFile() {
-        val f = binding.fileEt.text.toString()
-        if (f.isBlank()) {
-            toast("不能为空")
-            return
-        }
-        val file = File(f)
-        if (!file.exists() || !file.isFile) {
-            toast("文件错误")
-            binding.fileEt.setText("")
-            return
-        }
-        filePath = f
+//        val f = binding.fileEt.text.toString()
+//        if (f.isBlank()) {
+//            toast("不能为空")
+//            return
+//        }
+//        val file = File(f)
+//        if (!file.exists() || !file.isFile) {
+//            toast("文件错误")
+//            binding.fileEt.setText("")
+//            return
+//        }
+//        filePath = f
+        filePath = VideoUtil.strVideo
     }
 
     private fun resetOutputEt() {
-        val path = TextUtils.concat(Environment.getExternalStorageDirectory().path,File.separator, Environment.DIRECTORY_MOVIES,File.separator,"Droidmedia").toString()
-        if (!File(path).exists()){
-            File(path).mkdirs()
-        }
-        binding.outputEt.setText(path)
-        binding.outputEt.setSelection(binding.outputEt.text.toString().length)
+//        val path = TextUtils.concat(Environment.getExternalStorageDirectory().path,File.separator, Environment.DIRECTORY_MOVIES,File.separator,"Droidmedia").toString()
+//        if (!File(path).exists()){
+//            File(path).mkdirs()
+//        }
     }
 
     override fun onDestroy() {

@@ -7,45 +7,21 @@
     android:layout_height="match_parent">
 
 
-    <EditText
-        android:id="@+id/file_et"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="8dp"
-        android:hint="输入解码文件地址"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <TextView
         android:id="@+id/sure_file_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:layout_marginEnd="60dp"
         android:background="@android:color/darker_gray"
         android:padding="10dp"
         android:text="确定"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/file_et"
+        app:layout_constraintTop_toTopOf="@id/start_tv"
+
         />
 
-    <EditText
-        android:id="@+id/output_et"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="236dp"
-        android:ems="10"
-        android:hint="输出文件地址"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"/>
+
 
     <TextView
         android:id="@+id/sure_output_tv"
@@ -54,11 +30,11 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="60dp"
         android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toTopOf="parent"
         android:padding="10dp"
         android:text="确定"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/output_et"
         />
 
     <TextView
@@ -82,7 +58,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="104dp"
         android:layout_marginEnd="8dp"
         android:background="@android:color/holo_green_light"
         android:padding="15dp"
@@ -90,7 +65,7 @@
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/output_et"/>
+        app:layout_constraintTop_toBottomOf="@id/textView"/>
 
     <ImageView
         android:id="@+id/switch_iv"

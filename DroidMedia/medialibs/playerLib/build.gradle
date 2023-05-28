@@ -8,6 +8,8 @@ plugins {
 android {
     namespace 'com.me.harris.playerLibrary'
     compileSdk 33
+    buildToolsVersion '33.0.2'
+
 
     buildFeatures {
 //        buildConfig = true
