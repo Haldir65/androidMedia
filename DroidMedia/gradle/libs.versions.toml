@@ -1,6 +1,6 @@
 [versions]
 arrow = "1.2.0-RC"
-androidGradlePlugin = "8.0.1"
+androidGradlePlugin = "8.0.2"
 kotlin_verison = "1.8.10"
 gson = "2.8.6"
 retrofit = "2.9.0"
@@ -35,6 +35,7 @@ kotlinxCollectionsImmutable = "0.3.4"
 # other versions
 
 [libraries]
+android-gradle-build-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
 arrow-opticsreflect = { module = "io.arrow-kt:arrow-optics-reflect", version.ref = "arrow" }

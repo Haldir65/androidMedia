@@ -227,6 +227,7 @@ dependencies {
     implementation project(":medialibs:ijksource")
     implementation project(":medialibs:yuv")
     implementation project(":medialibs:extractframe")
+    implementation project(":medialibs:gpuv")
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
