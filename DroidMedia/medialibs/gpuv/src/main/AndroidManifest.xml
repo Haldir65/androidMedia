@@ -3,5 +3,6 @@
 
     <application>
         <activity android:name="com.me.harris.gpuvideo.GPUVideoPreviewVideoActivity" />
+        <activity android:name="com.me.harris.gpuvideo.GPUVideoEntryActivity" />
     </application>
 </manifest>

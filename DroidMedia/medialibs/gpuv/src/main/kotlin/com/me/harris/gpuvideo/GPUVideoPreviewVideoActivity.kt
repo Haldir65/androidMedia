@@ -74,7 +74,9 @@ class GPUVideoPreviewVideoActivity:AppCompatActivity(R.layout.activity_gpuvideo_
         timeSeekBar = findViewById(R.id.timeSeekBar)
         timeSeekBar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                player?.seekTo((progress*1000).toLong())
+                if (fromUser){
+                    player?.seekTo((progress*1000).toLong())
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {

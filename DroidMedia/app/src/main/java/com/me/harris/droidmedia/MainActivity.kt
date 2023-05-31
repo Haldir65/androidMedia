@@ -24,6 +24,7 @@ import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
+import com.me.harris.gpuvideo.GPUVideoEntryActivity
 import com.me.harris.gpuvideo.GPUVideoPreviewVideoActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
 import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             startActivity(Intent(this, SendSurfaceToAnotherProcessSenderActivity::class.java))
         }
         binding.btn12.setOnClickListener {
-            startActivity(Intent(this, GPUVideoPreviewVideoActivity::class.java))
+            startActivity(Intent(this, GPUVideoEntryActivity::class.java))
         }
 
     }

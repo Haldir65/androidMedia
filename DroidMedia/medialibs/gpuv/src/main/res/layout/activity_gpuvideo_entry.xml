@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/button1"
+        style="@style/CardStyleButton"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        app:contentPadding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:text="VideoPlayerWithFilter"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/button2"
+        style="@style/CardStyleButton"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        app:contentPadding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:text="Camera activity 1"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/button3"
+        style="@style/CardStyleButton"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        app:contentPadding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:text="Camera activity 2"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
+    </androidx.cardview.widget.CardView>
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/button4"
+        style="@style/CardStyleButton"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        app:contentPadding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:text="mp4 compose"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
