@@ -4,5 +4,6 @@
     <application>
         <activity android:name="com.me.harris.gpuvideo.GPUVideoPreviewVideoActivity" />
         <activity android:name="com.me.harris.gpuvideo.GPUVideoEntryActivity" />
+        <activity android:name="com.me.harris.gpuvideo.compose.Mp4ComposeActivity" />
     </application>
 </manifest>
