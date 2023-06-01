@@ -37,7 +37,7 @@
             android:layout_height="15dp"
             android:layout_gravity="center"
             android:background="@android:color/white"
-            android:text="Camera activity 1"
+            android:text="mp4 compose"
             android:textAllCaps="false"
             android:textColor="@android:color/black" />
     </androidx.cardview.widget.CardView>
@@ -56,7 +56,7 @@
             android:layout_height="15dp"
             android:layout_gravity="center"
             android:background="@android:color/white"
-            android:text="Camera activity 2"
+            android:text="Camera activity 1"
             android:textAllCaps="false"
             android:textColor="@android:color/black" />
     </androidx.cardview.widget.CardView>
@@ -76,7 +76,7 @@
             android:layout_height="15dp"
             android:layout_gravity="center"
             android:background="@android:color/white"
-            android:text="mp4 compose"
+            android:text="Camera activity 2"
             android:textAllCaps="false"
             android:textColor="@android:color/black" />
     </androidx.cardview.widget.CardView>

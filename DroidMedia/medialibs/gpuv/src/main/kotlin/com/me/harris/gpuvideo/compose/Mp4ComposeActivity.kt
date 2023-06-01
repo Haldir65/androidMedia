@@ -1,18 +1,25 @@
 package com.me.harris.gpuvideo.compose
 
 import android.Manifest
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.daasuu.gpuv.R
+import com.daasuu.gpuv.composer.FillMode
 import com.daasuu.gpuv.composer.GPUMp4Composer
 import com.daasuu.gpuv.egl.filter.GlFilter
 import com.daasuu.gpuv.egl.filter.GlFilterGroup
@@ -20,9 +27,12 @@ import com.daasuu.gpuv.egl.filter.GlMonochromeFilter
 import com.daasuu.gpuv.egl.filter.GlVignetteFilter
 import com.daasuu.gpuv.gpuvideoandroid.FilterType
 import com.me.harris.gpuv.compose.VideoItem
+import com.me.harris.gpuv.compose.VideoListAdapter
 import com.me.harris.gpuv.compose.VideoLoadListener
 import com.me.harris.gpuv.compose.VideoLoader
-import java.lang.Exception
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
 
@@ -49,10 +59,11 @@ class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
         flipHorizontalCheckBox = findViewById(R.id.flip_horizontal_check_box)
         findViewById<Button>(R.id.start_codec_button).setOnClickListener { v ->
              v.isEnabled =   true
-
+            startCodec()
         }
         findViewById<Button>(R.id.cancel_button).setOnClickListener {
             GPUMp4Composer?.cancel()
+            File(videoPath).takeIf { it.exists() }?.delete()
         }
 
         findViewById<Button>(R.id.start_play_movie).setOnClickListener {
@@ -92,16 +103,85 @@ class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
             videoLoader = VideoLoader(applicationContext).apply {
                 loadDeviceVideos(object :VideoLoadListener{
                     override fun onVideoLoaded(videoItems: MutableList<VideoItem>?) {
-                        val lv = findViewById<ListView>()
+                        val lv = findViewById<ListView>(R.id.video_list)
+                        val adapter = VideoListAdapter(applicationContext,R.layout.row_video_list,videoItems)
+                        lv.adapter = adapter
+                        lv.setOnItemClickListener { parent,view,position,id ->
+                            this@Mp4ComposeActivity.videoItem = videoItems?.get(position)
+                            findViewById<Button>(R.id.start_codec_button).isEnabled = true
+                        }
                     }
 
                     override fun onFailed(e: Exception?) {
-                        TODO("Not yet implemented")
+                        e?.printStackTrace()
                     }
                 })
-
             }
         }
+    }
+
+
+
+    private fun getVideoFilePath():String {
+        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath +  File.separator+ "Mp4Composer"
+        if (!File(dir).exists()){
+            File(dir).mkdirs()
+        }
+        return dir+File.separator + SimpleDateFormat("yyyyMM_dd-HHmmss").format(
+            Date()
+        )+"filter_apply.mp4"
+    }
+
+    private fun startCodec(){
+        if (videoItem?.path.isNullOrEmpty()) {
+            Toast.makeText(this, "选中视频为空", Toast.LENGTH_SHORT).show()
+            return
+        }
+        videoPath = getVideoFilePath()
+        val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
+        progressBar.max = 100
+        findViewById<Button>(R.id.start_play_movie).isEnabled = false
+        GPUMp4Composer = GPUMp4Composer(requireNotNull(videoItem!!.path),videoPath)
+            .fillMode(FillMode.PRESERVE_ASPECT_CROP)
+            .filter(glFilter)
+            .mute(muteCheckBox.isChecked)
+            .flipHorizontal(flipHorizontalCheckBox.isChecked)
+            .flipVertical(flipVerticalCheckBox.isChecked)
+            .listener(object :GPUMp4Composer.Listener{
+                override fun onProgress(progress: Double) {
+                    Log.d(TAG, "onProgress = $progress")
+                    runOnUiThread { progressBar.progress = (progress*100).toInt() }
+                }
+
+                override fun onCompleted() {
+                    Log.d(TAG, "onCompleted  $videoPath")
+                    if (File(videoPath).exists()){
+                        exportMp4ToGallery(applicationContext,videoPath)
+                        runOnUiThread {
+                            Toast.makeText(this@Mp4ComposeActivity, "导出成功", Toast.LENGTH_SHORT).show()
+                            progressBar.progress = 100
+                            findViewById<Button>(R.id.start_codec_button).isEnabled = true
+                            findViewById<Button>(R.id.start_play_movie).isEnabled = true
+                        }
+                    }
+                }
+
+                override fun onCanceled() {
+
+                }
+
+                override fun onFailed(exception: java.lang.Exception?) {
+                }
+
+            }).start()
+    }
+
+    private fun exportMp4ToGallery(context:Context,filePath:String){
+        val values = ContentValues(2)
+        values.put(MediaStore.Video.Media.MIME_TYPE,"video/mp4")
+        values.put(MediaStore.Video.Media.DATA,filePath)
+        context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,values)
+        context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse("file://"+filePath)))
     }
 
     override fun onRequestPermissionsResult(

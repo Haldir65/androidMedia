@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <activity android:name="com.me.harris.gpuvideo.GPUVideoPreviewVideoActivity" />
+        <activity android:name="com.me.harris.gpuvideo.preview.GPUVideoPreviewVideoActivity" />
         <activity android:name="com.me.harris.gpuvideo.GPUVideoEntryActivity" />
         <activity android:name="com.me.harris.gpuvideo.compose.Mp4ComposeActivity" />
     </application>

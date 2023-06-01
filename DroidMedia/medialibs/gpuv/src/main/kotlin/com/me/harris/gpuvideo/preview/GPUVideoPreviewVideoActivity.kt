@@ -1,6 +1,5 @@
-package com.me.harris.gpuvideo
+package com.me.harris.gpuvideo.preview
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -24,7 +23,6 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.io.File
 
 class GPUVideoPreviewVideoActivity:AppCompatActivity(R.layout.activity_gpuvideo_preview) {
 
@@ -35,7 +33,7 @@ class GPUVideoPreviewVideoActivity:AppCompatActivity(R.layout.activity_gpuvideo_
     private lateinit var timeSeekBar:SeekBar
     private lateinit var filterSeekBar:SeekBar
     private  var filter: GlFilter? = null
-    private  var adjuster:FilterAdjuster? = null
+    private  var adjuster: FilterAdjuster? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

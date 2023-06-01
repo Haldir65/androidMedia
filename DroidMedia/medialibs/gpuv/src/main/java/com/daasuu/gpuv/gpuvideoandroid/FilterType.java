@@ -47,8 +47,8 @@ import com.daasuu.gpuv.egl.filter.GlWatermarkFilter;
 import com.daasuu.gpuv.egl.filter.GlWeakPixelInclusionFilter;
 import com.daasuu.gpuv.egl.filter.GlWhiteBalanceFilter;
 import com.daasuu.gpuv.egl.filter.GlZoomBlurFilter;
-import com.me.harris.gpuvideo.FilterAdjuster;
-import com.me.harris.gpuvideo.GlBitmapOverlaySample;
+import com.me.harris.gpuvideo.preview.FilterAdjuster;
+import com.me.harris.gpuvideo.preview.GlBitmapOverlaySample;
 
 import java.io.IOException;
 import java.io.InputStream;

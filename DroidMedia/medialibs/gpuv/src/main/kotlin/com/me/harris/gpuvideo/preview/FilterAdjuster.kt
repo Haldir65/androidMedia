@@ -1,4 +1,4 @@
-package com.me.harris.gpuvideo
+package com.me.harris.gpuvideo.preview
 
 import com.daasuu.gpuv.egl.filter.GlFilter
 

@@ -46,6 +46,7 @@ dependencies {
     implementation libs.coroutines.android
     implementation libs.androidx.cardview.cardview
     implementation libs.coil.kt
+    implementation libs.coil.video.kt
     implementation  libs.androidx.recyclerview.recyclerview
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

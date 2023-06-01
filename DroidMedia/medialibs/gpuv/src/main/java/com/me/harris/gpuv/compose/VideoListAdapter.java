@@ -36,7 +36,7 @@ public class VideoListAdapter extends ArrayAdapter<VideoItem> {
         ImageView imageView = convertView.findViewById(R.id.image);
         TextView textView = convertView.findViewById(R.id.txt_image_name);
 
-        ImageLoader.loadImage(imageView,data.getPath(),getContext());
+        ImageLoader.loadVideoThumbnail(imageView,data.getPath(),getContext());
 //        Glide.with(getContext().getApplicationContext())
 //                .load(data.getPath())
 //                .into(imageView);

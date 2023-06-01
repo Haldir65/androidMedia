@@ -1,4 +1,4 @@
-package com.me.harris.gpuvideo
+package com.me.harris.gpuvideo.preview
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

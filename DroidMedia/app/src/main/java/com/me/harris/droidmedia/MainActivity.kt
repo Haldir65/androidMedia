@@ -25,7 +25,6 @@ import com.me.harris.awesomelib.viewBinding
 import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
-import com.me.harris.gpuvideo.GPUVideoPreviewVideoActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
 import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
 

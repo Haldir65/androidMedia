@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.me.harris.gpuvideo.MovieWrapperView
+    <com.me.harris.gpuvideo.preview.MovieWrapperView
         android:id="@+id/layout_movie_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
