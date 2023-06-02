@@ -5,5 +5,8 @@
         <activity android:name="com.me.harris.gpuvideo.preview.GPUVideoPreviewVideoActivity" />
         <activity android:name="com.me.harris.gpuvideo.GPUVideoEntryActivity" />
         <activity android:name="com.me.harris.gpuvideo.compose.Mp4ComposeActivity" />
+        <activity android:name="com.me.harris.gpuvideo.camera.LandscapeCameraActivity" />
+        <activity android:name="com.me.harris.gpuvideo.camera.PortraitCameraActivity" />
+        <activity android:name="com.me.harris.gpuvideo.camera.SquareCameraActivity" />
     </application>
 </manifest>

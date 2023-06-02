@@ -26,6 +26,7 @@ import com.daasuu.gpuv.egl.filter.GlFilterGroup
 import com.daasuu.gpuv.egl.filter.GlMonochromeFilter
 import com.daasuu.gpuv.egl.filter.GlVignetteFilter
 import com.daasuu.gpuv.gpuvideoandroid.FilterType
+import com.me.harris.awesomelib.exportMp4ToGallery
 import com.me.harris.gpuv.compose.VideoItem
 import com.me.harris.gpuv.compose.VideoListAdapter
 import com.me.harris.gpuv.compose.VideoLoadListener
@@ -176,13 +177,7 @@ class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
             }).start()
     }
 
-    private fun exportMp4ToGallery(context:Context,filePath:String){
-        val values = ContentValues(2)
-        values.put(MediaStore.Video.Media.MIME_TYPE,"video/mp4")
-        values.put(MediaStore.Video.Media.DATA,filePath)
-        context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,values)
-        context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse("file://"+filePath)))
-    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
