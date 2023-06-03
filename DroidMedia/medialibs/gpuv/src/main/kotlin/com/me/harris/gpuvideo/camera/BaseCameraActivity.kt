@@ -19,6 +19,7 @@ import com.daasuu.gpuv.gpuvideoandroid.FilterType
 import com.daasuu.gpuv.gpuvideoandroid.widget.SampleCameraGLView
 import com.me.harris.awesomelib.exportMp4ToGallery
 import com.me.harris.awesomelib.exportPngToGallery
+import com.me.harris.awesomelib.utils.Utils
 import com.me.harris.gpuv.FilterAdapter
 import java.io.File
 import java.io.FileOutputStream
@@ -101,10 +102,10 @@ open class BaseCameraActivity :AppCompatActivity() {
         lv.setOnItemClickListener { parent, view, position, id ->
             GPUCameraRecorder.setFilter(FilterType.createGlFilter(filterTypes[position],applicationContext))
         }
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//            WindowManager.LayoutParams.FLAG_FULLSCREEN
+//        )
     }
 
     override fun onResume() {

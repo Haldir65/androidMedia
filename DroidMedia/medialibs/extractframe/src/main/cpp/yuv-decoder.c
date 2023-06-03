@@ -4,8 +4,9 @@
 #include <GLES2/gl2.h>
 
 
+
 JNIEXPORT void JNICALL
-Java_com_me_harris_viewmodelsample_extractFrame_GPUImageNativeLibrary_YUVtoRBGA(JNIEnv *env, jobject obj,
+Java_com_me_harris_extractframe_GPUImageNativeLibrary_YUVtoRBGA(JNIEnv *env, jobject obj,
                                                                        jbyteArray yuv420sp,
                                                                        jint width, jint height,
                                                                        jintArray rgbOut) {
@@ -64,7 +65,7 @@ Java_com_me_harris_viewmodelsample_extractFrame_GPUImageNativeLibrary_YUVtoRBGA(
 }
 
 JNIEXPORT void JNICALL
-Java_com_me_harris_viewmodelsample_extractFrame_GPUImageNativeLibrary_YUVtoARBG(JNIEnv *env, jobject obj,
+Java_com_me_harris_extractframe_GPUImageNativeLibrary_YUVtoARBG(JNIEnv *env, jobject obj,
                                                                        jbyteArray yuv420sp,
                                                                        jint width, jint height,
                                                                        jintArray rgbOut) {
@@ -124,7 +125,7 @@ Java_com_me_harris_viewmodelsample_extractFrame_GPUImageNativeLibrary_YUVtoARBG(
 
 
 JNIEXPORT void JNICALL
-Java_com_me_harris_viewmodelsample_extractFrame_GPUImageNativeLibrary_adjustBitmap(JNIEnv *jenv, jclass thiz,
+Java_com_me_harris_extractframe_GPUImageNativeLibrary_adjustBitmap(JNIEnv *jenv, jclass thiz,
                                                                        jobject src) {
     unsigned char *srcByteBuffer;
     int result = 0;
@@ -156,3 +157,4 @@ Java_com_me_harris_viewmodelsample_extractFrame_GPUImageNativeLibrary_adjustBitm
     }
     AndroidBitmap_unlockPixels(jenv, src);
 }
+

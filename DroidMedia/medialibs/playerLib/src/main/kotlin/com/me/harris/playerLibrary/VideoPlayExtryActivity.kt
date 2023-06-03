@@ -13,6 +13,7 @@ import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.playerLibrary.exoplayer.ExoplayerSampleActivity
 import com.me.harris.playerLibrary.ffmediaplayer.FFMediaPlayerActivity
 import com.me.harris.playerLibrary.openglplayvideo.MediaPlayerSurfaceStubActivity
+import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
 import com.me.harris.playerLibrary.textureview.TextureViewMediaCodecVideoPlayerActivity
 import com.me.harris.playerLibrary.video.MediaCodecVideoMainActivity
 import com.me.harris.playerLibrary.video.sharedSurface.SharedSurfaceTextureListActivity
@@ -59,6 +60,9 @@ class VideoPlayExtryActivity:AppCompatActivity() {
         }
         findViewById<Button>(R.id.btn7)?.setOnClickListener {
             startActivity(Intent(this, IJKPlayerSourcingActivity::class.java))
+        }
+        findViewById<Button>(R.id.btn8)?.setOnClickListener {
+            startActivity(Intent(this, SendSurfaceToAnotherProcessSenderActivity::class.java))
         }
         viewModel.doStuff()
     }

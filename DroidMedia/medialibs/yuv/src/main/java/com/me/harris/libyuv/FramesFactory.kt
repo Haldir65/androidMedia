@@ -41,7 +41,10 @@ object FramesFactory {
     @JvmStatic
     fun instanceArgb(width: Int, height: Int): ArgbFrame {
         val newFrame = ArgbFrame()
+        // java.lang.OutOfMemoryError: Failed to allocate a 265420819 byte allocation with 17768469 free bytes and 239MB until OOM,
+        // target footprint 35536941, growth limit 268435456
         val data = ByteBuffer.allocateDirect((width * height) * 32)
+
         val extra = if (width % 2 == 0) 0 else 1
         val dataStride = width * 4 + extra
         newFrame.fill(data, dataStride, width, height)

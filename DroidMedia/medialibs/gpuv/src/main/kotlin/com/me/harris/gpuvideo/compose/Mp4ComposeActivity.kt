@@ -1,14 +1,11 @@
 package com.me.harris.gpuvideo.compose
 
 import android.Manifest
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
@@ -18,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import com.daasuu.gpuv.R
 import com.daasuu.gpuv.composer.FillMode
 import com.daasuu.gpuv.composer.GPUMp4Composer
@@ -27,10 +25,12 @@ import com.daasuu.gpuv.egl.filter.GlMonochromeFilter
 import com.daasuu.gpuv.egl.filter.GlVignetteFilter
 import com.daasuu.gpuv.gpuvideoandroid.FilterType
 import com.me.harris.awesomelib.exportMp4ToGallery
+import com.me.harris.awesomelib.scanExternalStorageDirRecursiveAndReturnFiles
 import com.me.harris.gpuv.compose.VideoItem
 import com.me.harris.gpuv.compose.VideoListAdapter
 import com.me.harris.gpuv.compose.VideoLoadListener
 import com.me.harris.gpuv.compose.VideoLoader
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -55,6 +55,9 @@ class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            scanExternalStorageDirRecursiveAndReturnFiles(this@Mp4ComposeActivity)
+        }
         muteCheckBox = findViewById(R.id.mute_check_box)
         flipVerticalCheckBox = findViewById(R.id.flip_vertical_check_box)
         flipHorizontalCheckBox = findViewById(R.id.flip_horizontal_check_box)
@@ -104,12 +107,18 @@ class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
             videoLoader = VideoLoader(applicationContext).apply {
                 loadDeviceVideos(object :VideoLoadListener{
                     override fun onVideoLoaded(videoItems: MutableList<VideoItem>?) {
-                        val lv = findViewById<ListView>(R.id.video_list)
-                        val adapter = VideoListAdapter(applicationContext,R.layout.row_video_list,videoItems)
-                        lv.adapter = adapter
-                        lv.setOnItemClickListener { parent,view,position,id ->
-                            this@Mp4ComposeActivity.videoItem = videoItems?.get(position)
-                            findViewById<Button>(R.id.start_codec_button).isEnabled = true
+                        lifecycleScope.launch {
+                            val scanedList = scanExternalStorageDirRecursiveAndReturnFiles(this@Mp4ComposeActivity)
+                            scanedList.filter { f -> videoItems.orEmpty().none { v -> v.path == f } }.onEach { v -> videoItems?.add(
+                                VideoItem(v,0,0,0)
+                            ) }
+                            val lv = findViewById<ListView>(R.id.video_list)
+                            val adapter = VideoListAdapter(applicationContext,R.layout.row_video_list,videoItems)
+                            lv.adapter = adapter
+                            lv.setOnItemClickListener { parent,view,position,id ->
+                                this@Mp4ComposeActivity.videoItem = videoItems?.get(position)
+                                findViewById<Button>(R.id.start_codec_button).isEnabled = true
+                            }
                         }
                     }
 
@@ -142,6 +151,8 @@ class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
         val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
         progressBar.max = 100
         findViewById<Button>(R.id.start_play_movie).isEnabled = false
+        // 2023-06-03 17:43:41.739 25186-25604 WebmWriter              com.me.harris.droidmedia
+        // E  Track (video/avc) other than video/x-vnd.on2.vp8, video/x-vnd.on2.vp9, audio/vorbis, or audio/opus is not supported
         GPUMp4Composer = GPUMp4Composer(requireNotNull(videoItem!!.path),videoPath)
             .fillMode(FillMode.PRESERVE_ASPECT_CROP)
             .filter(glFilter)

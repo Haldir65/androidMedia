@@ -35,7 +35,7 @@ class SendSurfaceToAnotherProcessSenderActivity:AppCompatActivity(R.layout.activ
             )
         }
         binding.btn1.setOnClickListener {
-            configurePlayerInAnotherProcess()
+//            configurePlayerInAnotherProcess()
         }
         binding.btn2.setOnClickListener {
             playerService?.pause()
@@ -124,6 +124,7 @@ class SendSurfaceToAnotherProcessSenderActivity:AppCompatActivity(R.layout.activ
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             playerService = IPlayerService.Stub.asInterface(service)
+            configurePlayerInAnotherProcess()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {

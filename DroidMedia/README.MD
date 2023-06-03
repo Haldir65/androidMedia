@@ -84,3 +84,7 @@
 
 export JAVA_HOME=`/usr/libexec/java_home -v 17`
 export https_proxy="http://127.0.0.1:6666" && export http_proxy=$https_proxy
+
+首先，开发者选项 ->  ​启动MIUI优化​​ ->关闭 （第一步过后授权管理 右上角才有设置按钮入口）
+
+其次，​​设置​​​ -> ​​授权管理​​​ -> ​​右上角设置​​​ -> ​​USB安装管理、应用权限监控​​ ->两个都关闭

@@ -1,5 +1,7 @@
 package com.spx.egl;
 
+import static android.media.MediaPlayer.SEEK_CLOSEST;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
@@ -18,8 +20,6 @@ import com.me.harris.awesomelib.utils.VideoUtil;
 import com.spx.library.player.mp.TextureSurfaceRenderer2;
 
 import java.io.IOException;
-
-import static android.media.MediaPlayer.SEEK_CLOSEST;
 
 /**
  * by shaopx 2018.11.5
@@ -232,8 +232,10 @@ public abstract class MPlayerView extends FrameLayout implements
         Log.d(TAG, "onPrepared: ...");
         int width = mp.getVideoWidth();
         int height = mp.getVideoHeight();
-        VideoUtil.adjustViewRatio(this.getWidth(),width,height,mContainer);
-        VideoUtil.adjustViewRatio(this.getWidth(),width,height,mTextureView);
+        if (false){
+            VideoUtil.adjustViewRatio(this.getWidth(),width,height,mContainer);
+            VideoUtil.adjustViewRatio(this.getWidth(),width,height,mTextureView);
+        }
         mp.start();
     }
 

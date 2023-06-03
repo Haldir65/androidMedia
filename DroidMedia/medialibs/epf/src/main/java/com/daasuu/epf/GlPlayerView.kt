@@ -36,9 +36,9 @@ class GlPlayerView : MPlayerView {
         if (listener != null && mMediaPlayer != null && mMediaPlayer.isPlaying) {
             currentPostion = mMediaPlayer.currentPosition.toLong()
             listener?.invoke(currentPostion)
-            uiHandler?.postDelayed({ checkPlayProgress() }, 100)
+            uiHandler.postDelayed({ checkPlayProgress() }, 100)
         } else {
-            uiHandler?.postDelayed({ checkPlayProgress() }, 200)
+            uiHandler.postDelayed({ checkPlayProgress() }, 200)
         }
 
     }

@@ -106,7 +106,7 @@ class VideoPlayerOfExoPlayer(val playerView: StyledPlayerView) : VideoPlayer {
 
     override fun setPlaySpeed(speed: Float) {
         val param = PlaybackParameters(speed)
-        exoPlayer?.setPlaybackParameters(param)
+        exoPlayer?.playbackParameters = param
     }
 
     override fun releasePlayer() {

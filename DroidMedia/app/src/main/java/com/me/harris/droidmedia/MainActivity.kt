@@ -9,6 +9,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.daasuu.epf.VideoClipEntryActivity
 import com.me.harris.cameralib.CameraEntryActivity
 import com.me.harris.droidmedia.audiorecord.MediaCodecForAACActivity
 import com.me.harris.droidmedia.databinding.ActivityMainBinding
@@ -88,10 +89,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         binding.btn11.setOnClickListener {
-            startActivity(Intent(this, SendSurfaceToAnotherProcessSenderActivity::class.java))
+            startActivity(Intent(this, GPUVideoEntryActivity::class.java))
         }
         binding.btn12.setOnClickListener {
-            startActivity(Intent(this, GPUVideoEntryActivity::class.java))
+            startActivity(Intent(this, VideoClipEntryActivity::class.java))
         }
 
     }
