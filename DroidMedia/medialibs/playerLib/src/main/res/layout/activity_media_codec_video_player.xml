@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
 
     <com.me.harris.playerLibrary.VideoPlayView
         android:id="@+id/player"
         android:layout_gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_height="200dp"/>
 
-</FrameLayout>
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/player"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:maxHeight="2dp"
+        android:minHeight="2dp"
+        app:layout_constraintWidth_percent="0.95"
+        android:progressDrawable="@drawable/video_progress_thumb_drawable"
+        android:thumb="@drawable/video_progress_thumb_cubic"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
+        android:progress="0"
+        tools:progress="10" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,12 +24,10 @@ import com.daasuu.epf.Config.Companion.minSelection
 import com.daasuu.epf.custfilter.GlFlashFliter
 import com.daasuu.epf.custfilter.GlShakeFilter
 import com.daasuu.epf.custfilter.GlSoulOutFilter
-import com.daasuu.epf.databinding.ActivityVideoClipBinding
 import com.daasuu.epf.widget.ClipContainer
 import com.daasuu.mp4compose.composer.Mp4Composer
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.me.harris.awesomelib.utils.VideoUtil
-import com.me.harris.awesomelib.viewBinding
 import com.spx.egl.GlFilterList
 import com.spx.egl.GlFilterPeriod
 import com.spx.library.ThumbExoPlayerView
@@ -43,6 +41,8 @@ import com.spx.library.showToast
 import java.io.File
 import java.text.DecimalFormat
 
+//     Caused by: android.media.MediaCodec$CodecException:
+//     Failed to initialize OMX.qcom.video.decoder.avc, error 0xfffffff4
 class VideoClipActivity:AppCompatActivity(R.layout.activity_video_clip),ClipContainer.Callback {
 
     companion object {
@@ -349,6 +349,7 @@ class VideoClipActivity:AppCompatActivity(R.layout.activity_video_clip),ClipCont
 
     override fun onDestroy() {
         super.onDestroy()
+        releasePlayer()
         player_view_exo_thumbnail.release()
         videoPlayTimeController?.stop()
     }

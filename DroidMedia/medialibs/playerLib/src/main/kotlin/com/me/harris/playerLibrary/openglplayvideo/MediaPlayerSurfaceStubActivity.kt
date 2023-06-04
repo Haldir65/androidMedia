@@ -6,11 +6,15 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.me.harris.awesomelib.updateProgressWithMediaPlayer
 import com.me.harris.awesomelib.utils.Utils
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.whenProgressChanged
 import com.me.harris.playerLibrary.R
 import com.me.harris.playerLibrary.video.GLVideoSurfaceView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
 
@@ -33,6 +37,10 @@ class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Utils.dip2px(this,200F)))
 
         seekbar.whenProgressChanged(::seekWhenStopTracking)
+        lifecycleScope.launch{
+            delay(1000)
+            seekbar.updateProgressWithMediaPlayer(player)
+        }
     }
 
     override fun onResume() {

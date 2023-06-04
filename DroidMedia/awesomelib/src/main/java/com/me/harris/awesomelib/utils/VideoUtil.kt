@@ -44,7 +44,7 @@ object VideoUtil {
                     File.separator + Environment.DIRECTORY_MOVIES
         )
 //        val fs = dir.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".mkv") || f.name.endsWith(".webm")  }
-        val fs = dir.listFiles { f -> f.name.endsWith(".webm")  }
+        val fs = dir.listFiles { f -> f.name.endsWith(".mp4")  }
 //        strVideo = fs[Random().nextInt(fs.size)].absolutePath
 //        strVideo = fs[1].absolutePath
         strVideo = fs[0].absolutePath

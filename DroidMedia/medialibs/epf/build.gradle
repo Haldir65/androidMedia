@@ -56,7 +56,7 @@ dependencies {
 
     implementation libs.coroutines.core
     implementation libs.coroutines.android
-    compileOnly libs.exoplayer.core
-    compileOnly libs.exoplayer.ui
+    implementation libs.exoplayer.core
+    implementation libs.exoplayer.ui
     implementation  libs.androidx.recyclerview.recyclerview
 }

@@ -36,32 +36,29 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        VideoUtil.setUrl()
         binding.btn1.setOnClickListener {
-            VideoUtil.setUrl()
-            startActivity(Intent(this, com.me.harris.extractframe.DecodeFrameActivity::class.java))
+            startActivity(Intent(this, VideoPlayExtryActivity::class.java))
         }
         binding.btn2.setOnClickListener {
-            VideoUtil.setUrl()
-            startActivity(Intent(this, DecodeFrameActivity::class.java))
-        }
-        binding.btn3.setOnClickListener {
-            VideoUtil.setUrl()
-            startActivity(Intent(this, DecodeActivity::class.java))
-        }
-
-        binding.btn4.setOnClickListener {
-            VideoUtil.setUrl()
             startActivity(Intent(this, CameraEntryActivity::class.java))
         }
+        binding.btn3.setOnClickListener {
+            startActivity(Intent(this, VideoClipEntryActivity::class.java))
 
+        }
+        binding.btn4.setOnClickListener {
+            startActivity(Intent(this, FilterEntryActivity::class.java))
+
+        }
         binding.btn5.setOnClickListener {
             VideoUtil.setUrl()
-            startActivity(Intent(this, VideoPlayExtryActivity::class.java))
+            startActivity(Intent(this, com.me.harris.extractframe.DecodeFrameActivity::class.java))
         }
 
         binding.btn6.setOnClickListener {
             VideoUtil.setUrl()
-            startActivity(Intent(this, FilterEntryActivity::class.java))
+            startActivity(Intent(this, DecodeFrameActivity::class.java))
 //            startActivity(Intent(this, VideoPlayFilterActivity::class.java))
         }
         binding.btn7.setOnClickListener {
@@ -92,9 +89,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             startActivity(Intent(this, GPUVideoEntryActivity::class.java))
         }
         binding.btn12.setOnClickListener {
-            startActivity(Intent(this, VideoClipEntryActivity::class.java))
+            startActivity(Intent(this, DecodeActivity::class.java))
         }
-
     }
 
 

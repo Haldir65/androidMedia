@@ -6,7 +6,7 @@ class Config{
         const val SPEED_RANGE = 30
         //                val videoPlayUrl = "/storage/emulated/0/DCIM/Camera/VID_20180930_123107.mp4"
 //        val videoPlayUrl = "/storage/emulated/0/download/VID_20181025.mp4"
-        const val DEFAULT_TEMP_VIDEO_LOCATION = "/storage/emulated/0/movies/process.mp4"
+        const val DEFAULT_TEMP_VIDEO_LOCATION = "/storage/emulated/0/movies/video_process.mp4"
 
         var MSG_UPDATE = 1
         val USE_EXOPLAYER = true

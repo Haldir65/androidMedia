@@ -38,6 +38,7 @@ class ThumbExoPlayerView(context: Context?, attrs: AttributeSet?) :
     callback: (String, Int) -> Boolean
   ) {
     mediaPath = source
+    release()
     exoPlayer = ExoPlayer.Builder(context).build()
     exoPlayer?.volume = 0f
     exoPlayer!!.repeatMode = Player.REPEAT_MODE_OFF
@@ -106,6 +107,6 @@ class ThumbExoPlayerView(context: Context?, attrs: AttributeSet?) :
   }
 
   fun release() {
-
+    exoPlayer?.release()
   }
 }

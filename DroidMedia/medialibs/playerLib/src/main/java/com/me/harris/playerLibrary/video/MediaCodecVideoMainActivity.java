@@ -5,6 +5,7 @@ import android.media.MediaCodecList;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,14 +18,17 @@ import java.util.HashMap;
 
 public class MediaCodecVideoMainActivity extends AppCompatActivity {
 	VideoPlayView playView;
+	SeekBar seekBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_media_codec_video_player);
 		playView = findViewById(R.id.player);
+		seekBar = findViewById(R.id.seekbar);
 		VideoUtil.setUrl();
 		VideoPlayView.strVideo = VideoUtil.strVideo;
 		int[] arr = VideoInfoHelper.queryVideoInfo(VideoUtil.strVideo);
+		MediaCodeView.watchProgress(this,seekBar,playView);
 		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) playView.getLayoutParams();
 
 
@@ -64,4 +68,6 @@ public class MediaCodecVideoMainActivity extends AppCompatActivity {
 		super.onPause();
 		playView.stop();
 	}
+
+
 }

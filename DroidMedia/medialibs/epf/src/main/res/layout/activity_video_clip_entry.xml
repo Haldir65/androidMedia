@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="first"
+            android:text="VideoClip"
             android:layout_gravity="center"
             />
 
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="second"
+            android:text="VideoEdit"
             android:layout_gravity="center"
             />
 

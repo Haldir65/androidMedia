@@ -4,5 +4,6 @@
     <application>
         <activity android:name="com.me.harris.filterlibrary.FilterEntryActivity" />
         <activity android:name="com.me.harris.filterlibrary.baisc.FilterBasicActivity" />
+        <activity android:name="com.me.harris.filterlibrary.cain.ImageFilterActivity" />
     </application>
 </manifest>

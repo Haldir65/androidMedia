@@ -30,6 +30,11 @@ public class VideoDecodeThread extends Thread {
 
 	private String path;
 
+
+	public long presentationTimeMs;
+
+	public long videoDuration;
+
 	public VideoDecodeThread(Surface surface, String path) {
 		this.surface = surface;
 		this.path = path;
@@ -49,6 +54,8 @@ public class VideoDecodeThread extends Thread {
 			MediaFormat format = mediaExtractor.getTrackFormat(i); // 音频文件信息
 			mimeType = format.getString(MediaFormat.KEY_MIME);
 			if (mimeType.startsWith("video/")) { // 视频信道
+				videoDuration = format.getLong(MediaFormat.KEY_DURATION)/1000;
+				Log.w("=A=","video duration is " + videoDuration);
 				mediaExtractor.selectTrack(i); // 切换到视频信道
 				try {
 					mediaCodec = MediaCodec.createDecoderByType(mimeType); // 创建解码器,提供数据输出
@@ -137,6 +144,7 @@ public class VideoDecodeThread extends Thread {
 								break;
 							}
 						}
+						presentationTimeMs = info.presentationTimeUs/1000;
 						mediaCodec.releaseOutputBuffer(outIndex, true);
 						break;
 				}

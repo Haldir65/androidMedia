@@ -31,7 +31,7 @@ import com.spx.library.ThumbExoPlayerView
 import com.spx.library.getVideoDuration
 import com.spx.library.toTime
 
-class VideoEditActivity:AppCompatActivity() {
+class VideoEditActivity:AppCompatActivity(R.layout.activity_video_edit) {
     companion object {
         const val TAG = "VideoEditActivity"
         const val STATE_NORMAL = 0
@@ -102,8 +102,6 @@ class VideoEditActivity:AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_video_edit)
         player_view_mp = findViewById(R.id.player_view_mp)
         tv_filter = findViewById(R.id.tv_filter)
         tv_effect = findViewById(R.id.tv_effect)
@@ -325,6 +323,7 @@ class VideoEditActivity:AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         player_view_mp.release()
+        player_view_exo_thumbnail.release()
     }
 
 

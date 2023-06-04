@@ -29,7 +29,7 @@ import java.nio.ByteBuffer
 //            val bmp = getBitmapUsingNV21(img) // crashy
 
 //            val bmp = ImageToBitmap.getBitMapFromImageUsingYUVImage(img,scale,rotation) // Java YUVImage，一切正常
-            val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(img)// libyuv , 表现正常
+            val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(img)// libyuv , 表现正常,只不过  Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x44 in tid 22175 (HeapTaskDaemon)
             Log.w(MediaCodecFrameExtractor.TAG,"got one bitmap not null!!")
             callback(bmp)
         } catch (e:Exception){

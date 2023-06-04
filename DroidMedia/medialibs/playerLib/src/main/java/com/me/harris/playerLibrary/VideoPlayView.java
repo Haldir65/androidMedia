@@ -103,4 +103,15 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 		soundDecodeThread.stop = true;
 		soundDecodeThread.interrupt();
 	}
+
+	public long getCurrentPosition(){
+		if (thread!=null) return thread.presentationTimeMs;
+		else  return 0;
+	}
+
+	public long getDuration(){
+		if (thread!=null) return thread.videoDuration;
+		return 0;
+	}
+
 }

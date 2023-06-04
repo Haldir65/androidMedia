@@ -20,7 +20,7 @@ class VideoClipEntryActivity:AppCompatActivity(R.layout.activity_video_clip_entr
         VideoUtil.setUrl()
         binding.card1.setOnClickListener { startActivity(Intent(this,VideoClipActivity::class.java)) }
         binding.card2.setOnClickListener { startActivity(Intent(this,VideoEditActivity::class.java)) }
-        binding.card3.setOnClickListener { startActivity(Intent(this,VideoClipActivity::class.java)) }
+//        binding.card3.setOnClickListener { startActivity(Intent(this,VideoClipActivity::class.java)) }
 
     }
 }

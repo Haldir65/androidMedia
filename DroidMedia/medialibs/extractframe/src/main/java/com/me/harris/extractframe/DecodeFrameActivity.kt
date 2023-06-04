@@ -42,7 +42,6 @@ class DecodeFrameActivity:AppCompatActivity()
 
     }
 
-    lateinit var mButton:Button
     lateinit var mImageView1:ImageView
     lateinit var mImageView2:ImageView
     lateinit var mGlSurfaceViewv3:GLSurfaceView
@@ -57,7 +56,7 @@ class DecodeFrameActivity:AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_codec_deco_frame)
-        mButton = findViewById(R.id.button1)
+//        mButton = findViewById(R.id.button1)
         mImageView1 = findViewById(R.id.image1)
         mImageView2 = findViewById(R.id.image2)
         mGlSurfaceViewv2 = findViewById(R.id.glsurfaceView2)
