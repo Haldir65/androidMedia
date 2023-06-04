@@ -9,6 +9,8 @@ import com.daasuu.epf.custfilter.GlItchFilter;
 import com.daasuu.epf.custfilter.GlScaleFilter;
 import com.daasuu.epf.custfilter.GlShakeFilter;
 import com.daasuu.epf.custfilter.GlSoulOutFilter;
+import com.daasuu.epf.filter2.AutoFixFilter;
+import com.daasuu.epf.filter2.InvertColorsFilter;
 import com.spx.egl.GLImageComplexionBeautyFilter;
 import com.daasuu.epf.custfilter.Gl4SplitFilter;
 import com.daasuu.epf.custfilter.GlHuanJueFliter;
@@ -51,7 +53,12 @@ public enum FilterType implements Serializable {
     VIGNETTE,
     FILTER_GROUP_SAMPLE,
     SPHERE_REFRACTION,
-    BITMAP_OVERLAY_SAMPLE;
+    BITMAP_OVERLAY_SAMPLE,
+
+    // FILTERS2
+    INVERT_COLORS,
+
+    AutoFixEffect;
 
 
     public static List<FilterType> createFilterList() {
@@ -77,6 +84,8 @@ public enum FilterType implements Serializable {
         filters.add(CGA_COLORSPACE);
         filters.add(SHARP);
         filters.add(BITMAP_OVERLAY_SAMPLE);
+        filters.add(INVERT_COLORS);
+        filters.add(AutoFixEffect);
 
         return filters;
     }
@@ -141,6 +150,12 @@ public enum FilterType implements Serializable {
                 GlSharpenFilter glSharpenFilter = new GlSharpenFilter();
                 glSharpenFilter.setSharpness(4f);
                 return glSharpenFilter;
+            case INVERT_COLORS:
+                InvertColorsFilter filter = new InvertColorsFilter();
+                return filter;
+            case AutoFixEffect:
+                AutoFixFilter fixFilter = new AutoFixFilter(0.5f);
+                return fixFilter;
             default:
                 return new GlFilter();
         }

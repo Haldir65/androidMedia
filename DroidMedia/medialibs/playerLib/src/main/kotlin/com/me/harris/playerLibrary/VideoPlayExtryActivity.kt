@@ -1,14 +1,21 @@
 package com.me.harris.playerLibrary
 
 import android.content.Intent
+import android.media.MediaCodecInfo
+import android.media.MediaCodecList
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.activity.contextaware.withContextAvailable
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import bzijkplayer.IJKPlayerTestActivity
 import com.me.harris.IJKPlayerSourcingActivity
+import com.me.harris.awesomelib.CodecUtils
+import com.me.harris.awesomelib.CodecUtils.probeMediaCodecInfoDetails
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.playerLibrary.exoplayer.ExoplayerSampleActivity
 import com.me.harris.playerLibrary.ffmediaplayer.FFMediaPlayerActivity
@@ -33,8 +40,42 @@ class VideoPlayExtryActivity:AppCompatActivity() {
                 launch(Dispatchers.IO) {
                     VideoUtil.setUrl()
                 }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    probeMediaCodecInfoDetails()
+                }
             }
         }
+    }
+
+    // https://developer.android.com/guide/topics/media/media-codecs
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun probeMediaCodecInfoDetails(){
+        if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.Q){
+            val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)
+            val infos = arrayListOf<MediaCodecInfo>()
+            codecList.codecInfos.map { codec ->
+//                codec.getCapabilitiesForType("video/mp4").videoCapabilities.supportedPerformancePoints
+//                    ?.onEach { p ->
+//                      Log.w("=A=","p.covers(MediaCodecInfo.VideoCapabilities.PerformancePoint.UHD_50)")
+//                    }
+
+                """
+                    =============================
+                    code.name = ${codec.name}
+                    codec.isSoftwareOnly = ${codec.isSoftwareOnly}
+                    codec.isHardwareAccelerated = ${codec.isHardwareAccelerated}
+                    codec.isVendor = ${codec.isVendor}
+                    codec.isAlias = ${codec.isAlias}
+                    codec.canonicalName = ${codec.canonicalName}
+                    ===============================
+                """.trimIndent()
+            }.onEach {
+                Log.i("=A=",it)
+            }
+
+
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

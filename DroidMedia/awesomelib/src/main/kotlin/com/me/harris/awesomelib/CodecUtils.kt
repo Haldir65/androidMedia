@@ -2,7 +2,10 @@ package com.me.harris.awesomelib
 
 import androidx.exifinterface.media.ExifInterface
 import android.media.MediaCodecInfo
+import android.media.MediaCodecList
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import java.nio.ByteBuffer
 
 object CodecUtils
@@ -93,6 +96,8 @@ object CodecUtils
         val ll = gfgExif.latLong
         Log.w("=A=","latitude = ${ll?.get(0)?.toString()} longitude ${ll?.get(1)?.toString()}")
     }
+
+
 
 
 

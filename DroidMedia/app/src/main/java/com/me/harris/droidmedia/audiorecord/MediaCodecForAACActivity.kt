@@ -340,11 +340,12 @@ class MediaCodecForAACActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (audioRecorder != null) {
+        if (::audioRecorder.isInitialized){
             audioRecorder.release()
         }
 
-        if (mediaEncode != null) {
+
+        if (::mediaEncode.isInitialized) {
             mediaEncode.release()
         }
         if (outputStream != null) {

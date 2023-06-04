@@ -1,0 +1,1 @@
+https://github.com/krazykira/VidEffects/blob/master/videffects/src/main/java/com/sherazkhilji/videffects/InvertColorsEffect.java

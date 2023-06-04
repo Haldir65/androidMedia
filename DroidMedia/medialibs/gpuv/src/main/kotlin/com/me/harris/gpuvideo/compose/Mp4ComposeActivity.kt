@@ -113,7 +113,7 @@ class Mp4ComposeActivity:AppCompatActivity(R.layout.activity_mp4compose) {
                                 VideoItem(v,0,0,0)
                             ) }
                             val lv = findViewById<ListView>(R.id.video_list)
-                            val adapter = VideoListAdapter(applicationContext,R.layout.row_video_list,videoItems)
+                            val adapter = VideoListAdapter(this@Mp4ComposeActivity,R.layout.row_video_list,videoItems)
                             lv.adapter = adapter
                             lv.setOnItemClickListener { parent,view,position,id ->
                                 this@Mp4ComposeActivity.videoItem = videoItems?.get(position)

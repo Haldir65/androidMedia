@@ -19,7 +19,9 @@ fun createFilterOptions(): List<BottomDialogFragment.Option> {
         BottomDialogFragment.Option(R.drawable.ic_filter_huaijiu, "怀旧"),
         BottomDialogFragment.Option(R.drawable.ic_filter_landiao, "蓝调"),
         BottomDialogFragment.Option(R.drawable.ic_filter_qingliang, "清凉"),
-        BottomDialogFragment.Option(R.drawable.ic_filter_rixi, "日系")
+        BottomDialogFragment.Option(R.drawable.ic_filter_rixi, "日系"),
+        BottomDialogFragment.Option(R.drawable.ic_filter_rixi, "黑白"),
+        BottomDialogFragment.Option(R.drawable.ic_filter_rixi, "高斯算子")
     )
 }
 
@@ -27,9 +29,13 @@ fun getFilterByName(name: String, context: Context): GlFilter {
     return when {
         name.equals("无") -> GlFilter()
         name.equals("美颜") -> GLImageComplexionBeautyFilter(context)
+        name.equals("黑白") -> GLImageBlackWhiteFilter()
+        name.equals("高斯算子") -> GLImageGaussPassFilter(1)
         else -> GlPngFliter(context, getFilterPngByType(name))
     }
 }
+
+// todo https://github.com/krazykira/VidEffects/tree/master/videffects/src/main/java/com/sherazkhilji/videffects
 
 fun getFilterPngByType(type: String): String {
     return when (type) {
@@ -84,3 +90,4 @@ fun getEffectFilterByName(name: String, context: Context): GlFilter {
         }
     }
 }
+
