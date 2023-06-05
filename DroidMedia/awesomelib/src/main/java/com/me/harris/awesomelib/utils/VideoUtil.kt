@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
@@ -38,7 +39,8 @@ object VideoUtil {
     //	}
     @JvmStatic
     fun setUrl() {
-        val dir :File = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1 )
+        val selfHosted = Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1
+        val dir :File = if (selfHosted )
             File(Environment.getExternalStorageDirectory().absolutePath).parentFile.parentFile.listFiles()[0] else  File(
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES
@@ -47,7 +49,13 @@ object VideoUtil {
         val fs = dir.listFiles { f -> f.name.endsWith(".mp4")  }
 //        strVideo = fs[Random().nextInt(fs.size)].absolutePath
 //        strVideo = fs[1].absolutePath
-        strVideo = fs[0].absolutePath
+//        strVideo = fs[0].absolutePath
+        strVideo = if (selfHosted) {
+            fs[1].absolutePath
+        }else {
+            fs.first { it.name.contains("video_004") }!!.absolutePath
+        }
+        Log.w("=A=","strVideo = $strVideo")
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
     }
 

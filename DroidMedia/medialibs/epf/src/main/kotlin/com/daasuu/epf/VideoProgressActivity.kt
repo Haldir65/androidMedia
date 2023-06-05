@@ -7,8 +7,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import com.daasuu.epf.filter.FilterType
 import com.daasuu.mp4compose.composer.Mp4Composer
+import com.me.harris.awesomelib.ServiceHelper
+import com.me.harris.serviceapi.KEY_VIDEO_URL
+import com.me.harris.serviceapi.PlayerLibService
 import com.spx.egl.GlFilterList
 import com.spx.egl.GlFilterPeriod
 import com.spx.egl.VideoProcessConfig
@@ -61,6 +65,7 @@ class VideoProgressActivity : AppCompatActivity() {
                     runOnUiThread {
                         var e = System.currentTimeMillis()
                         Toast.makeText(this@VideoProgressActivity, "生成视频成功,耗时${e-s}ms, 文件放在:${videoProcessConfig.outMediaPath}", Toast.LENGTH_LONG).show()
+                        openVideoPlayerActivityViaServiceLoader(videoProcessConfig.outMediaPath)
                     }
                     progression = 100
                     finish()
@@ -96,5 +101,10 @@ class VideoProgressActivity : AppCompatActivity() {
             handler.postDelayed({ showProgress() }, 200)
         }
 
+    }
+
+    private fun openVideoPlayerActivityViaServiceLoader(filePath:String){
+         ServiceHelper.getService(PlayerLibService::class.java)?.startPlayVideoActivity(activity = this, bundle = bundleOf(
+KEY_VIDEO_URL to filePath))
     }
 }

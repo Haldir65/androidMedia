@@ -18,6 +18,10 @@ import kotlinx.coroutines.launch
 
 class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
 
+    companion object {
+        const val KEY_VIDEO_PATH = "key_video_path"
+    }
+
     private lateinit var mVideoView: GLVideoSurfaceView
     private lateinit var seekbar: SeekBar
     private lateinit var player:MediaPlayer
@@ -26,12 +30,13 @@ class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mediaplayer_glsurfaceview)
         seekbar = findViewById(R.id.seekbar)
+        val filePath = intent.getStringExtra(KEY_VIDEO_PATH).orEmpty().ifEmpty { VideoUtil.strVideo }
         player = MediaPlayer()
         mVideoView =
             GLVideoSurfaceView(
                 this,
                 player.apply {
-                    setDataSource(VideoUtil.strVideo)
+                    setDataSource(filePath)
                 })
         findViewById<LinearLayout>(R.id.container)?.addView(mVideoView,0,
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Utils.dip2px(this,200F)))

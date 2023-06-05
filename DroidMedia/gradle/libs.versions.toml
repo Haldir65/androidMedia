@@ -20,7 +20,10 @@ hilt = "2.44.2"
 hiltExt = "1.0.0"
 recyclerview="1.3.0"
 junit4 = "4.13.2"
-kotlin = "1.8.20"
+androixJunit="1.1.5"
+espresso="3.5.1"
+
+kotlin = "1.8.21"
 kotlinxCoroutines = "1.7.1"
 kotlinxDatetime = "0.4.0"
 kotlinxSerializationJson = "1.5.0"
@@ -114,6 +117,11 @@ exoplayer-dash = { group = "com.google.android.exoplayer", name = "exoplayer-das
 exoplayer-smoothstreaming = { group = "com.google.android.exoplayer", name = "exoplayer-smoothstreaming", version.ref = "exoplayer" }
 exoplayer-cast = { group = "com.google.android.exoplayer", name = "exoplayer-cast", version.ref = "exoplayer" }
 exoplayer-extension-mediasession = { group = "com.google.android.exoplayer", name = "extension-mediasession", version.ref = "exoplayer" }
+
+# testsuite
+junit-junit = { group = "junit", name = "junit", version.ref = "junit4" }
+androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androixJunit" }
+androidx-test-espresso-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 
 # other dependencies
 

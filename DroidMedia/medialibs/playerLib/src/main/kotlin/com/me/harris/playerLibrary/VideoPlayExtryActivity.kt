@@ -12,10 +12,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import bzijkplayer.IJKPlayerTestActivity
 import com.me.harris.IJKPlayerSourcingActivity
-import com.me.harris.awesomelib.CodecUtils
-import com.me.harris.awesomelib.CodecUtils.probeMediaCodecInfoDetails
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.playerLibrary.exoplayer.ExoplayerSampleActivity
 import com.me.harris.playerLibrary.ffmediaplayer.FFMediaPlayerActivity

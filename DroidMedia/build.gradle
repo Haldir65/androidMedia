@@ -15,9 +15,13 @@ buildscript {
 
 
     repositories {
-        gradlePluginPortal()
+        // In Android, all plugins are found in the google() and mavenCentral() repositories.
+        // However, your build might need third-party plugins that are resolved using the gradlePluginPortal() service.
         google()
         mavenCentral()
+        gradlePluginPortal()
+        // Therefore, experiment with the gradlePluginPortal() entry
+        // by putting it last in the repository block in your settings.gradle file.
     }
     dependencies {
 //        classpath 'com.android.tools.build:gradle:8.0.2'

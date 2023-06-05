@@ -18,3 +18,4 @@ include ':medialibs:gpuv'
 //    libs {
 //        from(files("./libs.versions.toml"))
 //    }
+include ':serviceloaderapi:serviceapi'
