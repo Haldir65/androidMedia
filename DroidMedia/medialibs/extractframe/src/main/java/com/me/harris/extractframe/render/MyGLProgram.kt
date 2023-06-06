@@ -27,6 +27,8 @@ class MyGLProgram {
                     "  tc = texCoord;" +
                     "}"
 
+        // uMVPMatrix 导致画面颠倒，刻意为之
+
         /**
          * 片段着色器程序
          * fragment shader在每个像素上都会执行一次，通过插值确定像素的最终显示颜色
