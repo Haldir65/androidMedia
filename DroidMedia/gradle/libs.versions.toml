@@ -75,6 +75,7 @@ androidx-lifecycle-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifec
 
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt_version" }
 google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt_version" }
+google-dagger-hilt-build-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt_version" }
 
 
 
