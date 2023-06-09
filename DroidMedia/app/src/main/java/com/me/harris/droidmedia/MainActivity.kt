@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        VideoUtil.setUrl()
         binding.btn1.setOnClickListener {
             startActivity(Intent(this, VideoPlayExtryActivity::class.java))
         }
@@ -109,10 +108,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
+        val storagePermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        val cameraPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        val audioPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (!storagePermission || !cameraPermission || !audioPermission) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -123,6 +122,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 ),
                 1098
             )
+        } else {
+            VideoUtil.setUrl()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()){

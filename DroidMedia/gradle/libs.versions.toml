@@ -1,7 +1,7 @@
 [versions]
 arrow = "1.2.0-RC"
 androidGradlePlugin = "8.0.2"
-kotlin_verison = "1.8.10"
+kotlin_verison = "1.8.21"
 gson = "2.8.6"
 retrofit = "2.9.0"
 cardview = "1.0.0"

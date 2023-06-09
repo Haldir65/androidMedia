@@ -40,22 +40,30 @@ object VideoUtil {
     @JvmStatic
     fun setUrl() {
         val selfHosted = Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1
+        val glassy = Build.VERSION.SECURITY_PATCH == "2020-12-01"
         val dir :File = if (selfHosted )
-            File(Environment.getExternalStorageDirectory().absolutePath).parentFile.parentFile.listFiles()[0] else  File(
+            File(Environment.getExternalStorageDirectory().absolutePath).parentFile.parentFile.listFiles()[0]
+        else  File(
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES
         )
 //        val fs = dir.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".mkv") || f.name.endsWith(".webm")  }
-        val fs = dir.listFiles { f -> f.name.endsWith(".mp4")  }
+        val fs = dir.listFiles { f -> f.name.endsWith(".mp4")  }.orEmpty()
 //        strVideo = fs[Random().nextInt(fs.size)].absolutePath
 //        strVideo = fs[1].absolutePath
 //        strVideo = fs[0].absolutePath
-        strVideo = if (selfHosted) {
-            fs[1].absolutePath
-        }else {
-            fs.first { it.name.contains("video_004") }!!.absolutePath
+        if (fs.isNotEmpty()){
+            strVideo = if (selfHosted) {
+                fs[1].absolutePath
+            } else if (glassy){
+                fs.lastOrNull { f -> f.name.endsWith(".mp4")}?.absolutePath.orEmpty()
+            }
+            else {
+                fs.firstOrNull { it.name.contains("video_004") }?.absolutePath.orEmpty()
+            }
+            Log.w("=A=","strVideo = $strVideo")
         }
-        Log.w("=A=","strVideo = $strVideo")
+
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
     }
 
