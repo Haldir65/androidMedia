@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.me.harris.nativecrash'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 27
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+
+    implementation libs.iqiyi.xcrash
+
+    compileOnly libs.androidx.activity.ktx
+    compileOnly libs.androidx.cardview.cardview
+    compileOnly libs.androidx.core.core.ktx
+    compileOnly libs.androidx.appcompat.appcompat
+    compileOnly libs.google.android.material.material
+    compileOnly libs.coroutines.core
+    compileOnly libs.coroutines.android
+    compileOnly libs.androidx.lifecycle.lifecycle.viewmodel.ktx
+    compileOnly libs.androidx.lifecycle.lifecycle.runtime.ktx
+    compileOnly libs.androidx.lifecycle.lifecycle.livedata.ktx
+    compileOnly libs.androidx.exfi.interface
+
+    testImplementation libs.junit.junit
+    androidTestImplementation libs.androidx.test.junit
+    androidTestImplementation libs.androidx.test.espresso.espresso.core
+}

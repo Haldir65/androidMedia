@@ -7,9 +7,9 @@
     tools:context=".VideoClipActivity">
     <com.spx.library.ThumbExoPlayerView
         android:id="@+id/player_view_exo_thumbnail"
-        android:layout_width="27dp"
-        android:layout_height="48dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="54dp"
+        android:layout_height="96dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"

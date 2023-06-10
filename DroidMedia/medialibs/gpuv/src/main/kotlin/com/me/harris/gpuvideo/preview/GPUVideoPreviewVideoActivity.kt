@@ -103,8 +103,8 @@ class GPUVideoPreviewVideoActivity:AppCompatActivity(R.layout.activity_gpuvideo_
         listView.adapter =
             FilterAdapter(this, R.layout.row_text, filteTypes)
         listView.setOnItemClickListener { parent, view, position, id ->
-            val filter = FilterType.createGlFilter(filteTypes.get(position),applicationContext)
-            val adjuster = FilterType.createFilterAdjuster(filteTypes.get(position))
+            val filter = FilterType.createGlFilter(filteTypes.get(position),applicationContext).also { this.filter = it }
+            val adjuster = FilterType.createFilterAdjuster(filteTypes.get(position)).also { this.adjuster = it }
             findViewById<View>(R.id.filterSeekBarLayout).isVisible = adjuster!=null
             gpuPlayerView.setGlFilter(filter)
         }

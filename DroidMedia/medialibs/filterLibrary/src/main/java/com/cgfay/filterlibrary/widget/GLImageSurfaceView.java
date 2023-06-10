@@ -9,11 +9,11 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-import com.cgfay.filterlibrary.glfilter.GLImageFilterManager;
-import com.cgfay.filterlibrary.glfilter.base.GLImageFilter;
-import com.cgfay.filterlibrary.glfilter.base.GLImageInputFilter;
-import com.cgfay.filterlibrary.glfilter.utils.GLImageFilterType;
-import com.cgfay.filterlibrary.glfilter.utils.OpenGLUtils;
+import com.glfilter.GLImageFilterManager;
+import com.glfilter.base.GLImageFilter;
+import com.glfilter.base.GLImageInputFilter;
+import com.glfilter.utils.GLImageFilterType;
+import com.spx.library.util.OpenGLUtils;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

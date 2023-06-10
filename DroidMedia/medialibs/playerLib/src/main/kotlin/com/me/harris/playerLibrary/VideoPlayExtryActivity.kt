@@ -3,6 +3,7 @@ package com.me.harris.playerLibrary
 import android.content.Intent
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
+import android.media.MediaFormat
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -48,13 +49,19 @@ class VideoPlayExtryActivity:AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun probeMediaCodecInfoDetails(){
         if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.Q){
-            val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)
+            val format = MediaFormat.MIMETYPE_VIDEO_VP9
+            val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)//74种
             val infos = arrayListOf<MediaCodecInfo>()
-            codecList.codecInfos.map { codec ->
-//                codec.getCapabilitiesForType("video/mp4").videoCapabilities.supportedPerformancePoints
-//                    ?.onEach { p ->
-//                      Log.w("=A=","p.covers(MediaCodecInfo.VideoCapabilities.PerformancePoint.UHD_50)")
-//                    }
+            codecList.codecInfos.filter { c -> c.supportedTypes.any { a -> a.contains(format) } }.distinct().map { codec ->
+                kotlin.runCatching {
+                    val cap =  codec.getCapabilitiesForType(format)
+                    cap?.videoCapabilities?.supportedPerformancePoints
+                        ?.onEach { p ->
+                            Log.w("=A=","${codec.name} covers ${p.covers(MediaCodecInfo.VideoCapabilities.PerformancePoint.UHD_60)}")
+                        }
+                }.onFailure {
+                    it.printStackTrace()
+                }
 
                 """
                     =============================

@@ -81,4 +81,9 @@ public class GlBulgeDistortionFilter extends GlFilter {
         GLES20.glUniform1f(getHandle("radius"), radius);
         GLES20.glUniform1f(getHandle("scale"), scale);
     }
+
+    @Override
+    public FilterType getFilterType() {
+        return FilterType.BULGE_DISTORTION;
+    }
 }

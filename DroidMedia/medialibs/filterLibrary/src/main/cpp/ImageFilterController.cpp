@@ -7,6 +7,7 @@
 #include "common/AndroidLog.h"
 
 #include "nativefilter/ndkfilter.h"
+#include <jni.h>
 
 /**
  * 马赛克处理

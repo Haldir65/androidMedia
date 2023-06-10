@@ -9,9 +9,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
 import com.daasuu.epf.VideoClipEntryActivity
-import com.me.harris.awesomelib.ServiceHelper
 import com.me.harris.cameralib.CameraEntryActivity
 import com.me.harris.droidmedia.audiorecord.MediaCodecForAACActivity
 import com.me.harris.droidmedia.databinding.ActivityMainBinding
@@ -29,10 +27,6 @@ import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
-import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
-import com.me.harris.serviceapi.DisplayB
-import com.me.harris.serviceapi.KEY_VIDEO_URL
-import com.me.harris.serviceapi.PlayerLibService
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 

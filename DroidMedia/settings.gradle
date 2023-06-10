@@ -19,3 +19,4 @@ include ':medialibs:gpuv'
 //        from(files("./libs.versions.toml"))
 //    }
 include ':serviceloaderapi:serviceapi'
+include ':mango:nativecrash'

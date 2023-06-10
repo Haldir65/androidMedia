@@ -2,20 +2,28 @@ package com.daasuu.epf.filter;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.daasuu.epf.R;
+import com.daasuu.epf.custfilter.Gl4SplitFilter;
 import com.daasuu.epf.custfilter.GlFlashFliter;
+import com.daasuu.epf.custfilter.GlHuanJueFliter;
 import com.daasuu.epf.custfilter.GlItchFilter;
+import com.daasuu.epf.custfilter.GlPngFliter;
 import com.daasuu.epf.custfilter.GlScaleFilter;
 import com.daasuu.epf.custfilter.GlShakeFilter;
 import com.daasuu.epf.custfilter.GlSoulOutFilter;
 import com.daasuu.epf.filter2.AutoFixFilter;
 import com.daasuu.epf.filter2.BlackAndWhiteEffectFilter;
 import com.daasuu.epf.filter2.InvertColorsFilter;
+import com.glfilter.advanced.adjust.GLImageBrightnessFilter;
+import com.glfilter.advanced.adjust.GLImageContrastFilter;
+import com.glfilter.advanced.adjust.GLImageExposureFilter;
+import com.glfilter.advanced.adjust.GLImageHueFilter;
+import com.glfilter.advanced.adjust.GLImageMirrorFilter;
 import com.spx.egl.GLImageComplexionBeautyFilter;
-import com.daasuu.epf.custfilter.Gl4SplitFilter;
-import com.daasuu.epf.custfilter.GlHuanJueFliter;
-import com.daasuu.epf.custfilter.GlPngFliter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,6 +70,12 @@ public enum FilterType implements Serializable {
 
     BLACK_AND_WHITE_FILTER,
 
+    IMAGE_BRIGHTNESS_FILTER,
+    IMAGE_CONTRAST_FILTER,
+    IMAGE_EXPOSURE_FILTER,
+    IMAGE_HueFilter,
+    IMAGE_MIRROR_FILTER,
+
     AutoFixEffect;
 
 
@@ -90,6 +104,10 @@ public enum FilterType implements Serializable {
         filters.add(BITMAP_OVERLAY_SAMPLE);
         filters.add(INVERT_COLORS);
         filters.add(BLACK_AND_WHITE_FILTER);
+        filters.add(IMAGE_BRIGHTNESS_FILTER);
+        filters.add(IMAGE_CONTRAST_FILTER);
+        filters.add(IMAGE_EXPOSURE_FILTER);
+        filters.add(IMAGE_MIRROR_FILTER);
         filters.add(AutoFixEffect);
 
         return filters;
@@ -101,8 +119,8 @@ public enum FilterType implements Serializable {
                 return new GlFilter();
             case BEAUTY_CUS:
 //                return new GlFilterGroup(new GLImageGaussPassFilter(0), new GLImageGaussPassFilter(1) );
-//                return new GLImageComplexionBeautyFilter(context);
                 return new GLImageComplexionBeautyFilter(context);
+//                return new GLImageComplexionBeautyFilter(context);
             case SPX_SOULOUT: return new GlSoulOutFilter(context);
             case SPX_LUCION: return new GlHuanJueFliter(context);
             case SPX_FLASH: return new GlFlashFliter(context);
@@ -126,10 +144,9 @@ public enum FilterType implements Serializable {
                 return new GlBilateralFilter();
             case BOX_BLUR:
                 return new GlBoxBlurFilter();
-//            case LOOK_UP_TABLE_SAMPLE:
-//                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.lookup_sample);
-//
-//                return new GlLookUpTableFilter(bitmap);
+            case LOOK_UP_TABLE_SAMPLE:
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_beauty_face);
+                return new GlLookUpTableFilter(bitmap);
             case TONE_CURVE_SAMPLE:
                 try {
                     InputStream is = context.getAssets().open("acv/tone_cuver_sample.acv");
@@ -161,6 +178,25 @@ public enum FilterType implements Serializable {
             case BLACK_AND_WHITE_FILTER:
                 BlackAndWhiteEffectFilter blackAndWhiteEffectFilter = new BlackAndWhiteEffectFilter();
                 return blackAndWhiteEffectFilter;
+            case IMAGE_BRIGHTNESS_FILTER:
+                GLImageBrightnessFilter ibs = new GLImageBrightnessFilter(context);
+                ibs.setBrightness(0.5f);
+                return ibs;
+            case IMAGE_CONTRAST_FILTER:
+                GLImageContrastFilter cf = new GLImageContrastFilter(context);
+                return cf;
+            case IMAGE_EXPOSURE_FILTER:
+                GLImageExposureFilter EF = new GLImageExposureFilter(context);
+                EF.setExposure(8);
+                return EF;
+            case IMAGE_HueFilter:
+                GLImageHueFilter hue = new GLImageHueFilter(context);
+                hue.setHue(120);
+                return hue;
+            case IMAGE_MIRROR_FILTER:
+                GLImageMirrorFilter mirror = new GLImageMirrorFilter(context);
+                mirror.setAngle(90);
+                return mirror;
             case AutoFixEffect:
                 AutoFixFilter fixFilter = new AutoFixFilter(0.5f);
                 return fixFilter;

@@ -1,5 +1,22 @@
 
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.12)
+
+## add all file with certain extension to a collection,
+# then call add_library will be easier
+## https://stackoverflow.com/a/3201211
+file(GLOB cain_filters CONFIGURE_DEPENDS
+#        "*.h"
+        src/main/cpp/cainfilter/*.cpp
+        src/main/cpp/cainfilter/adjust/*.cpp
+        src/main/cpp/cainfilter/input/*.cpp
+        src/main/cpp/cainfilter/*.h
+        src/main/cpp/caingles/*.cpp
+        src/main/cpp/caingles/*.h
+        src/main/cpp/cainrender/*.cpp
+        src/main/cpp/cainrender/*.h
+#        "*.h"
+#        "*.cpp"
+        )
 
 add_library(
             nativefilter
@@ -7,6 +24,10 @@ add_library(
              SHARED
 
              # common
+             src/main/cpp/common/Point.cpp
+             src/main/cpp/common/Looper.cpp
+             src/main/cpp/common/MyLooper.cpp
+             src/main/cpp/common/native_log.h
              src/main/cpp/common/Point.cpp
              # utils
              src/main/cpp/nativefilter/FilterUtils.cpp
@@ -25,9 +46,14 @@ add_library(
              src/main/cpp/nativefilter/StackBlurFilter.cpp
              src/main/cpp/nativefilter/VignetteFilter.cpp
 
-             # jni interface
-             src/main/cpp/ImageFilterController.cpp )
 
+             ${cain_filters}
+             # jni interface
+             src/main/cpp/ImageFilterController.cpp
+             src/main/cpp/NativeEglController.cpp)
+
+find_library( EGL-lib EGL )
+find_library( GLESv2-lib GLESv2 )
 
 find_library( log-lib log )
 
@@ -36,4 +62,8 @@ target_link_libraries(
 
                        -ljnigraphics
                        -landroid
-                       ${log-lib} )
+
+        ${log-lib}
+        ${EGL-lib}
+        ${GLESv2-lib}
+                      )

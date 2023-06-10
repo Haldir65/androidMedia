@@ -95,4 +95,8 @@ public class GlSharpenFilter extends GlFilter {
         GLES20.glUniform1f(getHandle("sharpness"), sharpness);
     }
 
+    @Override
+    public FilterType getFilterType() {
+        return FilterType.SHARP;
+    }
 }

@@ -370,4 +370,8 @@ public class GlToneCurveFilter extends GlFilter {
     }
 
 
+    @Override
+    public FilterType getFilterType() {
+        return FilterType.TONE_CURVE_SAMPLE;
+    }
 }

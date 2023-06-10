@@ -10,4 +10,5 @@ class GlBitmapOverlaySample(val bitmap:Bitmap?):GlOverlayFilter() {
             canvas?.drawBitmap(it,0.0f,0.0f,null)
         }
     }
+
 }

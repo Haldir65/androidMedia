@@ -101,4 +101,8 @@ public class GlGaussianBlurFilter extends GlFilter {
         GLES20.glUniform1f(getHandle("blurSize"), blurSize);
     }
 
+    @Override
+    public FilterType getFilterType() {
+        return FilterType.GAUSSIAN_FILTER;
+    }
 }

@@ -4,6 +4,9 @@
     <application>
         <activity android:name="com.me.harris.filterlibrary.FilterEntryActivity" />
         <activity android:name="com.me.harris.filterlibrary.baisc.FilterBasicActivity" />
-        <activity android:name="com.me.harris.filterlibrary.cain.ImageFilterActivity" />
+        <activity android:name="com.me.harris.filterlibrary.imagefilter.ImageFilterActivity" />
+        <activity android:name="com.cgfay.filterlibrary.ui.NativeRenderMain2Activity" />
+        <activity android:name="com.cgfay.filterlibrary.ui.NativeRenderMainActivity" />
+        <activity android:name="com.cgfay.filterlibrary.ui.NativeRenderMain3Activity" />
     </application>
 </manifest>
