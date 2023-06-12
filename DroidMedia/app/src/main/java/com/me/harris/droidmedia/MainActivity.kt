@@ -26,6 +26,7 @@ import com.me.harris.awesomelib.viewBinding
 import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
+import com.me.harris.mediainfo.MediaInfoProbeActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -92,6 +93,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 //                .name.orEmpty().let { Log.w("=A=","service loader on Android works") }
 //        ServiceHelper.getService(PlayerLibService::class.java)?.startPlayVideoActivity(activity = this, bundle = bundleOf(
 //            KEY_VIDEO_URL to VideoUtil.strVideo))
+        }
+
+        binding.btn13.setOnClickListener {
+            startActivity(Intent(this, MediaInfoProbeActivity::class.java))
         }
     }
 

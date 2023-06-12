@@ -26,7 +26,7 @@ public class GLImageBrightnessFilter extends GLImageFilter {
             "}                                                                                  ";
 
     private int mBrightnessHandle;
-    private float mBrightness;
+    private float mBrightness = 0.0f;
 
     public GLImageBrightnessFilter(Context context) {
         this(context, VERTEX_SHADER, FRAGMENT_SHADER);

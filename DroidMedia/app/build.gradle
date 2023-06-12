@@ -222,8 +222,10 @@ dependencies {
 
 //    implementation files('somelibs/jetified-exoplayer-core-r2.5.2.aar')
 //    implementation files('somelibs/jetified-exoplayer-ui-r2.5.2.aar')
-    implementation project(":awesomelib")
-    implementation project(":medialibs:filterLibrary")
+//    implementation project(":awesomelib")
+    implementation projects.awesomelib
+    implementation projects.medialibs.filterLibrary
+//    implementation project(":medialibs:filterLibrary")
     implementation project(":medialibs:playerLib")
     implementation project(":medialibs:epf")
     implementation project(":medialibs:mediakit")
@@ -232,6 +234,7 @@ dependencies {
     implementation project(":medialibs:yuv")
     implementation project(":medialibs:extractframe")
     implementation project(":medialibs:gpuv")
+    implementation project(":medialibs:mediainfo")
     implementation project(":serviceloaderapi:serviceapi")
     implementation project(":mango:nativecrash")
 

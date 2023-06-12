@@ -180,7 +180,7 @@ public enum FilterType implements Serializable {
                 return blackAndWhiteEffectFilter;
             case IMAGE_BRIGHTNESS_FILTER:
                 GLImageBrightnessFilter ibs = new GLImageBrightnessFilter(context);
-                ibs.setBrightness(0.5f);
+                ibs.setBrightness(-0.5f);
                 return ibs;
             case IMAGE_CONTRAST_FILTER:
                 GLImageContrastFilter cf = new GLImageContrastFilter(context);

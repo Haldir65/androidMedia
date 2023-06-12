@@ -13,6 +13,8 @@ include ':medialibs:yuv'
 include ':medialibs:extractframe'
 include ':medialibs:gpuv'
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 
 //  // 第二种方式使用版本目录
 //    libs {
@@ -20,3 +22,4 @@ include ':medialibs:gpuv'
 //    }
 include ':serviceloaderapi:serviceapi'
 include ':mango:nativecrash'
+include ':medialibs:mediainfo'

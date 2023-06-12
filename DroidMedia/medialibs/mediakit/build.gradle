@@ -13,6 +13,12 @@ android {
     namespace 'com.jadyn.mediakit'
     compileSdk 33
 
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+//        aidl true
+    }
+
     defaultConfig {
         minSdk 27
         targetSdk 29
