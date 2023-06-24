@@ -14,9 +14,21 @@ file(GLOB cain_filters CONFIGURE_DEPENDS
         src/main/cpp/caingles/*.h
         src/main/cpp/cainrender/*.cpp
         src/main/cpp/cainrender/*.h
-#        "*.h"
+        #        "*.h"
 #        "*.cpp"
         )
+
+
+file(GLOB gl_filters CONFIGURE_DEPENDS
+        #        "*.h"
+        src/main/cpp/gl/*.cpp
+        src/main/cpp/gl/*.h
+        #        "*.h"
+        #        "*.cpp"
+        )
+
+
+
 
 add_library(
             nativefilter
@@ -48,12 +60,14 @@ add_library(
 
 
              ${cain_filters}
+             ${gl_filters}
              # jni interface
              src/main/cpp/ImageFilterController.cpp
              src/main/cpp/NativeEglController.cpp)
 
 find_library( EGL-lib EGL )
 find_library( GLESv2-lib GLESv2 )
+find_library( GLESv3-lib GLESv3 )
 
 find_library( log-lib log )
 
@@ -65,5 +79,6 @@ target_link_libraries(
 
         ${log-lib}
         ${EGL-lib}
+        ${GLESv3-lib}
         ${GLESv2-lib}
                       )
