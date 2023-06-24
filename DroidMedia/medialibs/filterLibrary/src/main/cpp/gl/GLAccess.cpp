@@ -1,45 +1,16 @@
 #include <jni.h>
 #include "GLAccess.h"
 #include "EGLRoutine.h"
+#include "../glm/glm/gtc/matrix_transform.hpp"
+#include "../glm/glm/ext.hpp"
+#include "../glm/glm/detail/_noise.hpp"
 
 //
 // Created by me on 2023/6/24.
 //
 
 
-GLint initShader(const char *source, GLint type) {
-    //创建shader
-    GLint sh = glCreateShader(type);
-    if (sh == 0) {
-        LOGD("glCreateShader %d failed", type);
-        return 0;
-    }
-    //加载shader
-    glShaderSource(sh,
-                   1,//shader数量
-                   &source,
-                   0);//代码长度，传0则读到字符串结尾
 
-    //编译shader
-    glCompileShader(sh);
-
-    GLint status;
-    glGetShaderiv(sh, GL_COMPILE_STATUS, &status);
-    if (status == 0) {
-        LOGD("glCompileShader %d failed", type);
-        LOGD("source %s", source);
-        auto *infoLog = new GLchar[512];
-        GLsizei length;
-        glGetShaderInfoLog(sh, 512, &length, infoLog);
-//        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-
-        LOGD("ERROR::SHADER::VERTEX::COMPILATION_FAILED %s", infoLog);
-        return 0;
-    }
-
-    LOGD("glCompileShader %d success", type);
-    return sh;
-}
 
 
 
@@ -51,10 +22,10 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
                                                              jobject surface) {
 
     auto *routine = new EGLRoutine();
-    routine->eglSetup(env,surface);
+    routine->eglSetup(env, surface);
 
-    GLint vsh = initShader(vertexSimpleTexture, GL_VERTEX_SHADER);
-    GLint fsh = initShader(fragSimpleTexture, GL_FRAGMENT_SHADER);
+    GLint vsh = routine->initShader(vertexSimpleTexture, GL_VERTEX_SHADER);
+    GLint fsh = routine->initShader(fragSimpleTexture, GL_FRAGMENT_SHADER);
 
     //创建渲染程序
     GLint program = glCreateProgram();
@@ -126,7 +97,7 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
 
     AndroidBitmap_lockPixels(env, bitmap, &bmpPixels);
 
-    LOGD("bitmap width:%d,height:%d" ,bmpInfo.width,bmpInfo.height);
+    LOGD("bitmap width:%d,height:%d", bmpInfo.width, bmpInfo.height);
 
     AndroidBitmapInfo bmpInfo1;
     void *bmpPixels1;
@@ -138,9 +109,9 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
 
     AndroidBitmap_lockPixels(env, bitmap1, &bmpPixels1);
 
-    LOGD("bitmap width:%d,height:%d" ,bmpInfo1.width,bmpInfo1.height);
+    LOGD("bitmap width:%d,height:%d", bmpInfo1.width, bmpInfo1.height);
 
-    if (bmpPixels == nullptr || bmpPixels1 == nullptr){
+    if (bmpPixels == nullptr || bmpPixels1 == nullptr) {
         return;
     }
 
@@ -174,7 +145,8 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
     glGenTextures(1, &texture2);
     glBindTexture(GL_TEXTURE_2D, texture2);
     // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                    GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -225,5 +197,228 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
     glDeleteProgram(program);
     LOGD("glDeleteProgram called");
 
+
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuv(JNIEnv *env, jobject thiz, jobject surface,
+                                                         jobject assetmanager) {
+    LOGD("load yuv start");
+    auto *routine = new EGLRoutine();
+    routine->eglSetup(env, surface);
+
+    GLint vsh = routine->initShader(vertexShader, GL_VERTEX_SHADER);
+//    GLint fsh = routine->initShader(fragYUV420P, GL_FRAGMENT_SHADER);
+
+//    GLint fsh = routine->initShader(fragYUV420P_SPLIT, GL_FRAGMENT_SHADER);
+    GLint fsh = routine->initShader(fragYUV420P_split_vertical_two, GL_FRAGMENT_SHADER);
+
+
+    //创建渲染程序
+    GLint program = glCreateProgram();
+    if (program == 0) {
+        LOGD("glCreateProgram failed");
+        return;
+    }
+
+    //向渲染程序中加入着色器
+    glAttachShader(program, vsh);
+    glAttachShader(program, fsh);
+
+    //链接程序
+    glLinkProgram(program);
+    GLint status = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &status);
+    if (status == 0) {
+        LOGD("glLinkProgram failed");
+        return;
+    }
+    LOGD("glLinkProgram success");
+    //激活渲染程序
+    glUseProgram(program);
+
+    //加入三维顶点数据
+    static float ver[] = {
+            1.0f, -1.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f,
+            1.0f, 1.0f, 0.0f,
+            -1.0f, 1.0f, 0.0f
+    };
+
+    GLuint apos = static_cast<GLuint>(glGetAttribLocation(program, "aPosition"));
+    glEnableVertexAttribArray(apos);
+    glVertexAttribPointer(apos, 3, GL_FLOAT, GL_FALSE, 0, ver);
+
+    //加入纹理坐标数据
+    static float fragment[] = {
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f
+    };
+    GLuint aTex = static_cast<GLuint>(glGetAttribLocation(program, "aTextCoord"));
+    glEnableVertexAttribArray(aTex);
+    glVertexAttribPointer(aTex, 2, GL_FLOAT, GL_FALSE, 0, fragment);
+
+    int width = 640;
+    int height = 272;
+
+    //纹理初始化
+    //设置纹理层对应的对应采样器？
+
+    /**
+     *  //获取一致变量的存储位置
+    GLint textureUniformY = glGetUniformLocation(program, "SamplerY");
+    GLint textureUniformU = glGetUniformLocation(program, "SamplerU");
+    GLint textureUniformV = glGetUniformLocation(program, "SamplerV");
+    //对几个纹理采样器变量进行设置
+    glUniform1i(textureUniformY, 0);
+    glUniform1i(textureUniformU, 1);
+    glUniform1i(textureUniformV, 2);
+     */
+    //对sampler变量，使用函数glUniform1i和glUniform1iv进行设置
+    glUniform1i(glGetUniformLocation(program, "yTexture"), 0);
+    glUniform1i(glGetUniformLocation(program, "uTexture"), 1);
+    glUniform1i(glGetUniformLocation(program, "vTexture"), 2);
+    //纹理ID
+    GLuint textures[3] = {0};
+    //创建若干个纹理对象，并且得到纹理ID
+    glGenTextures(3, textures);
+
+    //绑定纹理。后面的的设置和加载全部作用于当前绑定的纹理对象
+    //GL_TEXTURE0、GL_TEXTURE1、GL_TEXTURE2 的就是纹理单元，GL_TEXTURE_1D、GL_TEXTURE_2D、CUBE_MAP为纹理目标
+    //通过 glBindTexture 函数将纹理目标和纹理绑定后，对纹理目标所进行的操作都反映到对纹理上
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    //缩小的过滤器
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //放大的过滤器
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //设置纹理的格式和大小
+    // 加载纹理到 OpenGL，读入 buffer 定义的位图数据，并把它复制到当前绑定的纹理对象
+    // 当前绑定的纹理对象就会被附加上纹理图像。
+    //width,height表示每几个像素公用一个yuv元素？比如width / 2表示横向每两个像素使用一个元素？
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,//细节基本 默认0
+                 GL_LUMINANCE,//gpu内部格式 亮度，灰度图（这里就是只取一个亮度的颜色通道的意思）
+                 width,//加载的纹理宽度。最好为2的次幂(这里对y分量数据当做指定尺寸算，但显示尺寸会拉伸到全屏？)
+                 height,//加载的纹理高度。最好为2的次幂
+                 0,//纹理边框
+                 GL_LUMINANCE,//数据的像素格式 亮度，灰度图
+                 GL_UNSIGNED_BYTE,//像素点存储的数据类型
+                 NULL //纹理的数据（先不传）
+    );
+
+    //绑定纹理
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    //缩小的过滤器
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //设置纹理的格式和大小
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,//细节基本 默认0
+                 GL_LUMINANCE,//gpu内部格式 亮度，灰度图（这里就是只取一个颜色通道的意思）
+                 width / 2,//u数据数量为屏幕的4分之1
+                 height / 2,
+                 0,//边框
+                 GL_LUMINANCE,//数据的像素格式 亮度，灰度图
+                 GL_UNSIGNED_BYTE,//像素点存储的数据类型
+                 NULL //纹理的数据（先不传）
+    );
+
+    //绑定纹理
+    glBindTexture(GL_TEXTURE_2D, textures[2]);
+    //缩小的过滤器
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //设置纹理的格式和大小
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,//细节基本 默认0
+                 GL_LUMINANCE,//gpu内部格式 亮度，灰度图（这里就是只取一个颜色通道的意思）
+                 width / 2,
+                 height / 2,//v数据数量为屏幕的4分之1
+                 0,//边框
+                 GL_LUMINANCE,//数据的像素格式 亮度，灰度图
+                 GL_UNSIGNED_BYTE,//像素点存储的数据类型
+                 NULL //纹理的数据（先不传）
+    );
+
+    //创建3个buffer数组分别用于存放YUV三个分量
+    unsigned char *buf[3] = {0};
+    buf[0] = new unsigned char[width * height];//y
+    buf[1] = new unsigned char[width * height / 4];//u
+    buf[2] = new unsigned char[width * height / 4];//v
+
+    //得到AAssetManager对象指针
+    AAssetManager *mManeger = AAssetManager_fromJava(env, assetmanager);
+    //得到AAsset对象
+    AAsset *dataAsset = AAssetManager_open(mManeger, "video1_640_272.yuv",
+                                           AASSET_MODE_STREAMING);//get file read AAsset
+    //文件总长度
+    off_t dataBufferSize = AAsset_getLength(dataAsset);
+    //纵帧数
+    long frameCount = dataBufferSize / (width * height * 3 / 2);
+
+    LOGD("frameCount:%d", frameCount);
+
+
+    for (int i = 0; i < frameCount; ++i) {
+        //读取y分量
+        int bufYRead = AAsset_read(dataAsset, buf[0],
+                                   width * height);  //begin to read data once time
+        //读取u分量
+        int bufURead = AAsset_read(dataAsset, buf[1],
+                                   width * height / 4);  //begin to read data once time
+        //读取v分量
+        int bufVRead = AAsset_read(dataAsset, buf[2],
+                                   width * height / 4);  //begin to read data once time
+        LOGD("bufYRead:%d,bufURead:%d,bufVRead:%d", bufYRead, bufURead, bufVRead);
+
+        //读到文件末尾了
+        if (bufYRead <= 0 || bufURead <= 0 || bufVRead <= 0) {
+            AAsset_close(dataAsset);
+            return;
+        }
+
+        //  int c = dataRead(mManeger, "video1_640_272.yuv");
+
+        //激活第一层纹理，绑定到创建的纹理
+        //下面的width,height主要是显示尺寸？
+        glActiveTexture(GL_TEXTURE0);
+        //绑定y对应的纹理
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
+        //替换纹理，比重新使用glTexImage2D性能高多
+        glTexSubImage2D(GL_TEXTURE_2D, 0,
+                        0, 0,//相对原来的纹理的offset
+                        width, height,//加载的纹理宽度、高度。最好为2的次幂
+                        GL_LUMINANCE, GL_UNSIGNED_BYTE,
+                        buf[0]);
+
+        //激活第二层纹理，绑定到创建的纹理
+        glActiveTexture(GL_TEXTURE1);
+        //绑定u对应的纹理
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
+        //替换纹理，比重新使用glTexImage2D性能高
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width / 2, height / 2, GL_LUMINANCE,
+                        GL_UNSIGNED_BYTE,
+                        buf[1]);
+
+        //激活第三层纹理，绑定到创建的纹理
+        glActiveTexture(GL_TEXTURE2);
+        //绑定v对应的纹理
+        glBindTexture(GL_TEXTURE_2D, textures[2]);
+        //替换纹理，比重新使用glTexImage2D性能高
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width / 2, height / 2, GL_LUMINANCE,
+                        GL_UNSIGNED_BYTE,
+                        buf[2]);
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        //窗口显示，交换双缓冲区
+        routine->eglSwapBuffer();
+
+
+        usleep(4000);
+    }
+
+    delete routine;
 
 }

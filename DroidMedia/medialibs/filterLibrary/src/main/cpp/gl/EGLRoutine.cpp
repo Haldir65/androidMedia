@@ -82,3 +82,41 @@ void EGLRoutine::eglSwapBuffer() {
 }
 
 
+GLint EGLRoutine::initShader(const char *source, int type) {
+
+    //创建shader
+    GLint sh = glCreateShader(type);
+    if (sh == 0) {
+        LOGD("glCreateShader %d failed", type);
+        return 0;
+    }
+    //加载shader
+    glShaderSource(sh,
+                   1,//shader数量
+                   &source,
+                   0);//代码长度，传0则读到字符串结尾
+
+    //编译shader
+    glCompileShader(sh);
+
+    GLint status;
+    glGetShaderiv(sh, GL_COMPILE_STATUS, &status);
+    if (status == 0) {
+        LOGD("glCompileShader %d failed", type);
+        LOGD("source %s", source);
+        auto *infoLog = new GLchar[512];
+        GLsizei length;
+        glGetShaderInfoLog(sh, 512, &length, infoLog);
+//        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+
+        LOGD("ERROR::SHADER::VERTEX::COMPILATION_FAILED %s", infoLog);
+        return 0;
+    }
+
+    LOGD("glCompileShader %d success", type);
+    return sh;
+}
+
+
+
+

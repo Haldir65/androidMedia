@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.databinding.ActivityOpenglEntryBinding
 import com.me.harris.droidmedia.opengl.egl.TextureViewRenderViaEglActivity
+import com.me.harris.filterlibrary.opengl.GLLoadYUVActivity
 import com.me.harris.filterlibrary.opengl.GLMixTwoPictureActivity
 
 class OpenGlEntryActivity:AppCompatActivity()
@@ -21,6 +22,9 @@ class OpenGlEntryActivity:AppCompatActivity()
         }
         binding.btn2.setOnClickListener {
             startActivity(Intent(this,GLMixTwoPictureActivity::class.java))
+        }
+        binding.btn3.setOnClickListener {
+            startActivity(Intent(this,GLLoadYUVActivity::class.java))
         }
 
     }

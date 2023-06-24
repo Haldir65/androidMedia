@@ -9,5 +9,6 @@
         <activity android:name="com.cgfay.filterlibrary.ui.NativeRenderMainActivity" />
         <activity android:name="com.cgfay.filterlibrary.ui.NativeRenderMain3Activity" />
         <activity android:name="com.me.harris.filterlibrary.opengl.GLMixTwoPictureActivity" />
+        <activity android:name="com.me.harris.filterlibrary.opengl.GLLoadYUVActivity" />
     </application>
 </manifest>

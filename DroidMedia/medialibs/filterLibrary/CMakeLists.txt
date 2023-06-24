@@ -28,7 +28,8 @@ file(GLOB gl_filters CONFIGURE_DEPENDS
         )
 
 
-
+include_directories(${CMAKE_SOURCE_DIR}/glm)
+include_directories(${CMAKE_SOURCE_DIR}/glm/glm)
 
 add_library(
             nativefilter
@@ -75,7 +76,7 @@ target_link_libraries(
                         nativefilter
 
                        -ljnigraphics
-                       -landroid
+                       android
 
         ${log-lib}
         ${EGL-lib}

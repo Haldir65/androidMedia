@@ -14,36 +14,37 @@
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/btn1"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="6dp"
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
-                android:id="@+id/btn1"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
+                android:layout_gravity="center"
                 android:text="TextureView and egl setup"
                 android:textAllCaps="false" />
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/btn2"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="6dp"
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
-                android:id="@+id/btn2"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text=""
+                android:layout_gravity="center"
+                android:text="gl mix image"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -54,13 +55,13 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text=""
+                android:text="load yuv ndk asset"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
@@ -72,7 +73,7 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,7 +91,7 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,7 +108,7 @@
             app:contentPadding="4dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,7 +126,7 @@
             app:cardCornerRadius="6dp"
             app:cardElevation="3dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

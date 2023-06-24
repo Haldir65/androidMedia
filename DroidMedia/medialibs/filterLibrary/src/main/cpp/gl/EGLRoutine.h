@@ -11,12 +11,15 @@
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <EGL/egl.h>
+#include <GLES3/gl3.h>
 
 class EGLRoutine{
 public:
     EGLRoutine();
 
     virtual ~EGLRoutine();
+
+    GLint initShader(const char *source, int type);
 
 
     void eglSetup(JNIEnv *env, jobject surface);
