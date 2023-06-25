@@ -1,6 +1,7 @@
 #include <jni.h>
 #include "GLAccess.h"
 #include "EGLRoutine.h"
+#include "AssetReader.h"
 #include "../glm/glm/gtc/matrix_transform.hpp"
 #include "../glm/glm/ext.hpp"
 #include "../glm/glm/detail/_noise.hpp"
@@ -19,11 +20,14 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobject thiz,
                                                              jobject bitmap, jobject bitmap1,
-                                                             jobject surface) {
+                                                             jobject surface, jobject assetmanager) {
 
     auto *routine = new EGLRoutine();
     routine->eglSetup(env, surface);
-
+    auto assetReader = new AssetReader();
+    const char* vertexSimpleTexture = assetReader->readAssets(env,"shader2/vertexSimpleTexture.glsl",assetmanager);
+    const char* fragSimpleTexture = assetReader->readAssets(env,"shader2/fragSimpleTexture.glsl",assetmanager);
+    delete assetReader;
     GLint vsh = routine->initShader(vertexSimpleTexture, GL_VERTEX_SHADER);
     GLint fsh = routine->initShader(fragSimpleTexture, GL_FRAGMENT_SHADER);
 
@@ -421,4 +425,16 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuv(JNIEnv *env, jobject th
 
     delete routine;
 
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_me_harris_filterlibrary_opengl_GLAccess_readAssests(JNIEnv *env, jobject thiz,
+                                                             jstring name, jobject assetmanager) {
+    auto reader = new AssetReader();
+    const char* nativeString = env->GetStringUTFChars(name, nullptr);
+    if (nativeString == nullptr) return;
+    const char* contents = reader->readAssets(env, const_cast<char *>(nativeString), assetmanager);
+    LOGD("%s", contents);
+    env->ReleaseStringUTFChars(name, nativeString);
+    delete reader;
 }

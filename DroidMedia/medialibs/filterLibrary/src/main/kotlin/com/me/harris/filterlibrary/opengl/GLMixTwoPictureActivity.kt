@@ -25,7 +25,7 @@ class GLMixTwoPictureActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGlMixTwoPictureBinding.inflate(layoutInflater).also { setContentView(it.root) }
         binding.button.setOnClickListener {
-
+            GLAccess.readAssests("shaders/fragment_amaro.glsl",resources.assets)
         }
 
 
@@ -34,7 +34,7 @@ class GLMixTwoPictureActivity:AppCompatActivity() {
                 thread {
                     val bmp1 = BitmapFactory.decodeResource(resources,R.drawable.shiyuanmeili)
                     val bmp2 = BitmapFactory.decodeResource(resources,R.drawable.liyingai)
-                    GLAccess.drawTexture(bmp1,bmp2,binding.glsurfaceview.holder.surface)
+                    GLAccess.drawTexture(bmp1,bmp2,binding.glsurfaceview.holder.surface,resources.assets)
                 }
             }
 
