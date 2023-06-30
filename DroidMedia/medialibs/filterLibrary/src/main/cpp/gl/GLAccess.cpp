@@ -210,12 +210,16 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuv(JNIEnv *env, jobject th
     LOGD("load yuv start");
     auto *routine = new EGLRoutine();
     routine->eglSetup(env, surface);
+    auto assetReader = new AssetReader();
 
+    const char* vertexShader = assetReader->readAssets(env,"shader2/vertexShader.glsl",assetmanager);
     GLint vsh = routine->initShader(vertexShader, GL_VERTEX_SHADER);
 //    GLint fsh = routine->initShader(fragYUV420P, GL_FRAGMENT_SHADER);
 
 //    GLint fsh = routine->initShader(fragYUV420P_SPLIT, GL_FRAGMENT_SHADER);
+    const char* fragYUV420P_split_vertical_two = assetReader->readAssets(env,"shader2/fragYUV420P_SPLIT.glsl",assetmanager);
     GLint fsh = routine->initShader(fragYUV420P_split_vertical_two, GL_FRAGMENT_SHADER);
+    delete assetReader;
 
 
     //创建渲染程序
