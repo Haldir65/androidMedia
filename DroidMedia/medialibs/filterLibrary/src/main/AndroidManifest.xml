@@ -10,5 +10,7 @@
         <activity android:name="com.cgfay.filterlibrary.ui.NativeRenderMain3Activity" />
         <activity android:name="com.me.harris.filterlibrary.opengl.GLMixTwoPictureActivity" />
         <activity android:name="com.me.harris.filterlibrary.opengl.GLLoadYUVActivity" />
+        <activity android:name="com.me.harris.filterlibrary.opengl.GLTransformActivity" />
+        <activity android:name="com.me.harris.filterlibrary.opengl.GLGaussianBlurActivity" />
     </application>
 </manifest>

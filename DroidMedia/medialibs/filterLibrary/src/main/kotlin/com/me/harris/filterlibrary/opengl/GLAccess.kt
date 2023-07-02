@@ -14,6 +14,8 @@ object GLAccess {
     external fun drawTexture(bitmap:Bitmap,bitmap1:Bitmap,surface:Surface,assetmanager:AssetManager)
 
     external fun loadYuv(surface:Surface,assetmanager:AssetManager)
+    external fun loadYuvTransform(surface:Surface,assetmanager:AssetManager,filterType:Int)
+    external fun loadYuvGaussianBlur(surface:Surface,assetmanager:AssetManager)
     external fun readAssests(name:String,assetmanager:AssetManager)
 
 }

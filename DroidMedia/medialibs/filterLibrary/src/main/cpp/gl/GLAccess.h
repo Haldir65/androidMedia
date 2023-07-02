@@ -177,4 +177,7 @@
 //        "    FragColor = vec4(rgb, 1.0);\n"
 //        " }";
 
+
+float getTransformMatrix(int scaleDuration, int frame);
+
 #endif //DROIDMEDIA_GLACCESS_H

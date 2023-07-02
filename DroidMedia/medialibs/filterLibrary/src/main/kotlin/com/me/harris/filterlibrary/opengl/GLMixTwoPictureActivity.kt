@@ -28,7 +28,6 @@ class GLMixTwoPictureActivity:AppCompatActivity() {
             GLAccess.readAssests("shaders/fragment_amaro.glsl",resources.assets)
         }
 
-
         binding.glsurfaceview.holder.addCallback(object:SurfaceHolder.Callback{
             override fun surfaceCreated(holder: SurfaceHolder) {
                 thread {

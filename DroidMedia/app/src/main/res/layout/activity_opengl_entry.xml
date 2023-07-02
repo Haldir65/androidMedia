@@ -49,6 +49,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/btn3"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="6dp"
@@ -56,10 +57,9 @@
             app:cardElevation="3dp">
 
             <TextView
-                android:id="@+id/btn3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:background="@android:color/white"
                 android:text="load yuv ndk asset"
                 android:textAllCaps="false" />
@@ -67,6 +67,7 @@
 
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/btn4"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="6dp"
@@ -74,17 +75,17 @@
             app:cardElevation="3dp">
 
             <TextView
-                android:id="@+id/btn4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:background="@android:color/white"
-                android:text=""
+                android:text="旋转，位移"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/btn5"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="6dp"
@@ -92,12 +93,11 @@
             app:cardElevation="3dp">
 
             <TextView
-                android:id="@+id/btn5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:background="@android:color/white"
-                android:text=""
+                android:text="高斯模糊"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
