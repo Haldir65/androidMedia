@@ -12,5 +12,19 @@
         <activity android:name="com.me.harris.filterlibrary.opengl.GLLoadYUVActivity" />
         <activity android:name="com.me.harris.filterlibrary.opengl.GLTransformActivity" />
         <activity android:name="com.me.harris.filterlibrary.opengl.GLGaussianBlurActivity" />
+
+        <activity android:name="com.videffects.sample.view.AssetsGalleryActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name="com.videffects.sample.view.SamplePlayerActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:screenOrientation="landscape"
+            >
+        </activity>
+
+        <activity
+            android:name="com.videffects.sample.view.VideoActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 </manifest>

@@ -10,6 +10,8 @@ import com.me.harris.awesomelib.viewBinding
 import com.me.harris.filterlibrary.baisc.FilterBasicActivity
 import com.me.harris.filterlibrary.imagefilter.ImageFilterActivity
 import com.me.harris.filterlibrary.databinding.ActivityFilterEntryBinding
+import com.videffects.sample.view.AssetsGalleryActivity
+import com.videffects.sample.view.SamplePlayerActivity
 
 class FilterEntryActivity:AppCompatActivity(R.layout.activity_filter_entry) {
 
@@ -32,7 +34,12 @@ class FilterEntryActivity:AppCompatActivity(R.layout.activity_filter_entry) {
         binding.card5.setOnClickListener {
             startActivity(Intent(this, NativeRenderMain3Activity::class.java))
         }
-
+        binding.card6.setOnClickListener {
+            startActivity(Intent(this, AssetsGalleryActivity::class.java))
+        }
+        binding.card7.setOnClickListener {
+//            startActivity(Intent(this, SamplePlayerActivity::class.java))
+        }
     }
 
 
