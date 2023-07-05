@@ -10,7 +10,9 @@ void main()
       gl_FragColor = vec4(fGrayColor, fGrayColor, fGrayColor, 1.0);
     */
 
-  ## or if you hate gray color
+  /*
+     or if you hate gray color
+  */
   gl_FragColor = texture2D(uTextureSampler, vTextureCoord);
 
 }

@@ -5,11 +5,13 @@
 #include "EGLRoutine.h"
 
 EGLRoutine::EGLRoutine() {
-
+    LOGD("EGLRoutine constructor");
 }
 
 EGLRoutine::~EGLRoutine() {
-
+    LOGD("EGLRoutine destructor, called by delete");
+    this->mEglDisplay = nullptr;
+    this->mGlSurface = nullptr;
 }
 
 void EGLRoutine::eglSetup(JNIEnv *env, jobject surface) {

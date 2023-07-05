@@ -225,7 +225,8 @@ JNIEXPORT void JNICALL
 Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuv(JNIEnv *env, jobject thiz, jobject surface,
                                                          jobject assetmanager) {
     LOGD("load yuv start  https://juejin.cn/post/7160304816877469733 合并三个向量以及texture函数和sample2D的解释");
-    auto *routine = new EGLRoutine();
+    EGLRoutine routineObj; // allocate on stack
+    auto routine = &routineObj;
     routine->eglSetup(env, surface);
     auto assetReader = new AssetReader();
 
@@ -444,7 +445,7 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuv(JNIEnv *env, jobject th
         usleep(4000);
     }
 
-    delete routine;
+//    delete routine;
 
 }
 extern "C"

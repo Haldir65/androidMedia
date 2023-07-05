@@ -103,3 +103,5 @@ https://github.com/inotify-tools/inotify-tools/blob/master/libinotifytools/src/e
 https://github.com/fsnotify/fsnotify
 
 https://gitlab.com/king011/go-socks5
+
+https://www.jianshu.com/p/74b0fcff8b66

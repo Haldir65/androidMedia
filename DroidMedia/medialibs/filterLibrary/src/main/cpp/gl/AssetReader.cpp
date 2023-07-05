@@ -5,11 +5,11 @@
 #include "AssetReader.h"
 
 AssetReader::AssetReader() {
-
+    LOGD("AssetReader constructor ");
 }
 
 AssetReader::~AssetReader() {
-
+    LOGD("AssetReader destructor");
 }
 
 char *AssetReader::readAssets(JNIEnv *env, char *name, jobject assetmanager) {

@@ -11,6 +11,7 @@ import android.util.Log;
 import com.me.harris.filterlibrary.R;
 import com.sherazkhilji.videffects.BlackAndWhiteEffect;
 import com.sherazkhilji.videffects.DuotoneEffect;
+import com.sherazkhilji.videffects.SaturationEffect;
 import com.sherazkhilji.videffects.view.VideoSurfaceView;
 
 public class SamplePlayerActivity extends Activity {
@@ -52,7 +53,8 @@ public class SamplePlayerActivity extends Activity {
         mVideoView = (VideoSurfaceView) findViewById(R.id.mVideoSurfaceView);
         mVideoView.init(mMediaPlayer,
 //                new DuotoneEffect(Color.parseColor("#3498DB"), Color.YELLOW)
-                new BlackAndWhiteEffect()
+//                new BlackAndWhiteEffect()
+                new SaturationEffect(-1)
         );
 //      If you want to change effect then just call mVideoView.init() again
 //      and then call mVideoView.onResume()
