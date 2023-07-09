@@ -8,6 +8,7 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import com.me.harris.filterlibrary.R
 import com.me.harris.filterlibrary.databinding.ActivityVideoBinding
 import com.sherazkhilji.videffects.filter.NoEffectFilter
@@ -50,6 +52,24 @@ class VideoActivity : AppCompatActivity() {
             ?: throw RuntimeException("Asset name is null")
         videoController = VideoController(this, filename)
         binding.progress.setOnClickListener { }
+//        addMenuProvider(object : MenuProvider {
+//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                this@VideoActivity.onCreateOptionsMenu(menu)
+//            }
+//
+//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+//               this@VideoActivity.onOptionsItemSelected(menuItem)
+//                return true
+//            }
+//        })
+        binding.btnChooseFilter.setOnClickListener { videoController?.chooseShader() }
+        binding.btnSaveFile.setOnClickListener {
+            if (isStoragePermissionNotGranted()) {
+                requestStoragePermissions()
+            } else {
+                videoController?.saveVideo()
+            }
+        }
     }
 
     fun setupVideoSurfaceView(mediaPlayer: MediaPlayer, width: Double, height: Double) {
@@ -59,7 +79,7 @@ class VideoActivity : AppCompatActivity() {
 
     fun setupSeekBar(onSeekBarChangeListener: SeekBar.OnSeekBarChangeListener) {
         binding.intensitySeekBar.max = 100
-        binding.intensitySeekBar.isEnabled = false
+        binding.intensitySeekBar.isEnabled = true
         binding.intensitySeekBar.setOnSeekBarChangeListener(onSeekBarChangeListener)
     }
 

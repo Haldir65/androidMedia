@@ -2,6 +2,7 @@ package com.me.harris.filterlibrary
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.cgfay.filterlibrary.ui.NativeRenderMain2Activity
 import com.cgfay.filterlibrary.ui.NativeRenderMain3Activity

@@ -2,7 +2,7 @@
 
 buildscript {
 
-    ext.kotlin_version = '1.8.22'
+    ext.kotlin_version = '1.8.22' // dagger not support 1.9.0 yet
     ext.hilt_version = "2.44"
 
     def slurper = new groovy.json.JsonSlurper()
@@ -24,7 +24,7 @@ buildscript {
         // by putting it last in the repository block in your settings.gradle file.
     }
     dependencies {
-//        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.0.2'
 
         classpath libs.android.gradle.build.plugin
         classpath libs.kotlin.gradle.plugin

@@ -57,7 +57,7 @@ object VideoUtil {
             strVideo = if (selfHosted) {
                 fs[1].absolutePath
             } else if (glassy){
-                fs.lastOrNull { f -> f.name.endsWith(".webm")}?.absolutePath.orEmpty()
+                fs.lastOrNull { f -> f.name.endsWith(".mp4")}?.absolutePath.orEmpty()
             }
             else {
                 fs.firstOrNull { it.name.contains("video_004") }?.absolutePath.orEmpty()

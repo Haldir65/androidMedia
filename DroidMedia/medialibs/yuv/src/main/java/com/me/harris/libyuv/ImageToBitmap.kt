@@ -13,6 +13,7 @@ object ImageToBitmap {
 
     // critical !!
      fun getBitmapFromImageUsingLibYUV(image: Image): Bitmap {
+        // todo 如果一直crash ,二分法，这里一行一行地注释掉
         require(image.format == ImageFormat.YUV_420_888)
         var yuvFrame = YuvUtils.convertToI420(image)
         yuvFrame = YuvUtils.scale(yuvFrame, image.width/4, image.height/4, Constants.FILTER_BOX)
