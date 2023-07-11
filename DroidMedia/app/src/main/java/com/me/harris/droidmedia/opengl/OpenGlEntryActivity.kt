@@ -8,6 +8,7 @@ import com.me.harris.droidmedia.R
 import com.me.harris.droidmedia.databinding.ActivityOpenglEntryBinding
 import com.me.harris.droidmedia.opengl.egl.TextureViewRenderViaEglActivity
 import com.me.harris.filterlibrary.opengl.GLGaussianBlurActivity
+import com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity
 import com.me.harris.filterlibrary.opengl.GLLoadYUVActivity
 import com.me.harris.filterlibrary.opengl.GLMixTwoPictureActivity
 import com.me.harris.filterlibrary.opengl.GLTransformActivity
@@ -33,6 +34,9 @@ class OpenGlEntryActivity:AppCompatActivity()
         }
         binding.btn5.setOnClickListener {
             startActivity(Intent(this,GLGaussianBlurActivity::class.java))
+        }
+        binding.btn6.setOnClickListener {
+            startActivity(Intent(this,GLLoadBitmapActivity::class.java))
         }
 
     }
