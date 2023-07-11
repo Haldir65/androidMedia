@@ -91,7 +91,9 @@ public class CameraV2Renderer implements GLSurfaceView.Renderer {
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mOESTextureId);
         GLES20.glUniform1i(uTextureSamplerLocation, 0);
         GLES20.glUniformMatrix4fv(uTextureMatrixLocation, 1, false, transformMatrix, 0);
-
+        if (mFilterEngine!=null){
+            mFilterEngine.drawTexture(transformMatrix);
+        }
         if (mDataBuffer != null) {
             mDataBuffer.position(0);
             GLES20.glEnableVertexAttribArray(aPositionLocation);

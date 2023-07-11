@@ -69,6 +69,7 @@ public class CameraV1Renderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        // GL10 这个参数是opengl es 1.0遗留下来的，如果使用opengl 2.0及以上可以忽略
         Long t1 = System.currentTimeMillis();
         if (mSurfaceTexture != null) {
             mSurfaceTexture.updateTexImage();
@@ -94,9 +95,14 @@ public class CameraV1Renderer implements GLSurfaceView.Renderer {
         GLES20.glUniform1i(uTextureSamplerLocation, 0);
         GLES20.glUniformMatrix4fv(uTextureMatrixLocation, 1, false, transformMatrix, 0);
 
+        if (mFilterEngine!=null){
+            mFilterEngine.drawTexture(transformMatrix);
+        }
+
         if (mDataBuffer != null) {
             mDataBuffer.position(0);
             GLES20.glEnableVertexAttribArray(aPositionLocation);
+            // 2 代表这个属性每次读取几个数据，GL_FLOAT代表数据类型，false标识我们暂时忽略此参数，0表示跨度，mDataBuffer就是告诉OpenGL ES去哪里读数据
             GLES20.glVertexAttribPointer(aPositionLocation, 2, GLES20.GL_FLOAT, false, 16, mDataBuffer);
 
             mDataBuffer.position(2);
