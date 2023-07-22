@@ -25,7 +25,9 @@
         <activity
             android:name="com.videffects.sample.view.VideoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity" />
+        <activity android:name="com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity"
+
+            />
 
     </application>
 </manifest>
