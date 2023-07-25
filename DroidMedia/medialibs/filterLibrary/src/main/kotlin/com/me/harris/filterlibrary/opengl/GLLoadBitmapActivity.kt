@@ -34,6 +34,7 @@ import javax.microedition.khronos.opengles.GL10
  *
  * https://blog.csdn.net/lb377463323/article/details/64452714
  *  https://github.com/glumes/AndroidOpenGLTutorial/blob/master/opengl_tutorial/src/main/java/com/glumes/openglbasicshape/transition/TransitionRender.java#L39
+ *  https://www.cnblogs.com/8335IT/p/16390971.html
  */
 class GLLoadBitmapActivity :AppCompatActivity(){
 
@@ -61,10 +62,10 @@ class GLLoadBitmapActivity :AppCompatActivity(){
 //    )
     //代表这张图铺在什么位置
     private val CUBES2 = floatArrayOf(
-        0f,-0.5f, // 左下
-        0.5f,-0.5f, // 右下
+        0f,-1f, // 左下
+        1f,-1f, // 右下
         -0.0f,0.0f, // 左上
-        0.5f,0.0f // 右上
+        1f,0.0f // 右上
     )
 
     // 纹理也有坐标，称为UV坐标，或者ST坐标。UV坐标定义为左上角（0，0）
@@ -157,7 +158,7 @@ class GLLoadBitmapActivity :AppCompatActivity(){
                     textTure = loadTexture(this@GLLoadBitmapActivity, R.drawable.image_017)
                 }
                 if (textTure2 == 0){
-                    textTure2 = loadTexture(this@GLLoadBitmapActivity, R.drawable.image_008)
+                    textTure2 = loadTexture(this@GLLoadBitmapActivity, R.drawable.p6 )
                 }
                 if (aPositionLocation < 0){
                     aPositionLocation = GLES30.glGetAttribLocation(mProgramHandle, "a_Position");
