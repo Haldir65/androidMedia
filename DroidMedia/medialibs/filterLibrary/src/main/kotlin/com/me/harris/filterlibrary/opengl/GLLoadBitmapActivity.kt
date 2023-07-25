@@ -53,11 +53,18 @@ class GLLoadBitmapActivity :AppCompatActivity(){
         1.0f,1.0f
     )
 
+//    private val CUBES2 = floatArrayOf(
+//        -0.5f,-0.5f,
+//        0.5f,-0.5f,
+//        -0.5f,0.5f,
+//        0.5f,0.5f
+//    )
+    //代表这张图铺在什么位置
     private val CUBES2 = floatArrayOf(
-        -0.5f,-0.5f,
-        0.5f,-0.5f,
-        -0.5f,0.5f,
-        0.5f,0.5f
+        0f,-0.5f, // 左下
+        0.5f,-0.5f, // 右下
+        -0.0f,0.0f, // 左上
+        0.5f,0.0f // 右上
     )
 
     // 纹理也有坐标，称为UV坐标，或者ST坐标。UV坐标定义为左上角（0，0）
@@ -72,10 +79,10 @@ class GLLoadBitmapActivity :AppCompatActivity(){
 
 
     private val TEXTURE_NO_ROTATION2 = floatArrayOf(
-        0.0f, 0.5f,
-        0.5f,0.5f,
+        0.0f, 1f,
+        1f,1f,
         0.0f,0.0f,
-        0.5f,0.0f
+        1f,0.0f
     )
 
 
