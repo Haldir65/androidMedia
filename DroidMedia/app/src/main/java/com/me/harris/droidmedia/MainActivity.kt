@@ -25,6 +25,7 @@ import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
+import com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
 import com.me.harris.mediainfo.MediaInfoProbeActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
@@ -123,6 +124,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             )
         } else {
             VideoUtil.setUrl()
+            startActivity(Intent(this, GLLoadBitmapActivity::class.java))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()){

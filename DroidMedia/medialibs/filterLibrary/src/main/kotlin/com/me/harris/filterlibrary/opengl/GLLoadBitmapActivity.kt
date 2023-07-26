@@ -158,7 +158,7 @@ class GLLoadBitmapActivity :AppCompatActivity(){
                     textTure = loadTexture(this@GLLoadBitmapActivity, R.drawable.image_017)
                 }
                 if (textTure2 == 0){
-                    textTure2 = loadTexture(this@GLLoadBitmapActivity, R.drawable.p6 )
+                    textTure2 = loadTexture(this@GLLoadBitmapActivity, R.drawable.p8 )
                 }
                 if (aPositionLocation < 0){
                     aPositionLocation = GLES30.glGetAttribLocation(mProgramHandle, "a_Position");
@@ -214,12 +214,12 @@ class GLLoadBitmapActivity :AppCompatActivity(){
                     if (textTure2>0){
 
                         // 顶点着色器的顶点坐标
-                        mGLCubeBuffer2.position(0);
-                        GLES30.glVertexAttribPointer(aPositionLocation, 2, GLES30.GL_FLOAT, false, 0, mGLCubeBuffer2);
+                        mGLCubeBuffer.position(0);
+                        GLES30.glVertexAttribPointer(aPositionLocation, 2, GLES30.GL_FLOAT, false, 0, mGLCubeBuffer);
                         GLES30.glEnableVertexAttribArray(aPositionLocation);
                         // 顶点着色器的纹理坐标
-                        mGLTextureBuffer2.position(0);
-                        GLES30.glVertexAttribPointer(uTextureUnitLocation2, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer2);
+                        mGLTextureBuffer.position(0);
+                        GLES30.glVertexAttribPointer(uTextureUnitLocation2, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer);
 
                         GLES30.glEnableVertexAttribArray(uTextureUnitLocation2);
                         GLES30.glActiveTexture(GLES30.GL_TEXTURE1) // 激活纹理单元一
