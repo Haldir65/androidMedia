@@ -80,10 +80,10 @@ class GLLoadBitmapActivity :AppCompatActivity(){
 
 
     private val TEXTURE_NO_ROTATION2 = floatArrayOf(
-        0.0f, 1f,
-        1f,1f,
+        0.0f, 0.5f,
+        0.5f,0.5f,
         0.0f,0.0f,
-        1f,0.0f
+        0.5f,0.0f
     )
 
 
@@ -218,8 +218,8 @@ class GLLoadBitmapActivity :AppCompatActivity(){
                         GLES30.glVertexAttribPointer(aPositionLocation, 2, GLES30.GL_FLOAT, false, 0, mGLCubeBuffer);
                         GLES30.glEnableVertexAttribArray(aPositionLocation);
                         // 顶点着色器的纹理坐标
-                        mGLTextureBuffer.position(0);
-                        GLES30.glVertexAttribPointer(uTextureUnitLocation2, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer);
+                        mGLTextureBuffer2.position(0);
+                        GLES30.glVertexAttribPointer(uTextureUnitLocation2, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer2);
 
                         GLES30.glEnableVertexAttribArray(uTextureUnitLocation2);
                         GLES30.glActiveTexture(GLES30.GL_TEXTURE1) // 激活纹理单元一
