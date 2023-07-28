@@ -26,7 +26,7 @@ androixJunit="1.1.5"
 espresso="3.5.1"
 x_crash="3.0.0"
 
-kotlin = "1.8.21"
+kotlin = "1.9.0"
 kotlinxCoroutines = "1.7.2"
 kotlinxDatetime = "0.4.0"
 kotlinxSerializationJson = "1.5.1"
