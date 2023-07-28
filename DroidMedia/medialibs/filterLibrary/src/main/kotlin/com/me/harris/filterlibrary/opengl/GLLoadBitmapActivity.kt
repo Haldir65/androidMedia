@@ -35,6 +35,8 @@ import javax.microedition.khronos.opengles.GL10
  * https://blog.csdn.net/lb377463323/article/details/64452714
  *  https://github.com/glumes/AndroidOpenGLTutorial/blob/master/opengl_tutorial/src/main/java/com/glumes/openglbasicshape/transition/TransitionRender.java#L39
  *  https://www.cnblogs.com/8335IT/p/16390971.html
+ *
+ *  todo: pip,load two video stream
  */
 class GLLoadBitmapActivity :AppCompatActivity(){
 
