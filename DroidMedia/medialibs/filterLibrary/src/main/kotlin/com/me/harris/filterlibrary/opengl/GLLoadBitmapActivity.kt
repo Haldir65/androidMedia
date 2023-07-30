@@ -3,17 +3,14 @@ package com.me.harris.filterlibrary.opengl
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES20
-import android.opengl.GLES30.GL_FLOAT
+import android.opengl.GLES30
 import android.opengl.GLES30.GL_LINEAR
 import android.opengl.GLES30.GL_LINEAR_MIPMAP_LINEAR
 import android.opengl.GLES30.GL_TEXTURE_2D
 import android.opengl.GLES30.GL_TEXTURE_MAG_FILTER
 import android.opengl.GLES30.GL_TEXTURE_MIN_FILTER
-import android.opengl.GLES30.GL_TRIANGLE_FAN
 import android.opengl.GLES30.glBindTexture
 import android.opengl.GLES30.glGenerateMipmap
-import android.opengl.GLES30.glTexParameteri
-import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.opengl.GLUtils.texImage2D
 import android.os.Bundle
@@ -37,6 +34,10 @@ import javax.microedition.khronos.opengles.GL10
  *  https://www.cnblogs.com/8335IT/p/16390971.html
  *
  *  todo: pip,load two video stream
+ *  https://juejin.cn/post/6854573205378727949 坐标颠倒问题
+ *  https://www.cnblogs.com/renhui/p/8145734.html
+ *  https://www.jianshu.com/p/dfc82ca86a45
+ *  [圣经](https://learnopengl-cn.github.io/)
  */
 class GLLoadBitmapActivity :AppCompatActivity(){
 
@@ -62,7 +63,8 @@ class GLLoadBitmapActivity :AppCompatActivity(){
 //        -0.5f,0.5f,
 //        0.5f,0.5f
 //    )
-    //代表这张图铺在什么位置
+
+    //，左上角为原点，代表这张图铺在什么位置
     private val CUBES2 = floatArrayOf(
         0f,-1f, // 左下
         1f,-1f, // 右下
@@ -70,9 +72,7 @@ class GLLoadBitmapActivity :AppCompatActivity(){
         1f,0.0f // 右上
     )
 
-    // 纹理也有坐标，称为UV坐标，或者ST坐标。UV坐标定义为左上角（0，0）
-    // 右下角(1,1)
-    // 纹理坐标，每个坐标的纹理采样对应上面顶点坐标
+    // 纹理坐标，纹理坐标原点在左下角
     private val TEXTURE_NO_ROTATION = floatArrayOf(
         0.0f, 1.0f,
         1.0f,1.0f,
@@ -81,11 +81,30 @@ class GLLoadBitmapActivity :AppCompatActivity(){
     )
 
 
+    // 取这张图的哪部分，左上角为坐标原点
+    // 顺序的话，
+    // 左下 -> 右下 -> 左上 -> 右上
     private val TEXTURE_NO_ROTATION2 = floatArrayOf(
-        0.0f, 0.5f,
-        0.5f,0.5f,
+//        0.0f, 0.5f,
+//        0.5f,0.5f,
+//        0.0f,0.0f,  //左上角1/4
+//        0.5f,0.0f
+
+
+//        0.25f,0.75f,
+//        0.75f,0.75f,
+//        0.25f,0.25f, // 居中取1/4
+//        0.75f,0.25f,
+
+//         0.1f,0.90f,
+//         0.9f,0.9f,
+//         0.1f,0.1f, // 0.1-0.9
+//         0.9f,0.1f,
+
+        0.0f, 1.0f,
+        1.0f,1.0f,
         0.0f,0.0f,
-        0.5f,0.0f
+        1.0f,0.0f //全部
     )
 
 
@@ -157,10 +176,10 @@ class GLLoadBitmapActivity :AppCompatActivity(){
                     mProgramHandle = GlUtil.createProgram(vertextShader,fragShader)
                 }
                 if (textTure == 0){
-                    textTure = loadTexture(this@GLLoadBitmapActivity, R.drawable.image_017)
+                    textTure = loadTexture(this@GLLoadBitmapActivity, R.drawable.p1)
                 }
                 if (textTure2 == 0){
-                    textTure2 = loadTexture(this@GLLoadBitmapActivity, R.drawable.p8 )
+                    textTure2 = loadTexture(this@GLLoadBitmapActivity, R.drawable.image_017 )
                 }
                 if (aPositionLocation < 0){
                     aPositionLocation = GLES30.glGetAttribLocation(mProgramHandle, "a_Position");
@@ -185,6 +204,7 @@ class GLLoadBitmapActivity :AppCompatActivity(){
             }
 
             override fun onDrawFrame(gl: GL10?) {
+                GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
                 if (textTure!=0){
                     // https://blog.csdn.net/lb377463323/article/details/64452714
@@ -192,48 +212,65 @@ class GLLoadBitmapActivity :AppCompatActivity(){
                     Log.w("=A=","mProgramHandle = ${mProgramHandle}")
                     Log.w("=A=","uTextureUnitLocation = ${uTextureUnitLocation}")
 
-
                     // 传入图片纹理
                     if (textTure>0){
-                        // 顶点着色器的顶点坐标
-                        mGLCubeBuffer.position(0);
-                        GLES30.glVertexAttribPointer(aPositionLocation, 2, GLES30.GL_FLOAT, false, 0, mGLCubeBuffer);
-                        GLES30.glEnableVertexAttribArray(aPositionLocation);
-                        // 顶点着色器的纹理坐标
-                        mGLTextureBuffer.position(0);
-                        GLES30.glVertexAttribPointer(uTextureUnitLocation, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer);
-
-                        GLES30.glEnableVertexAttribArray(uTextureUnitLocation);
                         GLES30.glActiveTexture(GLES30.GL_TEXTURE0) // 激活纹理单元一
                         GLES30.glBindTexture(GL_TEXTURE_2D,textTure) // 绑定纹理到这个纹理单元
                         //把选定的纹理单元传递给片段着色器中的u_TextureUnit
                         GLES30.glUniform1i(uTextureUnitLocation,0)
-                    }
-                    //这里不画的话，底部是黑色的，不知道为什么
-                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, 4);
 
-                    // 传入图片纹理
-                    if (textTure2>0){
-
-                        // 顶点着色器的顶点坐标
+                        // 顶点坐标
                         mGLCubeBuffer.position(0);
                         GLES30.glVertexAttribPointer(aPositionLocation, 2, GLES30.GL_FLOAT, false, 0, mGLCubeBuffer);
                         GLES30.glEnableVertexAttribArray(aPositionLocation);
-                        // 顶点着色器的纹理坐标
-                        mGLTextureBuffer2.position(0);
-                        GLES30.glVertexAttribPointer(uTextureUnitLocation2, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer2);
 
-                        GLES30.glEnableVertexAttribArray(uTextureUnitLocation2);
+                        // 纹理坐标
+                        mGLTextureBuffer.position(0);
+                        GLES30.glVertexAttribPointer(aTextureCoordinatesLocation, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer);
+                        GLES30.glEnableVertexAttribArray(aTextureCoordinatesLocation)
+
+
+                        GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, 4);
+
+//                        GLES30.glDisableVertexAttribArray(aTextureCoordinatesLocation)
+//                        GLES30.glDisableVertexAttribArray(uTextureUnitLocation)
+                    }
+
+
+                    // 传入图片纹理
+                    if (textTure2>0  ){
+
                         GLES30.glActiveTexture(GLES30.GL_TEXTURE1) // 激活纹理单元一
                         GLES30.glBindTexture(GL_TEXTURE_2D,textTure2) // 绑定纹理到这个纹理单元
                         //把选定的纹理单元传递给片段着色器中的u_TextureUnit
                         GLES30.glUniform1i(uTextureUnitLocation2,1)
+
+                    //   顶点着色器的顶点坐标
+                        mGLCubeBuffer2.position(0);
+                        GLES30.glVertexAttribPointer(aTextureCoordinatesLocation2, 2, GLES30.GL_FLOAT, false, 0, mGLCubeBuffer2);
+                        GLES30.glEnableVertexAttribArray(aTextureCoordinatesLocation2);
+
+
+                        //着色器的纹理坐标
+                        mGLTextureBuffer2.position(0);
+                        GLES30.glVertexAttribPointer(aTextureCoordinatesLocation2, 2, GLES30.GL_FLOAT, false, 0, mGLTextureBuffer2);
+                        GLES30.glEnableVertexAttribArray(aTextureCoordinatesLocation2);
+
+
+
+                        GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, 4);
+
+
+
                     }
 
-                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, 4);
+                    GLES30.glDisableVertexAttribArray(aTextureCoordinatesLocation)
+                    GLES30.glDisableVertexAttribArray(uTextureUnitLocation)
+                    GLES30.glDisableVertexAttribArray(aTextureCoordinatesLocation2)
+                    GLES30.glDisableVertexAttribArray(uTextureUnitLocation2)
+
 //                    GLES30.glDrawArrays(GLES30.GL_TRIANGLE_FAN,0,4)
                     GLES30.glDisableVertexAttribArray(aPositionLocation)
-                    GLES30.glDisableVertexAttribArray(aTextureCoordinatesLocation)
                     GLES30.glBindTexture(GLES30.GL_TEXTURE_2D,0) // 绑定纹理到这个纹理单元
                 }
             }
