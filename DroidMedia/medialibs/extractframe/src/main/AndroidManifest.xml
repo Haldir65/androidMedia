@@ -11,5 +11,7 @@
         <activity
             android:name=".DecodeFrameActivity"
             android:screenOrientation="portrait" />
+        <activity android:name="com.me.harris.extractframe.ExtractFrameUsingParallelExtractorActivity" />
+        <activity android:name="com.me.harris.extractframe.ExtractFrameEntryActivity" />
     </application>
 </manifest>

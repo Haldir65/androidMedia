@@ -24,6 +24,8 @@ import com.me.harris.awesomelib.utils.StoragePermissSucks
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
+import com.me.harris.extractframe.ExtractFrameEntryActivity
+import com.me.harris.extractframe.ExtractFrameUsingParallelExtractorActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
 import com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             val user1 = UserInfo("john",100L, arrayListOf("user1","user2"))
             val user2 = SubUserInfo("john2",101L, arrayListOf("subaffs"), arrayOf("SubJohn"))
             val user3 = JUserInfo("john3",101L, arrayListOf("aff1","aff2"))
-            startActivity(Intent(this, ExtractFrameAndSaveKeyFrameToFileActivity::class.java).apply {
+            startActivity(Intent(this, ExtractFrameEntryActivity::class.java).apply {
                 putExtra("user3",user3)
                 putExtra("user1",user1)
                 putExtra("user2",user2)
@@ -124,7 +126,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             )
         } else {
             VideoUtil.setUrl()
-            startActivity(Intent(this, GLLoadBitmapActivity::class.java))
+            startActivity(Intent(this, ExtractFrameAndSaveKeyFrameToFileActivity::class.java))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()){

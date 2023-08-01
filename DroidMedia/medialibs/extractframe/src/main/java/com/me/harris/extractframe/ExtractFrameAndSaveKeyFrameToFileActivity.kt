@@ -19,6 +19,7 @@ import com.me.harris.awesomelib.viewBinding
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.extractframe.databinding.ActivityExtractFrameToFileBinding
 import com.me.harris.extractframe.databinding.ItemExtractingFrameNailBinding
+import com.me.harris.extractframe.ui.VideoFrameDisplayAdapter
 import com.me.harris.extractframe.viewmodel.ExtractFrameViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -124,17 +125,22 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
             withContext(Dispatchers.IO){
                 File(resultDir).deleteRecursively()
             }
+            if (!File(resultDir).exists()){
+                File(resultDir).mkdirs()
+            }
 //            refreshUi()
             val fPath = VideoUtil.strVideo
             withContext(Dispatchers.IO){
                 val time = measureTimedValue {
 //                    viewModel.getKeyFrames(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH) //1.  结果正确， 低端，MediaMetaDataRetriever
-//                    viewModel.getKeyFramesViaMediaCodec(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH2) // 2. 结果正确，速度慢，用的YuvImage
-                    viewModel.extractFrameInterval(filePath = fPath, intervalMs = 1000, scale = 4, cancellationSignal = singal) // 搞定
+//                    viewModel.getKeyFramesViaMediaCodec(fPath,resultDir) // 2. 结果正确，速度慢，用的YuvImage ,超级慢
+                    viewModel.extractFrameInterval(filePath = fPath, intervalMs = 5000, scale = 4, cancellationSignal = singal) // 搞定,但是只抽了4张图出来？
                     Log.e("=A=","we have bitmap now")
-                    val bmp = viewModel.extractFrameAtTimeUs(fPath,60_000_000)
-                    withContext(Dispatchers.Main.immediate){
-                        binding.image.setImageBitmap(bmp)
+                    if (false){
+                        val bmp = viewModel.extractFrameAtTimeUs(fPath,60_000_000)
+                        withContext(Dispatchers.Main.immediate){
+                            binding.image.setImageBitmap(bmp)
+                        }
                     }
                 }
 
@@ -193,34 +199,6 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
         singal.cancel()
     }
 
-
 }
 
 
-private class VideoFrameDisplayViewHolder(val binding: ItemExtractingFrameNailBinding):RecyclerView.ViewHolder(binding.root) {
-    fun bindData(imageUrl:String,position:Int){
-        val ctx = binding.root.context.applicationContext
-        binding.image.load(File(imageUrl)){
-//            transformations(CircleCropTransformation())
-            transformations(RoundedCornersTransformation(25f))
-//            transformations(GrayscaleTransformation())
-//            transformations(BlurTransformation(ctx))
-//            transformations(BlurTransformation(ctx, 5f))
-        }
-        binding.desc.text = position.toString()
-    }
-}
-private class VideoFrameDisplayAdapter(): RecyclerView.Adapter<VideoFrameDisplayViewHolder>() {
-
-     val list = mutableListOf<String>()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoFrameDisplayViewHolder {
-        val binding = ItemExtractingFrameNailBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return VideoFrameDisplayViewHolder(binding)
-    }
-
-    override fun getItemCount() = list.size
-
-    override fun onBindViewHolder(holder: VideoFrameDisplayViewHolder, position: Int) {
-        holder.bindData(list[position],position)
-    }
-}

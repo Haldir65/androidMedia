@@ -97,6 +97,7 @@ dependencies {
     implementation libs.coroutines.android
     implementation libs.androidx.cardview.cardview
     implementation libs.coil.kt
+    implementation libs.okio
     implementation  libs.androidx.recyclerview.recyclerview
     testImplementation libs.junit.junit
     androidTestImplementation libs.androidx.test.junit
