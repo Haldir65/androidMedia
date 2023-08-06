@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             )
         } else {
             VideoUtil.setUrl()
-            startActivity(Intent(this, ExtractFrameAndSaveKeyFrameToFileActivity::class.java))
+//            startActivity(Intent(this, ExtractFrameAndSaveKeyFrameToFileActivity::class.java))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()){

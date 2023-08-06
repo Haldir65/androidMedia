@@ -16,6 +16,8 @@ import com.me.harris.extractframe.parallel.PARALLISM
 import com.me.harris.extractframe.parallel.distributingTasksToIndividualMouse
 import com.me.harris.extractframe.parallel.getVideoDurationInMicroSeconds
 import com.me.harris.extractframe.ui.VideoFrameDisplayAdapter
+import kotlinx.collections.immutable.immutableListOf
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -102,6 +104,14 @@ class ExtractFrameUsingParallelExtractorActivity :AppCompatActivity(R.layout.act
             // with parallel limit at 16 , time cost is 5155
             // with parallel limit at 32 , time cost is 5490
         }
+    }
+
+    private fun testing(){
+
+            val immutableList = persistentListOf("Apple", "Banana", "Cherry")
+
+            // The following line would result in a compilation error, as the immutableList cannot be modified.
+            immutableList.add("Durian")
     }
 
 

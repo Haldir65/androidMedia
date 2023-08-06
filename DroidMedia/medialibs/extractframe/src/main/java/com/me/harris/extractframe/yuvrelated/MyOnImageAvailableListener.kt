@@ -31,7 +31,7 @@ import java.nio.ByteBuffer
             val start = System.currentTimeMillis()
             val bmp = ImageToBitmap.getBitMapFromImageUsingYUVImage(img,scale,rotation) // Java YUVImage，一切正常
 //            val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(img)// libyuv , 表现正常,
-            // 只不过  Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x44 in tid 22175 (HeapTaskDaemon)
+//             只不过  Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x44 in tid 22175 (HeapTaskDaemon)
             // 或者    Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x7f7f7f7f7f7f87 in tid 4885 (ImageReader), pid 3800 (rris.droidmedia)
             Log.w(MediaCodecFrameExtractor.TAG,"got one bitmap not null!!, time cost is ${System.currentTimeMillis() - start} ms")
             callback(bmp)

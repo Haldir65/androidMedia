@@ -95,6 +95,7 @@ dependencies {
     implementation libs.exoplayer.ui
     implementation libs.coroutines.core
     implementation libs.coroutines.android
+    implementation libs.kotlinx.collections.immutable
     implementation libs.androidx.cardview.cardview
     implementation libs.coil.kt
     implementation libs.okio
