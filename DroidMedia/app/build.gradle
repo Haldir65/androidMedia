@@ -20,15 +20,14 @@ def SUPPORTED_ABI = ['arm64-v8a', 'x86', 'x86_64','armeabi-v7a'] as String[]
 
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
+    buildToolsVersion = '34.0.0'
 
-    
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
     }
 
     namespace "com.me.harris.droidmedia"
-    buildToolsVersion '33.0.2'
     ndkVersion '25.1.8937393'
 
     buildFeatures {
@@ -172,11 +171,11 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.activity:activity-ktx:1.7.2'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
+    implementation libs.androidx.core.core.ktx
+    implementation libs.androidx.activity.ktx
+    implementation libs.androidx.cardview.cardview
+    implementation libs.coroutines.core
+    implementation libs.coroutines.android
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation libs.kotlin.stdlib.java8
@@ -210,7 +209,7 @@ dependencies {
     implementation libs.androidx.exfi.interface
 
     // Glide
-implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation libs.glide
 //    kapt 'com.github.bumptech.glide:compiler:4.11.0'
     // okhttp
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
@@ -221,15 +220,15 @@ implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation("com.squareup.okhttp3:logging-interceptor")
 
     implementation libs.retrofit
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation libs.converter.gson
 
 //    implementation group: 'com.jadynai.ai.kotlind', name: 'KotlinD', version: '1.0.5'
     // https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxandroid
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation libs.rxandroid
     // https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.1'
+    implementation libs.rxjava
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava3
-    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation libs.adapter.rxjava3
 
     implementation libs.kotlinx.serialization.json
 
