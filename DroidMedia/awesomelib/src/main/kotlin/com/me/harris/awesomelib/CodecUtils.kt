@@ -77,6 +77,9 @@ object CodecUtils
 
     @JvmStatic
    fun nv21ToI420(data:ByteArray ,width:Int, height: Int):ByteArray{
+        // width = 1980 height = 1080
+        // data.size = 3110400
+        // 1920 * 1080 * 1.5 = 3110400
        val ret = ByteArray(data.size)
        val total = width * height
        val bufferY = ByteBuffer.wrap(ret,0,total)
