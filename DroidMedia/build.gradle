@@ -24,7 +24,7 @@ buildscript {
         // by putting it last in the repository block in your settings.gradle file.
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.1.0'
 
         classpath libs.android.gradle.build.plugin
         classpath libs.kotlin.gradle.plugin
