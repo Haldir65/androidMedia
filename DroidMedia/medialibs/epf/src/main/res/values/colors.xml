@@ -9,4 +9,5 @@
     <color name="frame_bar_color">#ff324c</color>
     <color name="transparent">#00000000</color>
     <color name="white">#ffffff</color>
+    <color name="toast_shadow_color">#cc000000</color>
 </resources>

@@ -3,6 +3,7 @@ package com.me.harris.extractframe.render;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 
 import org.jetbrains.annotations.Nullable;
@@ -142,15 +143,23 @@ public class JfRender implements GLSurfaceView.Renderer {
 
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);//激活纹理
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId_yuv[0]);//绑定纹理
+            long now = System.nanoTime();
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_LUMINANCE, width_yuv, height_yuv, 0, GLES20.GL_LUMINANCE, GLES20.GL_UNSIGNED_BYTE, y);//
+            Log.w("=A=","glTexImage2D y data with size " + (y.limit() - y.position())  + " cost " + (System.nanoTime() - now)+ " nano seconds");
+
 
             GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId_yuv[1]);
+            now = System.nanoTime();
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_LUMINANCE, width_yuv / 2, height_yuv / 2, 0, GLES20.GL_LUMINANCE, GLES20.GL_UNSIGNED_BYTE, u);
+            Log.w("=A=","glTexImage2D u data with size " + (u.limit() - u.position())  + " cost " + (System.nanoTime() - now)+ " nano seconds");
+
 
             GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId_yuv[2]);
+            now = System.nanoTime();
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_LUMINANCE, width_yuv / 2, height_yuv / 2, 0, GLES20.GL_LUMINANCE, GLES20.GL_UNSIGNED_BYTE, v);
+            Log.w("=A=","glTexImage2D v data with size " + (v.limit() - v.position())  + " cost " + (System.nanoTime() - now) + " nano seconds");
 
             GLES20.glUniform1i(sampler_y, 0);
             GLES20.glUniform1i(sampler_u, 1);
