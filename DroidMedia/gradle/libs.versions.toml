@@ -4,8 +4,6 @@ androidGradlePlugin = "8.1.0"
 glide = "4.13.2"
 kotlin_verison = "1.9.0"
 gson = "2.9.0"
-kotlinxCoroutinesAndroid = "1.7.2"
-kotlinxCoroutinesCore = "1.7.2"
 retrofit = "2.9.0"
 cardview = "1.0.0"
 okhttp="4.11.0"
@@ -32,8 +30,7 @@ rxandroid = "3.0.0"
 rxjava = "3.1.1"
 x_crash="3.0.0"
 
-kotlin = "1.9.0"
-kotlinxCoroutines = "1.7.3"
+
 kotlinxDatetime = "0.4.0"
 kotlinxSerializationJson = "1.5.1"
 ktor = "1.6.3"
@@ -66,8 +63,7 @@ arrow-opticsksp-plugin = { module = "io.arrow-kt:arrow-optics-ksp-plugin", versi
 
 
 
-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine" }
-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutine" }
+
 
 androidx-core-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-viewpager2-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "androidx-viewpager2" }
@@ -109,7 +105,8 @@ kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotli
 kotlin-stdlib-java8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin_verison" }
 
 #Kotlin Coroutines, serialization, datetime...
-kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutine" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
@@ -152,7 +149,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_verison" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-gradlePlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_verison" }
+kotlin-gradlePlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_verison" }
 
 
