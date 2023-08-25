@@ -8,7 +8,7 @@ import android.media.MediaMetadataRetriever.OPTION_PREVIOUS_SYNC
 import android.os.Build
 import android.util.Log
 import androidx.annotation.WorkerThread
-import com.me.harris.awesomelib.utils.LogUtil
+import com.me.harris.extractframe.contract.ExtractConfiguration
 import kotlinx.coroutines.withContext
 import okio.Okio
 import okio.Source
@@ -19,7 +19,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.system.measureTimeMillis
 
-const val PARALLISM = 4 // todo
+const val PARALLISM = ExtractConfiguration.EXTRACT_FRAME_PARALLEISM // todo
 
 
 
@@ -53,10 +53,10 @@ internal class ExtractMouse(val id:Int,val filepath:String,val saveDirPath:Strin
         a.setDataSource(filepath)
         range.points.onEach { absTime ->
             Log.i("=A=","""
-                
+
                 第${id}个worker 抽${absTime/1000_000}秒的图片
                 线程信息【Thread】 ${Thread.currentThread().id} ${Thread.currentThread().name}
-                
+
             """.trimIndent())
             val start = System.currentTimeMillis() // MediaMetadataRetriever.OPTION_CLOSEST 要解码，超级慢
             val bmp = if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O_MR1) {
@@ -70,13 +70,13 @@ internal class ExtractMouse(val id:Int,val filepath:String,val saveDirPath:Strin
                     savePicFile(bitmap = mp, savePath = "${saveDirPath}${File.separator}${absTime}.jpg")
                 }
                 Log.d("=A=","""
-                    
+
                     【Thread】${Thread.currentThread().name} ${Thread.currentThread().id}
-                    extract frame at ${absTime} cost 
+                    extract frame at ${absTime} cost
                      ${c1} milliseconds
-                    save bitmap to file ${saveDirPath}${File.separator}${absTime}.jpg cost me 
+                    save bitmap to file ${saveDirPath}${File.separator}${absTime}.jpg cost me
                     $cost milliseconds
-                    
+
                 """.lineSequence().joinToString(transform = String::trimStart, separator = System.lineSeparator()))
             }
         }
@@ -90,8 +90,8 @@ internal class ExtractMouse(val id:Int,val filepath:String,val saveDirPath:Strin
 }
 
 internal fun distributingTasksToIndividualMouse(filepath:String,saveDir:String):List<ExtractMouse>{
-    // 每隔5s 抽一张图
-    val gap = 5*1000_000
+    // 每隔10s 抽一张图
+    val gap = ExtractConfiguration.EXTRACT_FRAME_GAP_IN_BETWEEN_SECONDS*1000_000
     File(saveDir).deleteRecursively()
     if (!File(saveDir).exists()) File(saveDir).mkdirs()
     val durationUs = getVideoDurationInMicroSeconds(filepath)

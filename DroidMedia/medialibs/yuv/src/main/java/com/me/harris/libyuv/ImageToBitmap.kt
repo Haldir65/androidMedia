@@ -13,10 +13,9 @@ object ImageToBitmap {
 
     // critical !!
      fun getBitmapFromImageUsingLibYUV(image: Image): Bitmap {
-        // todo 如果一直crash ,二分法，这里一行一行地注释掉
         require(image.format == ImageFormat.YUV_420_888)
         var yuvFrame = YuvUtils.convertToI420(image)
-        yuvFrame = YuvUtils.scale(yuvFrame, image.width/4, image.height/4, Constants.FILTER_BOX)
+//        yuvFrame = YuvUtils.scale(yuvFrame, image.width/4, image.height/4, Constants.FILTER_BOX) //   this is why we keep crash in the past,二分法确定
         yuvFrame = YuvUtils.rotate(yuvFrame, Constants.ROTATE_0)
         val argbFrame = YuvUtils.yuv420ToArgb(yuvFrame)
         val bm = Bitmap.createBitmap(argbFrame.width, argbFrame.height, Bitmap.Config.ARGB_8888)

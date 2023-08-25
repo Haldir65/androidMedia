@@ -117,7 +117,9 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
 
             val refreshUi = suspend {
                 withContext(Dispatchers.Main){
-                    val allFiles = File(resultDir).listFiles { f -> f.absolutePath.endsWith("jpg") }?.map { f -> f.absolutePath }.orEmpty()
+                    val allFiles = File(resultDir).listFiles { f -> f.absolutePath.endsWith("jpg") }?.map { f -> f.absolutePath }.orEmpty().sortedBy {
+                        a -> a.substringAfterLast("image_")
+                    }
                     Log.w("=A=","allfiles ${allFiles.size}")
                     showAllExtractedFrames(allFiles)
                 }
@@ -134,8 +136,9 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
                 val time = measureTimedValue {
 //                    viewModel.getKeyFrames(fPath,viewModel.SAVE_EXTRACT_FRAME_DIR_PATH) //1.  结果正确， 低端，MediaMetaDataRetriever
 //                    viewModel.getKeyFramesViaMediaCodec(fPath,resultDir) // 2. 结果正确，速度慢，用的YuvImage ,超级慢
-                    viewModel.extractFrameInterval(filePath = fPath, intervalMs = 5000, scale = 4, cancellationSignal = singal) // 搞定,但是只抽了4张图出来？
-                    Log.e("=A=","we have bitmap now")
+//                    viewModel.extractFrameInterval(filePath = fPath, intervalMs = 5000, scale = 4, cancellationSignal = singal) // 搞定,但是只抽了4张图出来？
+                    viewModel.getKeyFramesViaMediaCodec(inputPath = fPath, saveDir = resultDir)
+                    Log.e("=A=","we have done using mediacodec + mediaCode.getImage ")
                     if (false){
                         val bmp = viewModel.extractFrameAtTimeUs(fPath,60_000_000)
                         withContext(Dispatchers.Main.immediate){
@@ -146,7 +149,7 @@ class ExtractFrameAndSaveKeyFrameToFileActivity:AppCompatActivity(R.layout.activ
 
 
 
-                Log.w("=A=","time cost is ${time.duration.inWholeMilliseconds}")
+                Log.w("=A=","time cost is  ${time.duration.inWholeMilliseconds}ms")
                 // time cost is 9974, or 10797
                 // time cost is 12208
 

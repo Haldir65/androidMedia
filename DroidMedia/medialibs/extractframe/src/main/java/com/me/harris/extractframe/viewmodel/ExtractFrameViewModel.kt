@@ -2,6 +2,7 @@ package com.me.harris.extractframe.viewmodel
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.media.Image
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
@@ -10,12 +11,13 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.me.harris.awesomelib.utils.LogUtil
 import com.me.harris.extractframe.ImageUtil
+import com.me.harris.extractframe.NV21ToBitmap
 import com.me.harris.extractframe.VideoDecoder
 import com.me.harris.extractframe.yuvrelated.MediaCodecFrameExtractor
 import com.me.harris.extractframe.yuvrelated.getSyncFrameTimestamps
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.suspendCancellableCoroutine
+import com.me.harris.libyuv.ImageToBitmap
+import kotlinx.coroutines.*
+import okhttp3.internal.wait
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -23,6 +25,12 @@ import java.nio.ByteBuffer
 import kotlin.coroutines.resume
 
 //** ref : https://github.com/deepsadness/MediaMetadataRetrieverWrapper , 确实比MediaMetaDataRetriever快不少
+// result
+// 1 .mediaCodec + mediaCode.getImage + RenderScript ，每隔5s抽关键帧， 2s左右搞定
+// 2 .mediaCodec + mediaCode.getImage + libYuv ，每隔5s抽关键帧， 4s左右搞定
+// 3 .mediaCodec + mediaCode.getImage + JavaYuvImage ，每隔5s抽关键帧， 5s左右搞定
+// https://blog.minhazav.dev/how-to-convert-yuv-420-sp-android.media.Image-to-Bitmap-or-jpeg/
+
 
 class ExtractFrameViewModel(application: Application) :AndroidViewModel(application){
 
@@ -144,29 +152,51 @@ class ExtractFrameViewModel(application: Application) :AndroidViewModel(applicat
         if (!File(saveDir).exists()){
             File(saveDir).mkdirs()
         }
-        VideoDecoder().decode(inputPath,object :VideoDecoder.DecodeCallback{
-            var count = 0
-            override fun onDecode(
-                yuv: ByteArray?,
-                width: Int,
-                height: Int,
-                formatCount: Int,
-                presentationTimeUs: Long,
-                format: Int
-            ) {
-                val bmp = ImageUtil.yuvDataToBitMap(yuv,width,height,width,height)
-                savePicFile(bmp,"${saveDir}${File.separator}image_${count++}.jpg")
-            }
+            VideoDecoder().decode(inputPath,object :VideoDecoder.DecodeCallback{
+                var count = 0
+                val renderScriptConverter = NV21ToBitmap(getApplication())
+                var yuvToBmpTotal = 0L
+                override fun onDecode(
+                    yuv: ByteArray?,
+                    width: Int,
+                    height: Int,
+                    formatCount: Int,
+                    presentationTimeUs: Long,
+                    format: Int
+                ) {
+                    val now = System.currentTimeMillis()
+                    val bmp =  renderScriptConverter.nv21ToBitmap(yuv,width, height) // 7ms左右
+//                    val bmp = ImageUtil.yuvDataToBitMap(yuv,width,height,width,height) // 50ms左右
+                    Log.w("=A=","transforming yuv ${yuv?.size} to bmp at presentationTimeUs ${presentationTimeUs/1000_000} cost me ${System.currentTimeMillis()-now} ms")
+                    savePicFile(bmp,"${saveDir}${File.separator}image_${count++}.jpg")
+                    // transforming yuv 3110400 to bmp using renderScript at presentationTimeUs 210 cost me 6 ms
+                    // the ideal solution
+                }
 
-            override fun onFinish() {
-            }
+                override fun onDecode2(
+                    image: Image,
+                    width: Int,
+                    height: Int,
+                    formatCount: Int,
+                    presentationTimeUs: Long,
+                    format: Int
+                ) {
+                    super.onDecode2(image, width, height, formatCount, presentationTimeUs, format)
+                    val now = System.currentTimeMillis()
+                    val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(image)
+                    val cost = System.currentTimeMillis() - now
+                    Log.w("=A=","transforming Image to bmp at presentationTimeUs ${presentationTimeUs/1000_000} cost me ${System.currentTimeMillis()-now} ms yuvToBmpTotal toal = $yuvToBmpTotal")
+                    yuvToBmpTotal+=cost
+                    savePicFile(bmp,"${saveDir}${File.separator}image_${count++}.jpg")
+                }
 
-            override fun onStop() {
+                override fun onFinish() {
+                }
 
-            }
+                override fun onStop() {
 
-        })
-
+                }
+            })
         return false
     }
 

@@ -68,7 +68,10 @@ class ExtractFrameUsingParallelExtractorActivity :AppCompatActivity(R.layout.act
 
         val refreshUi = suspend {
             withContext(Dispatchers.Main){
-                val allFiles = File(saveDir).listFiles { f -> f.absolutePath.endsWith("jpg") }?.map { f -> f.absolutePath }.orEmpty()
+                val allFiles = File(saveDir).listFiles { f -> f.absolutePath.endsWith("jpg") }?.map { f -> f.absolutePath }.orEmpty().sortedBy {
+                        a -> a.substringAfterLast("image_")
+                }
+
                 Log.w("=A=","file that ends with .jpg counts  ${allFiles.size} in folder ${saveDir}")
                 showAllExtractedFrames(allFiles)
             }

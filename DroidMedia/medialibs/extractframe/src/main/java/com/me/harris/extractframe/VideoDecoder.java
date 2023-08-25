@@ -1,5 +1,7 @@
 package com.me.harris.extractframe;
 
+import static com.me.harris.extractframe.parallel.ParallelPineKt.getVideoDurationInMicroSeconds;
+
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.media.Image;
@@ -9,9 +11,12 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.util.Log;
 
+import com.me.harris.extractframe.contract.ExtractConfiguration;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+// todo: make this kotlin file , or never
 public class VideoDecoder {
     private static String TAG = "VideoDecoder";
 
@@ -48,6 +53,7 @@ public class VideoDecoder {
     public interface DecodeCallback {
         void onDecode(byte[] yuv, int width, int height ,int formatCount, long presentationTimeUs,int format);
 
+        default void onDecode2(Image image, int width, int height ,int formatCount, long presentationTimeUs,int format) {};
 
         void onFinish();
 
@@ -66,6 +72,7 @@ public class VideoDecoder {
                 Log.e(TAG,"No video track found in " + videoFilePath);
                 return;
             }
+            long duration = getVideoDurationInMicroSeconds(videoFilePath);
             MediaFormat mediaFormat = extractor.getTrackFormat(trackIndex);
             String mime = mediaFormat.getString(MediaFormat.KEY_MIME);
             decoder = MediaCodec.createDecoderByType(mime);
@@ -100,7 +107,7 @@ public class VideoDecoder {
             }
             decoder.configure(mediaFormat,null,null,0);
             decoder.start();
-            decodeFramesToImage(decoder,extractor,width,height,decodeCallback);
+            decodeFramesToImage(decoder,extractor,width,height, 0,duration, ExtractConfiguration.EXTRACT_FRAME_GAP_IN_BETWEEN_SECONDS,decodeCallback);
         }catch (IOException e){
             e.printStackTrace();
         }finally {
@@ -138,12 +145,13 @@ public class VideoDecoder {
         return false;
     }
 
-    private void decodeFramesToImage(MediaCodec decoder,MediaExtractor extractor, int width , int height,DecodeCallback decodeCallback){
+    private void decodeFramesToImage(MediaCodec decoder,MediaExtractor extractor, int width , int height,long startTimeMicroseconds ,long durationMicroSeconds,int gapInBetweenSeconds,DecodeCallback decodeCallback){
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
         boolean sawInputEOS = false;
         boolean sawOutputEOS = false;
         int outputFrameCount = 0;
         long startMs = System.currentTimeMillis();
+        long startTime = startTimeMicroseconds;
         while (!mStop && !sawOutputEOS&&!Thread.currentThread().isInterrupted()){
             if (!sawInputEOS){
                 int inputBufferId = decoder.dequeueInputBuffer(DEFAULT_TIMEOUT_US);
@@ -155,8 +163,18 @@ public class VideoDecoder {
                         sawInputEOS = true;
                         Log.i(TAG,"sawInputEOS is true");
                     }else  {
-                        decoder.queueInputBuffer(inputBufferId,0,sampleSize,extractor.getSampleTime(),0);
-                        extractor.advance();
+                        long time = extractor.getSampleTime();
+                        if (Math.abs(time-durationMicroSeconds) < 5_000_000){
+                            decoder.queueInputBuffer(inputBufferId,0,0,0L,MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                            sawInputEOS = true;
+                            Log.i(TAG,"Math.abs(time-durationMilliseconds*1000) < 5000_000 time =  " + time/1000_000 + " durationMilliseconds " + durationMicroSeconds);
+                        }else  {
+                            decoder.queueInputBuffer(inputBufferId,0,sampleSize,time,0);
+                            startTime+=gapInBetweenSeconds*1000_000L;
+                            extractor.seekTo(startTime,MediaExtractor.SEEK_TO_NEXT_SYNC);
+                            // extractor.advance();
+                            Log.i(TAG,"extractor.getSampleTime() = " + time/1000_000 + " call seekTo " + startTime/1000_000);
+                        }
                     }
                 }
             }
@@ -169,26 +187,36 @@ public class VideoDecoder {
                 if (info.size>0){
                     outputFrameCount++;
                     int format = decoder.getOutputFormat().getInteger(MediaFormat.KEY_COLOR_FORMAT);
-                    if (format ==  MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible) {
+                    if (format == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible) {
                         Log.w(TAG,"MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible found " + outputFrameCount + " format = " + format);
                     }
                     else  {
                         // format = 2141391876
-                        Log.w(TAG,"MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible not found " + outputFrameCount + " format = " + format);
+//                        Log.w(TAG,"MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible not found " + outputFrameCount + " format = " + format);
                     }
-                    Image image = decoder.getOutputImage(outputBufferId);
-                    int imageFormat = image.getFormat();
-                    if (imageFormat != ImageFormat.YUV_420_888){
-                        throw new IllegalStateException("unknown image Format!!!");
+                    if ((info.flags & MediaCodec.BUFFER_FLAG_KEY_FRAME) != 0) {
+                        Image image = decoder.getOutputImage(outputBufferId);
+                        int imageFormat = image.getFormat();
+                        if (imageFormat != ImageFormat.YUV_420_888){
+                            throw new IllegalStateException("unknown image Format!!!");
+                        }
+                        boolean useLibYuv = true;
+                        if (useLibYuv){
+                            if (decodeCallback!=null && (info.flags & MediaCodec.BUFFER_FLAG_KEY_FRAME)!=0){
+                                decodeCallback.onDecode2(image,width,height,outputFrameCount,info.presentationTimeUs,format);
+                            }
+                            image.close();
+                        }else  {
+                            getDataFromImage(image,mOutputFormat,width,height);
+                            image.close();
+                            if (decodeCallback!=null && (info.flags & MediaCodec.BUFFER_FLAG_KEY_FRAME)!=0){
+                                decodeCallback.onDecode(mYuvBuffer,width,height,outputFrameCount,info.presentationTimeUs,format);
+                            }
+                        }
+
+
                     }
-                    getDataFromImage(image,mOutputFormat,width,height);
-                    image.close();
                     decoder.releaseOutputBuffer(outputBufferId,false);
-                    //callback
-//                    sleepRender(info,startMs);
-                    if (decodeCallback!=null && (info.flags & MediaCodec.BUFFER_FLAG_KEY_FRAME)!=0){
-                        decodeCallback.onDecode(mYuvBuffer,width,height,outputFrameCount,info.presentationTimeUs,format);
-                    }
                 }
             }
         }
@@ -207,7 +235,7 @@ public class VideoDecoder {
             throw new IllegalArgumentException("only support COLOR_FormatI420 " + "and COLOR_FormatNV21");
         }
         Rect crop = image.getCropRect();
-        Log.v(TAG,"crop width: " + crop.width() + " ,height: "+ crop.height() + " format = "+ image.getFormat() );
+//        Log.v(TAG,"crop width: " + crop.width() + " ,height: "+ crop.height() + " format = "+ image.getFormat() );
         // image.getFormat()  == ImageFormat.YUV_420_888
         Image.Plane[] planes = image.getPlanes();
         byte[] rowData = new byte[planes[0].getRowStride()];
