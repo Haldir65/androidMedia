@@ -47,15 +47,15 @@ object VideoUtil {
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES
         )
-//        val fs = dir.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".mkv") || f.name.endsWith(".webm")  }
+        val fs = dir.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".mkv") || f.name.endsWith(".webm")  }
 //        val fs = dir.listFiles { f -> f.name.endsWith(".mp4")  }.orEmpty()
-        val fs = dir.listFiles { f -> f.name.endsWith(".webm")  }.orEmpty()
+//        val fs = dir.listFiles { f -> f.name.endsWith(".webm")  }.orEmpty()
 //        strVideo = fs[Random().nextInt(fs.size)].absolutePath
 //        strVideo = fs[1].absolutePath
 //        strVideo = fs[0].absolutePath
         if (fs.isNotEmpty()){
             strVideo = if (selfHosted) {
-                dir.listFiles { f -> f.name.endsWith(".webm")  }.orEmpty()[0].absolutePath
+                dir.listFiles { f -> f.name.endsWith(".mp4")  }.orEmpty()[0].absolutePath
             } else if (glassy){
                 dir.listFiles { f -> f.name.endsWith(".mkv")  }.orEmpty().lastOrNull()?.absolutePath.orEmpty()
             }
