@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.extractframe.databinding.ActivityExtractFrameEntryBinding
+import com.me.harris.extractframe.finale.FrameExtractFinalActivity
 
 class ExtractFrameEntryActivity:AppCompatActivity(R.layout.activity_extract_frame_entry) {
 
@@ -18,6 +19,10 @@ class ExtractFrameEntryActivity:AppCompatActivity(R.layout.activity_extract_fram
         }
         binding.card2.setOnClickListener {
             startActivity(Intent(this, ExtractFrameUsingParallelExtractorActivity::class.java))
+        }
+
+        binding.card3.setOnClickListener {
+            startActivity(Intent(this, FrameExtractFinalActivity::class.java))
         }
 
     }
