@@ -1,4 +1,4 @@
-package com.spx.library;
+package com.me.harris.extractframe.glextractor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,6 +34,7 @@ import java.util.Map;
 
 /**
  * 目前只支持本地mp4格式文件
+ * https://stackoverflow.com/a/57242347
  */
 public class VideoFrameExtractor {
     private static final String TAG = "VideoFrameExtractor";

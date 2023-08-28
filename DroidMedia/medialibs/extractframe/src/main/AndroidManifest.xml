@@ -14,5 +14,6 @@
         <activity android:name="com.me.harris.extractframe.ExtractFrameUsingParallelExtractorActivity" />
         <activity android:name="com.me.harris.extractframe.ExtractFrameEntryActivity" />
         <activity android:name="com.me.harris.extractframe.finale.FrameExtractFinalActivity" />
+        <activity android:name="com.me.harris.extractframe.glextractor.ExtractUingOpenglActivity" />
     </application>
 </manifest>
