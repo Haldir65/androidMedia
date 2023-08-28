@@ -33,6 +33,8 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
 
     private val renderScriptConverter = NV21ToBitmap(context.applicationContext)
 
+    private val bmpStorage:ExtractBitMapStoreK by lazy { ExtractBitMapStoreK() }
+
     @WorkerThread
     suspend fun doingExtract() {
         val filePath: String = config.filepath
@@ -77,7 +79,8 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                             Log.i(TAG, " ${identity()} sawInputEos set to true")
                         } else {
                             val time = extractor.sampleTime
-                            if (rangeIndex >= range.points.size || Math.abs(time - range.points.last()) < 5_000_000) {
+                            rangeIndex++
+                            if (rangeIndex >= range.points.size || Math.abs(time - range.points.last()) < 1_000_000) {
                                 decoder.queueInputBuffer(inputBufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                                 sawInputEOS = true
                                 Log.i(
@@ -86,9 +89,18 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                                 )
                             } else {
                                 decoder.queueInputBuffer(inputBufferId, 0, sampleSize, time, 0)
-                                rangeIndex++
-                                extractor.seekTo(range.points[rangeIndex], MediaExtractor.SEEK_TO_NEXT_SYNC)
-                                Log.i(TAG, "extractor ${identity()} seek to ${range.points[rangeIndex]} ")
+                                val t = range.points.getOrNull(rangeIndex)
+                                if (t!=null){
+                                    extractor.seekTo(t, MediaExtractor.SEEK_TO_NEXT_SYNC)
+                                    Log.i(TAG, "extractor ${identity()} seek to ${range.points[rangeIndex]} ")
+                                }else {
+                                    Log.e(TAG, """
+                                        extractor ${identity()} fatal flaw ,
+                                        ranges = ${range.points.joinToString(separator = " | ") { a -> a.toString() }}
+                                        rangeIndex = ${rangeIndex}
+                                        range.points.size = ${range.points.size}
+                                    """.trimIndent())
+                                }
                             }
                         }
                     }
@@ -108,7 +120,8 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                         if (useLibyuv) {
                             // image to jpeg file store
                             var now = System.currentTimeMillis()
-                            val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(image)
+//                            val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(image)
+                            val bmp = bmpStorage.getBitmapFromImageUsingLibYUV(image)
                             Log.w(
                                 TAG,
                                 " ${identity()} transforming yuv ${mYuvBuffer?.size} to bmp at presentationTimeUs ${presentationTimeUs / 1000_000} cost me ${System.currentTimeMillis() - now} ms"
@@ -151,8 +164,11 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
         } finally {
             Log.w(TAG, "${identity()} release codec and extractor")
             extractor?.release()
-            decoder?.stop()
-            decoder?.release()
+            kotlin.runCatching {
+                decoder?.stop()
+                decoder?.release()
+            }
+
         }
     }
 

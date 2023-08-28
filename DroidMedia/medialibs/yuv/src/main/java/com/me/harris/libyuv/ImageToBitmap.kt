@@ -23,6 +23,18 @@ object ImageToBitmap {
         return bm
     }
 
+
+    fun getBitmapFromImageUsingLibYUVReuseBitmap(image: Image,bitmap: Bitmap): Bitmap {
+        require(image.format == ImageFormat.YUV_420_888)
+        var yuvFrame = YuvUtils.convertToI420(image)
+//        yuvFrame = YuvUtils.scale(yuvFrame, image.width/4, image.height/4, Constants.FILTER_BOX) //   this is why we keep crash in the past,二分法确定
+        yuvFrame = YuvUtils.rotate(yuvFrame, Constants.ROTATE_0)
+        val argbFrame = YuvUtils.yuv420ToArgb(yuvFrame)
+        val bm = bitmap
+        bm.copyPixelsFromBuffer(ByteBuffer.wrap(argbFrame.asArray())) // for displaying argb
+        return bm
+    }
+
     /**
      * 色彩正常，速度正常，
      */
