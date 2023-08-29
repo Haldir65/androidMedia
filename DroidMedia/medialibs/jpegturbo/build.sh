@@ -10,6 +10,16 @@ NDK_PATH=${ANDROID_HOME}/ndk/21.4.7075529
 export PATH=${CMAKE_PATH}/bin:$PATH
 
 
+UNAME=$(uname)
+
+if [ "$UNAME" == "Linux" ] ; then
+	echo "Linux"
+elif [ "$UNAME" == "Darwin" ] ; then
+	echo "Darwin"
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	echo "Windows"
+fi
+
 
 if [ ! -d ${MY_LIBS_NAME} ]; then
   echo "${MY_LIBS_NAME} is an non existing dir"

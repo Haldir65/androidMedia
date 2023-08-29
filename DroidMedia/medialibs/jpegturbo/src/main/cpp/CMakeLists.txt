@@ -18,6 +18,13 @@ project("myjpeg")
 include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(../jniLibs/${ANDROID_ABI})
 
+file(GLOB media CONFIGURE_DEPENDS
+        #        "*.h"
+        media/*.cpp
+        media/*.h
+        )
+
+
 # 日志输出在.cxx/cmake/debug//armeabi-v7a/build_output.txt
 message("PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}")
 message("ANDROID_ABI=${ANDROID_ABI}")
@@ -36,6 +43,10 @@ add_library( # Sets the name of the library.
         JpegCup.cpp
         JpegSpoon.h
         AndroidLog.h
+        YuvToJpegUtil.cpp
+        YuvToJpegUtil.h
+        YuvUtilSample.cpp
+        ${media}
         )
 
 
