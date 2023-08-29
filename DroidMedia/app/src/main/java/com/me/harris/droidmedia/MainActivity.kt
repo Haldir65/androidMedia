@@ -29,6 +29,7 @@ import com.me.harris.extractframe.ExtractFrameUsingParallelExtractorActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
 import com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
+import com.me.harris.libjpeg.ui.LibJpegEntryActivity
 import com.me.harris.mediainfo.MediaInfoProbeActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
 
@@ -100,6 +101,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         binding.btn13.setOnClickListener {
             startActivity(Intent(this, MediaInfoProbeActivity::class.java))
+        }
+
+        binding.btn14.setOnClickListener {
+            startActivity(Intent(this, LibJpegEntryActivity::class.java))
         }
     }
 

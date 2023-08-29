@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CardStyleButton">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_margin">12dp</item>
+    </style>
+</resources>

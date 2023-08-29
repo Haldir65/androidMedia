@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 medialibs/filterLibrary/src/main/cpp/glm
+medialibs/jpegturbo/libjpeg-turbo
