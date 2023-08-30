@@ -3,3 +3,7 @@
 //
 
 #include "FilerBurn.h"
+
+int FilerBurn::getSupportColorFormat() {
+
+}

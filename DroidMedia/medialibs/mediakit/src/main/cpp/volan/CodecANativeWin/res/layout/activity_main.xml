@@ -1,0 +1,168 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.tom.entry.MainActivity" >
+
+    <Button
+        android:id="@+id/bNativeWinCodec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="原生Window和Codec"
+        android:onClick="funcOnClick" />
+
+    <Button
+        android:id="@+id/bCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bNativeWinCodec"
+        android:layout_below="@+id/bNativeWinCodec"
+        android:text="CamOpenGL预览保存" 
+		android:onClick="funcOnClick"/>
+
+    <Button
+        android:id="@+id/bDeEnCodec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bCamera"
+        android:layout_below="@+id/bCamera"
+        android:layout_marginTop="18dp"
+        android:text="从文件解码后编码到文件"
+        android:onClick="funcOnClick" />
+
+    <Button
+        android:id="@+id/bPlayMediaPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bDeEnCodec"
+        android:layout_below="@+id/bDeEnCodec"
+        android:layout_marginTop="18dp"
+        android:text="用Java MediaPlayer播放"
+        android:onClick="funcOnClick" />
+
+    <Button
+        android:id="@+id/bDisplayH264"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bPlayMediaPlayer"
+        android:layout_below="@+id/bPlayMediaPlayer"
+        android:layout_marginTop="14dp"
+        android:text="读H264文件显示"
+        android:onClick="funcOnClick" />
+    
+    
+	<Button
+        android:id="@+id/bAccFileDecode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bDisplayH264"
+        android:layout_below="@+id/bDisplayH264"
+        android:layout_marginTop="14dp"
+        android:text="从文件解码ACC"
+        android:onClick="funcOnClick" />
+
+	<Button
+	    android:id="@+id/bByteBuffer"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBaseline="@+id/bDisplayH264"
+	    android:layout_alignBottom="@+id/bDisplayH264"
+	    android:layout_toRightOf="@+id/bDisplayH264"
+	    android:text="测试DirectByteBuffer" 
+	    android:onClick="funcOnClick"/>
+
+	<Button
+	    android:id="@+id/bRtsp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/bAccFileDecode"
+	    android:layout_below="@+id/bAccFileDecode"
+	    android:layout_marginTop="14dp"
+	    android:text="RtspOverAndroid"
+	    android:onClick="funcOnClick" />
+
+	<Button
+	    android:id="@+id/bCam2OpenGL"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/bDeEnCodec"
+	    android:layout_alignRight="@+id/bByteBuffer"
+	    android:text="Cam2OpenGL"
+	    android:onClick="funcOnClick"  />
+
+	<Button
+	    android:id="@+id/bColorFormat"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBaseline="@+id/bRtsp"
+	    android:layout_alignBottom="@+id/bRtsp"
+	    android:layout_marginLeft="14dp"
+	    android:layout_toRightOf="@+id/bRtsp"
+	    android:text="颜色空间"
+	    android:onClick="funcOnClick" />
+
+	<LinearLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/bRtsp"
+	    android:layout_alignParentBottom="true"
+	    android:layout_below="@+id/bRtsp"
+	    android:layout_marginBottom="12dp" >
+	    
+	    <Button
+		    android:id="@+id/bDecodeYUVGL"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:onClick="funcOnClick"
+		    android:text="三纹理\nYUV-RGB" />
+
+		<Button
+		    android:id="@+id/bDecodeYUVGL2Plane"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:onClick="funcOnClick"
+		    android:text="双纹理\nYUV-RGB" />
+		
+		<Button
+		    android:id="@+id/bDecodeYUVGL1Plane"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:onClick="funcOnClick"
+		    android:text="单纹理\nYUV-RGB" />
+	</LinearLayout>
+
+	<Button
+		android:text="NativeHeap"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@+id/bDeEnCodec"
+		android:layout_alignEnd="@+id/bCam2OpenGL"
+		android:layout_marginEnd="1dp"
+		android:onClick="funcOnClick"
+		android:id="@+id/bNativeHeap" />
+
+	<Button
+		android:id="@+id/jbitmap"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/bCam2OpenGL"
+		android:layout_alignStart="@+id/bCam2OpenGL"
+		android:onClick="funcOnClick"
+		android:text="JBitmap" />
+
+	<Button
+		android:id="@+id/ManyThreads"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/bAccFileDecode"
+		android:layout_toEndOf="@+id/bDisplayH264"
+		android:onClick="funcOnClick"
+		android:text="线程" />
+
+</RelativeLayout>

@@ -59,7 +59,6 @@ add_library( # Sets the name of the library.
 
 find_library( # Sets the name of the path variable.
         log-lib
-        android
         # Specifies the name of the NDK library that
         # you want CMake to locate.
         log)
@@ -72,9 +71,9 @@ target_link_libraries( # Specifies the target library.
         myjpeg
         turbojpeg
         jpeg
+        android
         mediandk
         OpenMAXAL
-        android
 
         # Links the target library to the log library
         # included in the NDK.

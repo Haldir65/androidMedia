@@ -75,12 +75,14 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                         val sampleSize = extractor.readSampleData(inputBuffer, 0)
                         if (sampleSize < 0) {
                             decoder.queueInputBuffer(inputBufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+//                            decoder.signalEndOfInputStream()
                             sawInputEOS = true
                             Log.i(TAG, " ${identity()} sawInputEos set to true")
                         } else {
                             val time = extractor.sampleTime
                             rangeIndex++
                             if (rangeIndex >= range.points.size || Math.abs(time - range.points.last()) < 1_000_000) {
+//                                decoder.signalEndOfInputStream()
                                 decoder.queueInputBuffer(inputBufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                                 sawInputEOS = true
                                 Log.i(
@@ -110,6 +112,25 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                     if ((info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                         sawOutputEOS = true
                         Log.i(TAG, " ${identity()} saw output = true pt = ${info.presentationTimeUs} ")
+                    }
+                    if ((info.flags and MediaCodec.BUFFER_FLAG_KEY_FRAME)!=0){
+                        Log.w(TAG, " ${identity()} 【I帧】 BUFFER_FLAG_KEY_FRAME pt = ${info.presentationTimeUs} ")
+                    }
+                    if ((info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG)!=0){
+                        Log.w(TAG, " ${identity()} 【首帧信息帧】 BUFFER_FLAG_CODEC_CONFIG pt = ${info.presentationTimeUs} ")
+                        // flags = 4；End of Stream。
+                        //flags = 2；首帧信息帧。
+                        //flags = 1；关键帧。
+                        //flags = 0；普通帧。
+                    }
+                    if ((info.flags and MediaCodec.BUFFER_FLAG_PARTIAL_FRAME)!=0){
+                        Log.w(TAG, " ${identity()} 【B帧】 BUFFER_FLAG_PARTIAL_FRAME pt = ${info.presentationTimeUs} ")
+                    }
+                    if ((info.flags and 16)!=0){
+                        Log.w(TAG, " ${identity()} 【Muxer帧】 BUFFER_FLAG_MUXER_DATA pt = ${info.presentationTimeUs} ")
+                    }
+                    if (info.flags == 0){
+                        Log.w(TAG, " ${identity()} 【普通帧】 0 pt = ${info.presentationTimeUs} ")
                     }
                     if (info.size > 0) {
                         val presentationTimeUs = info.presentationTimeUs
@@ -157,8 +178,10 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                         }
                         decoder.releaseOutputBuffer(outputBufferId, false)
                     } else {
-                        Log.i(TAG, "${identity()} codec info.size = 0? ")
+                        Log.i(TAG, "${identity()} codec info.size = ${info.size} ")
                     }
+                }else {
+                    Log.w(TAG, "${identity()} dequeueOutputBuffer = $outputBufferId ")
                 }
             }
         } finally {

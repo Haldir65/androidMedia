@@ -1,0 +1,33 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cproject
+.project
+*.o
+*.a
+*.so
+*.o.d
+*.vcxproj
+*.vgdbsettings
+Visual\ Studio\ 2013
+Visual\ Studio\ 2013Projects
+Visual\ Studio\ 2013Templates
+VisualGDBCache
+CodeDB
+Debug
+Debug2
+Release
+obj
+*.vcxproj.*
+*.sdf
+*.sln
+*.suo
+bin/
+gen/
+
