@@ -14,7 +14,7 @@ import com.me.harris.cameralib.CameraEntryActivity
 import com.me.harris.droidmedia.audiorecord.MediaCodecForAACActivity
 import com.me.harris.droidmedia.databinding.ActivityMainBinding
 import com.me.harris.droidmedia.decode.DecodeActivity
-import com.me.harris.droidmedia.decode.DecodeFrameActivity
+import com.jadyn.mediakit.MediaKitDecodeFrameActivity
 import com.me.harris.droidmedia.encode.MediaCodecEncodeActivity
 import com.me.harris.droidmedia.entity.JUserInfo
 import com.me.harris.droidmedia.entity.SubUserInfo
@@ -23,11 +23,8 @@ import com.me.harris.droidmedia.opengl.OpenGlEntryActivity
 import com.me.harris.awesomelib.utils.StoragePermissSucks
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
-import com.me.harris.extractframe.ExtractFrameAndSaveKeyFrameToFileActivity
 import com.me.harris.extractframe.ExtractFrameEntryActivity
-import com.me.harris.extractframe.ExtractFrameUsingParallelExtractorActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
-import com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
 import com.me.harris.libjpeg.ui.LibJpegEntryActivity
 import com.me.harris.mediainfo.MediaInfoProbeActivity
@@ -61,7 +58,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         binding.btn6.setOnClickListener {
             VideoUtil.setUrl()
-            startActivity(Intent(this, DecodeFrameActivity::class.java))
+            startActivity(Intent(this, MediaKitDecodeFrameActivity::class.java))
 //            startActivity(Intent(this, VideoPlayFilterActivity::class.java))
         }
         binding.btn7.setOnClickListener {

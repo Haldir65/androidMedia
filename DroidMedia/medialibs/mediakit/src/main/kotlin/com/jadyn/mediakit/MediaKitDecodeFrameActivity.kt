@@ -1,16 +1,16 @@
-package com.me.harris.droidmedia.decode
+package com.jadyn.mediakit
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import com.jadyn.mediakit.databinding.ActivityDecodeFrameBinding
 import com.jadyn.mediakit.function.durationSecond
 import com.jadyn.mediakit.video.decode.VideoAnalyze
 import com.jadyn.mediakit.video.decode.VideoDecoder2
 import com.me.harris.awesomelib.utils.VideoUtil
-import com.me.harris.extractframe.databinding.ActivityDecodeFrameBinding
 
-class DecodeFrameActivity : AppCompatActivity() {
+class MediaKitDecodeFrameActivity : AppCompatActivity() {
 
     private val decodeMP4Path = VideoUtil.strVideo
 
