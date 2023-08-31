@@ -9,7 +9,7 @@
         </activity>
 
         <activity
-            android:name=".DecodeFrameActivity"
+            android:name=".DecodeFrameBitMapToViewActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.me.harris.extractframe.ExtractFrameUsingParallelExtractorActivity" />
         <activity android:name="com.me.harris.extractframe.ExtractFrameEntryActivity" />

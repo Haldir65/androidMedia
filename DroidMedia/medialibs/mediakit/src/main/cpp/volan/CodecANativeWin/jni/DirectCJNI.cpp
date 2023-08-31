@@ -6,6 +6,10 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <android/log.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdio.h>
+#include <string.h>
 
 extern "C"
 JNIEXPORT void JNICALL

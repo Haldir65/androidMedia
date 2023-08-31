@@ -6,4 +6,5 @@
     <string name="folder_name_created">生成文件夹名</string>
     <string name="image_type_created">生成图片格式</string>
     <string name="start">开始</string>
+    <string name="app_place_holder">广告位招租</string>
 </resources>

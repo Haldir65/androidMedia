@@ -72,8 +72,6 @@ target_link_libraries( # Specifies the target library.
         turbojpeg
         jpeg
         android
-        mediandk
-        OpenMAXAL
 
         # Links the target library to the log library
         # included in the NDK.

@@ -35,6 +35,11 @@
 #define LOG_TAG "default"
 #endif
 
+#ifndef bzero
+#define bzero(d,n) memset((d),0,(n))
+#endif
+
+
 
 /*
  * Basic log message macros intended to emulate the behavior of log/log.h
@@ -161,6 +166,9 @@ struct field {
  int jniThrowRuntimeException(JNIEnv* env, const char* msg) ;
  int jniThrowNullPointerException(JNIEnv* env, const char* msg);
  int jniThrowException(JNIEnv* env, const char* className, const char* msg);
+
+
+int64_t system_nanotime();
 
 
 #else

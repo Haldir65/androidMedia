@@ -246,6 +246,7 @@ dependencies {
     implementation projects.awesomelib
     implementation projects.medialibs.filterLibrary
     implementation projects.medialibs.jpegturbo
+    implementation projects.medialibs.audiolib
 //    implementation project(":medialibs:filterLibrary")
     implementation project(":medialibs:playerLib")
     implementation project(":medialibs:epf")

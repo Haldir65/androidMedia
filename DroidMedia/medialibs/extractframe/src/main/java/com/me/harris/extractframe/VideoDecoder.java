@@ -200,7 +200,7 @@ public class VideoDecoder {
                         if (imageFormat != ImageFormat.YUV_420_888){
                             throw new IllegalStateException("unknown image Format!!!");
                         }
-                        boolean useLibYuv = true;
+                        boolean useLibYuv = false;
                         if (useLibYuv){
                             if (decodeCallback!=null && (info.flags & MediaCodec.BUFFER_FLAG_KEY_FRAME)!=0){
                                 decodeCallback.onDecode2(image,width,height,outputFrameCount,info.presentationTimeUs,format);

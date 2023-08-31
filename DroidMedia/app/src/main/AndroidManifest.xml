@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -48,30 +47,22 @@
 
 
         <activity
-            android:name=".decode.DecodeActivity"
+            android:name="com.jadyn.mediakit.dumb.decode.DecodeActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.jadyn.mediakit.MediaKitDecodeFrameActivity"
+            android:name="com.jadyn.mediakit.framer.MediaKitDecodeFrameActivity"
             android:screenOrientation="portrait" />
-
 
 
         <activity
-            android:name=".encode.MediaCodecEncodeActivity"
+            android:name="com.me.harris.filterlibrary.opengl.enrty.OpenGlEntryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".opengl.OpenGlEntryActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".opengl.egl.TextureViewRenderViaEglActivity"
+            android:name="com.me.harris.filterlibrary.opengl.enrty.egl.TextureViewRenderViaEglActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".coroutine.CoroutinePlayActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".audioPlayer.MyAudioPlayerActivity" />
-        <activity android:name=".audiorecord.MediaCodecForAACActivity" />
+
 
 
 

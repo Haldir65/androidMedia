@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.4.1)
 # Gradle automatically packages shared libraries with your APK.
 
 
-file(GLOB gljni CONFIGURE_DEPENDS
+file(GLOB glsource CONFIGURE_DEPENDS
         #        "*.h"
         jni/*.cpp
         jni/*.h
@@ -34,6 +34,28 @@ file(GLOB volan CONFIGURE_DEPENDS
         #        "*.cpp"
         )
 
+
+file(GLOB media CONFIGURE_DEPENDS
+        #        "*.h"
+        #        volan/CodecANativeWin/jni/*.cpp
+        #        volan/CodecANativeWin/jni/*.c
+        #        volan/CodecANativeWin/jni/*.h
+        #        volan/CodecANativeWin/jni/tcp_udp/*.h
+        #        volan/CodecANativeWin/jni/tcp_udp/*.cpp
+        #        volan/CodecANativeWin/jni/tcp_udp/*.c
+        media/*.cpp
+        media/*.h
+        #        "*.h"
+        #        "*.cpp"
+        )
+
+file(GLOB utility CONFIGURE_DEPENDS
+        header/*.cpp
+        header/*.h
+        #        "*.h"
+        #        "*.cpp"
+        )
+
 add_library(cpufeatures STATIC
         ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c)
 
@@ -44,8 +66,12 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        ${gljni}
-        ${volan}
+        MediaKitBlue.cpp
+        MediaKitBlue.h
+        ${glsource}
+        ${media}
+        ${utility}
+#        ${volan}
         )
 
 # Searches for a specified prebuilt library and stores the path as a

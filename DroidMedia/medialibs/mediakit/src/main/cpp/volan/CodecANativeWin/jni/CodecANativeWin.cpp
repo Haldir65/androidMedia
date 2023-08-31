@@ -3,6 +3,7 @@
 
 #include <android/native_window_jni.h> // ANativeWindow
 #include <android/native_window.h>
+#include "vortex.h"
 /*
  *  android/native_window.h
  *
@@ -146,12 +147,12 @@ static void AttachDetachThread2JVM( JavaVM* vm ,
     ALOGD("AttachDetachThread2JVM %s Done" , (attach?"Attach":"Detach"));
 }
 
-int64_t system_nanotime()
-{
-    timespec now;
-    clock_gettime(CLOCK_MONOTONIC, &now);
-    return now.tv_sec * 1000000000LL + now.tv_nsec;
-}
+//int64_t system_nanotime()
+//{
+//    timespec now;
+//    clock_gettime(CLOCK_MONOTONIC, &now);
+//    return now.tv_sec * 1000000000LL + now.tv_nsec;
+//}
 
 
 static void* playback_thread(void* argv)
@@ -161,7 +162,7 @@ static void* playback_thread(void* argv)
 
 #if SAVE_EXTRACT_H264_TO_FILE
     int fd = -1 ;
-    fd = open( EXTRACT_DST_FILE_NAME ,O_CREAT | O_WRONLY | O_TRUNC );
+    fd = open( EXTRACT_DST_FILE_NAME ,O_CREAT | O_WRONLY | O_TRUNC,S_IRUSR | S_IWUSR );
     if( fd < 0 ) {
         ALOGE("native Codec H264 file open error %d , %s  " , fd , strerror(errno));
     }

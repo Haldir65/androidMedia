@@ -3,6 +3,8 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application>
-        <activity android:name="com.jadyn.mediakit.MediaKitDecodeFrameActivity" />
+        <activity android:name="com.jadyn.mediakit.framer.MediaKitDecodeFrameActivity" />
+        <activity android:name="com.jadyn.mediakit.MediaKitEntryActivity" />
+        <activity android:name="com.jadyn.mediakit.nativecodec.MediaKitNativeCodecActivity" />
     </application>
 </manifest>
