@@ -4,6 +4,11 @@
 
 
 std::string MediaInsighter::probeBasicInfo(std::string filepath) {
+    std::string version1 {"1" "." "2" "." "0"};
+    std::string version2 {std::string("1") +"." + "2"};
+    std::string version3  = std::string ("1") + "." + "2";
+
+
 
     const std::string& filename(filepath);
     FILE * f = fopen(filename.c_str(), "r");

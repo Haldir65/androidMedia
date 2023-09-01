@@ -1,6 +1,12 @@
 
 cmake_minimum_required(VERSION 3.12)
 
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-register")
+
 ## add all file with certain extension to a collection,
 # then call add_library will be easier
 ## https://stackoverflow.com/a/3201211

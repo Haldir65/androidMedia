@@ -12,6 +12,9 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
+
+set(CMAKE_CXX_STANDARD 17)
+
 add_library( # Sets the name of the library.
         yuv-decoder
 
