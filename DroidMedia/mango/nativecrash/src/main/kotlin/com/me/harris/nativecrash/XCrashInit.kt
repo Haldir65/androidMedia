@@ -3,6 +3,8 @@ package com.me.harris.nativecrash
 import android.content.Context
 import android.util.Log
 import xcrash.TombstoneManager
+import java.io.File
+import java.nio.charset.StandardCharsets
 
 fun initXcrash(context:Context){
     val params = xcrash.XCrash.InitParameters()
@@ -15,7 +17,12 @@ fun initXcrash(context:Context){
         .setNativeDumpMap(true)
         .setNativeDumpNetwork(true)
     xcrash.XCrash.init(context,params);
-    TombstoneManager.getAllTombstones().forEach { f ->
-        Log.w("xcrash","${f.absolutePath}")
+    val recent_crash =  TombstoneManager.getAllTombstones().orEmpty()
+    recent_crash.take(5).joinToString(separator = System.lineSeparator()) { f ->
+        f.readText(charset = StandardCharsets.UTF_8)
+    }.let {
+        Log.e("=A=",it)
     }
+
 }
+
