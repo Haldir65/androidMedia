@@ -129,11 +129,31 @@ bool DecodeDemo::Decode() {
                 // YUV420sp
                 size_t dataSize = bufferInfo.size;
                 if (output!= nullptr && dataSize !=0){
-                    long pts = bufferInfo.presentationTimeUs;
-                    int32_t  pts_32 = pts;
-                    uint8_t* buffer = static_cast<uint8_t*>(malloc(dataSize));
-                    memcpy(buffer,output+bufferInfo.offset,dataSize);
+                    int64_t pts = bufferInfo.presentationTimeUs;
+//                 uint8_t* buffer = static_cast<uint8_t*>(malloc(dataSize));
+                    auto* buffer = new uint8_t [dataSize];
+                    if (bufferInfo.flags == AMEDIACODEC_BUFFER_FLAG_CODEC_CONFIG){
+                        //估计是首帧
+                        memcpy(buffer,output+bufferInfo.offset,dataSize);
+                        char str[256] = {0};
+                        for(int i =0 ;i<bufferInfo.size;++i){
+                            sprintf(str,"%s%d",str,buffer[i]);
+                        }
+                        AVLOGW("%s",str);
+                        continue;
+                    }
+                    auto format = AMediaCodec_getOutputFormat(codec_);
+                    int colorFormatInt;
+                    // https://stackoverflow.com/a/57254618
+                    AMediaFormat_getInt32(format,AMEDIAFORMAT_KEY_COLOR_FORMAT,&colorFormatInt);
 
+                    if (bufferInfo.flags == AMEDIACODEC_CONFIGURE_FLAG_ENCODE){ // key frame
+                        memcpy(buffer,output,dataSize);
+                        // todo: 转jpeg?
+                    } else {
+                        memcpy(buffer,output,dataSize);
+                    }
+                    delete[] buffer;
                 }
                 AMediaCodec_releaseOutputBuffer(codec_, outputidx, false);
             } else if (outputidx == AMEDIACODEC_INFO_OUTPUT_BUFFERS_CHANGED) {
