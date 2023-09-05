@@ -19,11 +19,12 @@ Java_com_me_harris_libjpeg_JpegSpoon_basic(JNIEnv *env, jobject thiz, jstring st
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_me_harris_libjpeg_JpegSpoon_compressbitmap(JNIEnv *env, jobject thiz, jobject bitmap,
-                                                    jint quality, jstring out_file_path,
-                                                    jboolean optimize) {
+                                                    jint quality,jstring storageDir, jstring out_file_path,
+                                                    jboolean optimize,jboolean turbo) {
 
-    JpegSpoon p;
-    jint result = p.compressBitmap(env,thiz,bitmap,quality,out_file_path,optimize);
+    char *storagePath = (char *) env->GetStringUTFChars(storageDir, nullptr);
+    JpegSpoon p {env,storagePath} ;
+    jint result = p.compressBitmap(env,thiz,bitmap,quality,out_file_path,optimize,turbo);
     std::string a(" result from compressBitmap = ");
     a.append(std::to_string(result));
     ALOGD("some %s",a.c_str());

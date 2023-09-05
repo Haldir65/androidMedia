@@ -16,8 +16,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
 
-class LibJpegEntryActivity:AppCompatActivity(R.layout.activity_jpeg_entry) {
-
+class LibJpegEntryActivity : AppCompatActivity(R.layout.activity_jpeg_entry) {
 
     private val viewModel by viewModels<LibJpegEntryViewModel>()
     private val binding by viewBinding(ActivityJpegEntryBinding::bind)
@@ -25,6 +24,7 @@ class LibJpegEntryActivity:AppCompatActivity(R.layout.activity_jpeg_entry) {
     private val saveDir by lazy {
         "${application.filesDir}${File.separator}photos_compress_to_jpeg"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,35 +37,49 @@ class LibJpegEntryActivity:AppCompatActivity(R.layout.activity_jpeg_entry) {
         binding.btn2.setOnClickListener {
             makeSureSaveDirExists()
             val despath = "${saveDir}/opt_${System.currentTimeMillis()}.jpeg"
-            viewModel.callJpegCompressBitmap(bitmap = BitmapFactory.decodeResource(resources,R.drawable.image_2010)!!,
-               quality = 30, outFilePath = despath,optimize = true )
+            viewModel.callJpegCompressBitmap(
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.image_2010)!!,
+                quality = 30, storage_dir = saveDir, outFilePath = despath, optimize = true,turbo = false
+            )
+        }
+        binding.btn3.setOnClickListener {
+            makeSureSaveDirExists()
+            val despath = "${saveDir}/opt_${System.currentTimeMillis()}.jpeg"
+            viewModel.callJpegCompressBitmap(
+                bitmap = BitmapFactory.decodeResource(resources, R.drawable.image_2010)!!,
+                quality = 30, storage_dir = saveDir, outFilePath = despath, optimize = true,turbo = true
+            )
         }
         observeCompress()
     }
 
-    private fun makeSureSaveDirExists(){
+    private fun makeSureSaveDirExists() {
         val fileStorageDir = File(saveDir)
         fileStorageDir.deleteRecursively()
         fileStorageDir.mkdir()
     }
 
-    private fun observeCompress(){
+    private fun observeCompress() {
         lifecycleScope.launch {
             viewModel.events.collect() { ev ->
-                when(ev){
-                    is CompressEvents.CompressCompleted ->{
-                        binding.comoressedImage.load(ev.path){
+                when (ev) {
+                    is CompressEvents.CompressCompleted -> {
+                        binding.comoressedImage.load(ev.path) {
                             transformations(RoundedCornersTransformation(25f))
                         }
                     }
-                    else ->{
+                    is CompressEvents.TurboCompressCompleted -> {
+                        binding.comoressedImage2.load(ev.path) {
+                            transformations(RoundedCornersTransformation(25f))
+                        }
+                    }
+                    else -> {
 
-                        Log.w("=A=","")
+                        Log.w("=A=", "")
                     }
                 }
 
             }
         }
     }
-
 }

@@ -8,6 +8,6 @@ object JpegSpoon {
         System.loadLibrary("myjpeg")
     }
 
-    external fun compressbitmap(bitmap: Bitmap,quality:Int,outFilePath:String,optimize:Boolean):Int
+    external fun compressbitmap(bitmap: Bitmap,quality:Int,storage_dir:String,outFilePath:String,optimize:Boolean,turbo:Boolean):Int
     external fun basic(string :String)
 }

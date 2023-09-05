@@ -5,4 +5,6 @@ sealed class CompressEvents{
 
     class CompressCompleted(val path:String):CompressEvents()
 
+    class TurboCompressCompleted(val path:String):CompressEvents()
+
 }

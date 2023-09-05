@@ -26,14 +26,14 @@ internal class LibJpegEntryViewModel :ViewModel(){
     }
 
     @WorkerThread
-    fun callJpegCompressBitmap(bitmap:Bitmap,quality:Int,outFilePath:String,optimize:Boolean){
+    fun callJpegCompressBitmap(bitmap:Bitmap,quality:Int,storage_dir:String,outFilePath:String,optimize:Boolean,turbo:Boolean){
         viewModelScope.launch(Dispatchers.IO) {
             val now = System.currentTimeMillis()
             val width = bitmap.width
             val height = bitmap.height
-            spoon.compressbitmap(bitmap, quality, outFilePath, optimize)
+            spoon.compressbitmap(bitmap, quality, storage_dir,outFilePath, optimize,turbo)
             Log.w("=A=","compress bitmap w = ${width} h = ${height} to $outFilePath cost me ${System.currentTimeMillis() - now} milliseconds ")
-            events.emit(CompressEvents.CompressCompleted(path = outFilePath))
+            events.emit(if (turbo)CompressEvents.TurboCompressCompleted(path = outFilePath) else CompressEvents.CompressCompleted(path = outFilePath))
         }
     }
 }

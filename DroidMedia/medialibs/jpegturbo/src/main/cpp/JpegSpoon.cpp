@@ -11,6 +11,9 @@ METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
     longjmp(myerr->setjmp_buffer, 1);
 }
 
+void JpegSpoon::callSomeMethod() {
+
+}
 
 
 
@@ -112,12 +115,131 @@ int JpegSpoon::write_JPEG_file(BYTE *data, int w, int h, int quality, const char
 }
 
 jint JpegSpoon::compressBitmap(JNIEnv *env, jobject thiz, jobject bitmap, jint quality,
-                               jstring out_file_path, jboolean optimize) {
+                               jstring out_file_path, jboolean optimize,bool turbo) {
 
 
     //获取Bitmap信息
     AndroidBitmapInfo android_bitmap_info;
     AndroidBitmap_getInfo(env, bitmap, &android_bitmap_info);
+    //获取bitmap的 宽，高，format
+    u_int32_t w = android_bitmap_info.width;
+    u_int32_t h = android_bitmap_info.height;
+
+    ALOGW("android_bitmap_info w =%d h = %d ", w,h);
+
+
+    BYTE *tempData = read_rgb_buffer_from_bitmap(env,thiz,bitmap);
+
+    char *path = (char *) env->GetStringUTFChars(out_file_path, nullptr);
+    ALOGI("path=%s", path);
+    int resultCode = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    if (turbo){
+        // Turbojpeg进行压缩，并写入文件
+        resultCode =  compress_rgb_to_jpeg(tempData,quality,static_cast<int>(w),static_cast<int>(h),path);
+    } else {
+        // Libjpeg进行压缩，并写入文件
+        resultCode = write_JPEG_file(tempData, static_cast<int>(w), static_cast<int>(h), quality, path, optimize);
+    }
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto cost = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+    ALOGW(" turbo = %i compress bitmap with width = %d height %d  \n to file %s \n cost me %s milliseconds ",turbo, w, h,path,std::to_string(cost).c_str());
+    if (resultCode == -1) {
+        return -1;
+    }
+    env->ReleaseStringUTFChars(out_file_path, path);
+    free(tempData);
+    tempData = nullptr;
+    return 0;
+}
+
+
+
+int JpegSpoon::compress_rgb_to_jpeg(BYTE *rgbBuffer, int quality, int width, int height, const std::string& jpeg_file_path) {
+
+    tjhandle tj = tjInitCompress();
+    unsigned char * jpegBuf = nullptr;
+    unsigned long jpegSize = 0;
+    const int r = tjCompress2( tj, ( unsigned char * )rgbBuffer,	// TJ isn't const correct...
+                               width, width * 3, height, TJPF_RGB, &jpegBuf,
+                               &jpegSize, TJSAMP_420 /* TJSAMP_422 */, quality /* jpegQual */, TJFLAG_FASTUPSAMPLE|TJFLAG_FASTDCT/* flags */ );
+//    TJSAMP_GRAY 变为黑白
+    if ( r != 0 )
+    {
+        ALOGE( "tjCompress2 returned %s for %s", tjGetErrorStr(), jpeg_file_path.c_str() );
+        return false;
+    }
+
+    FILE * f = fopen( jpeg_file_path.c_str(), "wb" );
+    if ( f != nullptr )
+    {
+        fwrite( jpegBuf, jpegSize, 1, f );
+        fclose( f );
+    }
+    else
+    {
+        ALOGE( "WriteJpeg failed to write to %s", jpeg_file_path.c_str() );
+        return false;
+    }
+
+    tjFree( jpegBuf );
+
+    tjDestroy( tj );
+
+    return true;
+}
+
+
+int JpegSpoon::yuv_2_jpeg_buffer_Turbo(BYTE *yuvBuffer, int yuvSize, int width, int height, int padding, int quality,
+                                       BYTE **jpgBuffer, int &jpgSize, TJSAMP TJSAMP_TYPE) {
+
+    int subsample = TJSAMP_TYPE;
+
+    tjhandle handle = NULL;
+    int flags = 0;
+    int need_size = 0;
+    int ret = 0;
+
+    handle = tjInitCompress();
+
+    flags |= 0;
+
+    need_size = tjBufSizeYUV2(width, padding, height, subsample);
+    if (need_size != yuvSize) {
+        return -1;
+    }
+    unsigned long retSize = 0;
+    ret = tjCompressFromYUV(handle, yuvBuffer, width, padding, height, subsample,
+                            jpgBuffer, &retSize, quality, flags);
+    jpgSize = retSize;
+    if (ret < 0) {
+//        Log::info("压缩jpeg失败，错误信息:%s", tjGetErrorStr());
+    }
+    tjDestroy(handle);
+    return 0;
+}
+
+JpegSpoon::~JpegSpoon() {
+    this->env = nullptr;
+}
+
+JpegSpoon::JpegSpoon(JNIEnv *env, const std::string &storage_dir) {
+    this->env = env;
+    this->storage_dir = storage_dir;
+}
+
+BYTE* JpegSpoon::read_rgb_buffer_from_bitmap(JNIEnv *env, jobject thiz, jobject bitmap) {
+
+
+    //获取Bitmap信息
+    AndroidBitmapInfo android_bitmap_info;
+    int rcc = AndroidBitmap_getInfo(env, bitmap, &android_bitmap_info);
+    if (rcc!=ANDROID_BITMAP_RESULT_SUCCESS){
+        throw "getBitmap info failure";
+    }
+    if (android_bitmap_info.format != ANDROID_BITMAP_FORMAT_RGBA_8888){
+        throw "only argb888 format supported";
+    }
     //获取bitmap的 宽，高，format
     int w = android_bitmap_info.width;
     int h = android_bitmap_info.height;
@@ -127,10 +249,13 @@ jint JpegSpoon::compressBitmap(JNIEnv *env, jobject thiz, jobject bitmap, jint q
 
     //读取Bitmap所有像素信息
     BYTE *pixelsColor;
-    AndroidBitmap_lockPixels(env, bitmap, (void **) &pixelsColor);
+     rcc = AndroidBitmap_lockPixels(env, bitmap, (void **) &pixelsColor);
+    if (rcc != ANDROID_BITMAP_RESULT_SUCCESS){
+        throw "lockPixel failure";
+    }
 
     int i = 0, j = 0;
-    BYTE r, g, b;
+    BYTE r, g, b,alpha;
     //存储RGB所有像素点
     BYTE *data = (BYTE *) malloc(w * h * 3);
     // 临时保存指向像素内存的首地址
@@ -143,12 +268,13 @@ jint JpegSpoon::compressBitmap(JNIEnv *env, jobject thiz, jobject bitmap, jint q
             color = *((uint32_t *) pixelsColor);
 
             // 在jni层中，Bitmap像素点的值是ABGR，而不是ARGB，也就是说，高端到低端：A，B，G，R
+            alpha =  color & 0xff000000;
             b = ((color & 0x00FF0000) >> 16);
             g = ((color & 0x0000FF00) >> 8);
             r = ((color & 0x000000FF));
-
             // jpeg压缩需要的是rgb
             //  for example, R,G,B,R,G,B,R,G,B,... for 24-bit RGB color.
+            // Pixel Bytes Order has RGBA in LITTLE ENDIAN,
             *data = r;
             *(data + 1) = g;
             *(data + 2) = b;
@@ -157,22 +283,10 @@ jint JpegSpoon::compressBitmap(JNIEnv *env, jobject thiz, jobject bitmap, jint q
         }
     }
     AndroidBitmap_unlockPixels(env, bitmap);
-
-    char *path = (char *) env->GetStringUTFChars(out_file_path, nullptr);
-    ALOGE("path=%s", path);
-
-    // Libjpeg进行压缩
-    int resultCode = write_JPEG_file(tempData, w, h, quality, path, optimize);
-    if (resultCode == -1) {
-        return -1;
-    }
-    env->ReleaseStringUTFChars(out_file_path, path);
-    free(tempData);
-    tempData = nullptr;
-    return 0;
-
-    return 0;
+    return tempData;
 }
+
+
 
 
 
