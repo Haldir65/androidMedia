@@ -149,6 +149,7 @@ bool DecodeDemo::Decode() {
 
                     if (bufferInfo.flags == AMEDIACODEC_CONFIGURE_FLAG_ENCODE){ // key frame
                         memcpy(buffer,output,dataSize);
+
                         // todo: 转jpeg?
                     } else {
                         memcpy(buffer,output,dataSize);
