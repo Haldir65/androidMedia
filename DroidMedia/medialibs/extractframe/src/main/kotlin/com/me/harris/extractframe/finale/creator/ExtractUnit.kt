@@ -7,6 +7,8 @@ import android.media.Image
 import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.media.MediaFormat
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.me.harris.awesomelib.utils.LogUtil
@@ -17,13 +19,21 @@ import com.me.harris.extractframe.contract.ExtractConfiguration
 import com.me.harris.extractframe.parallel.Range
 import com.me.harris.libyuv.ImageToBitmap
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.Semaphore
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.CountDownLatch
 
 const val TAG = ExtractConfiguration.LOG_TAG
 
-internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Range, val context: Application) {
+internal class ExtractUnit(
+    val id: Int,
+    val config: ExtractConfig,
+    val range: Range,
+    val context: Application
+) {
 
     private val DEFAULT_TIMEOUT_US = 100000L
 
@@ -33,7 +43,7 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
 
     private val renderScriptConverter = NV21ToBitmap(context.applicationContext)
 
-    private val bmpStorage:ExtractBitMapStoreK by lazy { ExtractBitMapStoreK() }
+    private val bmpStorage: ExtractBitMapStoreK by lazy { ExtractBitMapStoreK() }
 
     @WorkerThread
     suspend fun doingExtract() {
@@ -74,7 +84,13 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                         val inputBuffer = requireNotNull(decoder.getInputBuffer(inputBufferId))
                         val sampleSize = extractor.readSampleData(inputBuffer, 0)
                         if (sampleSize < 0) {
-                            decoder.queueInputBuffer(inputBufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+                            decoder.queueInputBuffer(
+                                inputBufferId,
+                                0,
+                                0,
+                                0L,
+                                MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                            )
 //                            decoder.signalEndOfInputStream()
                             sawInputEOS = true
                             Log.i(TAG, " ${identity()} sawInputEos set to true")
@@ -83,7 +99,13 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                             rangeIndex++
                             if (rangeIndex >= range.points.size || Math.abs(time - range.points.last()) < 1_000_000) {
 //                                decoder.signalEndOfInputStream()
-                                decoder.queueInputBuffer(inputBufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+                                decoder.queueInputBuffer(
+                                    inputBufferId,
+                                    0,
+                                    0,
+                                    0L,
+                                    MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                                )
                                 sawInputEOS = true
                                 Log.i(
                                     TAG,
@@ -92,16 +114,21 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                             } else {
                                 decoder.queueInputBuffer(inputBufferId, 0, sampleSize, time, 0)
                                 val t = range.points.getOrNull(rangeIndex)
-                                if (t!=null){
+                                if (t != null) {
                                     extractor.seekTo(t, MediaExtractor.SEEK_TO_NEXT_SYNC)
-                                    Log.i(TAG, "extractor ${identity()} seek to ${range.points[rangeIndex]} ")
-                                }else {
-                                    Log.e(TAG, """
+                                    Log.i(
+                                        TAG,
+                                        "extractor ${identity()} seek to ${range.points[rangeIndex]} "
+                                    )
+                                } else {
+                                    Log.e(
+                                        TAG, """
                                         extractor ${identity()} fatal flaw ,
                                         ranges = ${range.points.joinToString(separator = " | ") { a -> a.toString() }}
                                         rangeIndex = ${rangeIndex}
                                         range.points.size = ${range.points.size}
-                                    """.trimIndent())
+                                    """.trimIndent()
+                                    )
                                 }
                             }
                         }
@@ -111,25 +138,40 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                 if (outputBufferId >= 0) {
                     if ((info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                         sawOutputEOS = true
-                        Log.i(TAG, " ${identity()} saw output = true pt = ${info.presentationTimeUs} ")
+                        Log.i(
+                            TAG,
+                            " ${identity()} saw output = true pt = ${info.presentationTimeUs} "
+                        )
                     }
-                    if ((info.flags and MediaCodec.BUFFER_FLAG_KEY_FRAME)!=0){
-                        Log.w(TAG, " ${identity()} 【I帧】 BUFFER_FLAG_KEY_FRAME pt = ${info.presentationTimeUs} ")
+                    if ((info.flags and MediaCodec.BUFFER_FLAG_KEY_FRAME) != 0) {
+                        Log.w(
+                            TAG,
+                            " ${identity()} 【I帧】 BUFFER_FLAG_KEY_FRAME pt = ${info.presentationTimeUs} "
+                        )
                     }
-                    if ((info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG)!=0){
-                        Log.w(TAG, " ${identity()} 【首帧信息帧】 BUFFER_FLAG_CODEC_CONFIG pt = ${info.presentationTimeUs} ")
+                    if ((info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
+                        Log.w(
+                            TAG,
+                            " ${identity()} 【首帧信息帧】 BUFFER_FLAG_CODEC_CONFIG pt = ${info.presentationTimeUs} "
+                        )
                         // flags = 4；End of Stream。
                         //flags = 2；首帧信息帧。
                         //flags = 1；关键帧。
                         //flags = 0；普通帧。
                     }
-                    if ((info.flags and MediaCodec.BUFFER_FLAG_PARTIAL_FRAME)!=0){
-                        Log.w(TAG, " ${identity()} 【B帧】 BUFFER_FLAG_PARTIAL_FRAME pt = ${info.presentationTimeUs} ")
+                    if ((info.flags and MediaCodec.BUFFER_FLAG_PARTIAL_FRAME) != 0) {
+                        Log.w(
+                            TAG,
+                            " ${identity()} 【B帧】 BUFFER_FLAG_PARTIAL_FRAME pt = ${info.presentationTimeUs} "
+                        )
                     }
-                    if ((info.flags and 16)!=0){
-                        Log.w(TAG, " ${identity()} 【Muxer帧】 BUFFER_FLAG_MUXER_DATA pt = ${info.presentationTimeUs} ")
+                    if ((info.flags and 16) != 0) {
+                        Log.w(
+                            TAG,
+                            " ${identity()} 【Muxer帧】 BUFFER_FLAG_MUXER_DATA pt = ${info.presentationTimeUs} "
+                        )
                     }
-                    if (info.flags == 0){
+                    if (info.flags == 0) {
                         Log.w(TAG, " ${identity()} 【普通帧】 0 pt = ${info.presentationTimeUs} ")
                     }
                     if (info.size > 0) {
@@ -180,7 +222,7 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
                     } else {
                         Log.i(TAG, "${identity()} codec info.size = ${info.size} ")
                     }
-                }else {
+                } else {
                     Log.w(TAG, "${identity()} dequeueOutputBuffer = $outputBufferId ")
                 }
             }
@@ -194,6 +236,224 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
 
         }
     }
+
+
+    @WorkerThread
+    suspend fun doingExtractAsync() {
+        val filePath: String = config.filepath
+        val durationMicroSeconds = config.videoDurationMicroSecond
+        val gapMicroSeconds = config.gapInBetweenSeconds * 1000_000
+        val lock = CountDownLatch(1)
+        var decoder: MediaCodec? = null
+        var extractor: MediaExtractor = MediaExtractor()
+        withContext(Dispatchers.IO) {
+                extractor.setDataSource(filePath)
+                val index = selectVideoTrack(extractor = extractor!!)
+                if (index < 0) {
+                    error("failed to selectVideoTrack for material ${filePath}")
+                }
+                var rangeIndex = 0
+                val format = extractor.getTrackFormat(index)
+                val mime = format.getString(MediaFormat.KEY_MIME)!!
+                decoder = requireNotNull(MediaCodec.createDecoderByType(mime))
+                val width = format.getInteger(MediaFormat.KEY_WIDTH)
+                val height = format.getInteger(MediaFormat.KEY_HEIGHT)
+                val yuvLength = width * height * 3 / 2
+                //            val info = MediaCodec.BufferInfo()
+                var sawInputEOS = false
+                var sawOutputEOS = false
+                var outputFrameCount = 0
+                var startTime = range.points[rangeIndex]
+                mYuvBuffer = ByteArray(yuvLength)
+                decoder!!.setCallback(object : MediaCodec.Callback() {
+                    override fun onInputBufferAvailable(codec: MediaCodec, inputBufferId: Int) {
+                        val inputBuffer = codec.getInputBuffer(inputBufferId)?:return
+                        if (sawInputEOS) return
+                        val sampleSize = extractor!!.readSampleData(inputBuffer, 0)
+                        if (sampleSize < 0) {
+                            codec.queueInputBuffer(
+                                inputBufferId,
+                                0,
+                                0,
+                                0L,
+                                MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                            )
+                            sawInputEOS = true
+//                            decoder.signalEndOfInputStream()
+                            Log.i(TAG, " ${identity()} sawInputEos set to true")
+                        } else {
+                            val time = extractor!!.sampleTime
+                            rangeIndex++
+                            if (rangeIndex >= range.points.size || Math.abs(time - range.points.last()) < 1_000_000) {
+//                                decoder.signalEndOfInputStream()
+                                codec.queueInputBuffer(
+                                    inputBufferId,
+                                    0,
+                                    0,
+                                    0L,
+                                    MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                                )
+                                Log.i(
+                                    TAG,
+                                    "${identity()} current sampleTime is ${time} manually sawInputEos set to true"
+                                )
+                                sawInputEOS = true
+
+                            } else {
+                                codec.queueInputBuffer(inputBufferId, 0, sampleSize, time, 0)
+                                val t = range.points.getOrNull(rangeIndex)
+                                if (t != null) {
+                                    extractor!!.seekTo(t, MediaExtractor.SEEK_TO_NEXT_SYNC)
+                                    Log.i(
+                                        TAG,
+                                        "extractor ${identity()} seek to ${range.points[rangeIndex]} "
+                                    )
+                                } else {
+                                    Log.e(
+                                        TAG, """
+                                        extractor ${identity()} fatal flaw ,
+                                        ranges = ${range.points.joinToString(separator = " | ") { a -> a.toString() }}
+                                        rangeIndex = ${rangeIndex}
+                                        range.points.size = ${range.points.size}
+                                    """.trimIndent()
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onOutputBufferAvailable(
+                        codec: MediaCodec,
+                        outputBufferId: Int,
+                        info: MediaCodec.BufferInfo
+                    ) {
+
+                        if (outputBufferId >= 0) {
+                            if ((info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
+                                sawOutputEOS = true
+                                Log.i(
+                                    TAG,
+                                    " ${identity()} saw output = true pt = ${info.presentationTimeUs} "
+                                )
+                            }
+                            if ((info.flags and MediaCodec.BUFFER_FLAG_KEY_FRAME) != 0) {
+                                Log.w(
+                                    TAG,
+                                    " ${identity()} 【I帧】 BUFFER_FLAG_KEY_FRAME pt = ${info.presentationTimeUs} "
+                                )
+                            }
+                            if ((info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
+                                Log.w(
+                                    TAG,
+                                    " ${identity()} 【首帧信息帧】 BUFFER_FLAG_CODEC_CONFIG pt = ${info.presentationTimeUs} "
+                                )
+                                // flags = 4；End of Stream。
+                                //flags = 2；首帧信息帧。
+                                //flags = 1；关键帧。
+                                //flags = 0；普通帧。
+                            }
+                            if ((info.flags and MediaCodec.BUFFER_FLAG_PARTIAL_FRAME) != 0) {
+                                Log.w(
+                                    TAG,
+                                    " ${identity()} 【B帧】 BUFFER_FLAG_PARTIAL_FRAME pt = ${info.presentationTimeUs} "
+                                )
+                            }
+                            if ((info.flags and 16) != 0) {
+                                Log.w(
+                                    TAG,
+                                    " ${identity()} 【Muxer帧】 BUFFER_FLAG_MUXER_DATA pt = ${info.presentationTimeUs} "
+                                )
+                            }
+                            if (info.flags == 0) {
+                                Log.w(
+                                    TAG,
+                                    " ${identity()} 【普通帧】 0 pt = ${info.presentationTimeUs} "
+                                )
+                            }
+                            if (info.size > 0) {
+                                val presentationTimeUs = info.presentationTimeUs
+                                outputFrameCount++;
+                                val image = requireNotNull(codec.getOutputImage(outputBufferId))
+                                val imageFormat = image.format
+                                require(imageFormat == ImageFormat.YUV_420_888)
+                                if (useLibyuv) {
+                                    // image to jpeg file store
+                                    var now = System.currentTimeMillis()
+//                            val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(image)
+                                    val bmp = bmpStorage.getBitmapFromImageUsingLibYUV(image)
+                                    Log.w(
+                                        TAG,
+                                        " ${identity()} transforming yuv ${mYuvBuffer?.size} to bmp at presentationTimeUs ${presentationTimeUs / 1000_000} cost me ${System.currentTimeMillis() - now} ms"
+                                    )
+                                    now = System.currentTimeMillis()
+                                    val abspath =
+                                        "${config.storageDir}${File.separator}image_${(id + 1) * 1000 + outputFrameCount}.jpg"
+                                    savePicFile(bmp, abspath)
+                                    Log.w(
+                                        TAG,
+                                        " ${identity()} [libyuv] saving  bmp at presentationTimeUs ${presentationTimeUs / 1000_000} to ${abspath} cost me ${System.currentTimeMillis() - now} ms"
+                                    )
+                                    image.close()
+                                } else {
+                                    // image to
+                                    // getDataFromImage to mYuvBuffer
+                                    getDataFromImage(image, COLOR_FORMAT_NV21, width, height)
+                                    image.close()
+                                    var now = System.currentTimeMillis()
+                                    val bmp = renderScriptConverter.nv21ToBitmap(
+                                        mYuvBuffer,
+                                        width,
+                                        height
+                                    )
+                                    Log.w(
+                                        TAG,
+                                        " ${identity()} [renderscript] transforming yuv ${mYuvBuffer?.size} to bmp at presentationTimeUs ${presentationTimeUs / 1000_000} cost me ${System.currentTimeMillis() - now} ms"
+                                    )
+                                    now = System.currentTimeMillis()
+                                    val abspath =
+                                        "${config.storageDir}${File.separator}image_${(id + 1) * 1000 + outputFrameCount}.jpg"
+                                    savePicFile(bmp, abspath)
+                                    Log.w(
+                                        TAG,
+                                        " ${identity()} saving  bmp at presentationTimeUs ${presentationTimeUs / 1000_000} to ${abspath} cost me ${System.currentTimeMillis() - now} ms"
+                                    )
+                                }
+                                codec.releaseOutputBuffer(outputBufferId, false)
+                            } else {
+                                Log.i(TAG, "${identity()} codec info.size = ${info.size} ")
+                            }
+                        } else {
+                            Log.w(TAG, "${identity()} dequeueOutputBuffer = $outputBufferId ")
+                        }
+                        if (sawOutputEOS) {
+                            lock.countDown()
+                        }
+
+                    }
+
+                    override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
+
+                    }
+
+                    override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {
+
+                    }
+
+                })
+                decoder!!.configure(format, null, null, 0)
+                decoder!!.start()
+                extractor!!.seekTo(startTime, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
+                Log.i(TAG, "extractor ${identity()} initially seek to ${startTime} ")
+        }
+        lock.await()
+        extractor?.release()
+        kotlin.runCatching {
+            decoder?.stop()
+            decoder?.release()
+        }
+        Log.w(TAG, "${identity()} release codec and extractor")
+    }
+
 
     private fun byteArrayToBitMapUsingRenderScript() {
     }
@@ -282,6 +542,9 @@ internal class ExtractUnit(val id: Int, val config: ExtractConfig, val range: Ra
     fun identity(): String {
         val str = """
             [codec ${id}]
+            ${Thread.currentThread().name}
+            ${Thread.currentThread().id}
+            ${Looper.getMainLooper() == Looper.myLooper()}
         """.trimIndent()
         return str
     }
