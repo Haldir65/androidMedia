@@ -106,6 +106,8 @@ dependencies {
     androidTestImplementation libs.androidx.test.espresso.espresso.core
     implementation project(":medialibs:yuv")
     implementation project(":awesomelib")
+    implementation (projects.serviceloaderapi.serviceapi)
+
 
 
 }

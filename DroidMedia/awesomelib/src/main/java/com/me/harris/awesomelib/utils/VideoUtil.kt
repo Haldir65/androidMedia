@@ -57,7 +57,7 @@ object VideoUtil {
             strVideo = if (selfHosted) {
                 dir.listFiles { f -> f.name.endsWith(".mkv")  }.orEmpty()[0].absolutePath
             } else if (glassy){
-                dir.listFiles { f -> f.name.endsWith(".mkv")  }.orEmpty().lastOrNull()?.absolutePath.orEmpty()
+                dir.listFiles { f -> f.name.endsWith(".webm")  }.orEmpty()[2]?.absolutePath.orEmpty()
             }
             else {
                 fs.firstOrNull { it.name.contains("365") }?.absolutePath.orEmpty()

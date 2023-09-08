@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
 
     implementation (projects.awesomelib)
+    implementation (projects.serviceloaderapi.serviceapi)
+
 
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.test.junit)
@@ -95,4 +97,5 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.okio)
     implementation(libs.androidx.recyclerview.recyclerview)
+
 }

@@ -8,7 +8,9 @@ import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
+import android.os.Message
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.me.harris.awesomelib.utils.LogUtil
@@ -17,6 +19,7 @@ import com.me.harris.extractframe.VideoDecoder
 import com.me.harris.extractframe.VideoDecoder.COLOR_FORMAT_NV21
 import com.me.harris.extractframe.contract.ExtractConfiguration
 import com.me.harris.extractframe.parallel.Range
+import com.me.harris.extractframe.parallel.saveBitMapToDir
 import com.me.harris.libyuv.ImageToBitmap
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -245,26 +248,39 @@ internal class ExtractUnit(
         val gapMicroSeconds = config.gapInBetweenSeconds * 1000_000
         val lock = CountDownLatch(1)
         var decoder: MediaCodec? = null
+
+        val handlerThread = object :HandlerThread("${id}-extract-unit"){
+
+        }.apply {
+            start()
+        }
+        val handler = object :Handler(handlerThread.looper) {
+
+            override fun handleMessage(msg: Message) {
+                super.handleMessage(msg)
+                Log.w("=A=","${identity()} handle message ")
+            }
+        }
+
         var extractor: MediaExtractor = MediaExtractor()
-        withContext(Dispatchers.IO) {
-                extractor.setDataSource(filePath)
-                val index = selectVideoTrack(extractor = extractor!!)
-                if (index < 0) {
-                    error("failed to selectVideoTrack for material ${filePath}")
-                }
-                var rangeIndex = 0
-                val format = extractor.getTrackFormat(index)
-                val mime = format.getString(MediaFormat.KEY_MIME)!!
-                decoder = requireNotNull(MediaCodec.createDecoderByType(mime))
-                val width = format.getInteger(MediaFormat.KEY_WIDTH)
-                val height = format.getInteger(MediaFormat.KEY_HEIGHT)
-                val yuvLength = width * height * 3 / 2
-                //            val info = MediaCodec.BufferInfo()
-                var sawInputEOS = false
-                var sawOutputEOS = false
-                var outputFrameCount = 0
-                var startTime = range.points[rangeIndex]
-                mYuvBuffer = ByteArray(yuvLength)
+        extractor.setDataSource(filePath)
+        val index = selectVideoTrack(extractor = extractor!!)
+        if (index < 0) {
+            error("failed to selectVideoTrack for material ${filePath}")
+        }
+        var rangeIndex = 0
+        val format = extractor.getTrackFormat(index)
+        val mime = format.getString(MediaFormat.KEY_MIME)!!
+        decoder = requireNotNull(MediaCodec.createDecoderByType(mime))
+        val width = format.getInteger(MediaFormat.KEY_WIDTH)
+        val height = format.getInteger(MediaFormat.KEY_HEIGHT)
+        val yuvLength = width * height * 3 / 2
+        //            val info = MediaCodec.BufferInfo()
+        var sawInputEOS = false
+        var sawOutputEOS = false
+        var outputFrameCount = 0
+        var startTime = range.points[rangeIndex]
+        mYuvBuffer = ByteArray(yuvLength)
                 decoder!!.setCallback(object : MediaCodec.Callback() {
                     override fun onInputBufferAvailable(codec: MediaCodec, inputBufferId: Int) {
                         val inputBuffer = codec.getInputBuffer(inputBufferId)?:return
@@ -432,6 +448,22 @@ internal class ExtractUnit(
                     }
 
                     override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
+                        Log.e("=A=","""
+                            ${identity()} codec ${codec} 
+                           diagnosticInfo =  ${e.diagnosticInfo}
+                           ${e.errorCode}
+                           ${e.isRecoverable}
+                           ${e.isTransient}
+                           ${e.stackTraceToString()}  
+                           ///    codec android.media.MediaCodec@ad6239b 
+//                         diagnosticInfo =  android.media.MediaCodec.error_1100
+//                         1100   AMEDIACODEC_ERROR_INSUFFICIENT_RESOURCE = 1100,
+//                         false
+//                         false
+//                         android.media.MediaCodec CodecException: Error 0xfffffff4
+                            
+                        """.trimIndent())
+                        lock.countDown()
 
                     }
 
@@ -439,13 +471,13 @@ internal class ExtractUnit(
 
                     }
 
-                })
+                }, handler)
                 decoder!!.configure(format, null, null, 0)
                 decoder!!.start()
                 extractor!!.seekTo(startTime, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
                 Log.i(TAG, "extractor ${identity()} initially seek to ${startTime} ")
-        }
         lock.await()
+        handlerThread.quitSafely()
         extractor?.release()
         kotlin.runCatching {
             decoder?.stop()
@@ -541,10 +573,12 @@ internal class ExtractUnit(
 
     fun identity(): String {
         val str = """
+            
             [codec ${id}]
-            ${Thread.currentThread().name}
-            ${Thread.currentThread().id}
-            ${Looper.getMainLooper() == Looper.myLooper()}
+            Thread.currentThread().name = ${Thread.currentThread().name}
+            Thread.currentThread().id = ${Thread.currentThread().id}
+            isMainThread = ${Looper.getMainLooper() == Looper.myLooper()}
+            
         """.trimIndent()
         return str
     }
@@ -556,13 +590,22 @@ internal class ExtractUnit(
             return
         }
         LogUtil.d("savePicFile step 1, bitmap is not null. size = ${bitmap.allocationByteCount / (1024 * 1024)}MB")
-        val file = File(savePath)
-        if (!file.exists()) {
-            file.createNewFile()
+        val ratio = ExtractConfiguration.BITMAP_RESIZE_FACTOR
+        val bmp = if(ratio>0) Bitmap.createScaledBitmap(bitmap,bitmap.width/ratio,bitmap.height/ratio,false) else bitmap
+        if (ExtractConfiguration.SAVE_BIT_MAP_USE_TURBO_JPEG){
+            saveJpeg(bmp,100,"",savePath,true,false)
+        }else {
+            val file = File(savePath)
+            if (!file.exists()) {
+                file.createNewFile()
+            }
+            val outputStream = FileOutputStream(file)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
         }
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-        outputStream.flush()
-        outputStream.close()
+
+
+
     }
 }
