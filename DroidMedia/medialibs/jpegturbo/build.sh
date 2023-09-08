@@ -45,14 +45,17 @@ fi
 #TOOLCHAIN_VERSION=4.9
 ANDROID_VERSION=24
 
+#-mcpu=cortex-a8  the clang compiler does not support '-mcpu=cortex-a8'
+## argument unused during compilation: '-mfpu=neon' Advanced SIMD (aka NEON) is mandatory for AArch64
+
 ANDROID_ARMV5_CFLAGS="-march=armv5te"
 ANDROID_ARMV7_CFLAGS="-march=armv7-a -mfloat-abi=softfp -mfpu=neon"  # -mfpu=vfpv3-d16  -fexceptions -frtti
-ANDROID_ARMV8_CFLAGS="-march=armv8-a"                   # -mfloat-abi=softfp -mfpu=neon -fexceptions -frtti
+ANDROID_ARMV8_CFLAGS="-march=armv8-a"                   # -mfloat-abi=softfp -mfpu=neon -fexceptions -frtti  
 ANDROID_X86_CFLAGS="-march=i386 -mtune=intel -mssse3 -mfpmath=sse -m32"
 ANDROID_X86_64_CFLAGS="-march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel"
 
 
-//https://github.com/libjpeg-turbo/libjpeg-turbo/blob/main/BUILDING.md
+##https://github.com/libjpeg-turbo/libjpeg-turbo/blob/main/BUILDING.md
 # params($1:arch,$2:arch_abi,$3:host,$4:compiler,$5:cflags,$6:processor)
 build_bin() {
 
