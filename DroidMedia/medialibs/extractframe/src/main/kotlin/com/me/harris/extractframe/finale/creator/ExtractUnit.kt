@@ -82,7 +82,7 @@ internal class ExtractUnit(
             while (!sawOutputEOS) {
                 currentCoroutineContext().ensureActive()
                 if (!sawInputEOS) {
-                    val inputBufferId = decoder.dequeueInputBuffer(DEFAULT_TIMEOUT_US)
+                    val inputBufferId = kotlin.runCatching { decoder.dequeueInputBuffer(DEFAULT_TIMEOUT_US) }.onFailure { sawOutputEOS = true }.getOrElse { -1 }
                     if (inputBufferId >= 0) {
                         val inputBuffer = requireNotNull(decoder.getInputBuffer(inputBufferId))
                         val sampleSize = extractor.readSampleData(inputBuffer, 0)
@@ -281,7 +281,7 @@ internal class ExtractUnit(
         var outputFrameCount = 0
         var startTime = range.points[rangeIndex]
         mYuvBuffer = ByteArray(yuvLength)
-                decoder!!.setCallback(object : MediaCodec.Callback() {
+        decoder!!.setCallback(object : MediaCodec.Callback() {
                     override fun onInputBufferAvailable(codec: MediaCodec, inputBufferId: Int) {
                         val inputBuffer = codec.getInputBuffer(inputBufferId)?:return
                         if (sawInputEOS) return
@@ -449,19 +449,19 @@ internal class ExtractUnit(
 
                     override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
                         Log.e("=A=","""
-                            ${identity()} codec ${codec} 
+                            ${identity()} codec ${codec}
                            diagnosticInfo =  ${e.diagnosticInfo}
                            ${e.errorCode}
                            ${e.isRecoverable}
                            ${e.isTransient}
-                           ${e.stackTraceToString()}  
-                           ///    codec android.media.MediaCodec@ad6239b 
+                           ${e.stackTraceToString()}
+                           ///    codec android.media.MediaCodec@ad6239b
 //                         diagnosticInfo =  android.media.MediaCodec.error_1100
 //                         1100   AMEDIACODEC_ERROR_INSUFFICIENT_RESOURCE = 1100,
 //                         false
 //                         false
 //                         android.media.MediaCodec CodecException: Error 0xfffffff4
-                            
+
                         """.trimIndent())
                         lock.countDown()
 
@@ -573,12 +573,12 @@ internal class ExtractUnit(
 
     fun identity(): String {
         val str = """
-            
+
             [codec ${id}]
             Thread.currentThread().name = ${Thread.currentThread().name}
             Thread.currentThread().id = ${Thread.currentThread().id}
             isMainThread = ${Looper.getMainLooper() == Looper.myLooper()}
-            
+
         """.trimIndent()
         return str
     }

@@ -15,6 +15,11 @@ void main() {
     rgb.b = y + 1.772 * u;
 
 
+    //RGB to YUV
+    //Y =  0.299R + 0.587G + 0.114B
+    //U = -0.147R - 0.289G + 0.436B
+    //V =  0.615R - 0.515G - 0.100B
+
     if(v_texPosition.x > 0.5) {
         gl_FragColor = vec4(vec3(rgb.r*0.299 + rgb.g*0.587 + rgb.b*0.114), 1.0);
         //将输出视频帧的一半渲染成经典黑白风格的图像

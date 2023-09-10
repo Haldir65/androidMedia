@@ -18,7 +18,7 @@ fun initXcrash(context:Context){
         .setNativeDumpNetwork(true)
     xcrash.XCrash.init(context,params);
     val recent_crash =  TombstoneManager.getAllTombstones().orEmpty()
-    recent_crash.take(5).joinToString(separator = System.lineSeparator()) { f ->
+    recent_crash.filter(File::exists).take(5).joinToString(separator = System.lineSeparator()) { f ->
         f.readText(charset = StandardCharsets.UTF_8)
     }.let {
         Log.e("=A=",it)

@@ -23,7 +23,7 @@ object ExtractConfiguration {
 
     const val EXTRACT_FRAME_USE_LIBYUV = false // 极容易抛出oom
 
-    const val BITMAP_RESIZE_FACTOR = 4 // Save bitmap之前先宽高缩小对应比例
+    const val BITMAP_RESIZE_FACTOR = 1 // Save bitmap之前先宽高缩小对应比例
     const val SAVE_BIT_MAP_USE_TURBO_JPEG = false
 
     const val LOG_TAG = "=A="
