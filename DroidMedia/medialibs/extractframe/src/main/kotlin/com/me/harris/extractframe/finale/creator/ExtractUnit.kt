@@ -24,6 +24,7 @@ import com.me.harris.libyuv.ImageToBitmap
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
+import okio.AsyncTimeout.Companion.lock
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -446,8 +447,11 @@ internal class ExtractUnit(
                         if (sawOutputEOS) {
                             lock.countDown()
                         }
+                if (sawOutputEOS) {
+                    lock.countDown()
+                }
 
-                    }
+            }
 
                     override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
                         Log.e("=A=","""

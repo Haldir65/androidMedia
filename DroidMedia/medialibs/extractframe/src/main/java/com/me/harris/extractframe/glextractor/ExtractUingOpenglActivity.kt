@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.extractframe.R
+import com.me.harris.extractframe.VideoDecoder
 import com.me.harris.extractframe.databinding.FrameExtractGlActivityBinding
 import java.io.File
 
@@ -21,11 +22,14 @@ class ExtractUingOpenglActivity :AppCompatActivity(R.layout.frame_extract_gl_act
 
 
     }
+    private var videoDecoder: VideoDecoder? = null
+
 
     private fun setupGL(){
         val filepath = VideoUtil.strVideo
         val extractor = VideoFrameExtractor(this, Uri.fromFile(File(filepath)))
 //        extractor.extractMpegFrames()
+
 
     }
 

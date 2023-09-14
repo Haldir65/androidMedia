@@ -85,7 +85,7 @@ class FBOPixelsGen(private val size: Size,
     }
 
     override fun produceBitmap(): Bitmap {
-        if (usePbo) {
+        if (usePbo || false) {
             return pboReadPixels()
         }
         return fboReadPixels()
@@ -95,23 +95,30 @@ class FBOPixelsGen(private val size: Size,
      * FBO模式，默认缓冲区
      * */
     private fun fboReadPixels(): Bitmap {
+        var start = System.currentTimeMillis()
         Log.d(TAG, "read FBO: ")
         pixelBuf.rewind()
         GLES20.glReadPixels(0, 0, size.width, size.height, GLES20.GL_RGBA,
                 GLES20.GL_UNSIGNED_BYTE, pixelBuf)
+        Log.d(TAG, "read FBO: glReadPixels cost = ${System.currentTimeMillis() - start} ")
         val bmp = Bitmap.createBitmap(size.width, size.height, Bitmap.Config.ARGB_8888)
         pixelBuf.rewind()
+        start = System.currentTimeMillis()
         bmp.copyPixelsFromBuffer(pixelBuf)
+        Log.d(TAG, "read FBO: copyPixelsFromBuffer cost = ${System.currentTimeMillis() - start} ")
         return bmp
     }
 
     private fun pboReadPixels(): Bitmap {
-        Log.d(TAG, "PBO read: ")
+        var start = System.currentTimeMillis()
+        Log.d(TAG, "PBO read: start  ")
         GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, pboIds[index])
         // 2019-08-18-14:29 数据复制到缓冲区
 //        GLJni.glReadPixels(0, 0, size.width, size.height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE)
         GLES30.glReadPixels(0, 0, size.width, size.height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE,0)
 // added in api 24  https://developer.android.com/reference/android/opengl/GLES30#glReadPixels(int,%20int,%20int,%20int,%20int,%20int,%20int)
+
+        Log.d(TAG, "PBO read: end  cost = ${System.currentTimeMillis()-start}") // end  cost = 2
 
         GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, pboIds[nextIndex])
 
@@ -126,7 +133,9 @@ class FBOPixelsGen(private val size: Size,
         index = (index + 1) % PBO_COUNT
         nextIndex = (nextIndex + 1) % PBO_COUNT
         val bitmap = Bitmap.createBitmap(size.width, size.height, Bitmap.Config.ARGB_8888)
-        bitmap.copyPixelsFromBuffer(data)
+        start = System.currentTimeMillis()
+        bitmap.copyPixelsFromBuffer(data) // copyPixelsFromBuffer  cost = 37
+        Log.d(TAG, "PBO read: copyPixelsFromBuffer  cost = ${System.currentTimeMillis()-start}")
         return bitmap
     }
 

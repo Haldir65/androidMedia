@@ -67,6 +67,13 @@ internal class MediaKitDecodeFrameActivity : AppCompatActivity() {
 
         binding.msVideoSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
                 videoAnalyze?.apply {
                     updateTime(seekBar.progress, mediaFormat.durationSecond * 1000)
                 }
@@ -77,12 +84,6 @@ internal class MediaKitDecodeFrameActivity : AppCompatActivity() {
                         Log.d("cece", "throwable ${it.message}: ")
                     })
                 }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
             }
         })
     }
