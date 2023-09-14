@@ -396,7 +396,9 @@ internal class ExtractUnit(
                                     // image to jpeg file store
                                     var now = System.currentTimeMillis()
 //                            val bmp = ImageToBitmap.getBitmapFromImageUsingLibYUV(image)
-                                    val bmp = bmpStorage.getBitmapFromImageUsingLibYUV(image)
+//                                    val bmp = bmpStorage.getBitmapFromImageUsingLibYUV(image)
+                                    val bmp = ImageToBitmap.getBitMapFromImageUsingYUVImage(image,1,0) // Java YUVImage，一切正常
+
                                     Log.w(
                                         TAG,
                                         " ${identity()} transforming yuv ${mYuvBuffer?.size} to bmp at presentationTimeUs ${presentationTimeUs / 1000_000} cost me ${System.currentTimeMillis() - now} ms"
