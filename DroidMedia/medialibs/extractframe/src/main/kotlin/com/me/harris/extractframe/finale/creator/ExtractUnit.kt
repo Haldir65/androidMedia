@@ -247,7 +247,7 @@ internal class ExtractUnit(
         val filePath: String = config.filepath
         val durationMicroSeconds = config.videoDurationMicroSecond
         val gapMicroSeconds = config.gapInBetweenSeconds * 1000_000
-        val lock = CountDownLatch(1)
+        val lock = Mutex(locked = true)
         var decoder: MediaCodec? = null
 
         val handlerThread = object :HandlerThread("${id}-extract-unit"){
@@ -282,6 +282,8 @@ internal class ExtractUnit(
         var outputFrameCount = 0
         var startTime = range.points[rangeIndex]
         mYuvBuffer = ByteArray(yuvLength)
+
+
         decoder!!.setCallback(object : MediaCodec.Callback() {
                     override fun onInputBufferAvailable(codec: MediaCodec, inputBufferId: Int) {
                         val inputBuffer = codec.getInputBuffer(inputBufferId)?:return
@@ -445,15 +447,12 @@ internal class ExtractUnit(
                             Log.w(TAG, "${identity()} dequeueOutputBuffer = $outputBufferId ")
                         }
                         if (sawOutputEOS) {
-                            lock.countDown()
+                            lock.unlock()
                         }
-                if (sawOutputEOS) {
-                    lock.countDown()
-                }
 
             }
 
-                    override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
+            override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
                         Log.e("=A=","""
                             ${identity()} codec ${codec}
                            diagnosticInfo =  ${e.diagnosticInfo}
@@ -469,20 +468,20 @@ internal class ExtractUnit(
 //                         android.media.MediaCodec CodecException: Error 0xfffffff4
 
                         """.trimIndent())
-                        lock.countDown()
+                        lock.unlock()
 
-                    }
+            }
 
-                    override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {
+            override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {
 
-                    }
+            }
 
                 }, handler)
                 decoder!!.configure(format, null, null, 0)
                 decoder!!.start()
                 extractor!!.seekTo(startTime, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
                 Log.i(TAG, "extractor ${identity()} initially seek to ${startTime} ")
-        lock.await()
+        lock.lock()
         handlerThread.quitSafely()
         extractor?.release()
         kotlin.runCatching {
@@ -606,7 +605,7 @@ internal class ExtractUnit(
                 file.createNewFile()
             }
             val outputStream = FileOutputStream(file)
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            bmp.compress(Bitmap.CompressFormat.WEBP, 100, outputStream)
             outputStream.flush()
             outputStream.close()
         }
