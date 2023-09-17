@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.me.harris.serviceapi'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 27

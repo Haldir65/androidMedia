@@ -16,8 +16,9 @@ dependencies {
 
 android {
     publishNonDefault true
-    compileSdkVersion 21
-    buildToolsVersion "24.0.3"
+    compileSdk 34
+    buildToolsVersion = '34.0.0'
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7

@@ -20,7 +20,9 @@ internal class FrameExtractFinaleViewModel(application: Application) :AndroidVie
     val events = _events.asSharedFlow()
 
     fun startExtract(config: ExtractConfig){
-        viewModelScope.launch {
+        viewModelScope.launch (CoroutineExceptionHandler { e,a ->
+            Log.e("=A=","critical ${a.stackTraceToString()}")
+        }){
             val start = System.currentTimeMillis()
             val context = getApplication<Application>()
             _events.emit(Event.ExtractStartEvent)
@@ -30,8 +32,8 @@ internal class FrameExtractFinaleViewModel(application: Application) :AndroidVie
                 ExtractUnit(index,config,m.range,context)
             }.map { a->
                 async(Dispatchers.IO) {
-                    a.doingExtractAsync()
-//                    a.doingExtract()
+//                    a.doingExtractAsync()
+                    a.doingExtract()
                 }
             }.awaitAll()
             val cost = System.currentTimeMillis() - start

@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.me.harris.mediainfo'
-    compileSdk 33
+    compileSdk 34
 
     buildFeatures {
         buildConfig = true
