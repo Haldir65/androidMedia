@@ -1,6 +1,10 @@
 
 
 #include "JpegSpoon.h"
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <vector>
 
 
 METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
@@ -114,8 +118,12 @@ int JpegSpoon::write_JPEG_file(BYTE *data, int w, int h, int quality, const char
     return 0;
 }
 
+#define COMPRESS_MODE_TURBO_JPEG  1
+#define COMPRESS_MODE_LIBJPEG_FILE  2
+#define COMPRESS_MODE_LIBJPEG_IN_MEMORY  3
+
 jint JpegSpoon::compressBitmap(JNIEnv *env, jobject thiz, jobject bitmap, jint quality,
-                               jstring out_file_path, jboolean optimize,bool turbo) {
+                               jstring out_file_path, jboolean optimize,int mode) {
 
 
     //获取Bitmap信息
@@ -134,16 +142,26 @@ jint JpegSpoon::compressBitmap(JNIEnv *env, jobject thiz, jobject bitmap, jint q
     ALOGI("path=%s", path);
     int resultCode = 0;
     auto startTime = std::chrono::high_resolution_clock::now();
-    if (turbo){
-        // Turbojpeg进行压缩，并写入文件
-        resultCode =  compress_rgb_to_jpeg(tempData,quality,static_cast<int>(w),static_cast<int>(h),path);
-    } else {
-        // Libjpeg进行压缩，并写入文件
-        resultCode = write_JPEG_file(tempData, static_cast<int>(w), static_cast<int>(h), quality, path, optimize);
+    switch (mode) {
+        case COMPRESS_MODE_TURBO_JPEG:
+            // Turbojpeg进行压缩，并写入文件
+            resultCode =  compress_rgb_to_jpeg(tempData,quality,static_cast<int>(w),static_cast<int>(h),path);
+            break;
+        case COMPRESS_MODE_LIBJPEG_FILE:
+            // Libjpeg进行压缩，并写入文件
+            resultCode = write_JPEG_file(tempData, static_cast<int>(w), static_cast<int>(h), quality, path, optimize);
+            break;
+        case COMPRESS_MODE_LIBJPEG_IN_MEMORY:
+            // Libjpeg进行压缩，并写入memory
+            resultCode = write_JPEG_file_in_memory(tempData, static_cast<int>(w), static_cast<int>(h), quality, path,optimize);
+            break;
+        default:
+            resultCode = -1;
+            break;
     }
     auto endTime = std::chrono::high_resolution_clock::now();
     auto cost = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-    ALOGW(" turbo = %i compress bitmap with width = %d height %d  \n to file %s \n cost me %s milliseconds ",turbo, w, h,path,std::to_string(cost).c_str());
+    ALOGW(" turbo = %i compress bitmap with width = %d height %d  \n to file %s \n cost me %s milliseconds ",mode, w, h,path,std::to_string(cost).c_str());
     if (resultCode == -1) {
         return -1;
     }
@@ -284,6 +302,193 @@ BYTE* JpegSpoon::read_rgb_buffer_from_bitmap(JNIEnv *env, jobject thiz, jobject 
     }
     AndroidBitmap_unlockPixels(env, bitmap);
     return tempData;
+}
+
+int JpegSpoon::write_JPEG_file_in_memory(BYTE *data, int w, int h, int quality, const char *outFileName,
+                                         bool optimize) {
+    struct jpeg_compress_struct jpegCompressStruct;
+
+
+    struct my_error_mgr jem;
+
+    jpegCompressStruct.err = jpeg_std_error(&jem.pub);
+    jem.pub.error_exit = my_error_exit;
+    if (setjmp(jem.setjmp_buffer)){
+        /* If we get here, the JPEG code has signaled an error.
+      and return.
+      */
+        return -1;
+    }
+
+    // 创建代表压缩的结构体
+    jpeg_create_compress(&jpegCompressStruct);
+
+    // 文件方式输出 还有一种是内存方式
+//    jpeg_stdio_dest(&jpegCompressStruct, fp);
+    unsigned char *outbuffer = new unsigned char [w*h*3];
+    unsigned long outSize = 0;
+    jpeg_mem_dest(&jpegCompressStruct,(static_cast<unsigned char **>(&outbuffer)), &outSize);
+
+    // 设置压缩的相关参数信息
+    jpegCompressStruct.image_width = w;
+    jpegCompressStruct.image_height = h;
+    jpegCompressStruct.arith_code = false;
+    jpegCompressStruct.input_components = 3;
+    // 设置解压的颜色
+    jpegCompressStruct.in_color_space = JCS_RGB;
+    jpeg_set_defaults(&jpegCompressStruct);
+    // 压缩的质量
+    jpegCompressStruct.optimize_coding = quality;
+    jpeg_set_quality(&jpegCompressStruct, quality, TRUE);
+
+    auto startTime = std::chrono::high_resolution_clock::now();
+    // 开始压缩
+    jpeg_start_compress(&jpegCompressStruct, TRUE);
+    // JSAMPROW 代表每行的数据
+    JSAMPROW row_pointer[1];
+    int row_stride = jpegCompressStruct.image_width * 3;
+
+    while (jpegCompressStruct.next_scanline < jpegCompressStruct.image_height) {
+        startTime = std::chrono::high_resolution_clock::now();
+
+        // data 参数就是要压缩的数据源
+        // 逐行读取像素内容
+        row_pointer[0] = &data[jpegCompressStruct.next_scanline * row_stride];
+        // 写入数据
+        jpeg_write_scanlines(&jpegCompressStruct, row_pointer, 1);
+
+        auto endTime = std::chrono::high_resolution_clock::now();
+        auto cost = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+        ALOGI("write each line at line num %d cost me %s microseconds ",jpegCompressStruct.next_scanline,std::to_string(cost).c_str());
+
+    }
+
+
+    // 完成压缩
+    jpeg_finish_compress(&jpegCompressStruct);
+    // 释放相应的结构体
+    jpeg_destroy_compress(&jpegCompressStruct);
+
+
+    // write file
+    startTime = std::chrono::high_resolution_clock::now();
+    std::string_view filepath { outFileName };
+    std::fstream fos { filepath ,std::ios::out | std::ios::binary };
+    if (fos){
+        fos.write(reinterpret_cast<const char *>(outbuffer), (std::streamsize)outSize);
+    } else {
+        ALOGI("fatal , failed to write jpeg buff to file %s \n", outFileName);
+    }
+    auto endTime = std::chrono::high_resolution_clock::now();
+     auto cost = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+    ALOGW(" writing jpeg buffer with size %lu bytes to jpeg file %s using fstream \n  cost me %s microseconds \n the original rgb buffer size is %d bytes ", outSize,outFileName,std::to_string(cost).c_str(),(w*h*3));
+
+    delete[] outbuffer;
+
+    ALOGW("out size = %ld , write to %s",outSize,outFileName);
+
+    return 0;
+}
+
+
+// https://mp.weixin.qq.com/s/x-dTLowXcqysnLxZ0BGA2g
+long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string jpeg_path,
+                                          jobject dstBuffer) {
+    const std::string_view jpegfile = std::string_view{jpeg_path};
+    if (!std::filesystem::exists(jpegfile)) {
+        return 0;
+    }
+
+    std::ifstream inputFile { jpegfile, std::ios ::binary | std::ios::in};
+
+    if (!inputFile) {
+        std::cerr << "Failed to open binary file" << std::endl;
+        return -1;
+    }
+
+    // Move the pointer to the end of the file to get the file size
+    inputFile.seekg(0, inputFile.end);
+    size_t fileSize = inputFile.tellg();
+    inputFile.seekg(0, inputFile.beg);
+
+
+    // Read the binary file into a vector buffer
+    std::vector<char> buffer(fileSize);
+    inputFile.read(buffer.data(), fileSize);
+
+    // Close the file
+    inputFile.close();
+
+    // Process the content of the binary file as needed
+    // For this example, we'll just print the size of the file
+    std::cout << "The binary file size is: " << fileSize << " bytes." << std::endl;
+
+
+    char * jpegBuffer = &buffer[0];
+   // https://stackoverflow.com/a/2923290  vector to arrray
+
+
+    struct jpeg_decompress_struct cinfo;
+
+
+    struct my_error_mgr jem;
+
+    cinfo.err = jpeg_std_error(&jem.pub);
+    jem.pub.error_exit = my_error_exit;
+    if (setjmp(jem.setjmp_buffer)){
+        /* If we get here, the JPEG code has signaled an error.
+      and return.
+      */
+        return -1;
+    }
+
+    FILE * fp= fopen(jpeg_path.c_str(),"rb");
+    jpeg_create_decompress(&cinfo);
+    // 设置数据源数据方式 这里以文件的方式，也可以以内存数据的方式
+    jpeg_stdio_src(&cinfo, fp);
+    // 读取文件信息，比如宽高之类的
+    jpeg_read_header(&cinfo, TRUE);
+
+
+    // 设置解压的相关参数：
+    jpeg_start_decompress(&cinfo); // 这一行走完，output_width就都有了
+    unsigned long width = cinfo.output_width; //1760
+    unsigned long height = cinfo.output_height; // 990
+    unsigned short depth = cinfo.output_components; //3
+     long row_stride = cinfo.output_width * cinfo.output_components; // 5280
+
+    ALOGW("image %s has width = %d , height = %d , output_components = %d ",jpeg_path.c_str(),cinfo.output_width,cinfo.image_height,cinfo.num_components)
+
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    // 保存每行解压的数据内容
+    JSAMPARRAY tmp;
+    // 初始化
+    tmp = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
+
+    // 保存图像的所有数据
+    unsigned char *src_buff;
+    // 初始化并置空
+    src_buff = static_cast<unsigned char *>(malloc(width * height * depth));
+    memset(src_buff, 0, sizeof(unsigned char) * width * height * depth);
+
+
+    unsigned char *point = src_buff;
+
+    while (cinfo.output_scanline < height) {
+        jpeg_read_scanlines(&cinfo, tmp, 1);
+        memcpy(point, *tmp, width * depth);
+        point += width * depth;
+    }
+
+    jpeg_finish_decompress(&cinfo);
+    jpeg_destroy_decompress(&cinfo);
+
+    free(src_buff);
+
+    // todo -> copy rgb buffer to direct buffer
+
+    return 0;
 }
 
 

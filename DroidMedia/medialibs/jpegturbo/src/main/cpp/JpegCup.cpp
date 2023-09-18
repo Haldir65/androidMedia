@@ -24,7 +24,7 @@ Java_com_me_harris_libjpeg_JpegSpoon_compressbitmap(JNIEnv *env, jobject thiz, j
 
     char *storagePath = (char *) env->GetStringUTFChars(storageDir, nullptr);
     JpegSpoon p {env,storagePath} ;
-    jint result = p.compressBitmap(env,thiz,bitmap,quality,out_file_path,optimize,turbo);
+    jint result = p.compressBitmap(env,thiz,bitmap,quality,out_file_path,optimize,turbo?1:2);
     std::string a(" result from compressBitmap = ");
     a.append(std::to_string(result));
     ALOGD("some %s",a.c_str());
@@ -35,3 +35,33 @@ Java_com_me_harris_libjpeg_JpegSpoon_compressbitmap(JNIEnv *env, jobject thiz, j
 
 
 
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_me_harris_libjpeg_JpegSpoon_compressbitmapInMemory(JNIEnv *env, jobject thiz,
+                                                            jobject bitmap, jint quality,
+                                                            jstring storage_dir,
+                                                            jstring out_file_path,
+                                                            jboolean optimize, jboolean turbo) {
+    char *storagePath = (char *) env->GetStringUTFChars(storage_dir, nullptr);
+    JpegSpoon p {env,storagePath} ;
+    jint result = p.compressBitmap(env,thiz,bitmap,quality,out_file_path,optimize,3);
+    std::string a(" result from compressBitmap = ");
+    a.append(std::to_string(result));
+    ALOGD("some %s",a.c_str());
+    return result;
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_me_harris_libjpeg_JpegSpoon_decompressBitmapFromJpegFilePath(JNIEnv *env, jobject thiz,
+                                                                      jstring jpeg_path,
+                                                                      jobject buffer) {
+    // decompress file , copy into DirectBytebuffer , so no large chunk of data across jni boundary is needed , only pointer address
+    char *filepath = (char *) env->GetStringUTFChars(jpeg_path, nullptr);
+    JpegSpoon p {env,filepath} ;
+    jint result = p.decompressjpegToRgbBuffer(env,thiz,std::string{filepath} ,buffer);
+    std::string a(" result from compressBitmap = ");
+    a.append(std::to_string(result));
+    ALOGD("some %s",a.c_str());
+    return result;
+}

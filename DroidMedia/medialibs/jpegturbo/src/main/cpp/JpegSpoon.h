@@ -49,6 +49,7 @@ public:
     void callSomeMethod();
 
     int write_JPEG_file(BYTE *data, int w, int h, int quality, const char *outFileName, bool optimize);
+    int write_JPEG_file_in_memory(BYTE *data, int w, int h, int quality, const char *outFileName, bool optimize);
 
     int yuv_2_jpeg_buffer_Turbo(BYTE *yuvBuffer, int yuvSize, int width, int height, int padding,
                                 int quality,
@@ -57,7 +58,10 @@ public:
 
     jint compressBitmap(JNIEnv *env, jobject thiz, jobject bitmap,
                         jint quality, jstring out_file_path,
-                        jboolean optimize,bool turbo);
+                        jboolean optimize,int mode);
+
+     long decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz,std::string jpeg_path,jobject dstBuffer);
+
 };
 
 

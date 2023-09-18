@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.me.harris.libjpeg.JpegSpoon
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import java.nio.ByteBuffer
 
 internal class LibJpegEntryViewModel :ViewModel(){
 
@@ -32,6 +33,7 @@ internal class LibJpegEntryViewModel :ViewModel(){
             val width = bitmap.width
             val height = bitmap.height
             spoon.compressbitmap(bitmap, quality, storage_dir,outFilePath, optimize,turbo)
+            spoon.decompressBitmapFromJpegFilePath(outFilePath, ByteBuffer.allocateDirect(bitmap.width*bitmap.height*3))
             Log.w("=A=","compress bitmap w = ${width} h = ${height} to $outFilePath cost me ${System.currentTimeMillis() - now} milliseconds ")
             events.emit(if (turbo)CompressEvents.TurboCompressCompleted(path = outFilePath) else CompressEvents.CompressCompleted(path = outFilePath))
         }

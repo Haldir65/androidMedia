@@ -1,6 +1,7 @@
 package com.me.harris.libjpeg
 
 import android.graphics.Bitmap
+import java.nio.ByteBuffer
 
 object JpegSpoon {
 
@@ -9,5 +10,9 @@ object JpegSpoon {
     }
 
     external fun compressbitmap(bitmap: Bitmap,quality:Int,storage_dir:String,outFilePath:String,optimize:Boolean,turbo:Boolean):Int
+    external fun compressbitmapInMemory(bitmap: Bitmap,quality:Int,storage_dir:String,outFilePath:String,optimize:Boolean,turbo:Boolean):Int
+
+
+    external fun decompressBitmapFromJpegFilePath(jpegPath:String,buffer:ByteBuffer):Int
     external fun basic(string :String)
 }
