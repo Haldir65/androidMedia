@@ -44,6 +44,8 @@ add_library( # Sets the name of the library.
         JpegSpoon.cpp
         JpegCup.cpp
         JpegSpoon.h
+        JpegFactory.cpp
+        JpegFactory.h
         AndroidLog.h
         YuvToJpegUtil.cpp
         YuvToJpegUtil.h

@@ -62,6 +62,10 @@ public:
 
      long decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz,std::string jpeg_path,jobject dstBuffer);
 
+     long decompressjpegToRgbBufferTurbo(JNIEnv *env, jobject thiz,std::string jpeg_path,jobject dstBuffer,jint width,jint height);
+
+     jintArray probeJpegFileInfo(JNIEnv *env,jobject thiz,std::string jpeg_path);
+
 };
 
 

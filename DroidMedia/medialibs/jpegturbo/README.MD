@@ -27,3 +27,15 @@ https://github.com/Denislyl/AndroidMediaCodec/blob/master/H264MediaCodec.cpp
 https://www.jianshu.com/p/5d62a3cf0741
 https://zhuanlan.zhihu.com/p/211027199
 https://github.com/CatDroid/CodecANativeWin/blob/master/jni/HWH264DecodeAndEncode.cpp
+
+
+
+lesson learnt
+一张1920 * 1080 的jpeg文件（文件管理器中查看）
+
+BitmapFactory.decodeResource 会默认缩放Bitmap尺寸
+https://stackoverflow.com/a/23047893
+放到 drawable-nodpi就好了
+
+转成jpeg后用libjpeg read header       变为1760 * 990
+转成bitmap后变成  变为1760 *990 (就是这一步变小的) 这张bitmap 存进去adb pull出来变小了

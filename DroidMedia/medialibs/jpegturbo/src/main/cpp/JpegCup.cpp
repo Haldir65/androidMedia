@@ -20,11 +20,11 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_me_harris_libjpeg_JpegSpoon_compressbitmap(JNIEnv *env, jobject thiz, jobject bitmap,
                                                     jint quality,jstring storageDir, jstring out_file_path,
-                                                    jboolean optimize,jboolean turbo) {
+                                                    jboolean optimize,jint mode) {
 
     char *storagePath = (char *) env->GetStringUTFChars(storageDir, nullptr);
     JpegSpoon p {env,storagePath} ;
-    jint result = p.compressBitmap(env,thiz,bitmap,quality,out_file_path,optimize,turbo?1:2);
+    jint result = p.compressBitmap(env,thiz,bitmap,quality,out_file_path,optimize,mode);
     std::string a(" result from compressBitmap = ");
     a.append(std::to_string(result));
     ALOGD("some %s",a.c_str());
@@ -56,10 +56,38 @@ JNIEXPORT jint JNICALL
 Java_com_me_harris_libjpeg_JpegSpoon_decompressBitmapFromJpegFilePath(JNIEnv *env, jobject thiz,
                                                                       jstring jpeg_path,
                                                                       jobject buffer) {
-    // decompress file , copy into DirectBytebuffer , so no large chunk of data across jni boundary is needed , only pointer address
     char *filepath = (char *) env->GetStringUTFChars(jpeg_path, nullptr);
     JpegSpoon p {env,filepath} ;
     jint result = p.decompressjpegToRgbBuffer(env,thiz,std::string{filepath} ,buffer);
+    std::string a(" result from compressBitmap = ");
+    a.append(std::to_string(result));
+    ALOGD("some %s",a.c_str());
+    return result;
+}
+
+
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_me_harris_libjpeg_JpegSpoon_probeJpegInfo(JNIEnv *env, jobject thiz, jstring jpeg_path) {
+    char *filepath = (char *) env->GetStringUTFChars(jpeg_path, nullptr);
+    JpegSpoon p {env,filepath} ;
+    auto array =  p.probeJpegFileInfo(env,thiz,filepath);
+    return array;
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_me_harris_libjpeg_JpegSpoon_decompressBitmapFromJpegFilePathTurbo(JNIEnv *env,
+                                                                           jobject thiz,
+                                                                           jstring jpeg_path,
+                                                                           jobject buffer,
+                                                                           jint width,
+                                                                           jint height) {
+    // decompress file , copy into DirectBytebuffer , so no large chunk of data across jni boundary is needed , only pointer address
+    char *filepath = (char *) env->GetStringUTFChars(jpeg_path, nullptr);
+    JpegSpoon p {env,filepath} ;
+    jint result = p.decompressjpegToRgbBufferTurbo(env,thiz,std::string{filepath} ,buffer,width,height);
     std::string a(" result from compressBitmap = ");
     a.append(std::to_string(result));
     ALOGD("some %s",a.c_str());

@@ -399,34 +399,33 @@ long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string
         return 0;
     }
 
-    std::ifstream inputFile { jpegfile, std::ios ::binary | std::ios::in};
-
-    if (!inputFile) {
-        std::cerr << "Failed to open binary file" << std::endl;
-        return -1;
-    }
-
-    // Move the pointer to the end of the file to get the file size
-    inputFile.seekg(0, inputFile.end);
-    size_t fileSize = inputFile.tellg();
-    inputFile.seekg(0, inputFile.beg);
-
-
-    // Read the binary file into a vector buffer
-    std::vector<char> buffer(fileSize);
-    inputFile.read(buffer.data(), fileSize);
-
-    // Close the file
-    inputFile.close();
-
-    // Process the content of the binary file as needed
-    // For this example, we'll just print the size of the file
-    std::cout << "The binary file size is: " << fileSize << " bytes." << std::endl;
-
-
-    char * jpegBuffer = &buffer[0];
+//    std::ifstream inputFile { jpegfile, std::ios ::binary | std::ios::in};
+//
+//    if (!inputFile) {
+//        std::cerr << "Failed to open binary file" << std::endl;
+//        return -1;
+//    }
+//
+//    // Move the pointer to the end of the file to get the file size
+//    inputFile.seekg(0, inputFile.end);
+//    size_t fileSize = inputFile.tellg();
+//    inputFile.seekg(0, inputFile.beg);
+//
+//
+//    // Read the binary file into a vector buffer
+//    std::vector<char> buffer(fileSize);
+//    inputFile.read(buffer.data(), fileSize);
+//
+//    // Close the file
+//    inputFile.close();
+//
+//    // Process the content of the binary file as needed
+//    // For this example, we'll just print the size of the file
+//    std::cout << "The binary file size is: " << fileSize << " bytes." << std::endl;
+//
+//
+//    char * jpegBuffer = &buffer[0];
    // https://stackoverflow.com/a/2923290  vector to arrray
-
 
     struct jpeg_decompress_struct cinfo;
 
@@ -442,6 +441,7 @@ long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string
         return -1;
     }
 
+
     FILE * fp= fopen(jpeg_path.c_str(),"rb");
     jpeg_create_decompress(&cinfo);
     // 设置数据源数据方式 这里以文件的方式，也可以以内存数据的方式
@@ -449,9 +449,14 @@ long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string
     // 读取文件信息，比如宽高之类的
     jpeg_read_header(&cinfo, TRUE);
 
+    // To use it after your jpeg_read_header() call (because this call sets a member on cinfo we need to a default)
+    // but before your jpeg_start_decompress() call (because it uses the value of this member), add:
+
+    cinfo.out_color_space = JCS_EXT_RGBX;
 
     // 设置解压的相关参数：
     jpeg_start_decompress(&cinfo); // 这一行走完，output_width就都有了
+
     unsigned long width = cinfo.output_width; //1760
     unsigned long height = cinfo.output_height; // 990
     unsigned short depth = cinfo.output_components; //3
@@ -484,9 +489,120 @@ long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string
     jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
 
-    free(src_buff);
 
     // todo -> copy rgb buffer to direct buffer
+    char *cBuffer = static_cast<char *>(env->GetDirectBufferAddress(dstBuffer));
+
+    memcpy(cBuffer,src_buff,width*height*cinfo.output_components);
+
+    free(src_buff);
+    ALOGW("done copy rgb buffer to directBuffer")
+
+    return 0;
+}
+
+jintArray JpegSpoon::probeJpegFileInfo(JNIEnv *env, jobject thiz, std::string jpeg_path) {
+    jintArray result;
+    int size = 2;
+    result = env->NewIntArray(size);
+    jint  fill[size];
+    for (int i =0;i<size;i++) {
+        fill[i] = -1;
+    }
+    if (!result) return nullptr;
+    const std::string_view jpegfile = std::string_view{jpeg_path};
+    if (!std::filesystem::exists(jpegfile)) {
+        env->SetIntArrayRegion(result,0,size,fill);
+        return result;
+    }
+    struct jpeg_decompress_struct cinfo;
+
+
+
+    struct my_error_mgr jem;
+
+    cinfo.err = jpeg_std_error(&jem.pub);
+    jem.pub.error_exit = my_error_exit;
+    if (setjmp(jem.setjmp_buffer)){
+        /* If we get here, the JPEG code has signaled an error.
+      and return.
+      */
+        return nullptr;
+    }
+
+    FILE * fp= fopen(jpeg_path.c_str(),"rb");
+    jpeg_create_decompress(&cinfo);
+    // 设置数据源数据方式 这里以文件的方式，也可以以内存数据的方式
+    jpeg_stdio_src(&cinfo, fp);
+    // 读取文件信息，比如宽高之类的
+    jpeg_read_header(&cinfo, TRUE);
+    fill[0] = static_cast<int>(cinfo.image_width);
+    fill[1] = static_cast<int>(cinfo.image_height);
+
+//    jpeg_finish_decompress(&cinfo);
+    jpeg_destroy_decompress(&cinfo);
+    env->SetIntArrayRegion(result,0,size,fill);
+    return result;
+}
+
+// https://stackoverflow.com/questions/9094691/examples-or-tutorials-of-using-libjpeg-turbos-turbojpeg
+long JpegSpoon::decompressjpegToRgbBufferTurbo(JNIEnv *env, jobject thiz, std::string jpeg_path, jobject dstBuffer,jint width,jint height) {
+    std::ifstream inputFile { jpeg_path, std::ios ::binary | std::ios::in};
+
+    if (!inputFile) {
+        std::cerr << "Failed to open binary file" << std::endl;
+        return -1;
+    }
+
+    // Move the pointer to the end of the file to get the file size
+    inputFile.seekg(0, inputFile.end);
+    size_t fileSize = inputFile.tellg();
+    inputFile.seekg(0, inputFile.beg);
+
+
+    // Read the binary file into a vector buffer
+    std::vector<char> buffer(fileSize);
+    inputFile.read(buffer.data(), fileSize);
+
+    // Close the file
+    inputFile.close();
+
+    // Process the content of the binary file as needed
+    // For this example, we'll just print the size of the file
+    std::cout << "The binary file size is: " << fileSize << " bytes." << std::endl;
+
+
+    char * jpegBuffer = &buffer[0];
+
+    std::chrono::time_point<std::chrono::steady_clock> start, end;
+    start = std::chrono::steady_clock::now();
+
+    long unsigned int _jpegSize = fileSize; //!< _jpegSize from above
+    unsigned char* _compressedImage = reinterpret_cast<unsigned char *>(jpegBuffer); //!< _compressedImage from above
+
+    int pixelFormat = TJPF_BGRX;
+
+    int COLOR_COMPONENTS = tjPixelSize[pixelFormat]; // 4
+
+    int jpegSubsamp;
+
+    unsigned char *imgBuf  = (unsigned char *)tjAlloc(width*height*COLOR_COMPONENTS); // //!< will contain the decompressed image
+    tjhandle _jpegDecompressor = tjInitDecompress();
+
+    int flags = TJFLAG_FASTDCT;
+    tjDecompressHeader2(_jpegDecompressor, _compressedImage, _jpegSize, &width, &height, &jpegSubsamp);
+
+    tjDecompress2(_jpegDecompressor, _compressedImage, _jpegSize, imgBuf, width, 0/*pitch*/, height, TJPF_RGB, flags);
+    char *cBuffer = static_cast<char *>(env->GetDirectBufferAddress(dstBuffer));
+    memcpy(cBuffer,imgBuf,width*height*COLOR_COMPONENTS);
+
+    tjFree(imgBuf);
+    tjDestroy(_jpegDecompressor);
+
+    end = std::chrono::steady_clock::now();
+    std::chrono::duration<double, std::milli> elapsed_time = end - start;
+    std::cout << "turbo uncompress jpg to bmp: " << elapsed_time.count() << std::endl;
+    ALOGW("turbo uncompress jpg to bmp: cost me %f milliseconds ",elapsed_time.count())
 
     return 0;
 }

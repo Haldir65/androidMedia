@@ -13,6 +13,6 @@ class JpegLibServiceImpl: JpegLibService {
         optimize: Boolean,
         turbo: Boolean
     ): Int {
-        return JpegSpoon.compressbitmap(bitmap, quality, storage_dir, outFilePath, optimize, turbo)
+        return JpegSpoon.compressbitmap(bitmap, quality, storage_dir, outFilePath, optimize, mode = JpegSpoon.COMPRESS_MODE_TURBO_JPEG)
     }
 }
