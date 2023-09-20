@@ -541,6 +541,7 @@ jintArray JpegSpoon::probeJpegFileInfo(JNIEnv *env, jobject thiz, std::string jp
 
 //    jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
+    fclose(fp);
     env->SetIntArrayRegion(result,0,size,fill);
     return result;
 }
@@ -548,7 +549,8 @@ jintArray JpegSpoon::probeJpegFileInfo(JNIEnv *env, jobject thiz, std::string jp
 // https://stackoverflow.com/questions/9094691/examples-or-tutorials-of-using-libjpeg-turbos-turbojpeg
 long JpegSpoon::decompressjpegToRgbBufferTurbo(JNIEnv *env, jobject thiz, std::string jpeg_path, jobject dstBuffer,jint width,jint height) {
     std::ifstream inputFile { jpeg_path, std::ios ::binary | std::ios::in};
-
+    std::chrono::time_point<std::chrono::steady_clock> start, end;
+    start = std::chrono::steady_clock::now();
     if (!inputFile) {
         std::cerr << "Failed to open binary file" << std::endl;
         return -1;
@@ -574,8 +576,7 @@ long JpegSpoon::decompressjpegToRgbBufferTurbo(JNIEnv *env, jobject thiz, std::s
 
     char * jpegBuffer = &buffer[0];
 
-    std::chrono::time_point<std::chrono::steady_clock> start, end;
-    start = std::chrono::steady_clock::now();
+
 
     long unsigned int _jpegSize = fileSize; //!< _jpegSize from above
     unsigned char* _compressedImage = reinterpret_cast<unsigned char *>(jpegBuffer); //!< _compressedImage from above

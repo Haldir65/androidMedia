@@ -29,3 +29,4 @@ project(':mango:nativecrash').projectDir = file('mango/nativecrash')
 project(':mango:nativecrash').buildFileName = 'project-a.gradle' // modify elements of projectDescriptor
 include ':medialibs:jpegturbo'
 include ':medialibs:audiolib'
+include ':medialibs:pnglib'

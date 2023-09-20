@@ -90,18 +90,24 @@ internal class LibJpegEntryViewModel :ViewModel(){
             val now = System.currentTimeMillis()
             val (width, height) = spoon.probeJpegInfo(jpegFilePath);
             require(width>0 && height >0 ) { " width or height must > 0" }
-            Log.w("=A=","jpeg file ${jpegFilePath} has width = ${width} height = ${height}")
+            Log.w("=A=","jpeg file ${jpegFilePath} has width = ${width} height = ${height} cost is ${System.currentTimeMillis()-now}")
             val outBuffer = ByteBuffer.allocateDirect(width*height*4).apply {
                 order(ByteOrder.nativeOrder())
             }
+            Log.w("=A=","turbo allocateDirect cost me ${System.currentTimeMillis()-now}")
             outBuffer.flip()
+            val t = System.currentTimeMillis()
             spoon.decompressBitmapFromJpegFilePathTurbo(jpegFilePath, outBuffer,width, height) // return image width + image height
+            Log.w("=A=","turbo decompressBitmapFromJpegFilePathTurbo cost me ${System.currentTimeMillis()-t}")
             outBuffer.limit(width*height*4)
 
+
+            val start = System.currentTimeMillis()
             val bmp = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
             bmp.copyPixelsFromBuffer(outBuffer)
-            val count = bmp.allocationByteCount
-            Log.w("=A=","count is ${count}")
+            Log.w("=A=","turbo copy from buffer cost me ${System.currentTimeMillis()-start}")
+//            val count = bmp.allocationByteCount
+//            Log.w("=A=","count is ${count}")
             Log.w("=A=","decompress jpeg to bitmap turbo cost me ${System.currentTimeMillis()-now} microseconds")
 
             val start2 = System.currentTimeMillis()
