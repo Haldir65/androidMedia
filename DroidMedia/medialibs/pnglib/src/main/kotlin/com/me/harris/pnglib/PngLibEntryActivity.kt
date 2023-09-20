@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.me.harris.pnglib.databinding.ActivityPngEntryBinding
+import kotlinx.coroutines.*
 import java.io.File
+import java.nio.ByteBuffer
 
 class PngLibEntryActivity:AppCompatActivity() {
 
@@ -33,12 +36,86 @@ class PngLibEntryActivity:AppCompatActivity() {
             testPngFileIsPngFile()
         }
 
+        binding.btn2.setOnClickListener {
+            makeSureSaveDirExists()
+            retrievePngFileWidthAndHeight()
+            binding.comoressedImage2.setImageBitmap(assets.open(NON_SCALEABLE_BMP_NAME).use(BitmapFactory::decodeStream))
+        }
+
+        binding.btn3.setOnClickListener {
+            makeSureSaveDirExists()
+            decodePngToByteBuffer()
+        }
+
+        binding.btn4.setOnClickListener {
+            makeSureSaveDirExists()
+            saveBitmapToPngFileUsingLibPng()
+        }
     }
 
     private fun makeSureSaveDirExists() {
         val fileStorageDir = File(saveDir)
         fileStorageDir.deleteRecursively()
         fileStorageDir.mkdir()
+    }
+
+
+    private fun decodePngToByteBuffer(){
+        val pngPath = generatePngFileOnTheFly()
+        val width = viewModel.getPngWidth(pngPath)
+        val height = viewModel.getPngHeight(pngPath)
+        val hasAlpha = viewModel.spoon.pngHasAlpha(pngPath)
+        val size = width * height * 3 // rgb
+        val buffer = ByteBuffer.allocateDirect(size)
+        viewModel.decodePngToByteBuffer(pngPath,buffer)
+        buffer.limit(size) // 读的尽头，读的开始是0
+        // PNG_FORMAT_FLAG_ALPHA  在c层
+        val rgbaBuffer = ByteBuffer.allocateDirect(width * height * 4)
+        // rgb buffer to rgba buffer
+        repeat(width*height) {num ->
+            repeat(3){ i ->
+                rgbaBuffer.put(buffer.get(3*num+i))
+            }
+//            rgbaBuffer.put(0XFF.toByte())
+            rgbaBuffer.put(255.toByte())
+        }
+        rgbaBuffer.flip() // 读完了，读的开始设置为0，读的结束设置为当前写的结束
+        val bitmap = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
+        bitmap.copyPixelsFromBuffer(rgbaBuffer)
+        binding.comoressedImage3.setImageBitmap(bitmap)
+    }
+
+    /**
+     * bitmap pixel -> directBytebuffer -> jni -> pass buffer address -> copy from buffer -> rgba data to lib-png abgr?
+     */
+    private fun saveBitmapToPngFileUsingLibPng(){
+        val pngPath = generatePngFileOnTheFly()
+        val width = viewModel.getPngWidth(pngPath)
+        val height = viewModel.getPngHeight(pngPath)
+        val size = width * height * 4
+        val bmp = File(pngPath).inputStream().use(BitmapFactory::decodeStream)
+        val buffer = ByteBuffer.allocateDirect(size)
+        bmp.copyPixelsToBuffer(buffer)
+        val despath = "${saveDir}/opt_${System.currentTimeMillis()}.png"
+        viewModel.saveBitmapToPngFile(destfile = despath,buffer = buffer)
+        binding.comoressedImage4.load(despath) {
+            transformations(RoundedCornersTransformation(25f))
+        }
+    }
+
+    private fun retrievePngFileWidthAndHeight(){
+        val pngPath = generatePngFileOnTheFly()
+        viewModel.getPngHeight(pngPath)
+        viewModel.getPngWidth(pngPath)
+    }
+
+    private fun generatePngFileOnTheFly():String{
+        val despath = "${saveDir}/opt_${System.currentTimeMillis()}.png"
+        val bmp = assets.open(NON_SCALEABLE_BMP_NAME).use(BitmapFactory::decodeStream)
+        val fos = File(despath).outputStream()
+        bmp.compress(Bitmap.CompressFormat.PNG,100,fos)
+        require(File(despath).exists())
+        return despath
     }
 
     private fun testPngFileIsPngFile(){

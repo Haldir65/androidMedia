@@ -19,7 +19,7 @@ fun initXcrash(context:Context){
     xcrash.XCrash.init(context,params);
     val recent_crash =  TombstoneManager.getAllTombstones().orEmpty()
     recent_crash.filter(File::exists).take(5).joinToString(separator = System.lineSeparator()) { f ->
-        f.readText(charset = StandardCharsets.UTF_8)
+        runCatching { f.readText(charset = StandardCharsets.UTF_8) }.getOrNull().orEmpty()
     }.let {
         Log.e("=A=",it)
     }

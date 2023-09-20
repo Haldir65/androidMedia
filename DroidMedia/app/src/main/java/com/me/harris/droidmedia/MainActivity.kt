@@ -78,11 +78,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             startActivity(Intent(this,PngLibEntryActivity::class.java))
         }
         binding.btn10.setOnClickListener {
-            startActivity(Intent(this, AudioLibEntryActivity::class.java))
+            startActivity(Intent(this, LibJpegEntryActivity::class.java))
         }
 
         binding.btn11.setOnClickListener {
-
+            startActivity(Intent(this, AudioLibEntryActivity::class.java))
         }
         binding.btn12.setOnClickListener {
             startActivity(Intent(this, AwesomePickVideoActivity::class.java))
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         binding.btn14.setOnClickListener {
-            startActivity(Intent(this, LibJpegEntryActivity::class.java))
+
         }
     }
 

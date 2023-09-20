@@ -47,13 +47,13 @@ class AwesomePickVideoActivity:AppCompatActivity() {
                 val saveDir = applicationContext.filesDir
                 val name = srcFile.nameWithoutExtension
                 val extension = srcFile.extension
+                VideoUtil.setUrl(path)
                 val dstFile = File("${saveDir}${File.separator}${name}_copy.${extension}")
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && false) {
                     val start = System.currentTimeMillis()
                     android.os.FileUtils.copy(srcFile.inputStream(),dstFile.outputStream()) // sendFile
                     val cost = System.currentTimeMillis() - start
                     require(dstFile.exists())
-                    VideoUtil.setUrl(path)
                     Log.w(TAG,"copy file ${srcFile.absolutePath} use send file to ${dstFile.absolutePath} cost me ${cost} millisecond")
                 }
             }

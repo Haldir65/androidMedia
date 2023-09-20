@@ -30,3 +30,4 @@ project(':mango:nativecrash').buildFileName = 'project-a.gradle' // modify eleme
 include ':medialibs:jpegturbo'
 include ':medialibs:audiolib'
 include ':medialibs:pnglib'
+include ':medialibs:pnglib'

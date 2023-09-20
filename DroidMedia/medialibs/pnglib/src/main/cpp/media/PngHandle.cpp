@@ -29,6 +29,11 @@ int PngHandle::probePngFileInfo(std::string filepath) {
     return -1;
 }
 
+
+
+
+
+
 bool PngHandle::jpeg_header_tester(std::string filepath) {
     int width, height;
     FILE *image;

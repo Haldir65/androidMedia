@@ -70,11 +70,11 @@ object VideoUtil {
             else {
                 fs.firstOrNull { it.name.contains("365") }?.absolutePath.orEmpty()
             }
-            Log.w("=A=","strVideo = $strVideo")
         }
         if (!TextUtils.isEmpty(choosenFile)){
             strVideo = choosenFile
         }
+        Log.w("=A=","strVideo = $strVideo")
 
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
     }

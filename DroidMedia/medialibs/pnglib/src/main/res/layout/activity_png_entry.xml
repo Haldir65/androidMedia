@@ -151,7 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
-                    android:text="compress rgb to jpeg using turbo-jpeg"
+                    android:text="decode png to bitmap using libpng"
                     android:textAllCaps="false"
                     android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
@@ -195,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
-                    android:text="compress rgb to jpeg using lib-jpeg inmemory"
+                    android:text="compress bitmap to png using lib-png "
                     android:textAllCaps="false"
                     android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>

@@ -13,6 +13,7 @@ extern "C" {
 #endif
 #include "png.h"
 #include "pnglibconf.h"
+#include "pngpriv.h"
 #include "../AndroidLog.h"
 #ifdef __cplusplus
 }
