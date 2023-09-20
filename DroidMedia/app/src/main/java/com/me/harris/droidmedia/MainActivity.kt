@@ -14,6 +14,7 @@ import com.me.harris.cameralib.CameraEntryActivity
 import com.me.harris.audiolib.audiorecord.MediaCodecForAACActivity
 import com.me.harris.droidmedia.databinding.ActivityMainBinding
 import com.jadyn.mediakit.MediaKitEntryActivity
+import com.me.harris.AwesomePickVideoActivity
 import com.me.harris.audiolib.AudioLibEntryActivity
 import com.me.harris.droidmedia.entity.JUserInfo
 import com.me.harris.droidmedia.entity.SubUserInfo
@@ -28,6 +29,7 @@ import com.me.harris.gpuvideo.GPUVideoEntryActivity
 import com.me.harris.libjpeg.ui.LibJpegEntryActivity
 import com.me.harris.mediainfo.MediaInfoProbeActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
+import com.me.harris.pnglib.PngLibEntryActivity
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -73,6 +75,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
         binding.btn9.setOnClickListener {
             VideoUtil.setUrl()
+            startActivity(Intent(this,PngLibEntryActivity::class.java))
         }
         binding.btn10.setOnClickListener {
             startActivity(Intent(this, AudioLibEntryActivity::class.java))
@@ -82,6 +85,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         }
         binding.btn12.setOnClickListener {
+            startActivity(Intent(this, AwesomePickVideoActivity::class.java))
 
 //         ServiceHelper.getService(DisplayB::class.java)?.name.orEmpty().let { Log.w("=A=","service loader on Android works ${it}") }
 //                .name.orEmpty().let { Log.w("=A=","service loader on Android works") }

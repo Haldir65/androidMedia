@@ -61,9 +61,7 @@
         <activity
             android:name="com.me.harris.filterlibrary.opengl.enrty.egl.TextureViewRenderViaEglActivity"
             android:screenOrientation="portrait" />
-
-
-
+        <activity android:name="com.me.harris.AwesomePickVideoActivity" />
 
 
     </application>

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Environment
+import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -37,6 +38,13 @@ object VideoUtil {
     ////		private static final String strVideo = Environment.getExternalStorageDirectory().getPath()+
     ////				File.separator+Environment.DIRECTORY_MOVIES+File.separator + "/h265.mp4";
     //	}
+
+    private var choosenFile = ""
+
+    fun setUrl(path:String){
+        choosenFile = path
+    }
+
     @JvmStatic
     fun setUrl() {
         val selfHosted = Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1
@@ -63,6 +71,9 @@ object VideoUtil {
                 fs.firstOrNull { it.name.contains("365") }?.absolutePath.orEmpty()
             }
             Log.w("=A=","strVideo = $strVideo")
+        }
+        if (!TextUtils.isEmpty(choosenFile)){
+            strVideo = choosenFile
         }
 
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"

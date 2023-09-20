@@ -177,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
-                android:text="@string/app_place_holder"
+                android:text="LibPng"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
         </androidx.cardview.widget.CardView>
@@ -233,7 +233,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
-                android:text="@string/app_place_holder"
+                android:text="pick video"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
         </androidx.cardview.widget.CardView>

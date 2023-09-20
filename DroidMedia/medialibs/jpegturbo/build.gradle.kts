@@ -7,17 +7,19 @@ plugins {
 val SUPPORT_NATIVE_BUILD:String  by project
 val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 val SUPPORTED_ABI="arm64-v8a"
+val COMPILE_SKD_VERSION:String by project
+val MIN_SDK_VERSION:String by project
 
 android {
     namespace = "com.me.harris.jpegturbo"
-    compileSdk = 34
+    compileSdk = COMPILE_SKD_VERSION.toInt()
     buildToolsVersion = "34.0.0"
     buildFeatures {
         viewBinding = true
     }
 
     defaultConfig {
-        minSdk = 27
+        minSdk = MIN_SDK_VERSION.toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

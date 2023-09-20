@@ -4,15 +4,46 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val COMPILE_SKD_VERSION:String by project
+val MIN_SDK_VERSION:String by project
+val SUPPORT_NATIVE_BUILD:String  by project
+val SUPPORTED_ABI="arm64-v8a"
+val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
+
+
+
 android {
     namespace = "com.me.harris.pnglib"
-    compileSdk = 34
+    compileSdk = COMPILE_SKD_VERSION.toInt()
+
+    buildFeatures {
+        viewBinding = true
+    }
 
     defaultConfig {
-        minSdk = 27
+        minSdk = MIN_SDK_VERSION.toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        if(enableCmake){
+            externalNativeBuild {
+                cmake {
+                    abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
+                    cppFlags("-g -std=c++11 -frtti -fexceptions")
+                    arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
+                }
+            }
+            ndk {
+                abiFilters.add(SUPPORTED_ABI)
+            }
+
+
+//        packagingOptions {
+//            pickFirst "lib/arm64-v8a/*.so"
+//        }
+        }
+
     }
 
     buildTypes {
@@ -24,15 +55,17 @@ android {
             )
         }
     }
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+
+    if (enableCmake){
+        externalNativeBuild {
+            cmake {
+                version =  "3.22.1"
+//                path("vendor/libpng-1.6.37/CMakeLists.txt") // build libpng.so
+                path("src/main/cpp/CMakeLists.txt") // link libpng.so with mypng.so
+            }
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

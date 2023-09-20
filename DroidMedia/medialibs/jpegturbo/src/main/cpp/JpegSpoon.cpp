@@ -41,6 +41,8 @@ int JpegSpoon::write_JPEG_file(BYTE *data, int w, int h, int quality, const char
         return -1;
     }
     jpeg_create_compress(&cinfo);
+    // https://github.com/libjpeg-turbo/libjpeg-turbo/blob/main/libjpeg.txt JDCT_IFAST  vs JDCT_ISLOW
+    cinfo.dct_method = JDCT_IFAST;
 
     /* Step 2: specify data destination (eg, a file) */
 
@@ -451,8 +453,14 @@ long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string
 
     // To use it after your jpeg_read_header() call (because this call sets a member on cinfo we need to a default)
     // but before your jpeg_start_decompress() call (because it uses the value of this member), add:
+    #ifdef JCS_EXTENSIONS
+        cinfo.out_color_space = JCS_EXT_RGBA;
+        // https://github.com/libjpeg-turbo/libjpeg-turbo/blob/main/README.md#colorspace-extensions
+    #endif
+//    cinfo.out_color_space = JCS_EXT_ABGR;
+    // https://stackoverflow.com/a/63210354
+    cinfo.dct_method = JDCT_IFAST; // change this to JDCT_ISLOW on Android/iOS
 
-    cinfo.out_color_space = JCS_EXT_RGBX;
 
     // 设置解压的相关参数：
     jpeg_start_decompress(&cinfo); // 这一行走完，output_width就都有了
@@ -460,7 +468,7 @@ long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string
     unsigned long width = cinfo.output_width; //1760
     unsigned long height = cinfo.output_height; // 990
     unsigned short depth = cinfo.output_components; //3
-     long row_stride = cinfo.output_width * cinfo.output_components; // 5280
+    long row_stride = cinfo.output_width * cinfo.output_components; // 5280
 
     ALOGW("image %s has width = %d , height = %d , output_components = %d ",jpeg_path.c_str(),cinfo.output_width,cinfo.image_height,cinfo.num_components)
 
@@ -489,6 +497,7 @@ long JpegSpoon::decompressjpegToRgbBuffer(JNIEnv *env, jobject thiz, std::string
     jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
 
+    fclose(fp);
 
     // todo -> copy rgb buffer to direct buffer
     char *cBuffer = static_cast<char *>(env->GetDirectBufferAddress(dstBuffer));
@@ -517,6 +526,7 @@ jintArray JpegSpoon::probeJpegFileInfo(JNIEnv *env, jobject thiz, std::string jp
     }
     struct jpeg_decompress_struct cinfo;
 
+    cinfo.dct_method = JDCT_FLOAT; // change this to JDCT_ISLOW on Android/iOS
 
 
     struct my_error_mgr jem;
@@ -589,7 +599,6 @@ long JpegSpoon::decompressjpegToRgbBufferTurbo(JNIEnv *env, jobject thiz, std::s
 
     unsigned char *imgBuf  = (unsigned char *)tjAlloc(width*height*COLOR_COMPONENTS); // //!< will contain the decompressed image
     tjhandle _jpegDecompressor = tjInitDecompress();
-
     int flags = TJFLAG_FASTDCT;
     tjDecompressHeader2(_jpegDecompressor, _compressedImage, _jpegSize, &width, &height, &jpegSubsamp);
 
