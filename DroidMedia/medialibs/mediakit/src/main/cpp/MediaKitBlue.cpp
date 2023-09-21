@@ -33,3 +33,16 @@ Java_com_jadyn_mediakit_native_MediaKitJNI_mediakitExtractFrame(JNIEnv *env, job
 std::string_view MediaKitBlue::probeBasicInfo() {
     return std::string_view("");
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_jadyn_mediakit_native_MediaKitJNI_readFileContentUsingMMap(JNIEnv *env, jobject thiz,
+                                                                    jstring filepath) {
+
+    FileFastMap map{};
+    char *c_str = const_cast<char *>(env->GetStringUTFChars(filepath, nullptr));
+    if (!std::filesystem::exists(c_str)){
+        ALOGE("file %s not exists ", c_str);
+    }
+    map.fastRead(c_str);
+}

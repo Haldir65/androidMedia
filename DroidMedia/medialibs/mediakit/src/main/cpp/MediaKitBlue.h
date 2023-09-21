@@ -14,6 +14,8 @@
 #include <android/native_window_jni.h> // ANativeWindow
 
 #include "media/MediaInsighter.h"
+#include <filesystem>
+#include "filemap/file_fast_map.h"
 
 
 class MediaKitBlue{

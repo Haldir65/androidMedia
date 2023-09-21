@@ -14,4 +14,6 @@ object MediaKitJNI {
 
     external fun mediakitExtractFrame(filepath:String,storageDir:String,gapInBetweenSeconds:Long)
 
+    external fun readFileContentUsingMMap(filepath: String):String
+
 }

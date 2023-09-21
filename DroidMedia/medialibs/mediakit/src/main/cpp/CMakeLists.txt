@@ -36,6 +36,12 @@ file(GLOB volan CONFIGURE_DEPENDS
         #        "*.cpp"
         )
 
+file(GLOB filemap CONFIGURE_DEPENDS
+        #        "*.h"
+        filemap/*.cpp
+        filemap/*.h
+        )
+
 
 file(GLOB media CONFIGURE_DEPENDS
         #        "*.h"
@@ -72,6 +78,7 @@ add_library( # Sets the name of the library.
         MediaKitBlue.h
         ${glsource}
         ${media}
+        ${filemap}
         ${utility}
 #        ${volan}
         )
