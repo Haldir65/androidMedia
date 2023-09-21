@@ -68,7 +68,7 @@ Java_com_me_harris_pnglib_PngSpoon_decodePngToDirectBuffer(JNIEnv *env, jobject 
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_me_harris_pnglib_PngSpoon_compressBitmapToPngFile(JNIEnv *env, jobject thiz,
-                                                           jstring destfile, jobject buffer) {
+                                                           jstring destfile, jobject buffer,jint width,jint height) {
 
     char *filepath = (char *) env->GetStringUTFChars(destfile, nullptr);
 
@@ -76,9 +76,15 @@ Java_com_me_harris_pnglib_PngSpoon_compressBitmapToPngFile(JNIEnv *env, jobject 
 //        ALOGE("file %s not exists ",filepath);
 //        return false;
 //    }
-    PngHelper helper { std::string {filepath}};
-
-
+    void* bufferaddress = env->GetDirectBufferAddress(buffer);
+    unsigned long bufferSize = width *height * 4;
+    unsigned char* rgbaBuffer = static_cast<unsigned char *> (new unsigned char[bufferSize]);
+    memcpy(rgbaBuffer, bufferaddress, bufferSize);
+    // pnghelper save rgba to png file?
+    PngHandle handle;
+    std::string fpp = std::string{filepath};
+    handle.saveRgbaBufferToPngFile(fpp, rgbaBuffer, width, height);
+    delete[] rgbaBuffer;
     return -1;
 }
 

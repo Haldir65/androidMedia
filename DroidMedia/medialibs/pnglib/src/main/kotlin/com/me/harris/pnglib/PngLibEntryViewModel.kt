@@ -40,8 +40,8 @@ class PngLibEntryViewModel(app:Application):AndroidViewModel(app) {
         spoon.decodePngToDirectBuffer(filepath,buffer)
     }
 
-    fun saveBitmapToPngFile(destfile:String,buffer:ByteBuffer){
-        spoon.compressBitmapToPngFile(destfile =destfile ,buffer = buffer)
+    fun saveBitmapToPngFile(destfile:String,buffer:ByteBuffer,width:Int,height:Int){
+        spoon.compressBitmapToPngFile(destfile =destfile, buffer = buffer, width = width, height = height)
     }
 
 }

@@ -1,6 +1,5 @@
 package com.me.harris.pnglib
 
-import android.graphics.Bitmap
 import java.nio.ByteBuffer
 
 object PngSpoon {
@@ -18,5 +17,5 @@ object PngSpoon {
 
     external fun decodePngToDirectBuffer(pngFilePath:String,buffer:ByteBuffer):Int
 
-    external fun compressBitmapToPngFile(destfile:String,buffer: ByteBuffer):Int
+    external fun compressBitmapToPngFile(destfile:String,buffer: ByteBuffer,width:Int,height:Int):Int
 }

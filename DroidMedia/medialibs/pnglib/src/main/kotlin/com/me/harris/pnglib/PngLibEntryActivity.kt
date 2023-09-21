@@ -67,11 +67,15 @@ class PngLibEntryActivity:AppCompatActivity() {
         val hasAlpha = viewModel.spoon.pngHasAlpha(pngPath)
         val size = width * height * 3 // rgb
         val buffer = ByteBuffer.allocateDirect(size)
+        var start = System.currentTimeMillis()
         viewModel.decodePngToByteBuffer(pngPath,buffer)
+        Log.w("=A=","decodePngToByteBuffer cost me with ${width*height*3} bytes [or ${width*height*3/1000_000}MB] ${System.currentTimeMillis()-start} milliseconds")
         buffer.limit(size) // 读的尽头，读的开始是0
         // PNG_FORMAT_FLAG_ALPHA  在c层
         val rgbaBuffer = ByteBuffer.allocateDirect(width * height * 4)
         // rgb buffer to rgba buffer
+
+        start = System.currentTimeMillis()
         repeat(width*height) {num ->
             repeat(3){ i ->
                 rgbaBuffer.put(buffer.get(3*num+i))
@@ -79,6 +83,8 @@ class PngLibEntryActivity:AppCompatActivity() {
 //            rgbaBuffer.put(0XFF.toByte())
             rgbaBuffer.put(255.toByte())
         }
+        val end = System.currentTimeMillis()
+        Log.w("=A=","adding alpha bytes to rgb buffer with size of ${width*height*3} bytes [or ${width*height*3/1000_000}MB ] cost me ${end-start} milliseconds")
         rgbaBuffer.flip() // 读完了，读的开始设置为0，读的结束设置为当前写的结束
         val bitmap = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
         bitmap.copyPixelsFromBuffer(rgbaBuffer)
@@ -97,7 +103,7 @@ class PngLibEntryActivity:AppCompatActivity() {
         val buffer = ByteBuffer.allocateDirect(size)
         bmp.copyPixelsToBuffer(buffer)
         val despath = "${saveDir}/opt_${System.currentTimeMillis()}.png"
-        viewModel.saveBitmapToPngFile(destfile = despath,buffer = buffer)
+        viewModel.saveBitmapToPngFile(destfile = despath,buffer = buffer,width = bmp.width,height = bmp.height)
         binding.comoressedImage4.load(despath) {
             transformations(RoundedCornersTransformation(25f))
         }
