@@ -29,6 +29,9 @@
             />
         <activity android:name="com.me.harris.playerLibrary.exoplayer.ExoplayerSampleActivity" />
         <activity android:name="com.me.harris.playerLibrary.ffmediaplayer.FFMediaPlayerActivity" />
+        <activity android:name="com.me.harris.playerLibrary.video.MediaCodecMain2Activity"
+                android:screenOrientation="portrait"
+                />
 
         <service android:name="com.me.harris.playerLibrary.process.ipc.RemoteMediaPlayerBackEndService"
             android:process=":playerService"

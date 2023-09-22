@@ -73,6 +73,8 @@ object FileUtils {
                 val type = splitArr[0]
                 if ("primary" == type.lowercase()) {
                     return "${Environment.getExternalStorageDirectory()} + / + ${splitArr[1]}"
+                }else {
+                    return "${Environment.getExternalStorageDirectory().parentFile.parentFile}${File.separator}${type}${File.separator}${splitArr[1]}"
                 }
             } else if (isDownloadsDocument(uri)) {
                 val id = DocumentsContract.getDocumentId(uri)

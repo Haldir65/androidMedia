@@ -1,4 +1,4 @@
-
+#pragma once
 
 #ifndef DROIDMEDIA_FILE_FAST_MAP_H
 #define DROIDMEDIA_FILE_FAST_MAP_H
@@ -18,10 +18,12 @@ extern "C" {
 #include <sys/stat.h>
 #include <unistd.h>
 #include <jni.h>
-#include <string>
 #ifdef __cplusplus
 }
 #endif
+#include <cstddef> // template 不能放在extern里面 https://stackoverflow.com/questions/4877705/why-cant-templates-be-within-extern-c-blocks
+#include <string>
+
 
 
 class FileFastMap {

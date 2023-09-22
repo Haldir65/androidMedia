@@ -30,6 +30,12 @@ class AwesomePickVideoActivity:AppCompatActivity() {
                 startActivityForResult(Intent.createChooser(intent,"选择播放文件"),2000)
             }
         }
+        val nowStr = VideoUtil.strVideo
+        if (File(nowStr).exists()){
+            binding.textUrl.text = """
+                ${nowStr}
+            """.trimIndent()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

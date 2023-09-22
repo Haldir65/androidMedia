@@ -561,6 +561,43 @@ public class Utils {
     }
 
 
+    public static int getSupportColorFormat() {
+        int numCodecs = MediaCodecList.getCodecCount();
+        MediaCodecInfo codecInfo = null;
+        for (int i = 0; i < numCodecs && codecInfo == null; i++) {
+            MediaCodecInfo info = MediaCodecList.getCodecInfoAt(i);
+            if (!info.isEncoder()) {
+                continue;
+            }
+            String[] types = info.getSupportedTypes();
+            boolean found = false;
+            for (int j = 0; j < types.length && !found; j++) {
+                if (types[j].equals("video/avc")) {
+                    Log.d("TAG:", "found");
+                    found = true;
+                }
+            }
+            if (!found)
+                continue;
+            codecInfo = info;
+        }
+        Log.e("TAG", "Found " + codecInfo.getName() + " supporting " + "video/avc");
+        // Find a color profile that the codec supports
+        MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType("video/avc");
+        Log.e("TAG",
+                "length-" + capabilities.colorFormats.length + "==" + Arrays.toString(capabilities.colorFormats));
+        for (int i = 0; i < capabilities.colorFormats.length; i++) {
+            Log.d("=A=", "TAG MediaCodecInfo COLOR FORMAT :" + capabilities.colorFormats[i]);
+            if ((capabilities.colorFormats[i] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar) || (capabilities.colorFormats[i] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar)) {
+                return capabilities.colorFormats[i]; // MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar 21
+            }
+        }
+        return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible;
+    }
+
+
+
+
 
 
 }

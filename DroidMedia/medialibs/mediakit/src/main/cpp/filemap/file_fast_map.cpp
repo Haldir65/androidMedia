@@ -23,6 +23,16 @@ const char *FileFastMap::fastRead(const char *path) {
     }
 
     close(fd);
+    char* array2 = static_cast<char *>(malloc(strlen(mapped)+1));
+    strncpy(array2,mapped,strlen(mapped)+1);
 
-    return mapped;
+    if (munmap(mapped, sb.st_size) == -1)
+    {
+        close(fd);
+        perror("Error un-mmapping the file");
+        exit(EXIT_FAILURE);
+    }
+
+
+    return array2;
 }

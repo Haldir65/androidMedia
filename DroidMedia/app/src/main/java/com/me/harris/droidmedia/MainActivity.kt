@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.daasuu.epf.VideoClipEntryActivity
 import com.me.harris.cameralib.CameraEntryActivity
-import com.me.harris.audiolib.audiorecord.MediaCodecForAACActivity
 import com.me.harris.droidmedia.databinding.ActivityMainBinding
 import com.jadyn.mediakit.MediaKitEntryActivity
 import com.me.harris.AwesomePickVideoActivity
