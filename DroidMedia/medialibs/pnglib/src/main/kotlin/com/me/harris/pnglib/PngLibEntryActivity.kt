@@ -105,7 +105,7 @@ class PngLibEntryActivity:AppCompatActivity() {
         val despath = "${saveDir}/opt_${System.currentTimeMillis()}.png"
         viewModel.saveBitmapToPngFile(destfile = despath,buffer = buffer,width = bmp.width,height = bmp.height)
         binding.comoressedImage4.load(despath) {
-            transformations(RoundedCornersTransformation(25f))
+//            transformations(RoundedCornersTransformation(25f))
         }
     }
 

@@ -2,6 +2,7 @@
 
 #include "MediaKitBlue.h"
 #include <jni.h>
+#include <sstream>
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -43,6 +44,11 @@ Java_com_jadyn_mediakit_native_MediaKitJNI_readFileContentUsingMMap(JNIEnv *env,
     char *c_str = const_cast<char *>(env->GetStringUTFChars(filepath, nullptr));
     if (!std::filesystem::exists(c_str)){
         ALOGE("file %s not exists ", c_str);
+        char buff[100];
+        snprintf(buff, sizeof(buff),"file %s not exists ",c_str);
+        return env->NewStringUTF(buff);
     }
-    map.fastRead(c_str);
+    const char* string = map.fastRead(c_str);
+    std::string str = string;
+    return env->NewStringUTF(str.c_str());
 }
