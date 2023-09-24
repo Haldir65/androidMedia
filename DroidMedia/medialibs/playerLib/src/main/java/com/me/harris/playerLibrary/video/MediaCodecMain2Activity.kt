@@ -51,7 +51,9 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
 
         binding.player.holder.setKeepScreenOn(true)
 
-        val videoDuration = getVideoDurationInMicroSeconds(url)
+        val videoDuration by lazy {
+            getVideoDurationInMicroSeconds(url)
+        }
 
 
         binding.seekbar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener {

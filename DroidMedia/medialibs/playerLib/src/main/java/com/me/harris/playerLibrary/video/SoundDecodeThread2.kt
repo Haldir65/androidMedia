@@ -88,7 +88,7 @@ class SoundDecodeThread2(val path:String): Thread("【Decoder-Audio】Thread") {
                         Log.e("=A=", "【Audio】queue inputBufer at " + mediaExtractor.sampleTime/1_000_000)
                         codec.queueInputBuffer(inIndex, 0, nSampleSize, mediaExtractor.sampleTime, 0) // 通知MediaDecode解码刚刚传入的数据
                         if (mSeekPts > 0 && !isSeeking) {
-                            mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_NEXT_SYNC)
+                            mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
                             isSeeking = true
                             Log.e("=A=", "【Audio】after seek to " + mSeekPts + "  current pos = " + mediaExtractor.sampleTime)
                         } else {
@@ -119,7 +119,7 @@ class SoundDecodeThread2(val path:String): Thread("【Decoder-Audio】Thread") {
                     if (mSeekPts>0) { // 说明是刚刚seek过出一次
                          // info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
 //                        if (Math.abs(info.presentationTimeUs/1_000_000 - mSeekPts/1_000_000)<10){
-                        if (info.presentationTimeUs - mSeekPts > 0){
+                        if (info.presentationTimeUs - mSeekPts > 0  || Math.abs(info.presentationTimeUs-mSeekPts) < 1_000_00){
                             mSeekPts = -1L
                             isSeeking = false
                             mStartTimeForSync = SystemClock.uptimeMillis() - info.presentationTimeUs/1_000

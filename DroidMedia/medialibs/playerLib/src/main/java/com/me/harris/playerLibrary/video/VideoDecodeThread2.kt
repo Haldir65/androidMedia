@@ -103,7 +103,7 @@ class VideoDecodeThread2(val surface:Surface, val path:String,val view:VideoPlay
                         } else {
                             codec.queueInputBuffer(inIndex, 0, nSampleSize, mediaExtractor.sampleTime, 0) // 通知MediaDecode解码刚刚传入的数据
                             if (mSeekPts > 0 && !isSeeking) {
-                                mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_NEXT_SYNC)
+                                mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
                                 isSeeking = true
                                 Log.e("=A=", "${identity()} after seek to " + mSeekPts + "  current pos = " + mediaExtractor.sampleTime)
                             } else {
@@ -124,10 +124,11 @@ class VideoDecodeThread2(val surface:Surface, val path:String,val view:VideoPlay
 
                     else -> {
                         if (mSeekPts > 0) {
-                            if (info.presentationTimeUs - mSeekPts > 0 ){
+                            if (info.presentationTimeUs - mSeekPts > 0 || Math.abs(info.presentationTimeUs-mSeekPts) < 1_000_000){
                                 mSeekPts = -1L
                                 isSeeking = false
                                 mStartTimeForSync = SystemClock.uptimeMillis() - info.presentationTimeUs/1_000
+                                presentationTimeMs = info.presentationTimeUs / 1000
                                 codec.releaseOutputBuffer(outIndex, true)
                                 Log.e("=A=", """
                                 ${identity()} after so many times , finally found valid buffer , buffer pts is ${info.presentationTimeUs/1_000_000} and we already seek to ${mSeekPts/1_000_000}, so we will continue
