@@ -1,4 +1,6 @@
 [versions]
+minSdk="27"
+targetSdk="33"
 arrow = "1.2.0"
 androidGradlePlugin = "8.1.1"
 glide = "4.13.2"

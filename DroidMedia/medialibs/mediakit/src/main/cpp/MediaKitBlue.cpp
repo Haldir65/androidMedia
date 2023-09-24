@@ -50,5 +50,9 @@ Java_com_jadyn_mediakit_native_MediaKitJNI_readFileContentUsingMMap(JNIEnv *env,
     }
     const char* string = map.fastRead(c_str);
     std::string str = string;
+    if (c_str!= nullptr){
+        env->ReleaseStringUTFChars(filepath,c_str);
+        // Yes, your assumption is correct (you should always call ReleaseStringUTFChars).
+    }
     return env->NewStringUTF(str.c_str());
 }

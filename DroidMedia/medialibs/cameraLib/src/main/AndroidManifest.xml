@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application android:requestLegacyExternalStorage="true">
+
         <activity
             android:name=".CameraEntryActivity"
             android:screenOrientation="portrait" />
@@ -18,5 +24,12 @@
         <activity
             android:name="com.me.harris.cameralib.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="cameraX.CameraXSampleActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.me.harris.cameralib.camerarecord.CameraToH264Activity"
+                android:screenOrientation="portrait"
+                />
     </application>
+
 </manifest>

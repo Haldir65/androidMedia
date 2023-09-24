@@ -20,13 +20,12 @@ import com.me.harris.playerLibrary.ffmediaplayer.FFMediaPlayerActivity
 import com.me.harris.playerLibrary.openglplayvideo.MediaPlayerSurfaceStubActivity
 import com.me.harris.playerLibrary.process.ui.SendSurfaceToAnotherProcessSenderActivity
 import com.me.harris.playerLibrary.textureview.TextureViewMediaCodecVideoPlayerActivity
-import com.me.harris.playerLibrary.video.MediaCodecVideoMainActivity
+import com.me.harris.playerLibrary.video.MediaCodecMain2Activity
 import com.me.harris.playerLibrary.video.sharedSurface.SharedSurfaceTextureListActivity
 import com.me.harris.playerLibrary.viewmodels.VideoPlayEntryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class VideoPlayExtryActivity:AppCompatActivity() {
@@ -86,7 +85,7 @@ class VideoPlayExtryActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_entry)
         findViewById<Button>(R.id.btn1)?.setOnClickListener {
-            startActivity(Intent(this, MediaCodecVideoMainActivity::class.java))
+            startActivity(Intent(this, MediaCodecMain2Activity::class.java))
         }
         findViewById<Button>(R.id.btn2)?.setOnClickListener {
             startActivity(Intent(this, TextureViewMediaCodecVideoPlayerActivity::class.java))

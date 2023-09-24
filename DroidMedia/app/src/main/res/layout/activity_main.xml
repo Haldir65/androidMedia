@@ -14,6 +14,26 @@
         android:orientation="vertical"
         android:paddingBottom="40dp">
 
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn12"
+            style="@style/CardStyleButton"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="3dp"
+            app:contentPadding="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/white"
+                android:text="pick video"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black" />
+        </androidx.cardview.widget.CardView>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/btn1"
             style="@style/CardStyleButton"
@@ -220,23 +240,6 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btn12"
-            style="@style/CardStyleButton"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="6dp"
-            app:cardElevation="3dp"
-            app:contentPadding="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@android:color/white"
-                android:text="pick video"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black" />
-        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/btn13"

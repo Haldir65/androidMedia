@@ -5,7 +5,7 @@ plugins {
 }
 
 val COMPILE_SKD_VERSION:String by project
-val MIN_SDK_VERSION:String by project
+//val MIN_SDK_VERSION:String by project
 val SUPPORT_NATIVE_BUILD:String  by project
 val SUPPORTED_ABI="arm64-v8a"
 val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = MIN_SDK_VERSION.toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -75,6 +75,8 @@ android {
     }
 }
 
+apply(rootProject.projectDir.absolutePath+File.separator+"dependencyHandler.gradle.kts")
+
 dependencies {
 
     implementation(libs.androidx.core.core.ktx)
@@ -91,15 +93,32 @@ dependencies {
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso.espresso.core)
 
-    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.lifecycle.livedata.ktx)
-    implementation(libs.exoplayer.core)
-    implementation(libs.exoplayer.ui)
-    implementation(libs.coroutines.core)
-    implementation(libs.coroutines.android)
+//    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
+//    implementation(libs.androidx.lifecycle.lifecycle.livedata.ktx)
+
+    lifecycle()
+    exoplayer()
+    coroutine()
+
     implementation(libs.androidx.cardview.cardview)
     implementation(libs.coil.kt)
     implementation(libs.okio)
     implementation(libs.androidx.recyclerview.recyclerview)
 
+}
+
+fun DependencyHandler.lifecycle(){
+    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.lifecycle.livedata.ktx)
+}
+
+fun DependencyHandler.exoplayer(){
+    implementation(libs.exoplayer.core)
+    implementation(libs.exoplayer.ui)
+}
+
+
+fun DependencyHandler.coroutine(){
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
 }

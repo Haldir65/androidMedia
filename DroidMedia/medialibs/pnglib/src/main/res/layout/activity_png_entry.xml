@@ -241,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
-                    android:text="decompress jpeg to bitmap"
+                    android:text="ImageDecoder"
                     android:textAllCaps="false"
                     android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
@@ -286,7 +286,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
-                    android:text="decompress jpeg to bitmap using turbo"
+                    android:text="广告位招租"
                     android:textAllCaps="false"
                     android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>

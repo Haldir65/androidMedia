@@ -9,6 +9,7 @@ import com.jadyn.mediakit.databinding.ActivityMediakitEntryBinding
 import com.jadyn.mediakit.framer.MediaKitDecodeFrameActivity
 import com.jadyn.mediakit.native.MediaKitJNI
 import com.jadyn.mediakit.nativecodec.MediaKitNativeCodecActivity
+import com.me.harris.awesomelib.utils.Utils
 import com.me.harris.awesomelib.viewBinding
 import java.io.File
 import java.nio.charset.Charset
@@ -34,5 +35,11 @@ class MediaKitEntryActivity:AppCompatActivity(R.layout.activity_mediakit_entry) 
         binding.card3.setOnClickListener {
             viewModel.readTextWithMMAP()
         }
+
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        Utils.getSupportColorFormat()
     }
 }

@@ -1,6 +1,7 @@
 package com.me.harris.cameralib;
 
 import android.app.Activity;
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
@@ -30,7 +31,15 @@ public class CameraV1 {
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             parameters.setPreviewSize(1280, 720);
             setCameraDisplayOrientation(mActivity, mCameraId, mCamera);
+            parameters.setPreviewFormat(ImageFormat.NV21);
+            parameters.setPreviewFormat(ImageFormat.YV12);
             mCamera.setParameters(parameters);
+            mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+                @Override
+                public void onPreviewFrame(byte[] data, Camera camera) {
+                    Log.w("=A=","onPreviewFrame " + data.length); // 1382400 = 1280 * 720 * 1.5
+                }
+            });
             Log.i("lb6905", "open camera");
         } catch (Exception e) {
             e.printStackTrace();

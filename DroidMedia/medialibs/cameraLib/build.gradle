@@ -7,6 +7,10 @@ android {
     namespace 'com.me.harris.cameralib'
     compileSdk 34
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         minSdk 27
         targetSdk 29

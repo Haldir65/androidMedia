@@ -2,13 +2,18 @@ package com.me.harris.pnglib
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import coil.decode.ImageSource
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.me.harris.awesomelib.BuildConfig
 import com.me.harris.pnglib.databinding.ActivityPngEntryBinding
 import kotlinx.coroutines.*
 import java.io.File
@@ -31,9 +36,14 @@ class PngLibEntryActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPngEntryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.originalImage.load("file:///android_asset/${NON_SCALEABLE_BMP_NAME}") {
+            transformations(RoundedCornersTransformation(25f))
+        }
         binding.btn1.setOnClickListener {
             makeSureSaveDirExists()
             testPngFileIsPngFile()
+//            binding.comoressedImage.setImageBitmap(assets.open(NON_SCALEABLE_BMP_NAME).use(BitmapFactory::decodeStream))
         }
 
         binding.btn2.setOnClickListener {
@@ -51,6 +61,22 @@ class PngLibEntryActivity:AppCompatActivity() {
             makeSureSaveDirExists()
             saveBitmapToPngFileUsingLibPng()
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+            binding.btn5.setOnClickListener {
+                var start = System.currentTimeMillis()
+                val source = ImageDecoder.createSource(assets,NON_SCALEABLE_BMP_NAME)
+                val bmp = ImageDecoder.decodeBitmap(source)
+                binding.comoressedImage5.setImageBitmap(bmp)
+                Log.w("=A=","using image decoder cost me ${System.currentTimeMillis() - start} milliseconds")
+                start = System.currentTimeMillis()
+                val bmp2 = assets.open(NON_SCALEABLE_BMP_NAME).use(BitmapFactory::decodeStream)
+                binding.comoressedImage5.setImageBitmap(bmp2)
+                Log.w("=A=","using BitmapFactory decoder cost me ${System.currentTimeMillis() - start} milliseconds")
+                // using image decoder cost me 79 milliseconds
+                // using BitmapFactory decoder cost me 25 milliseconds
+            }
+        }
+
     }
 
     private fun makeSureSaveDirExists() {

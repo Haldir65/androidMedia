@@ -6,8 +6,9 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.me.harris.playerLibrary.video.SoundDecodeThread;
-import com.me.harris.playerLibrary.video.VideoDecodeThread;
+import com.me.harris.playerLibrary.video.AvTimeSynchronizer;
+import com.me.harris.playerLibrary.video.SoundDecodeThread2;
+import com.me.harris.playerLibrary.video.VideoDecodeThread2;
 
 /**
  * Created by xiaoqi on 2018/1/5.
@@ -15,32 +16,12 @@ import com.me.harris.playerLibrary.video.VideoDecodeThread;
 
 public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback {
 
-	public static  String strVideo ;
-//	static {
-//		if (strVideo==null){
-//			File dir = new File(Environment.getExternalStorageDirectory().getPath()+
-//					File.separator+Environment.DIRECTORY_MOVIES);
-//			strVideo = dir.listFiles()[1].getAbsolutePath();
-//		}
-////		private static final String strVideo = Environment.getExternalStorageDirectory().getPath()+
-////				File.separator+Environment.DIRECTORY_MOVIES+File.separator + "/h265.mp4";
-//	}
+	public  String strVideo ;
 
 
-//	public static void setUrl(){
-//		File dir = new File(Environment.getExternalStorageDirectory().getPath()+
-//				File.separator+Environment.DIRECTORY_MOVIES);
-//		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4"));
-////		File[] fs = dir.listFiles((dir1, name) -> name.endsWith(".mp4") || name.endsWith(".webm") || name.endsWith(".mkv"));
-//		assert fs != null;
-//		strVideo = fs[new Random().nextInt(fs.length)].getAbsolutePath();
-//		strVideo = fs[4].getAbsolutePath();
-//	}
-
-
-	private VideoDecodeThread thread;
-	private SoundDecodeThread soundDecodeThread;
-	public static boolean isCreate = false;
+	private VideoDecodeThread2 thread;
+	private SoundDecodeThread2 soundDecodeThread;
+	public  boolean isCreate = false;
 	public VideoPlayView(Context context) {
 		super(context);
 		getHolder().addCallback(this);
@@ -65,53 +46,57 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.e("VideoPlayView", "surfaceChanged");
-		if (thread == null) {
-			thread = new VideoDecodeThread(holder.getSurface(), strVideo);
-			thread.start();
-		}
-		if (soundDecodeThread == null) {
-			soundDecodeThread = new SoundDecodeThread(strVideo);
-			soundDecodeThread.start();
-		}
+        if (isCreate){
+            start();
+        }
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.e("VideoPlayView", "surfaceDestroyed");
 		isCreate = false;
-		if (thread != null) {
-			thread.stop = true;
-			thread.interrupt();
-		}
-		if (soundDecodeThread != null) {
-			soundDecodeThread.stop = true;
-			soundDecodeThread.interrupt();
-		}
+        stop();
 	}
 
 	public void start(){
-		Log.e("VideoPlayView", "start");
-		thread = new VideoDecodeThread(getHolder().getSurface(), strVideo);
-		soundDecodeThread = new SoundDecodeThread(strVideo);
-		soundDecodeThread.start();
-		thread.start();
+        if (isCreate){
+            stop();
+            Log.e("VideoPlayView", "start");
+            AvTimeSynchronizer sync = new AvTimeSynchronizer(0,0);
+            thread = new VideoDecodeThread2(getHolder().getSurface(), strVideo,this);
+            soundDecodeThread = new SoundDecodeThread2(strVideo);
+            soundDecodeThread.start();
+            thread.start();
+        }
+
 	}
 
 	public void stop(){
-		thread.interrupt();
-		thread.stop = true;
-		soundDecodeThread.stop = true;
-		soundDecodeThread.interrupt();
+        Log.e("VideoPlayView", "stop");
+        if (thread != null) {
+            thread.setStop(true);
+            thread.interrupt();
+        }
+        if (soundDecodeThread != null) {
+            soundDecodeThread.setStop(true);
+            soundDecodeThread.interrupt();
+        }
 	}
 
 	public long getCurrentPosition(){
-		if (thread!=null) return thread.presentationTimeMs;
+		if (thread!=null) return thread.currentPosition();
 		else  return 0;
 	}
 
 	public long getDuration(){
-		if (thread!=null) return thread.videoDuration;
+		if (thread!=null) return thread.getVideoDuration();
 		return 0;
 	}
+
+    public void seek(long position){
+        Log.e("=A=","Seeking to " + position + "  or " + position/1_000_000 + " s");
+        if (thread!=null) thread.seek(position);
+        if (soundDecodeThread!=null) soundDecodeThread.seek(position);
+    }
 
 }
