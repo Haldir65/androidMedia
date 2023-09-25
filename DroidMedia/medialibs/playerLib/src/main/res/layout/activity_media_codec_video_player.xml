@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/md_grey_800"
     android:orientation="vertical">
 
-    <com.me.harris.playerLibrary.VideoPlayView
-        android:id="@+id/player"
+    <SurfaceView
+        android:id="@+id/surface_view"
         android:layout_gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -15,23 +16,61 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="200dp"/>
 
-    <SeekBar
-        android:id="@+id/seekbar"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/player"
+        app:layout_constraintTop_toBottomOf="@id/surface_view"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        />
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_width="0dp"
+        app:layout_constraintStart_toEndOf="@id/btn_player"
+        app:layout_constraintEnd_toStartOf="@id/btn_audio"
+        app:layout_constraintTop_toBottomOf="@id/tv_timer"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:maxHeight="2dp"
         android:minHeight="2dp"
-        app:layout_constraintWidth_percent="0.95"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:progressDrawable="@drawable/video_progress_thumb_drawable"
         android:thumb="@drawable/video_progress_thumb_cubic"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="20dp"
+        android:max="100"
         android:progress="0"
         tools:progress="10" />
+
+    <TextView
+        android:id="@+id/btn_player"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/play_resume"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/seek_bar"
+        app:layout_constraintBottom_toBottomOf="@id/seek_bar"
+        />
+
+    <TextView
+        android:id="@+id/btn_audio"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/audio_enable"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/seek_bar"
+        app:layout_constraintBottom_toBottomOf="@id/seek_bar"
+        />
+
 
 
 

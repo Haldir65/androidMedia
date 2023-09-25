@@ -7,8 +7,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.me.harris.playerLibrary.video.AvTimeSynchronizer;
-import com.me.harris.playerLibrary.video.SoundDecodeThread2;
-import com.me.harris.playerLibrary.video.VideoDecodeThread2;
+import com.me.harris.playerLibrary.video.player.decode.AudioDecodeThread;
+import com.me.harris.playerLibrary.video.player.video.VideoDecodeThread;
 
 /**
  * Created by xiaoqi on 2018/1/5.
@@ -19,8 +19,8 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
 	public  String strVideo ;
 
 
-	private VideoDecodeThread2 thread;
-	private SoundDecodeThread2 soundDecodeThread;
+	private VideoDecodeThread thread;
+	private AudioDecodeThread soundDecodeThread;
 	public  boolean isCreate = false;
 	public VideoPlayView(Context context) {
 		super(context);
@@ -63,8 +63,8 @@ public class VideoPlayView extends SurfaceView implements SurfaceHolder.Callback
             stop();
             Log.e("VideoPlayView", "start");
             AvTimeSynchronizer sync = new AvTimeSynchronizer(0,0);
-            thread = new VideoDecodeThread2(getHolder().getSurface(), strVideo,this);
-            soundDecodeThread = new SoundDecodeThread2(strVideo);
+//            thread = new VideoDecodeThread2(getHolder().getSurface(), strVideo,this);
+//            soundDecodeThread = new SoundDecodeThread2(strVideo);
             soundDecodeThread.start();
             thread.start();
         }

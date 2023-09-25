@@ -1,11 +1,7 @@
-package com.me.harris.playerLibrary.video
+package com.me.harris.playerLibrary.video.player.misc
 
 import android.media.MediaExtractor
 import android.media.MediaFormat
-import android.widget.SeekBar
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import com.me.harris.playerLibrary.VideoPlayView
 import java.io.File
 
 internal fun getVideoDurationInMicroSeconds (filepath:String):Long {

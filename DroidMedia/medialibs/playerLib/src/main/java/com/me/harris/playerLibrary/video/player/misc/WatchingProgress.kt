@@ -1,5 +1,5 @@
 @file:JvmName("MediaCodeView")
-package com.me.harris.playerLibrary.video
+package com.me.harris.playerLibrary.video.player.misc
 
 import android.widget.SeekBar
 import androidx.fragment.app.FragmentActivity

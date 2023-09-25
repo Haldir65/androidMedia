@@ -4,8 +4,16 @@ import android.app.Application
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.flow.*
 
 class MediaCodeMain2ViewModel( app:Application):AndroidViewModel(app) {
+
+
+
+    val playButtonState : MutableStateFlow<PlayState> = MutableStateFlow(PlayState.PlayIdle)
+
+    val playMuteState: MutableStateFlow<MuteState> = MutableStateFlow(MuteState.NotMute)
+
 
 
     fun probeVideoInfo(){

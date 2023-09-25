@@ -1,4 +1,4 @@
-package com.me.harris.playerLibrary.video;
+package com.me.harris.playerLibrary.video.player.audio;
 
 import android.media.AudioManager;
 import android.media.AudioTrack;
