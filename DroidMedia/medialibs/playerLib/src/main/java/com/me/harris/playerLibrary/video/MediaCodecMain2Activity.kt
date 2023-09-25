@@ -84,7 +84,7 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                 val current = player!!.getCurrentPosition()
                 val thismax = binding.seekBar.max
                 val percentage = current.toFloat() / total.toFloat()
-                if (!isSeeking) {
+                if (!player!!.isSeeking()) {
                     binding.seekBar.setProgress((thismax * percentage).toInt(), false)
                     withContext(Dispatchers.Main.immediate) {
                         binding.tvTimer.text = "${CommonUtils.formatDuration(current / 1000.toLong())} / ${CommonUtils.formatDuration(total / 1000.toLong())}"
@@ -103,10 +103,16 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                 val sf = holder.surface
                 val p = player?: MediaCodecVideoPlayer()
                 with(p){
-                    setDataSource(getPlayableSource())
-                    setSurface(sf)
-                    prepare()
-                    start()
+                    if (isPaused()){
+                        setSurface(sf)
+                        resume()
+                    }else {
+                        setDataSource(getPlayableSource())
+                        setSurface(sf)
+                        prepare()
+                        start()
+                    }
+                    viewModel.playButtonState.value = PlayState.PlayPlaying
                 }
 
             }

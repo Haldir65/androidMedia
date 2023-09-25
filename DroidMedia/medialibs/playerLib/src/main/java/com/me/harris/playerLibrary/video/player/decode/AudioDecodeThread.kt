@@ -11,10 +11,12 @@ import com.me.harris.playerLibrary.video.player.audio.AudioPlayer
 import com.me.harris.playerLibrary.video.player.internal.PlayerState
 import com.me.harris.playerLibrary.video.player.misc.CodecExceptions
 import java.io.IOException
+import java.nio.ByteBuffer
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 import kotlin.jvm.internal.Ref.ObjectRef
 
-class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): Thread("【Decoder-Audio】Thread") {
+class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) : Thread("【Audio-Decoder-Thread】") {
 
     private val TAG = "AudioDecodeThread"
 
@@ -26,54 +28,83 @@ class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): 
     private var mPlayer: AudioPlayer? = null
 
     @Volatile
-    var mute:Boolean = false
+    var mute: Boolean = false
 
     var mStartTimeForSync: Long = 0
 
-    var mSeekPts: Long = -1
-
     private var isSeeking = false
 
+    private fun isSeeking(): Boolean = context.state == PlayerState.SEEKING
 
     override fun run() {
         val mediaExtractor = MediaExtractor()
         mediaExtractor.setDataSource(path) // 设置数据源
-       selectTrack(mediaExtractor)
+        selectTrack(mediaExtractor)
         val codec = requireNotNull(mediaCodec)
+        mStartTimeForSync = SystemClock.uptimeMillis()
         codec.start() // 启动MediaCodec ，等待传入数据
-        val inputBuffers = codec.inputBuffers // 用来存放目标文件的数据  todo catch crash ?
+        var buffer: Array<out ByteBuffer>? = null
+        for (i in 0..30) {
+            buffer = try {
+                codec.inputBuffers
+            } catch (e: IllegalStateException) {
+                loge { e.stackTraceToString() }
+                null
+            }
+            if (buffer == null) try {
+                Thread.sleep(300)
+            }catch (e:InterruptedException){
+                e.printStackTrace()
+                stop = true
+                break
+            }
+            else break
+        }
+        val inputBuffers = requireNotNull(buffer)
         var outputBuffers = codec.outputBuffers // 解码后的数据
         val info = MediaCodec.BufferInfo() // 用于描述解码得到的byte[]数据的相关信息
         var bIsEos = false
-        mStartTimeForSync = SystemClock.uptimeMillis()
-        while (!stop&&!interrupted()) {
+        val avSynchronizer = requireNotNull(context.avSynchronizer)
+
+        var seekStartTime = -1L
+
+        while (!stop && !interrupted()) {
 
             waitIfPaused() // pause
 
+
             val inIndex = codec.dequeueInputBuffer(0)
-            if (!bIsEos ) {
+            if (!bIsEos) {
                 if (inIndex >= 0) {
                     val buffer = inputBuffers[inIndex]
                     val nSampleSize = mediaExtractor.readSampleData(buffer, 0) // 读取一帧数据至buffer中
                     if (nSampleSize < 0) {
-                        loge { "【Audio】 InputBuffer BUFFER_FLAG_END_OF_STREAM"  }
+                        loge { "【Audio】 InputBuffer BUFFER_FLAG_END_OF_STREAM" }
                         codec.queueInputBuffer(inIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                         bIsEos = true
                     } else {
                         // 填数据
-                        loge { "【Audio】queue inputBufer at ${mediaExtractor.sampleTime/1_000_000} s"  }
+                        logd {  "${identity()}【Audio】queue inputBufer at ${mediaExtractor.sampleTime / 1_000_000} s" }
                         codec.queueInputBuffer(inIndex, 0, nSampleSize, mediaExtractor.sampleTime, 0) // 通知MediaDecode解码刚刚传入的数据
-                        if (mSeekPts > 0 && !isSeeking) {
-                            mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
-                            isSeeking = true
-                            Log.e("=A=", "【Audio】after seek to " + mSeekPts + "  current pos = " + mediaExtractor.sampleTime)
+                        val mSeekPts = avSynchronizer.mAudioSeekPositionMs * 1000
+                        if (mSeekPts >= 0 ) {
+                            if (!isSeeking){
+                                mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_NEXT_SYNC)
+                                seekStartTime = SystemClock.uptimeMillis()
+                                isSeeking = true
+                            }else {
+                               loge { "${identity()}【Audio】skip seek to ${mSeekPts} since we are still seeking ? current pos = ${ mediaExtractor.sampleTime} " }
+                            }
+
                         } else {
                             mediaExtractor.advance() // 继续下一取样
                         }
                     }
-                }else {
+                } else {
 //                    bIsEos = true
-                    Log.e("=A=", "【Audio】dequeueInputBuffer return -1!!!!" + mSeekPts + "  current pos = " + mediaExtractor.sampleTime)
+                   loge {
+                       "【Audio】dequeueInputBuffer return -1!!!!" + avSynchronizer.mAudioSeekPositionMs + "  current pos = " + mediaExtractor.sampleTime
+                   }
                 }
             }
             val outIndex = codec.dequeueOutputBuffer(info, 0)
@@ -86,7 +117,7 @@ class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): 
 
             when (outIndex) {
                 MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
-                    Log.d(TAG, "INFO_OUTPUT_BUFFERS_CHANGED")
+                    logd { "INFO_OUTPUT_BUFFERS_CHANGED" }
                     outputBuffers = codec.outputBuffers
                 }
 
@@ -96,26 +127,37 @@ class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): 
 
                 else -> {
                     val buffer = outputBuffers[outIndex]
-//                    Log.v(TAG, "We can't use this buffer but render it due to the API limit, $buffer")
-                    if (mSeekPts>0) { // 说明是刚刚seek过出一次
-                         // info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
-//                        if (Math.abs(info.presentationTimeUs/1_000_000 - mSeekPts/1_000_000)<10){
-                        if (info.presentationTimeUs - mSeekPts > 0  || Math.abs(info.presentationTimeUs-mSeekPts) < 1_000_00){
-                            mSeekPts = -1L
+                    val mSeekPts = avSynchronizer.mAudioSeekPositionMs * 1000
+                    if (mSeekPts >= 0 ) { // 说明是刚刚seek过出一次
+//                        if (info.presentationTimeUs - mSeekPts > 0) {
+                        if (Math.abs(info.presentationTimeUs /1_000_000- mediaExtractor.sampleTime/1_000_000) <=1L  ) {
                             isSeeking = false
-                            mStartTimeForSync = SystemClock.uptimeMillis() - info.presentationTimeUs/1_000
-                            codec.releaseOutputBuffer(outIndex, false)
-                            Log.e("=A=", """
-                                【Audio】 after so many times , finally found valid buffer , buffer pts is ${info.presentationTimeUs/1_000_000} and we already seek to ${mSeekPts/1_000_000}, so we will continue
+                            mStartTimeForSync = SystemClock.uptimeMillis() - info.presentationTimeUs / 1_000
+                            loge {
+                                """
+                                ${identity()}
+                                 after so many times , finally found valid buffer , buffer pts is ${info.presentationTimeUs / 1_000_000} and we already seek to ${mSeekPts / 1_000_000}, so we will continue
                                 next sleep time is ${info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)} ms
-                            """.trimIndent())
-                        }else {
-                            Log.e("=A=", "【Audio】 invalid buffer , buffer pts is ${info.presentationTimeUs/1_000_000} but we already seek to ${mSeekPts/1_000_000}, so we will discard")
-                            codec.releaseOutputBuffer(outIndex, false)
+                                mediaExtractor.sampleTime  = ${mediaExtractor.sampleTime/1_000_000 }
+                                ${if (seekStartTime>-1L)"took me ${SystemClock.uptimeMillis() - seekStartTime} ms to get render target frame" else ""}
+                             """.lineSequence()
+                                    .joinToString(transform = String::trimStart, separator = System.lineSeparator())
+                            }
+                            seekStartTime = -1
+                            avSynchronizer.seekAudioCompleted()
+                            context.avSynchronizer?._audioPtsMicroSeconds = info.presentationTimeUs
+                        } else {
+                            logw{
+                                "【Audio】 invalid buffer , buffer pts is ${info.presentationTimeUs / 1_000_000} but we already seek to ${mSeekPts / 1_000_000}, so we will discard"
+                            }
+
                         }
-                    } else {
+
+                    } else if (Math.abs(info.presentationTimeUs /1_000_000- mediaExtractor.sampleTime/1_000_000) <=1L ){
                         val diff = info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
-                        Log.w("=A=", "【Audio】 normal buffer , buffer pts is ${info.presentationTimeUs/1_000_000} , we will sleep for $diff ")
+                        logd {
+                            "【Audio】 normal buffer , buffer pts is ${info.presentationTimeUs / 1_000_000} , we will sleep for $diff "
+                        }
                         sleepRender(info)
                         context.avSynchronizer?._audioPtsMicroSeconds = info.presentationTimeUs
                         //用来保存解码后的数据
@@ -124,11 +166,11 @@ class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): 
                         //清空缓存
                         buffer.clear()
                         //播放解码后的数据
-                        if (!mute && !stop){
+                        if (!mute && !stop ) {
                             mPlayer!!.play(outData, 0, info.size)
                         }
-                        codec.releaseOutputBuffer(outIndex, false)
                     }
+                    codec.releaseOutputBuffer(outIndex, false)
                 }
             }
         }
@@ -142,9 +184,9 @@ class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): 
     //
     private fun sleepRender(info: MediaCodec.BufferInfo) {
         var diff = info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
-        while (diff > 0) {
+        while (diff > 0 && !isSeeking) {
             diff = try {
-                logw { "【Audio】sleep  $diff ms" }
+                logd { "【Audio】sleep  $diff ms" }
                 sleep(33)
                 info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
             } catch (e: InterruptedException) {
@@ -158,17 +200,22 @@ class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): 
      * @param position 微秒
      */
     fun seek(position: Long) {
-        mSeekPts = position
     }
 
-    private inline fun logw( crossinline e:  (() -> String)) {
+    private inline fun logd(crossinline e: (() -> String)) {
+        Log.d("=A=", e())
+    }
+
+    private inline fun logi(crossinline e: (() -> String)) {
+        Log.i("=A=", e())
+    }
+    private inline fun logw(crossinline e: (() -> String)) {
         Log.w("=A=", e())
     }
 
-    private inline fun loge( crossinline e:  (() -> String)) {
+    private inline fun loge(crossinline e: (() -> String)) {
         Log.e("=A=", e())
     }
-
 
     private fun selectTrack(mediaExtractor: MediaExtractor) {
         var mimeType: String
@@ -198,15 +245,39 @@ class AudioDecodeThread(val path:String, val context: MediaCodecPlayerContext): 
         }
     }
 
-
     private val lock = ReentrantLock()
     private val condition = lock.newCondition()
 
-    private fun waitIfPaused(){
-        if (context.state == PlayerState.PAUSED){
-            lock.lock()
+    private fun waitIfPaused() {
+        if (context.state == PlayerState.PAUSED) {
+            lock.withLock {
+                logw { "${identity()} now will lock ,waiting for signal " }
+                val sleepStartTime = SystemClock.uptimeMillis()
+                condition.await() // block this
+                val diffTime = SystemClock.uptimeMillis() - sleepStartTime
+                mStartTimeForSync += diffTime
+                logw { "${identity()} wake up from  lock , continue processing, we slept for ${diffTime / 1_000} seconds " }
+            }
         }
     }
 
+    fun wakeUp() {
+        require(!lock.isLocked)
+        lock.withLock {
+            logw { "${identity()} prepare signal ${lock.holdCount} ${lock.hasQueuedThread(this)}  ${lock.hasQueuedThreads()}" }
+            condition.signal()
+            logw { "${identity()} done signalAll ${lock.holdCount} ${lock.hasQueuedThread(this)}  ${lock.hasQueuedThreads()}" }
+        }
+    }
 
+    fun identity(): String {
+        return "【Audio】 ${Thread.currentThread().name}"
+    }
+
+    fun pause() {
+        if (lock.isHeldByCurrentThread) {
+            lock.unlock()
+        }
+//       lock.unlock()
+    }
 }

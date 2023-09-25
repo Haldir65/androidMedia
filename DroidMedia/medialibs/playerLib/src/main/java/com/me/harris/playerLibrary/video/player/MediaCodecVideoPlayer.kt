@@ -1,5 +1,6 @@
 package com.me.harris.playerLibrary.video.player
 
+import android.util.Log
 import android.view.Surface
 import com.me.harris.playerLibrary.video.player.internal.PlayerState
 
@@ -30,11 +31,17 @@ class MediaCodecVideoPlayer :IMediaPlayer{
     }
 
     override fun pause() {
-        this.context.updateState(PlayerState.PAUSED)
+        if (this.context.getSurface()!=null) {
+            this.context.threadManner?.pause()
+            this.context.updateState(PlayerState.PAUSED)
+        }
     }
 
     override fun resume() {
-        this.context.updateState(PlayerState.PLAYING)
+        if (this.context.getSurface()!=null){
+            this.context.updateState(PlayerState.PLAYING)
+            this.context.threadManner?.resume()
+        }
     }
 
     override fun prepare() {
@@ -57,9 +64,24 @@ class MediaCodecVideoPlayer :IMediaPlayer{
        return state() == PlayerState.PLAYING
     }
 
-    override fun seekTo(msec: Long) {
-        this.context.updateState(PlayerState.SEEKING)
+    fun isSeeking():Boolean{
+        return state() == PlayerState.SEEKING
     }
+
+    fun isPaused():Boolean {
+        return state() == PlayerState.PAUSED
+    }
+
+    override fun seekTo(msec: Long) {
+        if (state()!= PlayerState.SEEKING){
+            this.context.updateState(PlayerState.SEEKING)
+            this.context.avSynchronizer!!.seekVideoAndAudio(msec)
+            Log.e("=A=","【Seeking】 now seek to $msec ")
+        }else {
+            Log.e("=A=","【Seeking】 skip seek to $msec since we are in the process of seeking")
+        }
+    }
+
 
     override fun getCurrentPosition(): Long {
        return context.getCurrentPosition()

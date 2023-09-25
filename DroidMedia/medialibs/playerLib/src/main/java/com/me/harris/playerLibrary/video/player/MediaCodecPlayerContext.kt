@@ -35,8 +35,6 @@ class MediaCodecPlayerContext {
     fun updateState(state: PlayerState){
         if (state!=this.state){
             this.state = state
-            //
-
         }
     }
 

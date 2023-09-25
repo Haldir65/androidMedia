@@ -7,13 +7,15 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.Surface
 import com.me.harris.playerLibrary.video.player.MediaCodecPlayerContext
+import com.me.harris.playerLibrary.video.player.internal.PlayerState
 import com.me.harris.playerLibrary.video.player.misc.CodecExceptions
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class VideoDecodeThread(val surface: Surface, val path: String, val context: MediaCodecPlayerContext) :
-    Thread("【Decoder-Video】Thread") {
+    Thread("【Video-Decoder-Thread】") {
 
     private val TAG = "VideoDecodeThread"
 
@@ -28,9 +30,12 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
     var videoDuration: Long = 0
 
     var mStartTimeForSync: Long = 0
-    var mSeekPts: Long = -1
+//    var mSeekPts: Long = -1
 
     private var isSeeking = false
+    private fun isSeeking():Boolean {
+        return context.state == PlayerState.SEEKING
+    }
 
     override fun run() {
         val mediaExtractor = MediaExtractor()
@@ -43,7 +48,12 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
         val info = MediaCodec.BufferInfo() // 用于描述解码得到的byte[]数据的相关信息
         var bIsEos = false
         mStartTimeForSync = SystemClock.uptimeMillis()
+        val avSynchronizer = requireNotNull(context.avSynchronizer)
+        var seekStartTime = -1L
         while (!stop&& !interrupted()) {
+
+            waitIfPaused()
+
             try {
                 if (!bIsEos ) {
                     val inIndex: Int = codec.dequeueInputBuffer(0)
@@ -51,15 +61,23 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
                         val buffer = inputBuffers[inIndex]
                         val nSampleSize = mediaExtractor.readSampleData(buffer, 0) // 读取一帧数据至buffer中
                         if (nSampleSize < 0) {
-                            Log.d(TAG, "InputBuffer BUFFER_FLAG_END_OF_STREAM")
+                           loge { "InputBuffer BUFFER_FLAG_END_OF_STREAM" }
                             codec.queueInputBuffer(inIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                             bIsEos = true
                         } else {
                             codec.queueInputBuffer(inIndex, 0, nSampleSize, mediaExtractor.sampleTime, 0) // 通知MediaDecode解码刚刚传入的数据
-                            if (mSeekPts > 0 && !isSeeking) {
-                                mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
-                                isSeeking = true
-                                loge { "${identity()} after seek to " + mSeekPts + "  current pos = " + mediaExtractor.sampleTime }
+                            logd { "${identity()}【Video】queue inputBufer at ${mediaExtractor.sampleTime / 1_000_000} s" }
+                            val mSeekPts = avSynchronizer.mVideoSeekPositionMs*1000
+                            if (mSeekPts >=0 ) {
+                                if ( !isSeeking){
+                                    seekStartTime = SystemClock.uptimeMillis()
+                                    mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_NEXT_SYNC)
+                                    isSeeking = true
+                                    logw { "${identity()} 【Video】after an attempt to seek to " + mSeekPts + "  current pos for mediaExtractor.sampleTime = " + mediaExtractor.sampleTime }
+                                }else {
+                                    logw { "${identity()}【Video】skip seek to ${mSeekPts} since we are still seeking ? current pos = ${ mediaExtractor.sampleTime} " }
+
+                                }
                             } else {
                                 mediaExtractor.advance() // 继续下一取样
                             }
@@ -83,39 +101,35 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
                     MediaCodec.INFO_TRY_AGAIN_LATER -> Log.d(TAG, "dequeueOutputBuffer timed out!")
 
                     else -> {
-                        if (mSeekPts > 0) {
-                            if (info.presentationTimeUs - mSeekPts > 0 || Math.abs(info.presentationTimeUs - mSeekPts) < 1_000_000) {
-                                mSeekPts = -1L
+                        val mSeekPts = avSynchronizer.mVideoSeekPositionMs * 1000
+                        if (mSeekPts >= 0) {
+                            if (Math.abs(info.presentationTimeUs /1_000_000- mediaExtractor.sampleTime/1_000_000) <=1L ) {
                                 isSeeking = false
                                 mStartTimeForSync = SystemClock.uptimeMillis() - info.presentationTimeUs / 1_000
                                 presentationTimeMs = info.presentationTimeUs / 1000
-                                if (!stop){
-                                    codec.releaseOutputBuffer(outIndex, true)
-                                }
-                                Log.e(
-                                    "=A=", """
-                                ${identity()} after so many times , finally found valid buffer , buffer pts is ${info.presentationTimeUs / 1_000_000} and we already seek to ${mSeekPts / 1_000_000}, so we will continue
+                                loge {
+                                    """
+                                ${identity()}
+                                after so many times , finally found valid buffer , buffer pts is ${info.presentationTimeUs / 1_000_000} and we already seek to ${mSeekPts / 1_000_000}, so we will continue
                                 next sleep time is ${info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)} ms
-                            """.trimIndent()
-                                )
+                                mediaExtractor.sampleTime  = ${mediaExtractor.sampleTime/1_000_000 }
+                                ${if (seekStartTime>-1L)"took me ${SystemClock.uptimeMillis() - seekStartTime} ms to get render target frame" else ""}
+                              """.lineSequence().joinToString(transform = String::trimStart, separator = System.lineSeparator())
+                                }
+                                avSynchronizer.seekVideoCompleted()
+                                context.avSynchronizer?._videoPtsMicroSeconds = info.presentationTimeUs
                             } else {
-                                Log.e(
-                                    "=A=",
+                                logw{
                                     "【Video】 invalid buffer , buffer pts is ${info.presentationTimeUs / 1_000_000} but we already seek to ${mSeekPts / 1_000_000}, so we will discard"
-                                )
-                                if (!stop){
-                                    codec.releaseOutputBuffer(outIndex, true)
                                 }
                             }
                         } else {
-                            val buffer = outputBuffers[outIndex]
-                            Log.v(TAG, "We can't use this buffer but render it due to the API limit, $buffer")
                             sleepRender(info)
                             context.avSynchronizer?._videoPtsMicroSeconds = info.presentationTimeUs
                             presentationTimeMs = info.presentationTimeUs / 1000
-                            if (!stop){
-                                codec.releaseOutputBuffer(outIndex, info.size > 0)
-                            }
+                        }
+                        if (!stop){
+                            codec.releaseOutputBuffer(outIndex, true)
                         }
                     }
                 }
@@ -139,9 +153,9 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
     private fun sleepRender(info: MediaCodec.BufferInfo) {
         //防止视频播放过快
         var diff: Long = info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
-        while (diff > 0) {
+        while (diff > 0 && !isSeeking) {
             try {
-                logw { "${identity()} sleep $diff ms" }
+                logd { "${identity()} sleep $diff ms" }
                 sleep(33)
                 diff = info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
             } catch (e: InterruptedException) {
@@ -156,20 +170,28 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
      * @param position 微秒
      */
     fun seek(position: Long) {
-        mSeekPts = position
+
     }
 
     fun identity(): String {
-        return "【Video】 ${Thread.currentThread().name}"
+        return "【Video】: ${Thread.currentThread().name}"
     }
 
     /**
      * ms
      */
     fun currentPosition(): Long {
-        return if (isSeeking && mSeekPts > 0) mSeekPts / 1_000
-        else presentationTimeMs
+        return presentationTimeMs
     }
+
+    private inline fun logd(crossinline e: (() -> String)) {
+        Log.d("=A=", e())
+    }
+
+    private inline fun logi(crossinline e: (() -> String)) {
+        Log.i("=A=", e())
+    }
+
 
     private inline fun logw(crossinline e: (() -> String)) {
         Log.w("=A=", e())
@@ -179,7 +201,6 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
         Log.e("=A=", e())
     }
 
-    val lock = ReentrantLock()
 
     private fun selectTrack(mediaExtractor: MediaExtractor){
 
@@ -203,6 +224,37 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
         if (mediaCodec == null) {
             Log.e(TAG, "Can't find video info!")
             throw CodecExceptions.PrepareExtractorException()
+        }
+    }
+
+    private val lock = ReentrantLock()
+    private val condition = lock.newCondition()
+
+    private fun waitIfPaused(){
+        if (context.state == PlayerState.PAUSED){
+            lock.withLock {
+                logw { "${identity()} now will lock ,waiting for signal " }
+                val sleepStartTime = SystemClock.uptimeMillis()
+                condition.await() // block this
+                val diffTime = SystemClock.uptimeMillis()-sleepStartTime
+                mStartTimeForSync+=diffTime
+                logw { "${identity()} wake up from  lock , continue processing, we slept for ${diffTime/1_000} seconds " }
+            }
+        }
+    }
+
+    fun wakeUp(){
+        require(!lock.isLocked)
+        lock.withLock {
+            logw { "${identity()} prepare signal ${lock.holdCount} ${lock.hasQueuedThread(this)}  ${lock.hasQueuedThreads()}" }
+            condition.signal()
+            logw { "${identity()} done signal ${lock.holdCount} ${lock.hasQueuedThread(this)}  ${lock.hasQueuedThreads()}" }
+        }
+    }
+
+    fun pause() {
+        if (lock.isHeldByCurrentThread){
+            lock.unlock()
         }
     }
 }

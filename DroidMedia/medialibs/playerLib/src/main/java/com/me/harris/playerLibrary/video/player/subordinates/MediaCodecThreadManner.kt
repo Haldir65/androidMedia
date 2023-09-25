@@ -29,11 +29,19 @@ class MediaCodecThreadManner(val context: MediaCodecPlayerContext) {
     }
 
 
-    fun resume(){
+    fun pause() {
+        audioDecodeThread?.pause()
+        videoDecodeThread?.pause()
+    }
 
+    fun resume(){
+        audioDecodeThread?.wakeUp()
+        videoDecodeThread?.wakeUp()
     }
 
     fun release(){
+        audioDecodeThread?.wakeUp()
+        videoDecodeThread?.wakeUp()
         stop()
     }
 
@@ -57,4 +65,6 @@ class MediaCodecThreadManner(val context: MediaCodecPlayerContext) {
     fun setMute(mute:Boolean){
         requireNotNull(audioDecodeThread).mute = mute
     }
+
+
 }

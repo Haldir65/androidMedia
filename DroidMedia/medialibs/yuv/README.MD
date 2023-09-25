@@ -64,7 +64,6 @@ https://juejin.cn/post/6996678928018440223
 
 todo:
 - yuvJava allocateDirect老是oom?
-https://mp.weixin.qq.com/s?__biz=MzA4MjU1MDk3Ng==&mid=2451526770&idx=1&sn=25cd744ea471ede99bbbece6f1150237&chksm=886ffdddbf1874cbdd15bd5285b65f2572314a16980c3a9050690261c006db76e6bffdb289e5&cur_album_id=1337187910394920960&scene=189#wechat_redirect
 - [一直烂尾]https://github.com/glumes/AndroidOpenGLTutorial/blob/master/opengl_tutorial/src/main/java/com/glumes/openglbasicshape/transition/TransitionRender.java#L39
 - compose 搞搞
 - 整理一下项目经历
@@ -74,5 +73,7 @@ https://mp.weixin.qq.com/s?__biz=MzA4MjU1MDk3Ng==&mid=2451526770&idx=1&sn=25cd74
 done
 - 高版本不是有一个ImageDecoder吗？纯粹兴趣 测下来速度比BitmapFactory慢多了
 - ImageReader和ImageWriter要会用，用ImageReader抽帧？ getLatestesImage感觉是不会有好处的
-- 相机输出的nv21 yuv通过mediacodec存储为h264视频？（不过还是mediaCodec那一套，注意pps 和 一些config信息）
+- 相机输出的nv21 yuv通过mediacodec存储为h264视频？（不过还是mediaCodec那一套，注意pps 和 一些config信息
+  https://mp.weixin.qq.com/s?__biz=MzA4MjU1MDk3Ng==&mid=2451526770&idx=1&sn=25cd744ea471ede99bbbece6f1150237&chksm=886ffdddbf1874cbdd15bd5285b65f2572314a16980c3a9050690261c006db76e6bffdb289e5&cur_album_id=1337187910394920960&scene=189#wechat_redirect
+ ）
 - yuv数据的来源有相机，mediaCodec，播放器。。。。 yuv420sp == semiplanar yyyyuvuv 好像是

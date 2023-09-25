@@ -13,7 +13,8 @@ android {
     }
 
     defaultConfig {
-        minSdk = 27
+        minSdk = libs.versions.minSdkVersion.get().toInt()
+        targetSdk =  libs.versions.targetSdkVersion.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -37,9 +38,16 @@ android {
     }
 }
 
+
+apply(from = "${rootProject.rootDir}${File.separator}gradle/scripts/DependencyHandlerExt.gradle.kts")
+//apply(from = "${rootProject.rootDir}${File.separator}gradle/scripts/Dependencies.gradle.kts")
+
+fun DependencyHandler.retrofit() {
+    implementation(libs.retrofit)
+}
+
 dependencies {
-
-
+    retrofit()
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat.appcompat)
