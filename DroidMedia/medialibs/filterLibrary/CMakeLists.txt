@@ -6,8 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-register")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wno-register -Wno-error=register")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-register -Wno-error=register")
 
-## add all file with certain extension to a collection,
+## add all file with certain extension to a collectio,
 # then call add_library will be easier
 ## https://stackoverflow.com/a/3201211
 file(GLOB cain_filters CONFIGURE_DEPENDS

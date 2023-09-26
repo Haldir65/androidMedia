@@ -29,3 +29,20 @@
     boolean FAST_SERVICE_LOADER_ENABLED return false;
 }
 -checkdiscard class kotlinx.coroutines.internal.FastServiceLoader
+
+-dontskipnonpubliclibraryclasses
+-dontobfuscate
+-forceprocessing
+-optimizationpasses 5
+
+-keep class * extends android.app.Activity
+
+
+-assumenosideeffects class android.util.Log {
+public static *** d(...);
+public static *** v(...);
+public static *** i(...);
+public static *** w(...);
+}
+
+-dontwarn com.me.harris.filterlibrary.opengl.enrty.egl.RenderThread
