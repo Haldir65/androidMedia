@@ -8,13 +8,13 @@ import android.os.SystemClock
 import android.util.Log
 import com.me.harris.playerLibrary.video.player.MediaCodecPlayerContext
 import com.me.harris.playerLibrary.video.player.audio.AudioPlayer
+import com.me.harris.playerLibrary.video.player.datasource.LocalFileDataSource
 import com.me.harris.playerLibrary.video.player.internal.PlayerState
 import com.me.harris.playerLibrary.video.player.misc.CodecExceptions
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
-import kotlin.jvm.internal.Ref.ObjectRef
 
 class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) : Thread("【Audio-Decoder-Thread】") {
 
@@ -38,7 +38,7 @@ class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) 
 
     override fun run() {
         val mediaExtractor = MediaExtractor()
-        mediaExtractor.setDataSource(path) // 设置数据源
+        mediaExtractor.setDataSource(LocalFileDataSource(path)) // 设置数据源
         selectTrack(mediaExtractor)
         val codec = requireNotNull(mediaCodec)
         mStartTimeForSync = SystemClock.uptimeMillis()
@@ -60,6 +60,7 @@ class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) 
             }
             else break
         }
+        if (buffer == null) return
         val inputBuffers = requireNotNull(buffer)
         var outputBuffers = codec.outputBuffers // 解码后的数据
         val info = MediaCodec.BufferInfo() // 用于描述解码得到的byte[]数据的相关信息

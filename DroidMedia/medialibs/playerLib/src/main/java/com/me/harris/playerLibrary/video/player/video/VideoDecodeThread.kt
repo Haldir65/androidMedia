@@ -7,6 +7,7 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.Surface
 import com.me.harris.playerLibrary.video.player.MediaCodecPlayerContext
+import com.me.harris.playerLibrary.video.player.datasource.LocalFileDataSource
 import com.me.harris.playerLibrary.video.player.internal.PlayerState
 import com.me.harris.playerLibrary.video.player.misc.CodecExceptions
 import java.io.IOException
@@ -39,7 +40,7 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
 
     override fun run() {
         val mediaExtractor = MediaExtractor()
-        mediaExtractor.setDataSource(path) // 设置数据源
+        mediaExtractor.setDataSource(LocalFileDataSource(path)) // 设置数据源
         selectTrack(mediaExtractor)
         val codec = requireNotNull(mediaCodec)
         codec.start() // 启动MediaCodec ，等待传入数据
