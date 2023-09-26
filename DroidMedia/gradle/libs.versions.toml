@@ -33,7 +33,8 @@ espresso="3.5.1"
 rxandroid = "3.0.0"
 rxjava = "3.1.1"
 x_crash="3.0.0"
-
+slfj="2.0.9"
+slfj-android="1.7.36"
 
 kotlinxDatetime = "0.4.0"
 kotlinxSerializationJson = "1.5.1"
@@ -145,6 +146,11 @@ rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroi
 rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
 
 # other dependencies
+## lfj
+slfj-api = { module = "org.slf4j:slf4j-api", version.ref = "slfj" }
+slfj-android = { module = "org.slf4j:slf4j-android", version.ref = "slfj-android" }
+
+
 
 
 [plugins]
