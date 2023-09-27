@@ -23,6 +23,7 @@ import com.me.harris.playerLibrary.video.player.MediaCodecVideoPlayer
 import com.me.harris.playerLibrary.video.vm.MediaCodeMain2ViewModel
 import com.me.harris.playerLibrary.video.vm.MuteState
 import com.me.harris.playerLibrary.video.vm.PlayState
+import com.me.harris.playerLibrary.video.widget.OnDoubleClickListener
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -45,7 +46,7 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
         val displayMetrics = DisplayMetrics()
         val arr = VideoInfoHelper.queryVideoInfo(VideoUtil.strVideo)
         windowManager.defaultDisplay.getMetrics(displayMetrics)
-        binding.surfaceView.updateLayoutParams<ViewGroup.LayoutParams> {
+        binding.surfaceViewContainer.updateLayoutParams<ViewGroup.LayoutParams> {
             this.width = displayMetrics.widthPixels
             this.height = (width * (arr[1].toFloat() / arr[0].toFloat())).toInt()
         }
@@ -76,6 +77,22 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                 }
             }
         })
+
+        binding.surfaceViewContainer.setOnDoubleClickListener { x, y ->
+            Log.w("=A=","Double click at x= ${x} y = ${y} container width = ${binding.surfaceViewContainer.width} container height = ${binding.surfaceViewContainer.height} ")
+            val doubleClickLeft = x < binding.surfaceViewContainer.width / 2
+            val p = requireNotNull(player)
+            val increment = 30_000
+            if (doubleClickLeft) {
+                val position = (p.getCurrentPosition() - increment).coerceAtLeast(0)
+                p.seekTo(position)
+                Log.w("=A=","双击左侧快退 ${position/1000}秒")
+            }else {
+                val position = (p.getCurrentPosition()+increment).coerceAtMost(p.getDuration())
+                p.seekTo(position)
+                Log.w("=A=","双击右侧快进 ${position/1000}秒")
+            }
+        }
 
         lifecycleScope.launch {
             delay(1000)
@@ -148,6 +165,7 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                 }
             }
         }
+
     }
 
 

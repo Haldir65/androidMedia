@@ -94,7 +94,7 @@ class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) 
                                 seekStartTime = SystemClock.uptimeMillis()
                                 isSeeking = true
                             }else {
-                               loge { "${identity()}【Audio】skip seek to ${mSeekPts} since we are still seeking ? current pos = ${ mediaExtractor.sampleTime} " }
+                               loge { "${identity()}【Audio】skip seek to ${mSeekPts} since we are done seeking, but output buffer pt is still not satisfied? mediaExtractor.sampleTime = ${ mediaExtractor.sampleTime} " }
                             }
 
                         } else {

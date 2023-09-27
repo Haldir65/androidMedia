@@ -8,9 +8,11 @@ import androidx.activity.contextaware.withContextAvailable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
+import com.me.harris.cameralib.cameraX.CameraXSampleActivity
 import com.me.harris.cameralib.CameraV1GLSurfaceView.CameraV1GLSurfaceViewActivity
 import com.me.harris.cameralib.CameraV1TextureView.CameraV1TextureViewActivity
 import com.me.harris.cameralib.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity
+import com.me.harris.cameralib.cameraX.CameraXTutorialActivity
 import com.me.harris.cameralib.camerarecord.CameraToH264Activity
 import kotlinx.coroutines.*
 
@@ -30,11 +32,16 @@ class CameraEntryActivity :AppCompatActivity(){
             startActivity(Intent(this, CameraV2GLSurfaceViewActivity::class.java))
         }
         findViewById<ViewGroup>(R.id.button4).setOnClickListener {
-//            startActivity(Intent(this, CameraV2GLSurfaceViewActivity::class.java))
-            Toast.makeText(this,"CameraX ,todo ",Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, CameraXTutorialActivity::class.java))
         }
         findViewById<CardView>(R.id.button5).setOnClickListener {
             startActivity(Intent(this, CameraToH264Activity::class.java))
+        }
+
+
+        findViewById<CardView>(R.id.button6).setOnClickListener {
+            startActivity(Intent(this, CameraXSampleActivity::class.java))
+            Toast.makeText(this,"CameraX ,todo ",Toast.LENGTH_SHORT).show()
         }
 
         lifecycleScope.launch {

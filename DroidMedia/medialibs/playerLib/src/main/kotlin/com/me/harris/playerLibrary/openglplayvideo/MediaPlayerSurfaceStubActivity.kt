@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.me.harris.awesomelib.updateProgressWithMediaPlayer
 import com.me.harris.awesomelib.utils.Utils
 import com.me.harris.awesomelib.utils.VideoUtil
+import com.me.harris.awesomelib.utils.VideoUtil.adjustPlayerViewPerVideoAspectRation
 import com.me.harris.awesomelib.whenProgressChanged
 import com.me.harris.playerLibrary.R
 import com.me.harris.playerLibrary.video.GLVideoSurfaceView
@@ -31,6 +32,7 @@ class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
         setContentView(R.layout.activity_mediaplayer_glsurfaceview)
         seekbar = findViewById(R.id.seekbar)
         val filePath = intent.getStringExtra(KEY_VIDEO_PATH).orEmpty().ifEmpty { VideoUtil.strVideo }
+
         player = MediaPlayer()
         mVideoView =
             GLVideoSurfaceView(
@@ -46,6 +48,10 @@ class MediaPlayerSurfaceStubActivity:AppCompatActivity() {
             delay(1000)
             seekbar.updateProgressWithMediaPlayer(player)
         }
+
+        mVideoView.adjustPlayerViewPerVideoAspectRation(filePath)
+
+
     }
 
     override fun onResume() {

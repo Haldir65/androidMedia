@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-    <androidx.cardview.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/button1"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
@@ -14,7 +17,7 @@
             app:cardElevation="3dp"
             app:contentPadding="4dp">
 
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
                 android:layout_gravity="center"
@@ -22,10 +25,10 @@
                 android:text="activity 1"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
 
-    <androidx.cardview.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/button2"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
@@ -33,7 +36,7 @@
             app:cardElevation="3dp"
             app:contentPadding="4dp">
 
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
                 android:layout_gravity="center"
@@ -41,10 +44,10 @@
                 android:text="activity 2"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
 
-    <androidx.cardview.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/button3"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
@@ -52,7 +55,7 @@
             app:cardElevation="3dp"
             app:contentPadding="4dp">
 
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
                 android:layout_gravity="center"
@@ -60,9 +63,9 @@
                 android:text="activity 3"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/button4"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
@@ -70,7 +73,7 @@
             app:cardElevation="3dp"
             app:contentPadding="4dp">
 
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
                 android:layout_gravity="center"
@@ -78,9 +81,9 @@
                 android:text="CameraX"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/button5"
             style="@style/CardStyleButton"
             app:cardBackgroundColor="@android:color/white"
@@ -88,7 +91,7 @@
             app:cardElevation="3dp"
             app:contentPadding="4dp">
 
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
                 android:layout_gravity="center"
@@ -96,6 +99,27 @@
                 android:text="Camera record to h264"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/button6"
+            style="@style/CardStyleButton"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="3dp"
+            app:contentPadding="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:background="@android:color/white"
+                android:text="CameraX tutorial"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black" />
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

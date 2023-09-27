@@ -33,8 +33,6 @@ class ExtractFrameEntryActivity:AppCompatActivity(R.layout.activity_extract_fram
         binding.card5.setOnClickListener {
             startActivity(Intent(this, DecodeFrameBitMapToViewActivity::class.java))
         }
-
-
     }
 
 }

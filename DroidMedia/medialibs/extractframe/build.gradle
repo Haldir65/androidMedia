@@ -14,8 +14,8 @@ android {
 //        aidl true
     }
     defaultConfig {
-        minSdk 27
-        targetSdk 33
+        minSdk = Integer.parseInt(libs.versions.minSdk.get())
+        targetSdk = Integer.parseInt(libs.versions.targetSdk.get())
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

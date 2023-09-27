@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application android:requestLegacyExternalStorage="true">
 
@@ -25,11 +26,12 @@
             android:name="com.me.harris.cameralib.CameraV2GLSurfaceView.CameraV2GLSurfaceViewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cameraX.CameraXSampleActivity"
+            android:name=".cameraX.CameraXSampleActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.me.harris.cameralib.camerarecord.CameraToH264Activity"
                 android:screenOrientation="portrait"
                 />
+        <activity android:name=".cameraX.CameraXTutorialActivity" />
     </application>
 
 </manifest>

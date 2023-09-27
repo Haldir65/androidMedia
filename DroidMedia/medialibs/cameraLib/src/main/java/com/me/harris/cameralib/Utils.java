@@ -79,7 +79,11 @@ public class Utils {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.CAMERA},100);
             return false;
-        }else  {
+        } else if (ContextCompat.checkSelfPermission(activity,Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.RECORD_AUDIO},100);
+            return false;
+        }
+        else  {
             return true;
         }
     }

@@ -12,8 +12,8 @@ android {
     }
 
     defaultConfig {
-        minSdk 27
-        targetSdk 29
+        minSdk = Integer.parseInt(libs.versions.minSdk.get())
+        targetSdk = Integer.parseInt(libs.versions.targetSdk.get())
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -54,7 +54,17 @@ dependencies {
     implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
     implementation libs.coroutines.core
     implementation libs.coroutines.android
+
     compileOnly libs.exoplayer.core
     compileOnly libs.exoplayer.ui
+
+    // camerax
+    implementation libs.camerax.camera.core
+    implementation libs.camerax.camera.camera2
+    implementation libs.camerax.camera.extensions
+    implementation libs.camerax.camera.video
+    implementation libs.camerax.camera.view
+    implementation libs.camerax.camera.lifecycle
+
 
 }

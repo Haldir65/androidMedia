@@ -23,6 +23,7 @@ object CommonUtils {
     fun formatDuration(seconds: Long): String = if (seconds < 60) {
         getTimeDesc(seconds.toInt()).toString()
     } else {
+//        getTimeDesc(seconds.toInt()).toString()
         DateUtils.formatElapsedTime(seconds) // from android sdk
     }
 

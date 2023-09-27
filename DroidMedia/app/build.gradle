@@ -45,11 +45,12 @@ android {
 
     defaultConfig {
         applicationId "com.me.harris.droidmedia"
-        minSdk 27
+        minSdk = Integer.parseInt(libs.versions.minSdk.get())
+        targetSdk = Integer.parseInt(libs.versions.targetSdk.get())
         //noinspection ExpiredTargetSdkVersion
-        targetSdk 29
         versionCode 1
         versionName "1.0"
+
         resourceConfigurations += ['zh', 'zh-rCN']
 
 

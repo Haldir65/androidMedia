@@ -76,7 +76,7 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
                                     isSeeking = true
                                     logw { "${identity()} 【Video】after an attempt to seek to " + mSeekPts + "  current pos for mediaExtractor.sampleTime = " + mediaExtractor.sampleTime }
                                 }else {
-                                    logw { "${identity()}【Video】skip seek to ${mSeekPts} since we are still seeking ? current pos = ${ mediaExtractor.sampleTime} " }
+                                    logw { "${identity()}【Video】skip seek to ${mSeekPts} since we are done seeking, but output buffer pt is still not satisfied? current mediaExtractor.sampleTime = ${ mediaExtractor.sampleTime} " }
 
                                 }
                             } else {
