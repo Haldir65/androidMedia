@@ -122,6 +122,7 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                 with(p){
                     if (isPaused()){
                         setSurface(sf)
+                        p.context.setSurfaceChanged(true)
                         resume()
                     }else {
                         setDataSource(getPlayableSource())
@@ -136,7 +137,7 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 // player.release
-                player?.release()
+//                player?.release()
             }
         })
 
@@ -214,14 +215,25 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
 
     override fun onResume() {
         super.onResume()
-        player?.resume()
+//        player?.resume()
         Log.w("=A=","onResume")
     }
 
     override fun onPause() {
         super.onPause()
+        Log.w("=A=","Player onPause pause")
+    }
+
+    override fun onStop() {
+        super.onStop()
         player?.pause()
-        Log.w("=A=","onPause")
+        Log.w("=A=","Player onStop pause")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        player?.release()
+        Log.w("=A=","Player onDestroy release")
     }
 
     private fun getPlayableSource():String = VideoUtil.strVideo

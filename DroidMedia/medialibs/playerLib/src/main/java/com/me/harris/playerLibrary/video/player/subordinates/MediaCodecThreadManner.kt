@@ -48,7 +48,7 @@ class MediaCodecThreadManner(val context: MediaCodecPlayerContext) {
     private fun videoDecodeLoop() {
         val path = requireNotNull(context.getDataSource())
         val surface = requireNotNull(context.getSurface())
-        VideoDecodeThread(surface = surface, path = path,context = context).apply {
+        VideoDecodeThread(path = path,context = context).apply {
             videoDecodeThread = this
             start()
         }

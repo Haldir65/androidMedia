@@ -76,7 +76,11 @@ class MediaCodecPlayerContext {
 
     fun getSurface():Surface? = immutableStates?.surface
 
+    fun getSurfaceChanged(): Boolean = immutableStates?.surfaceChanged?:false
 
+    fun setSurfaceChanged(changed:Boolean){
+        immutableStates?.surfaceChanged = changed
+    }
 
 }
 

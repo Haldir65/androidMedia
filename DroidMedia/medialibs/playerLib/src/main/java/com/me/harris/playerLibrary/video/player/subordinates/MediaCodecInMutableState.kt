@@ -17,6 +17,7 @@ class MediaCodecInMutableState(val filepath:String) {
     var height:Int = 0
     val videoDurationMicroSeconds:Long
     var surface:Surface? = null
+    var surfaceChanged = false // pause -> resume 重新setSurface
 
     init {
         videoDurationMicroSeconds = getVideoDurationInMicroSeconds(filepath)

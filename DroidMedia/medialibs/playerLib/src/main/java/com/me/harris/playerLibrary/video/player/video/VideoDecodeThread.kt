@@ -11,11 +11,10 @@ import com.me.harris.playerLibrary.video.player.datasource.LocalFileDataSource
 import com.me.harris.playerLibrary.video.player.internal.PlayerState
 import com.me.harris.playerLibrary.video.player.misc.CodecExceptions
 import java.io.IOException
-import java.nio.ByteBuffer
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class VideoDecodeThread(val surface: Surface, val path: String, val context: MediaCodecPlayerContext) :
+class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext) :
     Thread("【Video-Decoder-Thread】") {
 
     private val TAG = "VideoDecodeThread"
@@ -42,24 +41,23 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
         val mediaExtractor = MediaExtractor()
         mediaExtractor.setDataSource(LocalFileDataSource(path)) // 设置数据源
         selectTrack(mediaExtractor)
-        val codec = requireNotNull(mediaCodec)
-        codec.start() // 启动MediaCodec ，等待传入数据
-        val inputBuffers: Array<ByteBuffer> = codec.inputBuffers // 用来存放目标文件的数据
-        var outputBuffers: Array<ByteBuffer> = codec.outputBuffers // 解码后的数据
+        mediaCodec?.start() // 启动MediaCodec ，等待传入数据
+//        val inputBuffers: Array<ByteBuffer> = codec.inputBuffers // 用来存放目标文件的数据
+//        var outputBuffers: Array<ByteBuffer> = codec.outputBuffers // 解码后的数据
         val info = MediaCodec.BufferInfo() // 用于描述解码得到的byte[]数据的相关信息
         var bIsEos = false
         mStartTimeForSync = SystemClock.uptimeMillis()
         val avSynchronizer = requireNotNull(context.avSynchronizer)
         var seekStartTime = -1L
         while (!stop&& !interrupted()) {
-
             waitIfPaused()
-
+            recreateCodecIfSurfaceChanged()
+            val codec = requireNotNull(mediaCodec)
             try {
                 if (!bIsEos ) {
                     val inIndex: Int = codec.dequeueInputBuffer(0)
                     if (inIndex >= 0 ) {
-                        val buffer = inputBuffers[inIndex]
+                        val buffer = codec.getInputBuffer(inIndex)!!
                         val nSampleSize = mediaExtractor.readSampleData(buffer, 0) // 读取一帧数据至buffer中
                         if (nSampleSize < 0) {
                            loge { "InputBuffer BUFFER_FLAG_END_OF_STREAM" }
@@ -94,7 +92,7 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
                 when (outIndex) {
                     MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
                         Log.d(TAG, "INFO_OUTPUT_BUFFERS_CHANGED")
-                        outputBuffers = codec.outputBuffers
+//                        outputBuffers = codec.outputBuffers
                     }
 
                     MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> Log.d(TAG, "New format " + codec.outputFormat)
@@ -130,7 +128,7 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
                             presentationTimeMs = info.presentationTimeUs / 1000
                         }
                         if (!stop){
-                            codec.releaseOutputBuffer(outIndex, true)
+                            codec.releaseOutputBuffer(outIndex, info.size>0)
                         }
                     }
                 }
@@ -139,7 +137,7 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
                 e.printStackTrace()
             }
         }
-        codec.stop()
+        mediaCodec?.stop()
 //
 //        try {
 //        } catch (e: MediaCodec.CodecException) {
@@ -147,8 +145,37 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
 //        } catch (e: IllegalStateException) {
 //            loge { "${e.stackTraceToString()}" }
 //        }
-        codec.release()
+        mediaCodec?.release()
         mediaExtractor.release()
+    }
+
+
+    private fun recreateCodecIfSurfaceChanged() {
+        // setOutputSurface since api 23
+        // setOutputSurface always crash on my device https://github.com/google/ExoPlayer/issues/8329
+        if (context.getSurfaceChanged()){
+            mediaCodec?.run {
+                kotlin.runCatching {
+                    setOutputSurface(requireNotNull(context.getSurface()))
+                }.onFailure {
+                    try {
+                        stop()
+                        release()
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                    }
+                    recreateCodec()
+                }
+            }
+            context.setSurfaceChanged(false)
+        }
+    }
+
+    private fun recreateCodec(){
+        val mediaExtractor = MediaExtractor()
+        mediaExtractor.setDataSource(LocalFileDataSource(path)) // 设置数据源
+        selectTrack(mediaExtractor)
+        mediaCodec?.start()
     }
 
     private fun sleepRender(info: MediaCodec.BufferInfo) {
@@ -203,18 +230,24 @@ class VideoDecodeThread(val surface: Surface, val path: String, val context: Med
     }
 
 
-    private fun selectTrack(mediaExtractor: MediaExtractor){
+    fun setSurface(surface:Surface){
+        loge { "【Surface Changed】setSurface for codec " }
+        mediaCodec?.setOutputSurface(surface)
+    }
 
-        var mimeType: String? = null
+
+
+    private fun selectTrack(mediaExtractor: MediaExtractor){
+         val surface:Surface = requireNotNull(context.getSurface())
         for (i in 0 until mediaExtractor.trackCount) { // 信道总数
             val format = mediaExtractor.getTrackFormat(i) // 音频文件信息
-            mimeType = format.getString(MediaFormat.KEY_MIME)
-            if (mimeType!!.startsWith("video/")) { // 视频信道
+            val mimeType = requireNotNull(format.getString(MediaFormat.KEY_MIME))
+            if (mimeType.startsWith("video/")) { // 视频信道
                 videoDuration = format.getLong(MediaFormat.KEY_DURATION) / 1000
                 Log.w("=A=", "video duration is $videoDuration")
                 mediaExtractor.selectTrack(i) // 切换到视频信道
                 try {
-                    mediaCodec = MediaCodec.createDecoderByType(mimeType!!) // 创建解码器,提供数据输出
+                    mediaCodec = MediaCodec.createDecoderByType(mimeType) // 创建解码器,提供数据输出
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
