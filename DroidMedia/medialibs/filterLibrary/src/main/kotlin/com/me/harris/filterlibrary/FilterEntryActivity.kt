@@ -11,6 +11,7 @@ import com.me.harris.awesomelib.viewBinding
 import com.me.harris.filterlibrary.baisc.FilterBasicActivity
 import com.me.harris.filterlibrary.imagefilter.ImageFilterActivity
 import com.me.harris.filterlibrary.databinding.ActivityFilterEntryBinding
+import com.me.harris.filterlibrary.freetypes.FreeTypesDisplayTextActivity
 import com.videffects.sample.view.AssetsGalleryActivity
 import com.videffects.sample.view.SamplePlayerActivity
 
@@ -39,7 +40,7 @@ class FilterEntryActivity:AppCompatActivity(R.layout.activity_filter_entry) {
             startActivity(Intent(this, AssetsGalleryActivity::class.java))
         }
         binding.card7.setOnClickListener {
-//            startActivity(Intent(this, SamplePlayerActivity::class.java))
+            startActivity(Intent(this, FreeTypesDisplayTextActivity::class.java))
         }
     }
 

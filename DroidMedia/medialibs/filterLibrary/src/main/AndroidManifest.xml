@@ -28,6 +28,7 @@
         <activity android:name="com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity"
 
             />
+        <activity android:name="com.me.harris.filterlibrary.freetypes.FreeTypesDisplayTextActivity" />
 
     </application>
 </manifest>

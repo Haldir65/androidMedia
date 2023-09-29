@@ -1,0 +1,14 @@
+prefix=/Users/harris/Documents/github/androidMedia/DroidMedia/medialibs/filterLibrary/src/main/cpp/freetypes/android/armv64-v8a
+exec_prefix=/Users/harris/Documents/github/androidMedia/DroidMedia/medialibs/filterLibrary/src/main/cpp/freetypes/android/armv64-v8a
+libdir=/Users/harris/Documents/github/androidMedia/DroidMedia/medialibs/filterLibrary/src/main/cpp/freetypes/android/armv64-v8a/lib
+includedir=/Users/harris/Documents/github/androidMedia/DroidMedia/medialibs/filterLibrary/src/main/cpp/freetypes/android/armv64-v8a/include
+
+Name: FreeType 2
+URL: https://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 24.1.18
+Requires:
+Requires.private: 
+Libs: -L${libdir} -lfreetype
+Libs.private: 
+Cflags: -I${includedir}/freetype2

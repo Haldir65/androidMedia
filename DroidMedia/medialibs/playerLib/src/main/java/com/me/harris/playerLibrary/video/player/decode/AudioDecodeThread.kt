@@ -6,6 +6,7 @@ import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.os.SystemClock
 import android.util.Log
+import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.playerLibrary.video.player.MediaCodecPlayerContext
 import com.me.harris.playerLibrary.video.player.audio.AudioPlayer
 import com.me.harris.playerLibrary.video.player.datasource.LocalFileDataSource
@@ -38,7 +39,7 @@ class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) 
 
     override fun run() {
         val mediaExtractor = MediaExtractor()
-        mediaExtractor.setDataSource(LocalFileDataSource(path)) // 设置数据源
+        mediaExtractor.setDataSource(path) // 设置数据源
         selectTrack(mediaExtractor)
         val codec = requireNotNull(mediaCodec)
         mStartTimeForSync = SystemClock.uptimeMillis()
@@ -154,7 +155,7 @@ class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) 
 
                         }
 
-                    } else if (Math.abs(info.presentationTimeUs /1_000_000- mediaExtractor.sampleTime/1_000_000) <=1L ){
+                    } else if ( Math.abs(info.presentationTimeUs /1_000_000- mediaExtractor.sampleTime/1_000_000) <=1L ){
                         val diff = info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
                         logd {
                             "【Audio】 normal buffer , buffer pts is ${info.presentationTimeUs / 1_000_000} , we will sleep for $diff "
@@ -188,7 +189,7 @@ class AudioDecodeThread(val path: String, val context: MediaCodecPlayerContext) 
         while (diff > 0 && !isSeeking) {
             diff = try {
                 logd { "【Audio】sleep  $diff ms" }
-                sleep(33)
+                sleep(10)
                 info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
             } catch (e: InterruptedException) {
                 stop = true

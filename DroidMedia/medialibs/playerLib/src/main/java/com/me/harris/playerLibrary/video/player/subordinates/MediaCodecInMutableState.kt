@@ -18,13 +18,14 @@ class MediaCodecInMutableState(val filepath:String) {
     val videoDurationMicroSeconds:Long
     var surface:Surface? = null
     var surfaceChanged = false // pause -> resume 重新setSurface
+    var surfaceDestoried = false
 
     init {
         videoDurationMicroSeconds = getVideoDurationInMicroSeconds(filepath)
     }
 
     private fun getVideoDurationInMicroSeconds (filepath:String):Long {
-        require(File(filepath).exists())
+       if (!filepath.startsWith("http"))  require(File(filepath).exists())
         val extractor = MediaExtractor()
         extractor.setDataSource(filepath)
         for (i in 0 until extractor.trackCount){

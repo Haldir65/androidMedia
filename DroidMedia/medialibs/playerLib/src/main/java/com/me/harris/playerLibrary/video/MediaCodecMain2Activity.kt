@@ -53,7 +53,9 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
 
         binding.surfaceView.holder.setKeepScreenOn(true)
 
-        player = MediaCodecVideoPlayer()
+        player = MediaCodecVideoPlayer().apply {
+            setDataSource(getPlayableSource())
+        }
         val videoDuration by lazy {
             requireNotNull(player).getDuration()
         }
@@ -125,7 +127,6 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                         p.context.setSurfaceChanged(true)
                         resume()
                     }else {
-                        setDataSource(getPlayableSource())
                         setSurface(sf)
                         prepare()
                         start()
@@ -137,7 +138,7 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 // player.release
-//                player?.release()
+                player?.surfaceDestroyed()
             }
         })
 

@@ -4,7 +4,7 @@ import android.util.Log
 import android.view.Surface
 import com.me.harris.playerLibrary.video.player.internal.PlayerState
 
-class MediaCodecVideoPlayer :IMediaPlayer{
+class MediaCodecVideoPlayer :IMediaPlayer {
 
     val context = MediaCodecPlayerContext()
 
@@ -99,7 +99,13 @@ class MediaCodecVideoPlayer :IMediaPlayer{
         requireNotNull(context.threadManner).setMute(mute)
     }
 
+
+
     override fun getDuration(): Long {
         return context.getDuration()
+    }
+
+    fun surfaceDestroyed() {
+
     }
 }

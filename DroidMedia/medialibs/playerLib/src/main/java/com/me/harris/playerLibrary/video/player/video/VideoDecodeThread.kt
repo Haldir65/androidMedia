@@ -13,6 +13,7 @@ import com.me.harris.playerLibrary.video.player.misc.CodecExceptions
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
+import kotlin.math.abs
 
 class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext) :
     Thread("【Video-Decoder-Thread】") {
@@ -39,7 +40,7 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
 
     override fun run() {
         val mediaExtractor = MediaExtractor()
-        mediaExtractor.setDataSource(LocalFileDataSource(path)) // 设置数据源
+        mediaExtractor.setDataSource(path) // 设置数据源
         selectTrack(mediaExtractor)
         mediaCodec?.start() // 启动MediaCodec ，等待传入数据
 //        val inputBuffers: Array<ByteBuffer> = codec.inputBuffers // 用来存放目标文件的数据
@@ -51,11 +52,11 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
         var seekStartTime = -1L
         while (!stop&& !interrupted()) {
             waitIfPaused()
-            recreateCodecIfSurfaceChanged()
+            reconfigureOrRecreateCodecAfterSurfaceChanged(mediaExtractor)
             val codec = requireNotNull(mediaCodec)
             try {
                 if (!bIsEos ) {
-                    val inIndex: Int = codec.dequeueInputBuffer(0)
+                    val inIndex: Int = if (stop || !context.getSurface()!!.isValid) -1 else codec.dequeueInputBuffer(0)
                     if (inIndex >= 0 ) {
                         val buffer = codec.getInputBuffer(inIndex)!!
                         val nSampleSize = mediaExtractor.readSampleData(buffer, 0) // 读取一帧数据至buffer中
@@ -68,7 +69,7 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
                             logd { "${identity()}【Video】queue inputBufer at ${mediaExtractor.sampleTime / 1_000_000} s" }
                             val mSeekPts = avSynchronizer.mVideoSeekPositionMs*1000
                             if (mSeekPts >=0 ) {
-                                if ( !isSeeking){
+                                if (!isSeeking){
                                     seekStartTime = SystemClock.uptimeMillis()
                                     mediaExtractor.seekTo(mSeekPts, MediaExtractor.SEEK_TO_NEXT_SYNC)
                                     isSeeking = true
@@ -82,6 +83,9 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
                             }
                         }
                     }
+                }
+                if (stop || !context.getSurface()!!.isValid){
+                    continue
                 }
                 val outIndex: Int = codec.dequeueOutputBuffer(info, 0)
                 // All decoded frames have been rendered, we can stop playing
@@ -135,6 +139,7 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
 
             } catch (e: IllegalStateException) {
                 e.printStackTrace()
+//                throw e
             }
         }
         mediaCodec?.stop()
@@ -150,13 +155,20 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
     }
 
 
-    private fun recreateCodecIfSurfaceChanged() {
+    private fun reconfigureOrRecreateCodecAfterSurfaceChanged(mediaExtractor: MediaExtractor) {
         // setOutputSurface since api 23
         // setOutputSurface always crash on my device https://github.com/google/ExoPlayer/issues/8329
         if (context.getSurfaceChanged()){
+            val surface = requireNotNull(context.getSurface())
             mediaCodec?.run {
                 kotlin.runCatching {
-                    setOutputSurface(requireNotNull(context.getSurface()))
+//                    stop() // crash
+//                    flush() // crash
+                    reset()
+                    val format = mediaExtractor.getTrackFormat(mediaExtractor.sampleTrackIndex)
+                    configure(format, surface, null, 0)
+                    start()
+                    requireNotNull(context.avSynchronizer).seekVideoAndAudio(presentationTimeMs)
                 }.onFailure {
                     try {
                         stop()
@@ -182,6 +194,12 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
         //防止视频播放过快
         var diff: Long = info.presentationTimeUs / 1000 - (SystemClock.uptimeMillis() - mStartTimeForSync)
         while (diff > 0 && !isSeeking) {
+            if (context.avSynchronizer!=null){
+                val audioPts = context.avSynchronizer!!._audioPtsMicroSeconds
+                if (abs(audioPts-info.presentationTimeUs) >5_000_000) {
+                    break
+                }
+            }
             try {
                 logd { "${identity()} sleep $diff ms" }
                 sleep(33)
