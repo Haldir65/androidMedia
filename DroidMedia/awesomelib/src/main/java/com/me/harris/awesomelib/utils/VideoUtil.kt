@@ -1,12 +1,13 @@
 package com.me.harris.awesomelib.utils
 
 import android.app.Activity
-import android.content.Context
+import android.graphics.Matrix
 import android.os.Build
 import android.os.Environment
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
@@ -79,6 +80,7 @@ object VideoUtil {
         if (!TextUtils.isEmpty(choosenFile)){
             strVideo = choosenFile
         }
+//        strVideo = remoteUrl
         Log.w("=A=","strVideo = $strVideo")
 
 //        strVideo = "/storage/emulated/0/Movies/video_001.mp4"
@@ -104,11 +106,60 @@ object VideoUtil {
     }
 
     @JvmStatic
+    fun TextureView.adjustTextureViewPerVideoAspectRation(url:String){
+        val activity = context as Activity
+
+        val arr = VideoInfoHelper.queryVideoInfo(url)
+        val params = layoutParams
+
+        val displayMetrics = DisplayMetrics()
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+//        val height = displayMetrics.heightPixels.toFloat()
+        val width = displayMetrics.widthPixels.toFloat()
+        adjustAspectRatio(this,arr[0],arr[1])
+    }
+
+    @JvmStatic
 
     fun adjustViewRatio(maxWidth:Int,videoWitdh:Int, videoHeight:Int, view: View){
         view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             this.width = maxWidth
             this.height = (maxWidth * (videoHeight.toFloat() / videoWitdh.toFloat())).toInt()
         }
+    }
+
+
+    @JvmStatic
+
+    // https://github.com/google/grafika/blob/b1df331e89cffeab621f02b102d4c2c25eb6088a/app/src/main/java/com/android/grafika/PlayMovieActivity.java#L21
+     fun adjustAspectRatio(mTextureView:TextureView,videoWidth: Int, videoHeight: Int) {
+        val viewWidth: Int = mTextureView.getWidth()
+        val viewHeight: Int = mTextureView.getHeight()
+        val aspectRatio = videoHeight.toDouble() / videoWidth
+        val newWidth: Int
+        val newHeight: Int
+        if (viewHeight > (viewWidth * aspectRatio).toInt()) {
+            // limited by narrow width; restrict height
+            newWidth = viewWidth
+            newHeight = (viewWidth * aspectRatio).toInt()
+        } else {
+            // limited by short height; restrict width
+            newWidth = (viewHeight / aspectRatio).toInt()
+            newHeight = viewHeight
+        }
+        val xoff = (viewWidth - newWidth) / 2
+        val yoff = (viewHeight - newHeight) / 2
+//        Log.v(
+//            TAG, "video=" + videoWidth + "x" + videoHeight +
+//                " view=" + viewWidth + "x" + viewHeight +
+//                " newView=" + newWidth + "x" + newHeight +
+//                " off=" + xoff + "," + yoff
+//        )
+        val txform = Matrix()
+        mTextureView.getTransform(txform)
+        txform.setScale(newWidth.toFloat() / viewWidth, newHeight.toFloat() / viewHeight)
+        //txform.postRotate(10);          // just for fun
+        txform.postTranslate(xoff.toFloat(), yoff.toFloat())
+        mTextureView.setTransform(txform)
     }
 }

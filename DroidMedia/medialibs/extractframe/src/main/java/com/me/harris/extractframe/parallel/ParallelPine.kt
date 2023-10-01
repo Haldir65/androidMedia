@@ -24,7 +24,7 @@ const val PARALLISM = ExtractConfiguration.EXTRACT_FRAME_PARALLEISM // todo
 
 
 internal fun getVideoDurationInMicroSeconds (filepath:String):Long {
-    require(File(filepath).exists())
+    if (!filepath.startsWith("http"))require(File(filepath).exists())
     val extractor = MediaExtractor()
     extractor.setDataSource(filepath)
     for (i in 0 until extractor.trackCount){

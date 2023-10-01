@@ -273,6 +273,25 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@android:color/white"
+                android:text="avif"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black" />
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn15"
+            style="@style/CardStyleButton"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="3dp"
+            app:contentPadding="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/white"
                 android:text="@string/app_place_holder"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />

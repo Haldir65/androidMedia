@@ -5,6 +5,8 @@
 #include "../glm/glm/gtc/matrix_transform.hpp"
 #include "../glm/glm/ext.hpp"
 #include "../glm/glm/detail/_noise.hpp"
+#include <memory> // for std::unique_ptr
+
 
 //
 // Created by me on 2023/6/24.
@@ -39,12 +41,11 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
                                                              jobject bitmap, jobject bitmap1,
                                                              jobject surface, jobject assetmanager) {
 
-    auto *routine = new EGLRoutine();
+    std::unique_ptr<EGLRoutine> routine{new EGLRoutine{}};
     routine->eglSetup(env, surface);
-    auto assetReader = new AssetReader();
+    auto assetReader = std::make_unique<AssetReader>();
     const char* vertexSimpleTexture = assetReader->readAssets(env,"shader2/vertexSimpleTexture.glsl",assetmanager);
     const char* fragSimpleTexture = assetReader->readAssets(env,"shader2/fragSimpleTexture.glsl",assetmanager);
-    delete assetReader;
     GLint vsh = routine->initShader(vertexSimpleTexture, GL_VERTEX_SHADER);
     GLint fsh = routine->initShader(fragSimpleTexture, GL_FRAGMENT_SHADER);
 
@@ -203,7 +204,6 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
     //窗口显示，交换双缓冲区
 
     routine->eglSwapBuffer();
-    delete routine;
     LOGD("delete routine; called");
 
 
@@ -228,7 +228,7 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuv(JNIEnv *env, jobject th
     EGLRoutine routineObj; // allocate on stack
     auto routine = &routineObj;
     routine->eglSetup(env, surface);
-    auto assetReader = new AssetReader();
+    auto assetReader = std::make_unique<AssetReader>();
 
     const char* vertexShader = assetReader->readAssets(env,"shader2/vertexShader.glsl",assetmanager);
     GLint vsh = routine->initShader(vertexShader, GL_VERTEX_SHADER);
@@ -237,7 +237,6 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuv(JNIEnv *env, jobject th
 //    GLint fsh = routine->initShader(fragYUV420P_SPLIT, GL_FRAGMENT_SHADER);
     const char* fragYUV420P_split_vertical_two = assetReader->readAssets(env,"shader2/fragYUV420P_SPLIT.glsl",assetmanager);
     GLint fsh = routine->initShader(fragYUV420P_split_vertical_two, GL_FRAGMENT_SHADER);
-    delete assetReader;
 
 
     //创建渲染程序

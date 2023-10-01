@@ -15,6 +15,7 @@ import com.me.harris.droidmedia.databinding.ActivityMainBinding
 import com.jadyn.mediakit.MediaKitEntryActivity
 import com.me.harris.AwesomePickVideoActivity
 import com.me.harris.audiolib.AudioLibEntryActivity
+import com.me.harris.avif.AvIfEntryActivity
 import com.me.harris.droidmedia.entity.JUserInfo
 import com.me.harris.droidmedia.entity.SubUserInfo
 import com.me.harris.droidmedia.entity.UserInfo
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         binding.btn14.setOnClickListener {
-
+            startActivity(Intent(this, AvIfEntryActivity::class.java))
         }
     }
 

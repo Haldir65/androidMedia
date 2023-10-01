@@ -98,6 +98,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:text="MediaCodecVideoMainActivity"
+            android:padding="20dp"
+            android:background="@android:color/white"
             android:textAllCaps="false" />
 
         <Button

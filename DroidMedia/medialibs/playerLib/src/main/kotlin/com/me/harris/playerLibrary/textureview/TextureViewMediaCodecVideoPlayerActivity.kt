@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.utils.VideoUtil.adjustPlayerViewPerVideoAspectRation
+import com.me.harris.awesomelib.utils.VideoUtil.adjustTextureViewPerVideoAspectRation
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.awesomelib.whenProgressChanged
 import com.me.harris.awesomelib.withSurfaceAvailable
@@ -79,7 +80,9 @@ class TextureViewMediaCodecVideoPlayerActivity:AppCompatActivity(R.layout.activi
 
     private fun startPlay(surfaceTexture: SurfaceTexture){
         val url = VideoUtil.strVideo
-        binding.textureView.adjustPlayerViewPerVideoAspectRation(url)
+        binding.textureView.adjustTextureViewPerVideoAspectRation(url)
+
+
         lifecycleScope.launch {
             mVideoDecoder = VideoDecoder(Surface(surfaceTexture)).also { viewModel.addCloseable(it) }
             mAudioDecoder = AudioDecoder().also { viewModel.addCloseable(it) }

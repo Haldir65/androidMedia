@@ -24,6 +24,7 @@ import com.me.harris.playerLibrary.video.vm.MediaCodeMain2ViewModel
 import com.me.harris.playerLibrary.video.vm.MuteState
 import com.me.harris.playerLibrary.video.vm.PlayState
 import com.me.harris.playerLibrary.video.widget.OnDoubleClickListener
+import com.me.harris.playerLibrary.videocache.VideoCacheManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -97,8 +98,8 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
         }
 
         lifecycleScope.launch {
-            delay(1000)
             while (currentCoroutineContext().isActive && player!=null) {
+                delay(1000)
                 val total = videoDuration
                 val current = player!!.getCurrentPosition()
                 val thismax = binding.seekBar.max
@@ -109,7 +110,6 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                         binding.tvTimer.text = "${CommonUtils.formatDuration(current / 1000.toLong())} / ${CommonUtils.formatDuration(total / 1000.toLong())}"
                     }
                 }
-                delay(100)
             }
         }
 
@@ -122,14 +122,16 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
                 val sf = holder.surface
                 val p = player?: MediaCodecVideoPlayer()
                 with(p){
-                    if (isPaused()){
-                        setSurface(sf)
-                        p.context.setSurfaceChanged(true)
-                        resume()
-                    }else {
-                        setSurface(sf)
-                        prepare()
-                        start()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        if (isPaused()){
+                            setSurface(sf)
+                            p.context.setSurfaceChanged(true)
+                            resume()
+                        }else {
+                            setSurface(sf)
+                            prepare()
+                            start()
+                        }
                     }
                     viewModel.playButtonState.value = PlayState.PlayPlaying
                 }
@@ -238,4 +240,7 @@ class MediaCodecMain2Activity : AppCompatActivity(R.layout.activity_media_codec_
     }
 
     private fun getPlayableSource():String = VideoUtil.strVideo
+//    VideoCacheManager.getProxy(this).getProxyUrl(VideoUtil.remoteUrl).also {
+//        Log.w("=A=","video url is ${it}")
+//    }
 }

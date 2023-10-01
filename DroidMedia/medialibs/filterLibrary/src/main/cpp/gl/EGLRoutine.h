@@ -15,7 +15,7 @@
 
 class EGLRoutine{
 public:
-    EGLRoutine();
+    explicit EGLRoutine();
 
     virtual ~EGLRoutine();
 

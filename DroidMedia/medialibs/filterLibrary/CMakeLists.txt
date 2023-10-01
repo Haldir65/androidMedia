@@ -40,10 +40,6 @@ include_directories(${CMAKE_SOURCE_DIR}/glm)
 include_directories(${CMAKE_SOURCE_DIR}/glm/glm)
 
 
-include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2)
-include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2/freetype)
-link_directories("${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/lib")
-
 message("include_directories1= ${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2")
 message("include_directories2= ${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2/freetype")
 
@@ -88,8 +84,16 @@ add_library(
 find_library( EGL-lib EGL )
 find_library( GLESv2-lib GLESv2 )
 find_library( GLESv3-lib GLESv3 )
-
 find_library( log-lib log )
+
+
+add_library( freetype SHARED IMPORTED )
+set_target_properties( freetype PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/lib/libfreetype.so )
+target_include_directories(nativefilter PRIVATE
+        ${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2
+        ${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2/freetype
+        )
+
 
 target_link_libraries(
         nativefilter

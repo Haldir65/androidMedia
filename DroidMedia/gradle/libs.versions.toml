@@ -58,6 +58,7 @@ arrow-fx-stm-jvm = { module = "io.arrow-kt:arrow-fx-stm-jvm", version.ref = "arr
 arrow-fx-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrow" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_verison" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 retrofit = {  module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit"  }

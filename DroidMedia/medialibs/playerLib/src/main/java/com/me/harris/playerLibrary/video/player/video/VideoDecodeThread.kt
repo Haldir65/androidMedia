@@ -131,9 +131,8 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
                             context.avSynchronizer?._videoPtsMicroSeconds = info.presentationTimeUs
                             presentationTimeMs = info.presentationTimeUs / 1000
                         }
-                        if (!stop){
-                            codec.releaseOutputBuffer(outIndex, info.size>0)
-                        }
+
+                        codec.releaseOutputBuffer(outIndex, info.size>0 && !isSeeking && !stop)
                     }
                 }
 
@@ -142,7 +141,9 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
 //                throw e
             }
         }
-        mediaCodec?.stop()
+        kotlin.runCatching {
+            mediaCodec?.stop()
+        }
 //
 //        try {
 //        } catch (e: MediaCodec.CodecException) {
@@ -196,7 +197,7 @@ class VideoDecodeThread( val path: String, val context: MediaCodecPlayerContext)
         while (diff > 0 && !isSeeking) {
             if (context.avSynchronizer!=null){
                 val audioPts = context.avSynchronizer!!._audioPtsMicroSeconds
-                if (abs(audioPts-info.presentationTimeUs) >5_000_000) {
+                if (abs(audioPts-info.presentationTimeUs) >1_000_000) {
                     break
                 }
             }
