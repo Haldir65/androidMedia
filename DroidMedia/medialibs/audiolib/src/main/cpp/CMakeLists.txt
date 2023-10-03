@@ -25,6 +25,9 @@ file(GLOB audio CONFIGURE_DEPENDS
         #        "*.h"
         media/*.cpp
         media/*.h
+        opensles/*.h
+        opensles/*.cpp
+        opensles/*.c
         )
 
 
@@ -42,6 +45,7 @@ add_library( # Sets the name of the library.
         SHARED
         OpenslPalate.cpp
         OpenslPalate.h
+        ad_opensl_es.cpp
 
         # Provides a relative path to your source file(s).
         AndroidLog.h
