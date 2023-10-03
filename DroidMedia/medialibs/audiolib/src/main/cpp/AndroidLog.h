@@ -1,6 +1,7 @@
 //
 // Created by cain on 2017/12/28.
 //
+#pragma once
 
 #ifndef CAINCAMERA_NATIVE_LOG_H
 #define CAINCAMERA_NATIVE_LOG_H

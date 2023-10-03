@@ -15,7 +15,7 @@ public:
     AudioProperties getProperties() const override { return mProperties; }
     const float* getData() const override { return mBuffer.get(); }
 
-    static AAssetDataSource* newFromCompressedAsset(AAssetManager &assetManager,
+    static AAssetDataSource* newFromCompressedAsset(std::string &filepath,
             const char* filename,
             AudioProperties targetProperties);
 

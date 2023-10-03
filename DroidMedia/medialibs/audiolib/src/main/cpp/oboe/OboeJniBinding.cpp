@@ -1,6 +1,5 @@
-#pragma once
 #include "../AndroidLog.h"
-#include "../include/Oboe.h"
+#include <Oboe/Oboe.h>
 #include "audio/Player.h"
 #include "audio/PlayerController.h"
 #include "OboeSinePlayer.h"
@@ -24,11 +23,9 @@ OboeSinePlayer oboeSinePlayer;
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_me_harris_audiolib_oboe_OboeAudioPlayer_startPlaying(JNIEnv *env, jobject thiz,
-                                                              jobject asset_manager,
-                                                              jstring file_name) {
-    AAssetManager *assetManager = AAssetManager_fromJava(env,asset_manager);
+                                                              jstring file_name,jint sample_rate) {
 
-    mController=std::make_unique<PlayerController>(*assetManager);
+    mController=std::make_unique<PlayerController>(sample_rate);
 
     char* trackFileName = convertJString(env,file_name);
     mController->start(trackFileName);

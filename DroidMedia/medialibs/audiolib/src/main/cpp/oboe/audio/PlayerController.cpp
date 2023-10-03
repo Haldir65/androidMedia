@@ -7,7 +7,7 @@
 #include "../utils/logging.h"
 #include "../utils/UtilityFunctions.h"
 
-PlayerController::PlayerController(AAssetManager &assetManager):mAssetManager(assetManager) {
+PlayerController::PlayerController(int sample_rate):sampleRate(sample_rate) {
 }
 /**
  * Initializes stream and player then eventually starting the stream.
@@ -85,7 +85,7 @@ DataCallbackResult PlayerController::onAudioReady(AudioStream *oboeStream, void 
     LOGD("=A= onAudioReady called");
     if (!paused ){
         for (int i=0; i<numFrames; ++i){
-//            mSongPosition = convertFramesToMillis(mCurrentFrame,oboeStream->getSampleRate());
+            mSongPosition = convertFramesToMillis(mCurrentFrame,oboeStream->getSampleRate());
             mCurrentFrame++;
             mTrack->renderAudio(outputBuffer+(oboeStream->getChannelCount()*i), 1);
         }
@@ -181,7 +181,7 @@ bool PlayerController::openStream() {
             ->setFormatConversionAllowed(true)
             ->setPerformanceMode(PerformanceMode::LowLatency)
             ->setSharingMode(SharingMode::Exclusive)
-            ->setSampleRate(48000)
+            ->setSampleRate(sampleRate)
             ->setSampleRateConversionQuality(SampleRateConversionQuality::Medium)
             ->setChannelCount(ChannelCount::Stereo)
             ->setDataCallback(this)
@@ -205,10 +205,11 @@ bool PlayerController::setupAudioSources() {
             .channelCount = mAudioStream->getChannelCount(),
             .sampleRate = mAudioStream->getSampleRate()
     };
+    std::string path{ trackFilename };
 
     // Create a data source and player for our track
     std::shared_ptr<AAssetDataSource> trackSource{
-        AAssetDataSource::newFromCompressedAsset(mAssetManager,trackFilename,targetProperties)
+        AAssetDataSource::newFromCompressedAsset(path ,trackFilename,targetProperties)
     };
     if (trackSource== nullptr){
         LOGE("Could not load source data for track: %s",trackFilename);

@@ -19,24 +19,30 @@
 #include <cstring>
 
 #include <media/NdkMediaExtractor.h>
-#include "../AndroidLog.h"
+#include "../utils/logging.h"
 #include <cinttypes>
 
 #include "NDKExtractor.h"
 
-int32_t NDKExtractor::decode(AAsset *asset, uint8_t *targetData, AudioProperties targetProperties) {
+int32_t NDKExtractor::decode(std::string filepath, uint8_t *targetData, AudioProperties targetProperties) {
 
     LOGD("Using NDK decoder");
 
     // open asset as file descriptor
     off_t start, length;
-    int fd = AAsset_openFileDescriptor(asset, &start, &length);
-
+    start = 0;
+    auto f = fopen(filepath.c_str(),"rb");
+    int fd = fileno(f);
+    long cur = ftell(f);
+    fseek(f, 0, SEEK_END);
+    long len = ftell(f);
     // Extract the audio frames
     AMediaExtractor *extractor = AMediaExtractor_new();
-    media_status_t amresult = AMediaExtractor_setDataSourceFd(extractor, fd,
-                                                              static_cast<off64_t>(start),
-                                                              static_cast<off64_t>(length));
+    media_status_t amresult = AMediaExtractor_setDataSourceFd(extractor, fd, cur, len);
+//    media_status_t amresult =  AMediaExtractor_setDataSource(extractor,filepath.c_str()); // 给http用的
+//    media_status_t amresult = AMediaExtractor_setDataSourceFd(extractor, fd,
+//                                                              static_cast<off64_t>(start),
+//                                                              static_cast<off64_t>(length));
     if (amresult != AMEDIA_OK){
         LOGE("Error setting extractor data source, err %d", amresult);
         return 0;
@@ -146,7 +152,14 @@ int32_t NDKExtractor::decode(AAsset *asset, uint8_t *targetData, AudioProperties
         if (isDecoding){
             // Dequeue the decoded data
             AMediaCodecBufferInfo info;
-            ssize_t outputIndex = AMediaCodec_dequeueOutputBuffer(codec, &info, 0);
+            constexpr long time_out_us = 2000;
+            ssize_t outputIndex = AMediaCodec_dequeueOutputBuffer(codec, &info, time_out_us);
+
+            // Check whether this is set earlier
+            if (info.flags & AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM){
+                LOGD("Reached end of decoding stream");
+                isDecoding = false;
+            }
 
             if (outputIndex >= 0){
 
@@ -171,7 +184,6 @@ int32_t NDKExtractor::decode(AAsset *asset, uint8_t *targetData, AudioProperties
                 bytesWritten+=info.size;
                 AMediaCodec_releaseOutputBuffer(codec, outputIndex, false);
             } else {
-
                 // The outputIndex doubles as a status return if its value is < 0
                 switch(outputIndex){
                     case AMEDIACODEC_INFO_TRY_AGAIN_LATER:
@@ -186,7 +198,6 @@ int32_t NDKExtractor::decode(AAsset *asset, uint8_t *targetData, AudioProperties
                         LOGD("outputFormat changed to: %s", AMediaFormat_toString(format));
                         break;
                 }
-//                AMediaCodec_releaseOutputBuffer(codec, outputIndex, false);
             }
         }
     }

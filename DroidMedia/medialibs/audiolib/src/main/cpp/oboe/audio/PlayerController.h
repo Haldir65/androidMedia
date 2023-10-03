@@ -22,12 +22,13 @@ enum class PlayerControllerState{
 class PlayerController : public AudioStreamDataCallback, AudioStreamErrorCallback{
 
 public:
-    explicit PlayerController(AAssetManager&);
+    explicit PlayerController(int sampleRate);
     void start(char *fileName);
     void stop();
     void pause();
 
     bool paused=false;
+    int sampleRate;
 
     // Inherited from oboe::AudioStreamDataCallback
     DataCallbackResult onAudioReady(AudioStream *oboeStream, void* audioData, int32_t numFrames) override ;
@@ -36,13 +37,15 @@ public:
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override ;
 
 private:
-    AAssetManager& mAssetManager;
+//    AAssetManager& mAssetManager;
+
     std::shared_ptr<AudioStream> mAudioStream;
     std::atomic<int64_t> mCurrentFrame{0};
     std::atomic<int64_t> mSongPosition{0};
     std::atomic<PlayerControllerState> mControllerState{PlayerControllerState::Loading};
     std::future<void> mLoadingResult;
     std::atomic<int64_t> mLastUpdateTime { 0 };
+
 
     char* trackFilename;
 

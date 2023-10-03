@@ -4,6 +4,7 @@
 #include "../utils/logging.h"
 #include "oboe/Oboe.h"
 #include "AAssetDataSource.h"
+#include <filesystem>
 
 #if !defined(USE_FFMPEG)
 #error USE_FFMPEG should be defined in app.gradle
@@ -19,20 +20,22 @@
 
 constexpr int kMaxCompressionRatio{12};
 
-AAssetDataSource* AAssetDataSource::newFromCompressedAsset(AAssetManager &assetManager,
+AAssetDataSource* AAssetDataSource::newFromCompressedAsset(std::string &filepath,
         const char *filename,
         const AudioProperties targetProperties) {
 
     // get the asset by filename via AAssetManager
-    AAsset *asset = AAssetManager_open(&assetManager, filename, AASSET_MODE_UNKNOWN);
-    if (!asset)
-    {
+//    AAsset *asset = AAssetManager_open(&assetManager, filename, AASSET_MODE_UNKNOWN);
+    if (!std::filesystem::exists(filepath)) {
         LOGE("Failed to open asset %s",filename);
         return nullptr;
     }
-
-    off_t assetSize = AAsset_getLength(asset);
-    LOGD("Opened %s, size %ld",filename,assetSize);
+    FILE* fp = fopen(filepath.c_str(),"rb");
+    fseek(fp,  0,  SEEK_END);
+    long size = ftell(fp);
+    fseek(fp,  0,  SEEK_SET);
+//    off_t assetSize = AAsset_getLength(asset);
+    LOGD("Opened %s, size ",filename);
 
     // Allocate memory to store decompressed audio. We don't know the exact
     // size of the decoded data until after decoding so we make an assumption about the
@@ -46,10 +49,10 @@ AAssetDataSource* AAssetDataSource::newFromCompressedAsset(AAssetManager &assetM
     auto numSamples = bytesDecoded / sizeof(float);
 
 #else
-    const long maximumDataSizeInBytes = kMaxCompressionRatio * assetSize  * sizeof(int16_t);
+    const long maximumDataSizeInBytes = kMaxCompressionRatio * size  * sizeof(int16_t);
     auto decodedData = new uint8_t[maximumDataSizeInBytes];
 
-    int64_t bytesDecoded = NDKExtractor::decode(asset,decodedData,targetProperties);
+    int64_t bytesDecoded = NDKExtractor::decode(filepath,decodedData,targetProperties);
     auto numSamples = bytesDecoded / sizeof(int16_t);
 #endif
 
@@ -65,7 +68,7 @@ AAssetDataSource* AAssetDataSource::newFromCompressedAsset(AAssetManager &assetM
 #endif
 
     delete [] decodedData;
-    AAsset_close(asset);
+//    AAsset_close(asset);
 
     return new AAssetDataSource(std::move(outputBuffer), numSamples, targetProperties);
 

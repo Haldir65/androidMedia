@@ -8,9 +8,13 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.me.harris.audiolib.R
 import com.me.harris.audiolib.databinding.ActivityMyAudioPlayerBinding
 import com.me.harris.audiolib.oboe.OboeAudioPlayer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 // tldr
@@ -124,13 +128,22 @@ class MyAudioPlayerEntryActivity:AppCompatActivity() {
 
 
     private fun oboePlayAudio(){
-        val player =  OboeAudioPlayer()
-        player.startPlaying(assetManager = assets,"lilian.mp3")
-        lifecycle.addObserver(object :DefaultLifecycleObserver {
-            override fun onDestroy(owner: LifecycleOwner) {
-                super.onDestroy(owner)
-                player.stopPlaying()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO){
+                require(File(M4A_FILE_PATH).exists())
+                val player =  OboeAudioPlayer()
+                player.startPlaying(fileName = M4A_FILE_PATH, sampleRate = 44100)
+                withContext(Dispatchers.Main.immediate){
+                    lifecycle.addObserver(object :DefaultLifecycleObserver {
+                        override fun onDestroy(owner: LifecycleOwner) {
+                            super.onDestroy(owner)
+                            player.stopPlaying()
+                        }
+                    })
+                }
             }
-        })
+        }
+
+
     }
 }

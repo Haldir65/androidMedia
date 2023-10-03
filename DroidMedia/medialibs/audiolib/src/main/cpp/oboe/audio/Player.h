@@ -1,6 +1,7 @@
 //
 // Created by 43975 on 12/27/2021.
 //
+#pragma once
 
 #ifndef OBOE_AUDIO_PLAYER_PLAYER_H
 #define OBOE_AUDIO_PLAYER_PLAYER_H
