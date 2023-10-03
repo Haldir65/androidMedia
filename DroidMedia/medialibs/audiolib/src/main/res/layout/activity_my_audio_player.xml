@@ -60,6 +60,30 @@
             android:text="openSlesPlayer"
             android:textAllCaps="false" />
 
+        <Button
+            android:id="@+id/aaudioPlayer"
+            style="@android:style/Widget.Material.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:text="aaudioPlayer"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/oboePlayer"
+            style="@android:style/Widget.Material.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:text="oboePlayer"
+            android:textAllCaps="false" />
+
 
     </LinearLayout>
 

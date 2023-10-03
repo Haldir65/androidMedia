@@ -15,6 +15,7 @@ android {
     buildToolsVersion = "34.0.0"
     buildFeatures {
         viewBinding = true
+        prefab = true
     }
 
     defaultConfig {
@@ -30,7 +31,7 @@ android {
                 cmake {
                     abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
                     cppFlags("-g -std=c++11 -frtti -fexceptions")
-                    arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
+                    arguments("-DANDROID_PLATFORM=android-26","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
                 }
             }
             ndk {
@@ -97,5 +98,6 @@ dependencies {
     implementation(libs.androidx.cardview.cardview)
     implementation(libs.coil.kt)
     implementation(libs.okio)
+    implementation(libs.oboe)
     implementation(libs.androidx.recyclerview.recyclerview)
 }

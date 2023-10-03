@@ -9,7 +9,7 @@
             android:screenOrientation="portrait"
             />
 
-        <activity android:name="com.me.harris.audiolib.audioPlayer.MyAudioPlayerActivity"
+        <activity android:name="com.me.harris.audiolib.audioPlayer.MyAudioPlayerEntryActivity"
             android:screenOrientation="portrait"
             />
         <activity android:name="com.me.harris.audiolib.audiorecord.MediaCodecForAACActivity"
