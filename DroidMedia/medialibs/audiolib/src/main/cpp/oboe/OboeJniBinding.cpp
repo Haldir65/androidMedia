@@ -26,7 +26,6 @@ Java_com_me_harris_audiolib_oboe_OboeAudioPlayer_startPlaying(JNIEnv *env, jobje
                                                               jstring file_name,jint sample_rate) {
 
     mController=std::make_unique<PlayerController>(sample_rate);
-
     char* trackFileName = convertJString(env,file_name);
     mController->start(trackFileName);
 

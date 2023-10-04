@@ -7,8 +7,8 @@ cmake_minimum_required(VERSION 3.10.2)
 
 # Declares and names the project.
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_STANDARD 17)
 
 project("myaudio")
 
@@ -109,8 +109,13 @@ add_library( # Sets the name of the library.
         AndroidLog.h
         ${audio}
         )
-
-set_target_properties(myaudio PROPERTIES LINKER_LANGUAGE CXX)
+set_property(TARGET myaudio PROPERTY C_STANDARD 17)
+set_target_properties(myaudio PROPERTIES
+        LINKER_LANGUAGE CXX
+        CXX_STANDARD 17
+        CXX_EXTENSIONS OFF
+        POSITION_INDEPENDENT_CODE ON
+        )
 
 ## https://github.com/google/oboe/blob/main/docs/GettingStarted.md
 find_package (oboe REQUIRED CONFIG)

@@ -15,7 +15,7 @@
  */
 class NDKExtractor{
 public:
-    static int32_t decode(std::string filepath, uint8_t *targetData, AudioProperties targetProperties);
+    static int32_t decode(const std::string& filepath, uint8_t *targetData, AudioProperties targetProperties);
 };
 
 #endif //OBOE_AUDIO_PLAYER_NDKEXTRACTOR_H

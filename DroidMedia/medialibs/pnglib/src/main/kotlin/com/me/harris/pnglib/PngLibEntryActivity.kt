@@ -31,6 +31,8 @@ class PngLibEntryActivity:AppCompatActivity() {
     }
 
     private val NON_SCALEABLE_BMP_NAME = "image_2010.jpg"
+    private val NON_SCALEABLE_HEIC_NAME = "image_2010.heic"
+    // android 10原生支持heic,ImageDecoder和BitmapFactory都支持
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +66,12 @@ class PngLibEntryActivity:AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
             binding.btn5.setOnClickListener {
                 var start = System.currentTimeMillis()
-                val source = ImageDecoder.createSource(assets,NON_SCALEABLE_BMP_NAME)
+                val source = ImageDecoder.createSource(assets,NON_SCALEABLE_HEIC_NAME)
                 val bmp = ImageDecoder.decodeBitmap(source)
                 binding.comoressedImage5.setImageBitmap(bmp)
                 Log.w("=A=","using image decoder cost me ${System.currentTimeMillis() - start} milliseconds")
                 start = System.currentTimeMillis()
-                val bmp2 = assets.open(NON_SCALEABLE_BMP_NAME).use(BitmapFactory::decodeStream)
+                val bmp2 = assets.open(NON_SCALEABLE_HEIC_NAME).use(BitmapFactory::decodeStream)
                 binding.comoressedImage5.setImageBitmap(bmp2)
                 Log.w("=A=","using BitmapFactory decoder cost me ${System.currentTimeMillis() - start} milliseconds")
                 // using image decoder cost me 79 milliseconds

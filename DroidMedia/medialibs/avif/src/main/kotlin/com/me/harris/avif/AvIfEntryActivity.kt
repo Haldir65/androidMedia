@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.me.harris.avif.databinding.ActivityAvifEntryBinding
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -28,11 +30,13 @@ class AvIfEntryActivity:AppCompatActivity() {
 //            val bytes: ByteArray = inputStreamToBytes(assets.open("test.avif"))!!
             Glide.with(this)
                 .load(bytes)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(avifImage)
             val avifsImage = findViewById<ImageView>(R.id.avifs_img)
             val bytes2: ByteArray = inputStreamToBytes(assets.open("test.avifs"))!!
             Glide.with(this)
-                .load(bytes2)
+                .load(bytes2).
+                 override(SIZE_ORIGINAL)
                 .into(avifsImage)
         } catch (e: IOException) {
             e.printStackTrace()

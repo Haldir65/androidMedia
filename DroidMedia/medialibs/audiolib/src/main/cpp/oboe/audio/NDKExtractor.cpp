@@ -24,7 +24,7 @@
 
 #include "NDKExtractor.h"
 
-int32_t NDKExtractor::decode(std::string filepath, uint8_t *targetData, AudioProperties targetProperties) {
+int32_t NDKExtractor::decode(const std::string& filepath, uint8_t *targetData, AudioProperties targetProperties) {
 
     LOGD("Using NDK decoder");
 

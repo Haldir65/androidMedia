@@ -5,6 +5,19 @@
 #include "oboe/Oboe.h"
 #include "AAssetDataSource.h"
 #include <filesystem>
+#include <fstream>
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
+
+#ifdef __cplusplus
+}
+#endif
+
+
 
 #if !defined(USE_FFMPEG)
 #error USE_FFMPEG should be defined in app.gradle
@@ -30,7 +43,10 @@ AAssetDataSource* AAssetDataSource::newFromCompressedAsset(std::string &filepath
         LOGE("Failed to open asset %s",filename);
         return nullptr;
     }
-    FILE* fp = fopen(filepath.c_str(),"rb");
+    FILE* fp = fopen(filepath.c_str(), "r");
+//    errno_t err = fopen_s(&fp, filepath, "r");
+    // fopen_s is not part of C++'s standard library.
+    // It is a MSVC-specific extension or optional part of the C standard library.
     fseek(fp,  0,  SEEK_END);
     long size = ftell(fp);
     fseek(fp,  0,  SEEK_SET);
@@ -69,6 +85,7 @@ AAssetDataSource* AAssetDataSource::newFromCompressedAsset(std::string &filepath
 
     delete [] decodedData;
 //    AAsset_close(asset);
+    fclose(fp);
 
     return new AAssetDataSource(std::move(outputBuffer), numSamples, targetProperties);
 

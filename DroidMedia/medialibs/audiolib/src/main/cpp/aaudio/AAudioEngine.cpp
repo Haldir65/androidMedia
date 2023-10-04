@@ -48,14 +48,35 @@ namespace aaudiodemo {
         audioEngine->errorCallback(stream, error);
     }
 
+
     aaudio_data_callback_result_t AAudioEngine::dataCallback(AAudioStream *stream,
                                                              void *audioData,
                                                              int32_t numFrames) {
         assert(stream == mAudioStream);
 //        int size = AAsset_read(mAsset, audioData,
 //                               numFrames * mChannel * (mFormat == AAUDIO_FORMAT_PCM_I16 ? 2 : 1));
+        auto startTime = std::chrono::high_resolution_clock::now();
+//        int32_t previousUnderrunCount = 0;
+//        int32_t underrunCount = AAudioStream_getXRunCount(stream);
+//        int32_t bufferSize = AAudioStream_getBufferSizeInFrames(stream);
+//        int32_t framesPerBurst = AAudioStream_getFramesPerBurst(stream);
+//        int32_t bufferCapacity = AAudioStream_getBufferCapacityInFrames(stream);
+//        // Are we getting underruns?
+//        if (bufferSize < bufferCapacity) {
+//
+//            if (underrunCount > previousUnderrunCount) {
+//                previousUnderrunCount = underrunCount;
+//                // Try increasing the buffer size by one burst
+//                bufferSize += framesPerBurst;
+//                bufferSize = AAudioStream_setBufferSizeInFrames(stream, bufferSize);
+//            }
+//        }
+        int32_t underrunCount = AAudioStream_getXRunCount(stream);
         size_t size = fread(audioData, sizeof(char),numFrames * mChannel * (mFormat == AAUDIO_FORMAT_PCM_I16 ? 2 : 1),fp );
-        LOGI("AAudioEngine::dataCallback, size:%zu, numFrames:%d ", size, numFrames);
+        ALOGD("AAudioEngine::dataCallback, size:%zu, numFrames:%d ", size, numFrames);
+        auto endTime = std::chrono::high_resolution_clock::now();
+        auto cost = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+        ALOGD("AAudioEngine aaudio_data_callback_result_t read size = %zu bytes cost me %s microseconds  underrunCount = %d ",size,std::to_string(cost).c_str(),underrunCount);
         if (size <= 0) {
             LOGI("AAudioEngine::dataCallback, file reach eof!!");
             return AAUDIO_CALLBACK_RESULT_STOP;
@@ -263,8 +284,10 @@ namespace aaudiodemo {
         // We request EXCLUSIVE mode since this will give us the lowest possible latency.
         // If EXCLUSIVE mode isn't available the builder will fall back to SHARED mode.
         AAudioStreamBuilder_setSharingMode(builder, AAUDIO_SHARING_MODE_EXCLUSIVE);
-        AAudioStreamBuilder_setPerformanceMode(builder, AAUDIO_PERFORMANCE_MODE_POWER_SAVING );
+        AAudioStreamBuilder_setPerformanceMode(builder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY );
         AAudioStreamBuilder_setDirection(builder, AAUDIO_DIRECTION_OUTPUT);
+        AAudioStreamBuilder_setBufferCapacityInFrames(builder,3536); // this line fix clutter sound on android 8.1
+// https://developer.android.com/ndk/guides/audio/aaudio/aaudio?hl=zh-cn
 #if AAUDIO_CALLBACK
         AAudioStreamBuilder_setDataCallback(builder, aaudiodemo::dataCallback, this);
         AAudioStreamBuilder_setErrorCallback(builder, aaudiodemo::errorCallback, this);
@@ -285,7 +308,21 @@ namespace aaudiodemo {
         LOGI("Format: %d", STREAM_CALL(getFormat));
         LOGI("SharingMode: %s", (STREAM_CALL(getSharingMode)) == AAUDIO_SHARING_MODE_EXCLUSIVE ?
                                 "EXCLUSIVE" : "SHARED");
-
+        //023-10-04 17:27:14.688 25203-25203 =A=                     com.me.harris.droidmedia             W  framesPerBurst = 590
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  StreamID: 0x7c8ca44980
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  BufferCapacity: 1772
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  BufferSize: 590
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  FramesPerBurst: 590
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  XRunCount: 0
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  SampleRate: 44100
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  SamplesPerFrame: 2
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  DeviceId: 1
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  Format: 1
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  SharingMode: SHARED
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  PerformanceMode: NONE
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  Direction: OUTPUT
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  FramesReadByDevice: 0
+        //2023-10-04 17:27:14.689 25203-25203 =A=                     com.me.harris.droidmedia             I  FramesWriteByApp: 0
         aaudio_performance_mode_t perfMode = STREAM_CALL(getPerformanceMode);
         std::string perfModeDescription;
         switch (perfMode) {
@@ -330,7 +367,7 @@ namespace aaudiodemo {
                 }
 
                 int framesPerBurst = AAudioStream_getFramesPerBurst(mAudioStream);
-
+                LOGW("framesPerBurst = %d",framesPerBurst);
                 // Set the buffer size to the burst size - this will give us the minimum possible latency
                 AAudioStream_setBufferSizeInFrames(mAudioStream, framesPerBurst);
 

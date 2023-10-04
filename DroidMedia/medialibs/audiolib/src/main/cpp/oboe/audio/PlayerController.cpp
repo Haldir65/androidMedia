@@ -30,7 +30,13 @@ void PlayerController::load() {
         mControllerState=PlayerControllerState::FailedToLoad;
         return;
     }
+    bool supportAAudiommAP = oboe::OboeExtensions::isMMapSupported();
+    bool isMMapEnabled = oboe::OboeExtensions::isMMapEnabled();
+    bool isMMapUsed = oboe::OboeExtensions::isMMapUsed(mAudioStream.get());
+
     LOGD("=A= load should be finished");
+
+    LOGD("=A=  supportAAudiommAP = %s , isMMapEnabled = %s , isMMapUsed =  %s ",supportAAudiommAP?"true":"false",isMMapEnabled?"true":"false",isMMapUsed?"true":"false");
     Result result2 = mAudioStream->requestStart();
     LOGD("=A= load call result2 be finished");
     mControllerState=PlayerControllerState::Playing;
