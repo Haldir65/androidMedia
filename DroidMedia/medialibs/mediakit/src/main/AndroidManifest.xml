@@ -6,5 +6,6 @@
         <activity android:name="com.jadyn.mediakit.framer.MediaKitDecodeFrameActivity" />
         <activity android:name="com.jadyn.mediakit.MediaKitEntryActivity" />
         <activity android:name="com.jadyn.mediakit.nativecodec.MediaKitNativeCodecActivity" />
+        <activity android:name="com.jadyn.mediakit.volan.VolanExperimentalActivity" />
     </application>
 </manifest>

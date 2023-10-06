@@ -7,7 +7,7 @@
 
 #include<sys/socket.h>
 #include<arpa/inet.h>
-#include <time.h>		// gettimeofday 
+#include <time.h>		// gettimeofday
 #include <fcntl.h>		// fcntl F_SETFL  F_SETFL
 #include<sys/ioctl.h>	// FIONBIO
 // Default max packet size (1500, minus allowance for IP, UDP, UMTP headers)
@@ -16,10 +16,12 @@
 #define READ_BUFFER_SIZE 256
 #define PORT "10000"
 #define REMOTE_IP "192.168.43.1"
-// 25 packet per second 100k  100k*25 = 2.5M/s 
-#define FREQUENCY 25	// 1/1200 = 833us 
+// 25 packet per second 100k  100k*25 = 2.5M/s
+#define FREQUENCY 25	// 1/1200 = 833us
 
 #if 0
+
+
 
 #define LOG_TAG "cc"
 #include "../vortex.h"
@@ -30,17 +32,21 @@
 
 #endif
 
-int main(int argc,char**argv){
+#ifndef bzero
+#define bzero(d,n) memset((d),0,(n))
+#endif
+
+static int main(int argc,char**argv){
 
 	int ret = 0 ;
-	unsigned char rbuf[READ_BUFFER_SIZE];
+	unsigned char rbuf[MAX_PACKET_SIZE];
 	unsigned char* wbuf = (unsigned char*)malloc(MAX_PACKET_SIZE);
 	memset( wbuf, 0x55, MAX_PACKET_SIZE );
 	int sock;
 	struct sockaddr_in targetaddr;
- 
- 
-	
+
+
+
 	//sock= socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	sock= socket(AF_INET, SOCK_STREAM, 0);
 	if(sock==-1){
@@ -85,7 +91,7 @@ int main(int argc,char**argv){
 	targetaddr.sin_family=AF_INET;
 	targetaddr.sin_port=htons(atoi(PORT));
 	targetaddr.sin_addr.s_addr=inet_addr(REMOTE_IP);
-	
+
 	// 这里是阻塞连接 非阻塞可能离开返回EINPROGRESS连接进行中 三次握手 需要用select来判断socket是否可写 可写的话代表连接建立
 	// 非阻塞下可能还要设置excetpionFds
 	if(!connect(sock,(struct sockaddr *)&targetaddr,sizeof(struct sockaddr))){
@@ -102,7 +108,7 @@ int main(int argc,char**argv){
 			exit(1);
 		}
 	}
-	
+
 	/* 获取socket Buf的大小 /proc/sys/net/ipv4/tcp_wmem
 	 * net.ipv4.tcp_wmem = 4096 16384 81920
 		第一个值是socket的发送缓存区分配的最少字节数
@@ -133,8 +139,8 @@ int main(int argc,char**argv){
 	}else{
 		printf("i'm client sock sndbuf_size  = %d\n" , curSize );
 	}
-						
-						
+
+
 	struct timeval start ; memset(&start,0,sizeof(struct timeval));
 	struct timeval current ; memset(&current,0,sizeof(struct timeval));
 	gettimeofday( &start, NULL );
@@ -145,8 +151,8 @@ int main(int argc,char**argv){
 	unsigned long delayus = 0 ;
 	unsigned long packet_num = 0 ;
 	printf("i'm client,transfer once between = %lu us \n",  transfer_each );
-	
-	
+
+
 #if 1
 	while(1){
 
@@ -186,7 +192,7 @@ int main(int argc,char**argv){
 	ret = 0 ;
 	int change = 0;
 	while(1){
-  
+
 		FD_ZERO(&rdfds);	FD_ZERO(&wrfds);	FD_ZERO(&errfds);
 		FD_SET(sock,&rdfds);FD_SET(sock,&wrfds);FD_SET(sock,&errfds);
 

@@ -13,6 +13,7 @@ cmake_minimum_required(VERSION 3.4.1)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
+set(VOLAN_SOURCE_DIR volan/CodecANativeWin/jni)
 
 file(GLOB glsource CONFIGURE_DEPENDS
         #        "*.h"
@@ -24,15 +25,26 @@ file(GLOB glsource CONFIGURE_DEPENDS
 
 file(GLOB volan CONFIGURE_DEPENDS
         #        "*.h"
-        volan/CodecANativeWin/jni/*.cpp
-        volan/CodecANativeWin/jni/*.c
-        volan/CodecANativeWin/jni/*.h
-        volan/CodecANativeWin/jni/tcp_udp/*.h
-        volan/CodecANativeWin/jni/tcp_udp/*.cpp
-        volan/CodecANativeWin/jni/tcp_udp/*.c
-        volan/CodecANativeWin/jni/openGL/*.cpp
-        volan/CodecANativeWin/jni/openGL/*.c
-        volan/CodecANativeWin/jni/openGL/*.h
+        ${VOLAN_SOURCE_DIR}/JniBitmap.cpp
+        ${VOLAN_SOURCE_DIR}/native_msg.h
+        ${VOLAN_SOURCE_DIR}/NativeBuffer.h
+        ${VOLAN_SOURCE_DIR}/NativeBuffer.cpp
+        ${VOLAN_SOURCE_DIR}/vortex.cpp
+        ${VOLAN_SOURCE_DIR}/vortex.h
+        ${VOLAN_SOURCE_DIR}/HWH264DecodeAndEncode.cpp
+        ${VOLAN_SOURCE_DIR}/HWH264DecodeAndEncode.h
+        ${VOLAN_SOURCE_DIR}/tcp_udp/*.c
+        ${VOLAN_SOURCE_DIR}/tcp_udp/*.h
+        ${VOLAN_SOURCE_DIR}/DeFileAndEnCode.cpp
+#        volan/CodecANativeWin/jni/*.cpp
+#        volan/CodecANativeWin/jni/*.c
+#        volan/CodecANativeWin/jni/*.h
+#        volan/CodecANativeWin/jni/tcp_udp/*.h
+#        volan/CodecANativeWin/jni/tcp_udp/*.cpp
+#        volan/CodecANativeWin/jni/tcp_udp/*.c
+#        volan/CodecANativeWin/jni/openGL/*.cpp
+#        volan/CodecANativeWin/jni/openGL/*.c
+#        volan/CodecANativeWin/jni/openGL/*.h
         #        "*.h"
         #        "*.cpp"
         )
@@ -45,13 +57,6 @@ file(GLOB filemap CONFIGURE_DEPENDS
 
 
 file(GLOB media CONFIGURE_DEPENDS
-        #        "*.h"
-        #        volan/CodecANativeWin/jni/*.cpp
-        #        volan/CodecANativeWin/jni/*.c
-        #        volan/CodecANativeWin/jni/*.h
-        #        volan/CodecANativeWin/jni/tcp_udp/*.h
-        #        volan/CodecANativeWin/jni/tcp_udp/*.cpp
-        #        volan/CodecANativeWin/jni/tcp_udp/*.c
         media/*.cpp
         media/*.h
         #        "*.h"
@@ -77,11 +82,14 @@ add_library( # Sets the name of the library.
         # Provides a relative path to your source file(s).
         MediaKitBlue.cpp
         MediaKitBlue.h
+
+        jni/com_jadyn_mediakit_gl_GLJni.c
+        jni/com_jadyn_mediakit_gl_GLJni.h
         ${glsource}
         ${media}
         ${filemap}
         ${utility}
-#        ${volan}
+        ${volan}
         )
 
 # Searches for a specified prebuilt library and stores the path as a

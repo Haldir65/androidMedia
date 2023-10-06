@@ -12,6 +12,7 @@
 #include "../AndroidLog.h"
 #include <thread>
 #include <mutex>
+#include <queue>
 #include <condition_variable>
 
 namespace aaudiodemo {
@@ -20,7 +21,7 @@ namespace aaudiodemo {
         AAudioEngine(const std::string &filePath, uint32_t sampleRate,
                      uint16_t channel, uint32_t format);
 
-        ~AAudioEngine();
+        virtual ~AAudioEngine();
 
         AAudioEngine(const AAudioEngine &) = delete;
 
@@ -73,6 +74,14 @@ namespace aaudiodemo {
 //        AAsset *mAsset{nullptr};
         FILE *fp{nullptr};
         std::mutex mRestartingLock{};
+
+        std::deque<uint8_t> buffer; // 缓冲区
+        std::mutex mtx; // 缓冲区互斥锁
+        std::condition_variable cond; // 条件变量
+//        std::unique_ptr<std::thread> readerThread;
+
+
+        const int BUFFER_MAX = 1024*1000;//1MB？
 #if !AAUDIO_CALLBACK
         uint8_t *mBufferData{nullptr};
         std::condition_variable mPlayCV;
@@ -95,6 +104,9 @@ namespace aaudiodemo {
         void restartStream();
 
         void destroy();
+
+
+        void startFileReaderThread();
 
     };
 

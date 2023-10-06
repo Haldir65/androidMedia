@@ -2,6 +2,8 @@
 
 #include "AAudioEngine.h"
 #define BUFFER_SIZE 2048
+#include <filesystem>
+#include <string.h>
 #define TIMEOUT_NANO 800000000L
 namespace aaudiodemo {
 #if AAUDIO_CALLBACK
@@ -71,9 +73,36 @@ namespace aaudiodemo {
 //                bufferSize = AAudioStream_setBufferSizeInFrames(stream, bufferSize);
 //            }
 //        }
+
+
+
         int32_t underrunCount = AAudioStream_getXRunCount(stream);
-        size_t size = fread(audioData, sizeof(char),numFrames * mChannel * (mFormat == AAUDIO_FORMAT_PCM_I16 ? 2 : 1),fp );
-        ALOGD("AAudioEngine::dataCallback, size:%zu, numFrames:%d ", size, numFrames);
+         int32_t size = numFrames * mChannel * (mFormat == AAUDIO_FORMAT_PCM_I16 ? 2 : 1);
+        LOGD("AAudioEngine::AAudioEngine, 【Consumer】  need read %d bytes , buffer size = %zu",size,buffer.size());
+        std::unique_lock<std::mutex> locker(mtx); // 声明即加锁
+        while(buffer.size()<size &&mValid)
+            cond.wait(locker); // 等待缓冲区出现数据
+        uint8_t temp[size] ;
+        memset(temp,0,size); //magic , remove all the noise!!!
+//        for (int i = 0; i < size; ++i) {
+//            temp[i] = buffer.front();
+//            buffer.pop();
+//        }
+        std::copy(buffer.begin(),buffer.begin()+size,temp);
+        memcpy(audioData,temp,size);
+        buffer.erase(buffer.begin(),buffer.begin()+size);
+        LOGD("AAudioEngine::AAudioEngine, 【Consumer】  done read %d bytes ,buffer size = %zu  ",size,buffer.size());
+//        for (int i = 0; i < size; ++i) {
+////            auto data = buffer.front();
+//            buffer.pop(); // 从缓冲区取走数据
+//        }
+//        std::cout << "消费者线程 " << this_thread::get_id();
+//        std::cout<< " 取得数据：" << data << std::endl;
+        locker.unlock();
+        cond.notify_one(); // 相当于V(free)
+
+//        size_t size = fread(audioData, sizeof(uint8_t),numFrames * mChannel * (mFormat == AAUDIO_FORMAT_PCM_I16 ? 2 : 1),fp );
+        ALOGD("AAudioEngine::dataCallback, size:%d, numFrames:%d ", size, numFrames);
         auto endTime = std::chrono::high_resolution_clock::now();
         auto cost = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
         ALOGD("AAudioEngine aaudio_data_callback_result_t read size = %zu bytes cost me %s microseconds  underrunCount = %d ",size,std::to_string(cost).c_str(),underrunCount);
@@ -148,6 +177,11 @@ namespace aaudiodemo {
         mPlayThread = std::thread(&AAudioEngine::workFunc, this);
 #endif
         mValid = true;
+//        readerThread = std::make_unique<std::thread>();
+        std::thread([this]{
+            startFileReaderThread();
+        }).detach(); // 无论在何种情形，一定要在thread销毁前，调用t.join或者t.detach，来决定线程以何种方式运行。
+        // 创建它的线程还必须指定以何种策略等待新线程。
         return true;
     }
 
@@ -211,18 +245,22 @@ namespace aaudiodemo {
 
     void AAudioEngine::destroy() {
         LOGI("AAudioEngine::destroy, %d", mValid);
+        LOGI("AAudioEngine::destroy completed, %d", mValid);
         if (mValid) {
             Stop();
         }
+//        std::unique_lock<std::mutex> locker(mtx); // 声明即加锁
 #if  !AAUDIO_CALLBACK
         mPlayThread.join();
 #endif
         if (fp) {
             fclose(fp);
             fp = nullptr;
+
 //            AAsset_close(mAsset);
 //            mAsset = nullptr;
         }
+        LOGI("AAudioEngine::destroy  all completed");
 
 #if  !AAUDIO_CALLBACK
         if (mBufferData) {
@@ -230,6 +268,7 @@ namespace aaudiodemo {
             mBufferData = nullptr;
         }
 #endif
+
     }
 
 #if  !AAUDIO_CALLBACK
@@ -367,7 +406,7 @@ namespace aaudiodemo {
                 }
 
                 int framesPerBurst = AAudioStream_getFramesPerBurst(mAudioStream);
-                LOGW("framesPerBurst = %d",framesPerBurst);
+                LOGD("framesPerBurst = %d",framesPerBurst);
                 // Set the buffer size to the burst size - this will give us the minimum possible latency
                 AAudioStream_setBufferSizeInFrames(mAudioStream, framesPerBurst);
 
@@ -382,6 +421,42 @@ namespace aaudiodemo {
             LOGE("Unable to obtain an AAudioStreamBuilder object");
         }
         return result == AAUDIO_OK && mAudioStream;
+    }
+
+    void AAudioEngine::startFileReaderThread() {
+        if (fp!= nullptr){
+            LOGD("AAudioEngine::AAudioEngine, starting reader thread");
+            while (mValid) {
+                LOGD("AAudioEngine::AAudioEngine, starting reader thread running %d",mValid);
+                std::unique_lock<std::mutex> locker(mtx); // 声明即加锁
+                while(buffer.size() >= BUFFER_MAX && mValid){
+                    cond.wait(locker); //缓冲区已满，等待消费者线程取走数据
+                }
+                if (!mValid) break;
+                LOGD("AAudioEngine::AAudioEngine, start read data to buffer back,current buffer size = %zu ",buffer.size());
+                constexpr int READ_LEN = 4*1024;
+                uint8_t temp[READ_LEN] ;//因为是在栈上的，不能太大，4*1024*1000会崩掉
+                if (fp == nullptr) break;
+                size_t num_read = fread(temp, sizeof(uint8_t),READ_LEN,fp);
+                if (num_read>0){
+                    buffer.insert(buffer.end(),temp,temp+num_read);
+                    LOGD("AAudioEngine::AAudioEngine, 【producer】done read data to buffer back ,current buffer size = %zu ",buffer.size());
+                } else {
+                    LOGW("AAudioEngine::AAudioEngine, 【producer】 no more data to read ,current buffer size = %zu ",buffer.size());
+
+                }
+//                buffer.push(count); // 往缓冲区放入数据
+//                std::cout << "生产者线程 " << this_thread::get_id();
+//                std::cout<< " 放入数据：" << count << std::endl;
+                locker.unlock();
+                cond.notify_one(); // // 相当于V(full)
+                LOGD("notify_one called ")
+                if (num_read<=0) break;
+                // std::this_thread::sleep_for(std::chrono::seconds(1));
+//                count++;
+            }
+        }
+        LOGE("startFileReaderThread WILL now exit")
     }
 
 }

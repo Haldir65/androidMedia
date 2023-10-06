@@ -6,7 +6,7 @@
 
 #include<sys/socket.h>
 #include<arpa/inet.h>
-#include<pthread.h> 
+#include<pthread.h>
 
 #define PORT "10000"
 #define REMOTE_IP "192.168.43.1"
@@ -45,23 +45,23 @@ void scan(void* arg){
 	exit(0); // 进程关闭
 }
 
-int main(int argc,char**argv){
+static int main(int argc,char**argv){
 	//用于循环
 	int fd;
-	
+
 	// 用于 bind
 	struct sockaddr_in server_addr;
-	
+
 	// 用于select
 	fd_set fds;
 	int change;
-	
+
 	// 用于accept
 	struct sockaddr_in client_addr;
 	//int len;
 	socklen_t len;
 	int sock_client;
-	
+
 	// 用于read write
 	unsigned char* rbuf = (unsigned char*)malloc(MAX_PACKET_SIZE);
 	memset( rbuf, 0, MAX_PACKET_SIZE );
@@ -88,23 +88,23 @@ int main(int argc,char**argv){
 	}else{
 		printf("bind success\n");
 	}
-	
+
 	if( listen(sock,MAX_QUEUE) ==-1){
 		perror("listen error");
 		exit(1);
 	}else{
 		printf("listen success\n");
 	}
-	
+
 	for(fd=0;fd<MAX_CLIENT;fd++){
 		isconnect[fd]=0;
 	}
-	
+
 	pthread_t pid;
 	if( pthread_create(&pid,NULL,(void*)scan,NULL) ){
 		perror("thread create error");
 	}
-	
+
 	unsigned long start_time = 0 ;
 	unsigned long current_time = 0 ;
 	unsigned long last_time = 0 ;
@@ -112,7 +112,7 @@ int main(int argc,char**argv){
 	unsigned long transfer_each = 1 * 1000uL * 1000uL / FREQUENCY ; // us
 	unsigned long delayus = 0 ;
 	struct timeval current ; memset(&current,0,sizeof(struct timeval));
-	
+
 	while(1){
 		// initialization
 		FD_ZERO(&fds);
@@ -141,13 +141,13 @@ int main(int argc,char**argv){
 						ssize_t welcone_done = write(sock_client,WELCOME,sizeof(WELCOME));
 						printf("connect from %s write %zd done \n", inet_ntoa(client_addr.sin_addr)
 																, welcone_done );
-						
+
 						packet_num = 0 ;
 						struct timeval start ; memset(&start,0,sizeof(struct timeval));
 						gettimeofday( &start, NULL );
 						start_time =   start.tv_sec * 1000uL * 1000uL +   start.tv_usec ;
-						last_time = start_time; 
-						
+						last_time = start_time;
+
 						// 获取socket Buf的大小
 						unsigned int curSize;
 						unsigned int sizeSize = sizeof curSize;
@@ -163,26 +163,26 @@ int main(int argc,char**argv){
 						}else{
 							printf("i'm server client_socket sndbuf_size  = %d\n" , curSize );
 						}
-  
+
 
 					}else{			// 其他已经建立连接的socket
-						
+
 						ret = 0;
- 
-						if( ret = read( fd, rbuf, MAX_PACKET_SIZE ), ret > 0 ){ 
-						
-							// 控制速度 
-							gettimeofday( &current, NULL ); 
+
+						if( ret = read( fd, rbuf, MAX_PACKET_SIZE ), ret > 0 ){
+
+							// 控制速度
+							gettimeofday( &current, NULL );
 							current_time = current.tv_sec * 1000uL * 1000uL +   current.tv_usec ;
-			
+
 							delayus = transfer_each  + last_time - current_time ;
 							if( delayus > 0 ){
 								//printf("sleep %lu\n", delayus );
 								usleep( delayus  );
 							}
-							gettimeofday( &current, NULL ); 
+							gettimeofday( &current, NULL );
 							last_time =  current.tv_sec * 1000uL * 1000uL +   current.tv_usec ;
-							
+
 							packet_num++;
 							if( (packet_num & 0x3F) == 0 ){ // FF 256*N per 256 ; 3F 64*N per 64
 								//struct timeval current ; memset(&current,0,sizeof(struct timeval));
@@ -190,25 +190,25 @@ int main(int argc,char**argv){
 								current_time =   current.tv_sec * 1000uL * 1000uL +   current.tv_usec ;
 								printf("packet_num = %lu , freq = %lu\n", packet_num , packet_num * 1000uL * 1000uL /( current_time - start_time ) );
 								printf("recv %d, rbuf[0]=0x%02x, rbuf[%d]=0x%02x\n" ,
-									ret , rbuf[0] , 
-									(ret==MAX_PACKET_SIZE)?MAX_PACKET_SIZE-1:100, 
+									ret , rbuf[0] ,
+									(ret==MAX_PACKET_SIZE)?MAX_PACKET_SIZE-1:100,
 									*(rbuf + ((ret==MAX_PACKET_SIZE)?MAX_PACKET_SIZE-1:100)) );
 							}
-							
+
 						}else{
 							printf("read error ret = %d %s " , ret ,strerror(errno) );
-							
+
 							printf("can not read and write %d\nPlease reConnect\n",fd);
 							isconnect[fd]=0;
 							FD_CLR(fd,&fds);
 							close(fd);
 						}
-						
+
 					}
-					
+
 				}
 			}
-			
+
 		}
 	}
 	close(sock);

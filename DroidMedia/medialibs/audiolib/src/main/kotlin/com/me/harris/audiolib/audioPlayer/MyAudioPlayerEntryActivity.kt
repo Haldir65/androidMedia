@@ -124,6 +124,7 @@ class MyAudioPlayerEntryActivity:AppCompatActivity() {
             override fun onDestroy(owner: LifecycleOwner) {
                 super.onDestroy(owner)
                 player.stop()
+                player.destroy()
             }
         })
     }

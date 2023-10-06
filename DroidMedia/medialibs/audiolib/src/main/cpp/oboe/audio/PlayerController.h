@@ -23,6 +23,7 @@ class PlayerController : public AudioStreamDataCallback, AudioStreamErrorCallbac
 
 public:
     explicit PlayerController(int sampleRate);
+    virtual ~PlayerController();
     void start(char *fileName);
     void stop();
     void pause();

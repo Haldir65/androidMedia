@@ -9,6 +9,7 @@ import com.jadyn.mediakit.databinding.ActivityMediakitEntryBinding
 import com.jadyn.mediakit.framer.MediaKitDecodeFrameActivity
 import com.jadyn.mediakit.native.MediaKitJNI
 import com.jadyn.mediakit.nativecodec.MediaKitNativeCodecActivity
+import com.jadyn.mediakit.volan.VolanExperimentalActivity
 import com.me.harris.awesomelib.utils.Utils
 import com.me.harris.awesomelib.viewBinding
 import java.io.File
@@ -34,6 +35,10 @@ class MediaKitEntryActivity:AppCompatActivity(R.layout.activity_mediakit_entry) 
 
         binding.card3.setOnClickListener {
             viewModel.readTextWithMMAP()
+        }
+
+        binding.card4.setOnClickListener {
+            startActivity(Intent(this, VolanExperimentalActivity::class.java))
         }
 
     }

@@ -1,7 +1,6 @@
 package com.me.harris.audiolib.audioPlayer
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.me.harris.audiolib.audioPlayer.interfaces.AudioPlayInterface
@@ -35,6 +34,13 @@ class AAudioPlayer(val filepath:String,val context:Context,val sampleRate:Int = 
     override fun stop() {
         if (mEngineHandle!= INVALID_PTR){
             nativeAAudioEngineStop(mEngineHandle)
+        }
+    }
+
+    fun destroy(){
+        if (mEngineHandle!= INVALID_PTR){
+            nativeDestroyAAudioEngine(mEngineHandle)
+            mEngineHandle = INVALID_PTR
         }
     }
 

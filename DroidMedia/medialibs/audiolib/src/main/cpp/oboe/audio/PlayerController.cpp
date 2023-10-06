@@ -236,3 +236,7 @@ bool PlayerController::setupAudioSources() {
 void PlayerController::setAudioTrackFilename(char *filename) {
     trackFilename=filename;
 }
+
+PlayerController::~PlayerController() {
+    LOGE("PlayerController released!!");
+}

@@ -21,8 +21,10 @@ extern "C"
 JNIEXPORT jobject JNICALL Java_com_tom_codecanativewin_jni_JBitmap_rotateBitmapCcw90(JNIEnv * env, jclass jcls, jobject bitmap);
 }
 
-JNIEXPORT jobject JNICALL Java_com_tom_codecanativewin_jni_JBitmap_rotateBitmapCcw90(JNIEnv * env, jclass jcls, jobject bitmap)
-{
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_jadyn_mediakit_volan_Volan_rotateBitmapCcw90(JNIEnv *env, jobject thiz, jobject bitmap) {
     //
     //getting bitmap info:
     //
@@ -123,3 +125,4 @@ JNIEXPORT jobject JNICALL Java_com_tom_codecanativewin_jni_JBitmap_rotateBitmapC
     LOGD("create done");
     return newBitmap;
 }
+
