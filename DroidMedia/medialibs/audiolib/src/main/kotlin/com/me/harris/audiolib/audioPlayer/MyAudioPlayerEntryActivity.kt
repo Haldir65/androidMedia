@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.me.harris.audiolib.R
 import com.me.harris.audiolib.databinding.ActivityMyAudioPlayerBinding
 import com.me.harris.audiolib.oboe.OboeAudioPlayer
+import com.me.harris.awesomelib.utils.AudioUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -102,8 +103,9 @@ class MyAudioPlayerEntryActivity:AppCompatActivity() {
     }
 
     private fun opensslelPlayAudio(){
-        require(File(PCM_FILE_PATH).exists())
-        val player = ADOpenSLES(path = PCM_FILE_PATH, sample_rate =  44100,
+        val path = PCM_FILE_PATH
+        require(File(path).exists())
+        val player = ADOpenSLES(path = path, sample_rate =  44100,
             ch_layout = 1, format = 1)
         player.play()
         lifecycle.addObserver(object :DefaultLifecycleObserver {
@@ -128,11 +130,13 @@ class MyAudioPlayerEntryActivity:AppCompatActivity() {
 
 
     private fun oboePlayAudio(){
+        val path = M4A_FILE_PATH
+
         lifecycleScope.launch {
             withContext(Dispatchers.IO){
-                require(File(M4A_FILE_PATH).exists())
+                require(File(path).exists())
                 val player =  OboeAudioPlayer()
-                player.startPlaying(fileName = M4A_FILE_PATH, sampleRate = 44100)
+                player.startPlaying(fileName = path, sampleRate = AudioUtils.getAudioSampleRate(path))
                 withContext(Dispatchers.Main.immediate){
                     lifecycle.addObserver(object :DefaultLifecycleObserver {
                         override fun onDestroy(owner: LifecycleOwner) {

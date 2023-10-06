@@ -7,6 +7,9 @@
 #include "../utils/logging.h"
 #include "../utils/UtilityFunctions.h"
 
+
+// https://stackoverflow.com/questions/58390567/oboe-async-audio-extraction
+
 PlayerController::PlayerController(int sample_rate):sampleRate(sample_rate) {
 }
 /**
@@ -37,8 +40,6 @@ void PlayerController::load() {
     LOGD("=A= load should be finished");
 
     LOGD("=A=  supportAAudiommAP = %s , isMMapEnabled = %s , isMMapUsed =  %s ",supportAAudiommAP?"true":"false",isMMapEnabled?"true":"false",isMMapUsed?"true":"false");
-    Result result2 = mAudioStream->requestStart();
-    LOGD("=A= load call result2 be finished");
     mControllerState=PlayerControllerState::Playing;
 }
 

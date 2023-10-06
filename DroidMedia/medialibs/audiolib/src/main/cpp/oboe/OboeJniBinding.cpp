@@ -39,6 +39,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_me_harris_audiolib_oboe_OboeAudioPlayer_stopPlaying(JNIEnv *env, jobject thiz) {
     mController->stop();
+    delete mController.get();
 //    oboeSinePlayer.stopAudio();
 
 }

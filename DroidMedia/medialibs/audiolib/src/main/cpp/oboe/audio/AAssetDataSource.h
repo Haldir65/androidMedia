@@ -18,6 +18,7 @@ public:
     static AAssetDataSource* newFromCompressedAsset(std::string &filepath,
             const char* filename,
             AudioProperties targetProperties);
+    ~AAssetDataSource();
 
 private:
     AAssetDataSource(std::unique_ptr<float[]> data, size_t size, const AudioProperties properties)

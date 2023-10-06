@@ -25,6 +25,9 @@ void * getQueueCallBack2(SLAndroidSimpleBufferQueueItf  slBufferQueueItf, void* 
 
 class openslesAudioPlayer {
 public:
+    explicit openslesAudioPlayer() = default;
+
+    virtual ~openslesAudioPlayer() = default;
 
     int getPcm(void **pcm,size_t *pcm_size);
 

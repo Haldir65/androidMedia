@@ -48,6 +48,9 @@ namespace aaudiodemo {
          */
         void Stop();
 
+//        virtual bool isXRunCountSupported() const override;
+
+
 #if AAUDIO_CALLBACK
 
         aaudio_data_callback_result_t dataCallback(AAudioStream *stream,
@@ -69,7 +72,7 @@ namespace aaudiodemo {
         AAudioStream *mAudioStream{nullptr};
 //        AAsset *mAsset{nullptr};
         FILE *fp{nullptr};
-        std::mutex mRestartingLock;
+        std::mutex mRestartingLock{};
 #if !AAUDIO_CALLBACK
         uint8_t *mBufferData{nullptr};
         std::condition_variable mPlayCV;

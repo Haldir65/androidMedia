@@ -9,3 +9,7 @@
 
 [一些ndk自带的c++ so库在这里](https://www.cnblogs.com/sjjg/p/14617031.html)，具体在这个目录下面
 $NDK_HOME/21.4.7075529\toolchains\llvm\prebuilt\windows-x86_64\sysroot\usr\lib\aarch64-linux-android
+
+
+
+[mediaCodec解码音频比ffmpeg慢的多](https://github.com/google/oboe/tree/main/samples/RhythmGame)

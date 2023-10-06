@@ -90,3 +90,7 @@ AAssetDataSource* AAssetDataSource::newFromCompressedAsset(std::string &filepath
     return new AAssetDataSource(std::move(outputBuffer), numSamples, targetProperties);
 
 }
+
+AAssetDataSource::~AAssetDataSource() {
+    LOGE("AAssetDataSource DESTRUCTOR CALLED , should remove buffer now ");
+}
