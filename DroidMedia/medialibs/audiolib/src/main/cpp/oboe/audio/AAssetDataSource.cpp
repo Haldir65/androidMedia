@@ -4,6 +4,7 @@
 #include "../utils/logging.h"
 #include "oboe/Oboe.h"
 #include "AAssetDataSource.h"
+#include "FFMpegExtractor.h"
 #include <filesystem>
 #include <fstream>
 #ifdef __cplusplus
@@ -34,11 +35,13 @@ extern "C" {
 constexpr int kMaxCompressionRatio{12};
 
 AAssetDataSource* AAssetDataSource::newFromCompressedAsset(std::string &filepath,
+                                                           AAssetManager* assetManager,
         const char *filename,
         const AudioProperties targetProperties) {
 
     // get the asset by filename via AAssetManager
 //    AAsset *asset = AAssetManager_open(&assetManager, filename, AASSET_MODE_UNKNOWN);
+#if USE_FFMPEG==false
     if (!std::filesystem::exists(filepath)) {
         LOGE("Failed to open asset %s",filename);
         return nullptr;
@@ -51,18 +54,23 @@ AAssetDataSource* AAssetDataSource::newFromCompressedAsset(std::string &filepath
     long size = ftell(fp);
     fseek(fp,  0,  SEEK_SET);
 //    off_t assetSize = AAsset_getLength(asset);
-    LOGD("Opened %s, size ",filename);
+    LOGD("Opened %s, size =  %ld bytes",filename,size);
 
     // Allocate memory to store decompressed audio. We don't know the exact
     // size of the decoded data until after decoding so we make an assumption about the
     // maximum compression ratio and the decoded sample format (float for FFmpeg, int16 for NDK)
+#endif
 
 #if USE_FFMPEG==true
+    AAsset *asset = AAssetManager_open(assetManager, filename, AASSET_MODE_UNKNOWN);
+    off_t assetSize = AAsset_getLength(asset);
+    LOGD("Opened %s, size %ld", filename, assetSize);
     const long maximumDataSizeInBytes = kMaxCompressionRatio * assetSize * sizeof(float);
     auto decodedData = new uint8_t[maximumDataSizeInBytes];
 
     int64_t bytesDecoded = FFMpegExtractor::decode(asset, decodedData, targetProperties);
     auto numSamples = bytesDecoded / sizeof(float);
+    AAsset_close(asset);
 
 #else
     const long maximumDataSizeInBytes = kMaxCompressionRatio * size  * sizeof(int16_t);
@@ -75,17 +83,17 @@ AAssetDataSource* AAssetDataSource::newFromCompressedAsset(std::string &filepath
     // Now we know the exact number of samples we can create a float array to hold the audio data
     auto outputBuffer  = std::make_unique<float[]>(numSamples);
 
-#if USE_FFMPEF==1
+#if USE_FFMPEG==true
     memcpy(outputBuffer.get(), decodedData, (size_t)bytesDecoded);
 #else
     // The NDK decoder can only decode to int16, we need to convert to floats
     oboe::convertPcm16ToFloat(reinterpret_cast<int16_t*>(decodedData),outputBuffer.get(),
             bytesDecoded/sizeof(int16_t));
+    fclose(fp);
 #endif
 
     delete [] decodedData;
-//    AAsset_close(asset);
-    fclose(fp);
+
 
     return new AAssetDataSource(std::move(outputBuffer), numSamples, targetProperties);
 

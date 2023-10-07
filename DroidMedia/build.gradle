@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+
 buildscript {
 
     ext.kotlin_version = '1.9.10'
@@ -12,6 +13,7 @@ buildscript {
     project.logger.lifecycle "supported abi = ${SUPPORTED_ABI} ${SUPPORTED_ABI.size()}"
 //    ext.SUPPORTED_ABI = SUPPORTED_ABI
 //    ext.SUPPORT_NATIVE_BUILD = SUPPORT_NATIVE_BUILD
+
 
 
     repositories {
@@ -28,6 +30,7 @@ buildscript {
         classpath libs.android.gradle.build.plugin
         classpath libs.kotlin.gradle.plugin
         classpath libs.google.dagger.hilt.build.plugin
+//        id("com.google.devtools.ksp") version "1.8.10-1.0.9" apply false
 //        classpath(libs.android.gradlePlugin)
 //        def libs = project.extensions.getByType(VersionCatalogsExtension).named("libs") as org.gradle.accessors.dm.LibrariesForLibs
 //        classpath(libs.android.gradle.build.plugin)
@@ -51,3 +54,18 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task checkJetifierAll(group: "verification") { }
+
+subprojects { project ->
+    project.tasks.whenTaskAdded { task ->
+        if (task.name == "checkJetifier") {
+            checkJetifierAll.dependsOn(task)
+        }
+    }
+}
+
+//作者：程序员江同学
+//链接：https://juejin.cn/post/7153250843905654798
+//来源：稀土掘金
+//著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

@@ -4,6 +4,7 @@ import android.media.AudioFormat
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.system.Os
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -135,9 +136,9 @@ class MyAudioPlayerEntryActivity:AppCompatActivity() {
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO){
-                require(File(path).exists())
+//                require(File(path).exists())
                 val player =  OboeAudioPlayer()
-                player.startPlaying(fileName = path, sampleRate = AudioUtils.getAudioSampleRate(path))
+                player.startPlaying(fileName = path, assetmanager = assets, sampleRate = AudioUtils.getAudioSampleRate(path))
                 withContext(Dispatchers.Main.immediate){
                     lifecycle.addObserver(object :DefaultLifecycleObserver {
                         override fun onDestroy(owner: LifecycleOwner) {

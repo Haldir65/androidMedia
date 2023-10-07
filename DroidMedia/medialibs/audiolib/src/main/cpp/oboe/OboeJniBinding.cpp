@@ -23,11 +23,15 @@ OboeSinePlayer oboeSinePlayer;
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_me_harris_audiolib_oboe_OboeAudioPlayer_startPlaying(JNIEnv *env, jobject thiz,
-                                                              jstring file_name,jint sample_rate) {
-
-    mController=std::make_unique<PlayerController>(sample_rate);
+                                                              jstring file_name,
+                                                              jobject assetManager,jint sample_rate) {
+    AAssetManager  *m = AAssetManager_fromJava(env,assetManager);
+    mController=std::make_unique<PlayerController>(sample_rate, m);
     char* trackFileName = convertJString(env,file_name);
     mController->start(trackFileName);
+    if (trackFileName!= nullptr){
+        env->ReleaseStringUTFChars(file_name, trackFileName);
+    }
 
 //    oboeSinePlayer.startAudio();
 

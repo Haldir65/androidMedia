@@ -6,11 +6,15 @@
 #include "thread"
 #include "../utils/logging.h"
 #include "../utils/UtilityFunctions.h"
+#include <android/asset_manager.h>
+
 
 
 // https://stackoverflow.com/questions/58390567/oboe-async-audio-extraction
 
-PlayerController::PlayerController(int sample_rate):sampleRate(sample_rate) {
+
+PlayerController::PlayerController(int sample_rate, AAssetManager *asset):sampleRate(sample_rate),mAssetManager(asset) {
+
 }
 /**
  * Initializes stream and player then eventually starting the stream.
@@ -47,7 +51,7 @@ void PlayerController::load() {
  * sets the audio filename, call the load method.
  * @param fileName : name of the asset audio file.
  */
-void PlayerController::start(char *fileName) {
+void PlayerController::start(char *fileName ) {
    // LOGD("PlayerController, comp= %d",strcmp(fileName,trackFilename));
     if (paused){
         LOGD("PlayerController, setPlaying true");
@@ -216,7 +220,7 @@ bool PlayerController::setupAudioSources() {
 
     // Create a data source and player for our track
     std::shared_ptr<AAssetDataSource> trackSource{
-        AAssetDataSource::newFromCompressedAsset(path ,trackFilename,targetProperties)
+        AAssetDataSource::newFromCompressedAsset(path , mAssetManager, trackFilename, targetProperties)
     };
     if (trackSource== nullptr){
         LOGE("Could not load source data for track: %s",trackFilename);
@@ -234,9 +238,12 @@ bool PlayerController::setupAudioSources() {
  * @param filename : name of asset audio file
  */
 void PlayerController::setAudioTrackFilename(char *filename) {
-    trackFilename=filename;
+    std::string a{filename};
+    trackFilename = strdup(filename); // filename指针指向的object被干掉后
 }
 
 PlayerController::~PlayerController() {
     LOGE("PlayerController released!!");
 }
+
+

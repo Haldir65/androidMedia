@@ -22,7 +22,8 @@ enum class PlayerControllerState{
 class PlayerController : public AudioStreamDataCallback, AudioStreamErrorCallback{
 
 public:
-    explicit PlayerController(int sampleRate);
+    explicit PlayerController(int sample_rate, AAssetManager* asset);
+
     virtual ~PlayerController();
     void start(char *fileName);
     void stop();
@@ -38,7 +39,7 @@ public:
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override ;
 
 private:
-//    AAssetManager& mAssetManager;
+    AAssetManager* mAssetManager;
 
     std::shared_ptr<AudioStream> mAudioStream;
     std::atomic<int64_t> mCurrentFrame{0};
@@ -46,8 +47,6 @@ private:
     std::atomic<PlayerControllerState> mControllerState{PlayerControllerState::Loading};
     std::future<void> mLoadingResult;
     std::atomic<int64_t> mLastUpdateTime { 0 };
-
-
     char* trackFilename;
 
     std::unique_ptr<Player> mTrack;

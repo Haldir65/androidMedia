@@ -109,3 +109,6 @@ https://www.jianshu.com/p/74b0fcff8b66
 
 
 https://github.com/android/ndk-samples/tree/main/teapots
+
+
+[android.os.FileUtils.copyFile, 用sendFile和splice等linux api提升copy文件的速度](https://juejin.cn/post/7274211579692728335)

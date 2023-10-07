@@ -2,6 +2,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp").version("1.9.10-1.0.13") // Or latest version of KSP
 }
 
 val SUPPORT_NATIVE_BUILD:String  by project
@@ -103,6 +104,7 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.okio)
     implementation(libs.glide)
-    annotationProcessor(libs.glide.compiler)
+    ksp(libs.glide.ksp)
+//    annotationProcessor(libs.glide.compiler)
     implementation(libs.androidx.recyclerview.recyclerview)
 }

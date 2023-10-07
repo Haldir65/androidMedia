@@ -10,6 +10,6 @@ class OboeAudioPlayer {
     }
 
 
-    external fun startPlaying( fileName:String,sampleRate:Int);
+    external fun startPlaying( fileName:String,assetmanager:AssetManager,sampleRate:Int);
     external fun stopPlaying();
 }
