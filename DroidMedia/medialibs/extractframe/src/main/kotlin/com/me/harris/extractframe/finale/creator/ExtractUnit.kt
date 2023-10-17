@@ -19,16 +19,12 @@ import com.me.harris.extractframe.VideoDecoder
 import com.me.harris.extractframe.VideoDecoder.COLOR_FORMAT_NV21
 import com.me.harris.extractframe.contract.ExtractConfiguration
 import com.me.harris.extractframe.parallel.Range
-import com.me.harris.extractframe.parallel.saveBitMapToDir
 import com.me.harris.libyuv.ImageToBitmap
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.Semaphore
-import okio.AsyncTimeout.Companion.lock
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.concurrent.CountDownLatch
 
 const val TAG = ExtractConfiguration.LOG_TAG
 
@@ -56,6 +52,7 @@ internal class ExtractUnit(
         val gapMicroSeconds = config.gapInBetweenSeconds * 1000_000
         var extractor: MediaExtractor? = null
         var decoder: MediaCodec? = null
+        val sawKeyFrameTimes = mutableSetOf<Long>()
         try {
             extractor = MediaExtractor()
             extractor.setDataSource(filePath)
@@ -178,7 +175,8 @@ internal class ExtractUnit(
                     if (info.flags == 0) {
                         Log.w(TAG, " ${identity()} 【普通帧】 0 pt = ${info.presentationTimeUs} ")
                     }
-                    if (info.size > 0) {
+                    val hasNotSawThisFrame = sawKeyFrameTimes.add(info.presentationTimeUs)
+                    if (info.size > 0 && hasNotSawThisFrame) {
                         val presentationTimeUs = info.presentationTimeUs
                         outputFrameCount++;
                         val image = requireNotNull(decoder.getOutputImage(outputBufferId))
@@ -223,13 +221,25 @@ internal class ExtractUnit(
                             )
                         }
                         decoder.releaseOutputBuffer(outputBufferId, false)
-                    } else {
+                    } else if (info.size > 0 && !hasNotSawThisFrame){
+                        Log.w(TAG, "${identity()} code frame at time ${info.presentationTimeUs} us has already been processed , codec info.size = ${info.size} ")
+                    }
+                    else {
                         Log.i(TAG, "${identity()} codec info.size = ${info.size} ")
                     }
                 } else {
                     Log.w(TAG, "${identity()} dequeueOutputBuffer = $outputBufferId ")
                 }
             }
+            val resultTimes = sawKeyFrameTimes.filter { a-> a>0 }.joinToString(prefix = "", postfix = "", separator = System.lineSeparator()) { a -> "${a/1000_000} 秒" }
+            val designedTimes = range.points.joinToString(prefix = "", postfix = "", separator = System.lineSeparator()) { a ->  "${a/1000_000} 秒"}
+            Log.w("=A=","""
+                ${identity()}线程原计划抽取
+                ${designedTimes}
+                实际抽取
+                ${resultTimes}
+            """.lineSequence().joinToString(transform = String::trimStart, separator = System.lineSeparator()))
+
         } finally {
             Log.w(TAG, "${identity()} release codec and extractor")
             extractor?.release()
