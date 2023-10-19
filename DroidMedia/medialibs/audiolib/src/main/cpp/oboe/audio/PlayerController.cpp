@@ -244,6 +244,9 @@ void PlayerController::setAudioTrackFilename(char *filename) {
 
 PlayerController::~PlayerController() {
     LOGE("PlayerController released!!");
+    if (trackFilename){
+        free(trackFilename);
+    }
 }
 
 
