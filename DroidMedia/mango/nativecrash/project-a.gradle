@@ -6,6 +6,7 @@ plugins {
 android {
     namespace 'com.me.harris.nativecrash'
     compileSdk 34
+    ndkVersion project.properties['NDK_VERSION']
 
     defaultConfig {
         minSdk = Integer.parseInt(libs.versions.minSdk.get())

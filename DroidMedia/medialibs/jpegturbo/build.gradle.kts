@@ -9,6 +9,8 @@ val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 val SUPPORTED_ABI="arm64-v8a"
 val COMPILE_SKD_VERSION:String by project
 val MIN_SDK_VERSION:String by project
+val NDK_VERSION:String  by project
+
 
 android {
     namespace = "com.me.harris.jpegturbo"
@@ -17,6 +19,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    ndkVersion = NDK_VERSION
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -29,7 +32,7 @@ android {
             externalNativeBuild {
                 cmake {
                     abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
-                    cppFlags("-g -std=c++11 -frtti -fexceptions")
+                    cppFlags("-g -std=c++17 -frtti -fexceptions")
                     arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
                 }
             }

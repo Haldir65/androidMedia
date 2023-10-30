@@ -28,7 +28,8 @@ android {
     }
 
     namespace "com.me.harris.droidmedia"
-    ndkVersion '25.1.8937393'
+    ndkVersion project.properties['NDK_VERSION']
+
 
     buildFeatures {
         buildConfig = true
@@ -242,6 +243,7 @@ dependencies {
     implementation projects.medialibs.audiolib
     implementation projects.medialibs.pnglib
     implementation projects.medialibs.avif
+    implementation projects.mango.simdjson
 //    implementation project(":medialibs:filterLibrary")
     implementation project(":medialibs:playerLib")
     implementation project(":medialibs:epf")

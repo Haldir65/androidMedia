@@ -17,6 +17,10 @@
 #define MAX_PACKET_SIZE 1456
 #define FREQUENCY 15
 
+#ifndef bzero
+#define bzero(d,n) memset((d),0,(n))
+#endif
+
 // 下标代表 所有客户的socket
 int isconnect[MAX_CLIENT];
 // 服务器的socket

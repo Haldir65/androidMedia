@@ -6,6 +6,7 @@ plugins {
 android {
     namespace 'com.daasuu.epf'
     compileSdk 34
+    ndkVersion project.properties['NDK_VERSION']
 
     defaultConfig {
         minSdk = Integer.parseInt(libs.versions.minSdk.get())

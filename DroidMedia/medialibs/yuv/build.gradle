@@ -7,7 +7,7 @@ android {
     namespace 'com.me.harris.libyuv'
     compileSdk 34
     buildToolsVersion = '34.0.0'
-
+    ndkVersion project.properties['NDK_VERSION']
 
     defaultConfig {
         minSdk = Integer.parseInt(libs.versions.minSdk.get())
@@ -41,7 +41,7 @@ android {
             path "CMakeLists.txt"
         }
     }
-    ndkVersion '25.1.8937393'
+    ndkVersion '26.1.10909125'
 }
 
 dependencies {

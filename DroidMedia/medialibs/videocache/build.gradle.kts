@@ -5,12 +5,13 @@ plugins {
 }
 val COMPILE_SKD_VERSION:String by project
 val MIN_SDK_VERSION:String by project
+val NDK_VERSION:String by project
 
 android {
     namespace = "com.danikula.videocache"
     compileSdk = COMPILE_SKD_VERSION.toInt()
     buildToolsVersion = "34.0.0"
-
+    ndkVersion = NDK_VERSION
     buildFeatures {
         viewBinding = true
         buildConfig = true

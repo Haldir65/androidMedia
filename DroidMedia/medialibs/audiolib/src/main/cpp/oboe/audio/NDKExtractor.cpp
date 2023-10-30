@@ -21,8 +21,12 @@
 #include <media/NdkMediaExtractor.h>
 #include "../utils/logging.h"
 #include <cinttypes>
+#include <filesystem>
 
 #include "NDKExtractor.h"
+
+template<typename T>
+using deleted_unique_ptr = std::unique_ptr<T,std::function<void(T*)>>;
 
 int32_t NDKExtractor::decode(const std::string& filepath, uint8_t *targetData, AudioProperties targetProperties) {
 
@@ -31,11 +35,21 @@ int32_t NDKExtractor::decode(const std::string& filepath, uint8_t *targetData, A
     // open asset as file descriptor
     off_t start, length;
     start = 0;
-    auto f = fopen(filepath.c_str(),"rb");
-    int fd = fileno(f);
-    long cur = ftell(f);
-    fseek(f, 0, SEEK_END);
-    long len = ftell(f);
+//    auto f = fopen(filepath.c_str(),"rb");
+    //https://stackoverflow.com/a/26276805
+    deleted_unique_ptr<FILE> f(
+            fopen(filepath.c_str(), "r"),
+            [](FILE* f) {
+                LOGW("closing file %p when pointer out of scope",f);
+                fclose(f); });
+    int fd = fileno(f.get());
+    long cur = ftell(f.get());
+    fseek(f.get(), 0, SEEK_END);
+    long len = ftell(f.get());
+
+//    long len = std::filesystem::file_size(filepath);
+    LOGE("length if file %s  is  %ld", filepath.c_str(),static_cast<off64_t>(len));
+
     // Extract the audio frames
     AMediaExtractor *extractor = AMediaExtractor_new();
     media_status_t amresult = AMediaExtractor_setDataSourceFd(extractor, fd, cur, len);
@@ -92,17 +106,16 @@ int32_t NDKExtractor::decode(const std::string& filepath, uint8_t *targetData, A
     }
 
     // Obtain the correct decoder
-    AMediaCodec *codec = nullptr;
+    AMediaCodec *codec {nullptr};
     AMediaExtractor_selectTrack(extractor, 0);
     codec = AMediaCodec_createDecoderByType(mimeType);
     AMediaCodec_configure(codec, format, nullptr, nullptr, 0);
     AMediaCodec_start(codec);
 
     // DECODE
-
-    bool isExtracting = true;
-    bool isDecoding = true;
-    int32_t bytesWritten = 0;
+    int32_t bytesWritten{0};
+    bool isExtracting {true};
+    bool isDecoding{true};
 
     while(isExtracting || isDecoding){
 
@@ -187,7 +200,7 @@ int32_t NDKExtractor::decode(const std::string& filepath, uint8_t *targetData, A
                 // The outputIndex doubles as a status return if its value is < 0
                 switch(outputIndex){
                     case AMEDIACODEC_INFO_TRY_AGAIN_LATER:
-                        LOGD("dequeueOutputBuffer: try again later");
+                        LOGD("dequeueOutputBuffer: try again later , bytes written = %d kb",bytesWritten/1024);
                         break;
                     case AMEDIACODEC_INFO_OUTPUT_BUFFERS_CHANGED:
                         LOGD("dequeueOutputBuffer: output buffers changed");

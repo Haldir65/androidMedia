@@ -32,6 +32,7 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
 //        targetData[1] = data[(mReadFrameIndex*properties.channelCount)+1];
         // 也就可以改成
         memcpy(targetData,(data+(mReadFrameIndex*properties.channelCount)),framesToRenderFromData*properties.channelCount*sizeof(targetData));
+        LOGD("=A= onAudioReady called copy byte num =  %d  ",framesToRenderFromData*properties.channelCount*sizeof(targetData) );
         if (++mReadFrameIndex >= totalSourceFrames) mReadFrameIndex=0;
 
 //        mReadFrameIndex+=framesToRenderFromData;

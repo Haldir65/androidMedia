@@ -7,6 +7,7 @@ plugins {
 val COMPILE_SKD_VERSION:String by project
 //val MIN_SDK_VERSION:String by project
 val SUPPORT_NATIVE_BUILD:String  by project
+val NDK_VERSION:String  by project
 val SUPPORTED_ABI="arm64-v8a"
 val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 
@@ -15,6 +16,7 @@ val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 android {
     namespace = "com.me.harris.pnglib"
     compileSdk = COMPILE_SKD_VERSION.toInt()
+    ndkVersion = NDK_VERSION
 
     buildFeatures {
         viewBinding = true
@@ -31,7 +33,7 @@ android {
             externalNativeBuild {
                 cmake {
                     abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
-                    cppFlags("-g -std=c++11 -frtti -fexceptions")
+                    cppFlags("-g -std=c++17 -frtti -fexceptions")
                     arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
                 }
             }
@@ -75,6 +77,7 @@ android {
         jvmTarget = "17"
     }
 }
+
 
 apply(rootProject.projectDir.absolutePath+File.separator+"dependencyHandler.gradle.kts")
 

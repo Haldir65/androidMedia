@@ -6,6 +6,7 @@ plugins {
 android {
     namespace 'com.me.harris.cameralib'
     compileSdk 34
+    ndkVersion project.properties['NDK_VERSION']
 
     buildFeatures {
         viewBinding = true

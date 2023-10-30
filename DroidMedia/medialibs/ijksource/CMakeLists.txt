@@ -239,6 +239,10 @@ include_directories(
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
+set(MY_DEBUG_OPTIONS -Wno-implicit-function-declaration -Wno-error=declaration-after-statement -Wno-unsafe-buffer-usage -Wno-declaration-after-statement -Wno-strict-prototypes -Wno-implicit-function-declaration -Wno-int-conversion)
+
+target_compile_options(ijkplayer PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>)
+target_compile_options(ijkplayer PRIVATE "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
 target_link_libraries( # Specifies the target library.
         ijkplayer
 

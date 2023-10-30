@@ -29,6 +29,10 @@ void PlayerController::load() {
         mControllerState=PlayerControllerState::FailedToLoad;
         return;
     }
+/*    auto lock = std::make_unique<std::string>("");
+    std::unique_ptr<std::string> lock2 = lock;
+    std::shared_ptr<std::string> lock3 = std::make_shared<std::string>("");
+    std::shared_ptr<std::string> lock4 = std::shared_ptr{lock3};*/
 
     // starting the stream, after this onAudioReady method of DataCallbackResult will be called.
     Result result = mAudioStream->requestStart();
@@ -93,7 +97,7 @@ void PlayerController::pause() {
  */
 DataCallbackResult PlayerController::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
     auto *outputBuffer = static_cast<float *>(audioData);
-    LOGD("=A= onAudioReady called");
+    LOGV("=A= onAudioReady called ");
     if (!paused ){
         for (int i=0; i<numFrames; ++i){
             mSongPosition = convertFramesToMillis(mCurrentFrame,oboeStream->getSampleRate());

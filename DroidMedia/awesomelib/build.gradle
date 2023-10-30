@@ -8,10 +8,11 @@ plugins {
 android {
     namespace 'com.me.harris.awesomelib'
     compileSdkVersion =  34
+    ndkVersion project.properties['NDK_VERSION']
 
 
     buildToolsVersion = '34.0.0'
-    ndkVersion '25.1.8937393'
+    ndkVersion '26.1.10909125'
 
 
 

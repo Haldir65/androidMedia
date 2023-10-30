@@ -30,6 +30,7 @@ import com.me.harris.libjpeg.ui.LibJpegEntryActivity
 import com.me.harris.mediainfo.MediaInfoProbeActivity
 import com.me.harris.playerLibrary.VideoPlayExtryActivity
 import com.me.harris.pnglib.PngLibEntryActivity
+import com.me.harris.simdjson.SimdJsonEntryActivity
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -99,6 +100,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         binding.btn14.setOnClickListener {
             startActivity(Intent(this, AvIfEntryActivity::class.java))
+        }
+        binding.btn15.setOnClickListener {
+            startActivity(Intent(this, SimdJsonEntryActivity::class.java))
         }
     }
 

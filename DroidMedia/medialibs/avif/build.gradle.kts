@@ -10,12 +10,15 @@ val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 val SUPPORTED_ABI="arm64-v8a"
 val COMPILE_SKD_VERSION:String by project
 val MIN_SDK_VERSION:String by project
+val NDK_VERSION:String by project
 
 
 android {
     namespace = "com.me.harris.avif"
     compileSdk = COMPILE_SKD_VERSION.toInt()
     buildToolsVersion = "34.0.0"
+    ndkVersion = NDK_VERSION
+
 
     buildFeatures {
         viewBinding = true
@@ -34,7 +37,7 @@ android {
             externalNativeBuild {
                 cmake {
                     abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
-                    cppFlags("-g -std=c++11 -frtti -fexceptions")
+                    cppFlags("-g -std=c++17 -frtti -fexceptions -Wno-unsafe-buffer-usage")
                     arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
                 }
             }
