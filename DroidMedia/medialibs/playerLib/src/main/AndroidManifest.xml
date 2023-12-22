@@ -32,6 +32,9 @@
         <activity android:name="com.me.harris.playerLibrary.video.MediaCodecMain2Activity"
                 android:screenOrientation="portrait"
                 />
+        <activity android:name="com.me.harris.playerLibrary.compose.ComposeVideoPlayerActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
 
         <service android:name="com.me.harris.playerLibrary.process.ipc.RemoteMediaPlayerBackEndService"
             android:process=":playerService"

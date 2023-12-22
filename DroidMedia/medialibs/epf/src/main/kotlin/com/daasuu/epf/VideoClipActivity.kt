@@ -13,6 +13,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.media3.ui.PlayerView
 import com.daasuu.epf.Config.Companion.DEFAULT_FRAME_COUNT
 import com.daasuu.epf.Config.Companion.DEFAULT_TEMP_VIDEO_LOCATION
 import com.daasuu.epf.Config.Companion.MAX_FRAME_INTERVAL_MS
@@ -26,7 +27,6 @@ import com.daasuu.epf.custfilter.GlShakeFilter
 import com.daasuu.epf.custfilter.GlSoulOutFilter
 import com.daasuu.epf.widget.ClipContainer
 import com.daasuu.mp4compose.composer.Mp4Composer
-import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.spx.egl.GlFilterList
 import com.spx.egl.GlFilterPeriod
@@ -80,7 +80,7 @@ class VideoClipActivity:AppCompatActivity(R.layout.activity_video_clip),ClipCont
     lateinit var view_shadow: View
     lateinit var player_view_exo_thumbnail: ThumbExoPlayerView
     lateinit var player_view_mp: SurfaceView
-    private lateinit var player_view_exo: StyledPlayerView
+    private lateinit var player_view_exo: PlayerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

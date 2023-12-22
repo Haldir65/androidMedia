@@ -1,11 +1,11 @@
 [versions]
 minSdk="27"
 targetSdk="29"
-arrow = "1.2.0"
-androidGradlePlugin = "8.1.3"
-glide = "4.14.2"
-kotlin_verison = "1.9.20"
-gson = "2.9.0"
+arrow = "1.2.1"
+androidGradlePlugin = "8.2.0"
+glide = "4.16.0"
+kotlin_verison = "1.9.21"
+gson = "2.10"
 retrofit = "2.9.0"
 cardview = "1.0.0"
 okhttp="4.12.0"
@@ -14,8 +14,8 @@ coroutine="1.7.3"
 androidx-core-ktx="1.12.0"
 androidx-viewpager2="1.0.0"
 androidx-appcompat-appcompat="1.6.1"
-androidx-activity-ktx="1.8.0"
-android-material="1.10.0"
+androidx-activity-ktx="1.8.2"
+android-material="1.11.0"
 constraintLayout="2.1.4"
 coordinateLayout="1.2.0"
 lifecycle="2.6.2"
@@ -37,15 +37,17 @@ oboe_version="1.8.0"
 
 
 kotlinxDatetime = "0.4.0"
-kotlinxSerializationJson = "1.6.0"
+kotlinxSerializationJson = "1.6.1"
 ktor = "1.6.3"
-exfiinterface="1.3.6"
-exoplayer = "2.19.1"
-camerax_version="1.3.0"
-room = "2.6.0"
+exfiinterface="1.3.7"
+#exoplayer = "2.19.1"
+media3_version ="1.2.0"
+camerax_version="1.3.1"
+room = "2.6.1"
 
 mmkv = "1.2.15"
 kotlinxCollectionsImmutable = "0.3.5"
+material3 = "1.1.2"
 # other versions
 
 [libraries]
@@ -136,14 +138,15 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 
+
 #ExoPlayer
-exoplayer-core = { group = "com.google.android.exoplayer", name = "exoplayer-core", version.ref = "exoplayer" }
-exoplayer-ui = { group = "com.google.android.exoplayer", name = "exoplayer-ui", version.ref = "exoplayer" }
-exoplayer-hls = { group = "com.google.android.exoplayer", name = "exoplayer-hls", version.ref = "exoplayer" }
-exoplayer-dash = { group = "com.google.android.exoplayer", name = "exoplayer-dash", version.ref = "exoplayer" }
-exoplayer-smoothstreaming = { group = "com.google.android.exoplayer", name = "exoplayer-smoothstreaming", version.ref = "exoplayer" }
-exoplayer-cast = { group = "com.google.android.exoplayer", name = "exoplayer-cast", version.ref = "exoplayer" }
-exoplayer-extension-mediasession = { group = "com.google.android.exoplayer", name = "extension-mediasession", version.ref = "exoplayer" }
+exoplayer-core = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3_version" }
+exoplayer-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3_version" }
+exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3_version" }
+exoplayer-hls = { group = "androidx.media3", name = "media3-exoplayer-hls", version.ref = "media3_version" }
+#exoplayer-smoothstreaming = { group = "com.google.android.exoplayer", name = "exoplayer-smoothstreaming", version.ref = "exoplayer" }
+#exoplayer-cast = { group = "com.google.android.exoplayer", name = "exoplayer-cast", version.ref = "exoplayer" }
+#exoplayer-extension-mediasession = { group = "com.google.android.exoplayer", name = "extension-mediasession", version.ref = "exoplayer" }
 
 # testsuite
 junit-junit = { group = "junit", name = "junit", version.ref = "junit4" }
@@ -156,6 +159,7 @@ rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
 ## lfj
 slfj-api = { module = "org.slf4j:slf4j-api", version.ref = "slfj" }
 slfj-android = { module = "org.slf4j:slf4j-android", version.ref = "slfj-android" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 
 

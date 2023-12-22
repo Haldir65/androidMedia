@@ -13,11 +13,11 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.Surface;
 
+import androidx.media3.exoplayer.ExoPlayer;
+
 import com.daasuu.epf.filter.GlFilter;
 import com.daasuu.epf.filter.GlLookUpTableFilter;
 import com.daasuu.epf.filter.GlPreviewFilter;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 

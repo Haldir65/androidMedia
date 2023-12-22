@@ -10,13 +10,14 @@ import android.view.Surface;
 import com.daasuu.gpuv.egl.*;
 import com.daasuu.gpuv.egl.filter.GlFilter;
 import com.daasuu.gpuv.egl.filter.GlLookUpTableFilter;
-import com.google.android.exoplayer2.ExoPlayer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
 import static android.opengl.GLES20.*;
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.glViewport;
+
+import androidx.media3.exoplayer.ExoPlayer;
 
 public class GPUPlayerRenderer extends GlFrameBufferObjectRenderer implements SurfaceTexture.OnFrameAvailableListener {
     private static final String TAG = GPUPlayerRenderer.class.getSimpleName();

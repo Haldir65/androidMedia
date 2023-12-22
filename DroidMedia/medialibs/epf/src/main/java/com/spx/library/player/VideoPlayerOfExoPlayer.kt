@@ -1,13 +1,13 @@
 package com.spx.library.player
 
 import android.content.Context
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player.STATE_READY
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player.STATE_READY
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 
 
-class VideoPlayerOfExoPlayer(val playerView: StyledPlayerView) : VideoPlayer {
+class VideoPlayerOfExoPlayer(val playerView: PlayerView) : VideoPlayer {
 
     companion object {
         val TAG = "VideoPlayerOfExoPlayer"

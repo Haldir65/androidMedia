@@ -4,12 +4,12 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import androidx.media3.common.Player;
+import androidx.media3.exoplayer.ExoPlayer;
+
 import com.daasuu.epf.chooser.EConfigChooser;
 import com.daasuu.epf.contextfactory.EContextFactory;
 import com.daasuu.epf.filter.GlFilter;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 
 /**
  * Created by sudamasayuki on 2017/05/16.

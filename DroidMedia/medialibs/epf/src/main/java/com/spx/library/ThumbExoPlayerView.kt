@@ -4,16 +4,19 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.TextureView
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import androidx.annotation.OptIn
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
+
 import java.util.*
 
 
 class ThumbExoPlayerView(context: Context?, attrs: AttributeSet?) :
-  StyledPlayerView(context!!, attrs) {
+  PlayerView(context!!, attrs) {
   companion object {
     const val CHECK_INTERVAL_MS: Long = 30
     const val TAG = "ThumbExoPlayerView"
@@ -26,7 +29,7 @@ class ThumbExoPlayerView(context: Context?, attrs: AttributeSet?) :
   private val thumbnailMillSecList = ArrayList<Long>()
   private var exoPlayer: ExoPlayer? = null
 
-  override fun onFinishInflate() {
+  @OptIn(UnstableApi::class) override fun onFinishInflate() {
     super.onFinishInflate()
     textureView = videoSurfaceView as TextureView
   }

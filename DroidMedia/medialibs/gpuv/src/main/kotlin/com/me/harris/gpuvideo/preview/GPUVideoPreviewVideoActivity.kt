@@ -6,17 +6,19 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.RelativeLayout
 import android.widget.SeekBar
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.daasuu.gpuv.R
 import com.daasuu.gpuv.egl.filter.GlFilter
 import com.daasuu.gpuv.gpuvideoandroid.FilterType
 import com.daasuu.gpuv.player.GPUPlayerView
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.gpuv.FilterAdapter
 import kotlinx.coroutines.currentCoroutineContext
@@ -111,7 +113,7 @@ class GPUVideoPreviewVideoActivity:AppCompatActivity(R.layout.activity_gpuvideo_
 
     }
 
-    private fun setUpSimpleExoplayer(){
+    @OptIn(UnstableApi::class) private fun setUpSimpleExoplayer(){
         player = ExoPlayer.Builder(this)
             .setTrackSelector(DefaultTrackSelector(this))
             .build()

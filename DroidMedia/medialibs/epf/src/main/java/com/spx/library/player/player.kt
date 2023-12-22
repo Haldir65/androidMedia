@@ -2,12 +2,12 @@ package com.spx.library.player
 
 import android.content.Context
 import android.view.View
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 
-fun initPlayer(context: Context, videoUrl:String, playerView: StyledPlayerView): ExoPlayer {
+fun initPlayer(context: Context, videoUrl:String, playerView: PlayerView): ExoPlayer {
     var TAG ="initPlayer"
 
     var player = ExoPlayer.Builder(context).build()
