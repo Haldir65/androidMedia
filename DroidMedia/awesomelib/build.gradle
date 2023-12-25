@@ -46,7 +46,7 @@ android {
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(17)
-            vendor = JvmVendorSpec.ORACLE
+//            vendor = JvmVendorSpec.ORACLE
             implementation = JvmImplementation.VENDOR_SPECIFIC
         }
     }
