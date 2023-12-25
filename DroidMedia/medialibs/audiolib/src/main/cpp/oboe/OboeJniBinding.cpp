@@ -1,5 +1,5 @@
 #include "../AndroidLog.h"
-#include <Oboe/Oboe.h>
+#include <oboe/Oboe.h>
 #include "audio/Player.h"
 #include "audio/PlayerController.h"
 #include "OboeSinePlayer.h"

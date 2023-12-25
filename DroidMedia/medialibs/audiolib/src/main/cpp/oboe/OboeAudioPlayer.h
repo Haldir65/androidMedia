@@ -2,7 +2,7 @@
 #ifndef DROIDMEDIA_OBOEAUDIOPLAYER_H
 #define DROIDMEDIA_OBOEAUDIOPLAYER_H
 #include "../AndroidLog.h"
-#include <Oboe/Oboe.h>
+#include <oboe/Oboe.h>
 #include "audio/Player.h"
 #include "audio/PlayerController.h"
 
