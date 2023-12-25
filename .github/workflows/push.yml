@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17    
-          distribution: 'adopt'
+          distribution: 'oracle'
           cache: gradle
       - run: echo "The workflow is now ready to test your code."
       - name: show all files
