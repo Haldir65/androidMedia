@@ -24,6 +24,12 @@ jobs:
           distribution: 'oracle'
           cache: gradle
       - run: echo "The workflow is now ready to test your code."
+      - name: clone required dependencies , glm and jpeg-turbo
+        working-directory: ./DroidMedia
+        run: |
+         chmod +x ./.buildscripts/ensure_third_party_deps.sh
+         ./.buildscripts/ensure_third_party_deps.sh
+        shell: bash
       - name: show all files
         working-directory: ./DroidMedia
         run: ls -al
