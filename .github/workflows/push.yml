@@ -2,8 +2,8 @@ name: Android Build upon push
 
 on:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
 
 
 jobs:
@@ -24,16 +24,16 @@ jobs:
           cache: gradle
       - run: echo "The workflow is now ready to test your code."
       - name: clone required dependencies , glm and jpeg-turbo
-        working-directory: ./DroidMedia
+        working-directory: DroidMedia
         run: |
           chmod +x ./.buildscripts/ensure_third_party_deps.sh
           ./.buildscripts/ensure_third_party_deps.sh
         shell: bash
       - name: show all files
-        working-directory: ./DroidMedia
+        working-directory: DroidMedia
         run: ls -al
       - name: Grant execute permission for gradlew
-        working-directory: ./DroidMedia
+        working-directory: DroidMedia
         run: chmod +x gradlew
 
 
@@ -45,7 +45,7 @@ jobs:
     steps:
         - run: echo "Building Debug APK."
         - name: Build with Gradle
-          working-directory: ./DroidMedia
+          working-directory: DroidMedia
           # run: ./gradlew build
           run: ./gradlew assembleDebug
         - run: echo "Build status report=${{ job.status }}."
@@ -73,7 +73,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-caches-
       - name: Build with_So_Much_Gradle
-        working-directory: ./DroidMedia
+        working-directory: DroidMedia
         run: ./gradlew assembleRelease
       - run: echo "Build status report=${{ job.status }}."  
       - name: Upload_That_APK
