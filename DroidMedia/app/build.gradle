@@ -50,7 +50,7 @@ android {
         targetSdk = Integer.parseInt(libs.versions.targetSdk.get())
         //noinspection ExpiredTargetSdkVersion
         versionCode 100
-        versionName "1.0.0"
+        versionName "1.0.1"
 
         resourceConfigurations += ['zh', 'zh-rCN']
 

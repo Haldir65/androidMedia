@@ -82,43 +82,49 @@ jobs:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
-      - name: Cache Gradle Dependencies
+      - name: Cache Gradle All Kinds of Dependencies
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-caches-
-      - name: Build with Gradle
+      - name: Build with_So_Much_Gradle
         working-directory: ./DroidMedia
-        run: ./gradlew build
+        run: ./gradlew assembleRelease
       - run: echo "Build status report=${{ job.status }}."  
-      - name: Upload_APK
+      - name: Upload_That_APK
         uses: actions/upload-artifact@v3
         with:
           name: myapk
           path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/release/*.apk      
-      - name: Create_Github_Release 
-        id: create_new_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      - name: Release_This_Maintained
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-            - Third Change
-          draft: false
-          prerelease: false
-      - name: Upload APK to release assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          upload_url: ${{ steps.create_new_release.outputs.upload_url }}
-          asset_path: DroidMedia/app/build/outputs/apk/release/DroidMedia_1.0.0_arm64v8a.apk
-          asset_name: DroidMedia_1.0.0_arm64v8a.apk
-          asset_content_type: application/zip
+          files: |
+            DroidMedia/app/build/outputs/apk/release/DroidMedia_1.0.1_arm64v8a.apk
+            README.MD
+      # - name: Create_Github_Release 
+      #   id: create_new_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      #   with:
+      #     tag_name: ${{ github.run_number }}
+      #     release_name: Release ${{ github.run_number }}
+      #     body: |
+      #       Changes in this Release
+      #       - First Change
+      #       - Second Change
+      #       - Third Change
+      #     draft: false
+      #     prerelease: false
+      # - name: Upload APK to release assets
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      #   with:
+      #     upload_url: ${{ steps.create_new_release.outputs.upload_url }}
+      #     asset_path: DroidMedia/app/build/outputs/apk/release/DroidMedia_1.0.0_arm64v8a.apk
+      #     asset_name: DroidMedia_1.0.0_arm64v8a.apk
+      #     asset_content_type: application/zip
