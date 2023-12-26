@@ -36,15 +36,9 @@ jobs:
           chmod +x ./.buildscripts/ensure_third_party_deps.sh
           ./.buildscripts/ensure_third_party_deps.sh
         shell: bash
-      - name: show all files
-        working-directory: DroidMedia
-        run: ls -al
       - name: Grant execute permission for gradlew
         working-directory: DroidMedia
         run: chmod +x gradlew
-      - name: show all files step1
-        working-directory: DroidMedia
-        run: ls -al
         # cache Gradle dependencies and wrapper to reduce build time
       # - name: Cache Gradle Wrapper
       #   uses: actions/cache@v3
