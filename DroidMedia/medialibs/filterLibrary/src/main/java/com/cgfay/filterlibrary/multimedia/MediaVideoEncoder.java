@@ -22,6 +22,7 @@ package com.cgfay.filterlibrary.multimedia;
  * All files in the folder are under this Apache License, Version 2.0.
 */
 
+import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
@@ -51,16 +52,16 @@ public class MediaVideoEncoder extends MediaEncoder {
     private Surface mSurface;
 
     public MediaVideoEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener,
-                             final int width, final int height) {
-        super(muxer, listener, true);
+                             final int width, final int height, Context context) {
+        super(muxer, listener, true,context);
         if (DEBUG) Log.i(TAG, "MediaVideoEncoder: ");
         mWidth = width;
         mHeight = height;
     }
 
     public MediaVideoEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener,
-                             final int width, final int height, final boolean enableHD) {
-        super(muxer, listener, true);
+                             final int width, final int height, final boolean enableHD, Context context) {
+        super(muxer, listener, true,context);
         if (DEBUG) Log.i(TAG, "MediaVideoEncoder: ");
         mWidth = width;
         mHeight = height;

@@ -263,10 +263,11 @@ public class GPUCameraRecorder {
                             glSurfaceView.getMeasuredHeight(),
                             recordNoFilter,
                             glPreviewRenderer.getFilter()
+                            ,glSurfaceView.getContext()
                     );
                     if (!mute) {
                         // for audio capturing
-                        new MediaAudioEncoder(muxer, mediaEncoderListener);
+                        new MediaAudioEncoder(muxer, mediaEncoderListener,glSurfaceView.getContext());
                     }
                     muxer.prepare();
                     muxer.startRecording();

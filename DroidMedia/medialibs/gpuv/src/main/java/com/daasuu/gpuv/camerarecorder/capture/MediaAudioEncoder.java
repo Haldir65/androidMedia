@@ -1,7 +1,12 @@
 package com.daasuu.gpuv.camerarecorder.capture;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.*;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -18,8 +23,8 @@ public class MediaAudioEncoder extends MediaEncoder {
 
     private AudioThread audioThread = null;
 
-    public MediaAudioEncoder(final MediaMuxerCaptureWrapper muxer, final MediaEncoderListener listener) {
-        super(muxer, listener);
+    public MediaAudioEncoder(final MediaMuxerCaptureWrapper muxer, final MediaEncoderListener listener, final Context context) {
+        super(muxer, listener, context);
     }
 
     @Override
@@ -97,6 +102,9 @@ public class MediaAudioEncoder extends MediaEncoder {
                 AudioRecord audioRecord = null;
                 for (final int source : AUDIO_SOURCES) {
                     try {
+                        if (ActivityCompat.checkSelfPermission(appContext, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
                         audioRecord = new AudioRecord(
                                 source, SAMPLE_RATE,
                                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, buffer_size);
@@ -167,8 +175,8 @@ public class MediaAudioEncoder extends MediaEncoder {
             final String[] types = codecInfo.getSupportedTypes();
             for (int j = 0; j < types.length; j++) {
                 if (types[j].equalsIgnoreCase(mimeType)) {
-                    Log.i(TAG, "codec:" + codecInfo.getName() + ",MIME=" + types[j]);
-                    if (result == null) {
+//                    Log.i(TAG, "codec:" + codecInfo.getName() + ",MIME=" + types[j]);
+                    if (result != null) {
                         result = codecInfo;
                         break LOOP;
                     }

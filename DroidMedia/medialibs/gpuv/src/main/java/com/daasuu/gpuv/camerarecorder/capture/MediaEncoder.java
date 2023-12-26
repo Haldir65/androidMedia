@@ -1,5 +1,6 @@
 package com.daasuu.gpuv.camerarecorder.capture;
 
+import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
@@ -12,6 +13,8 @@ import java.nio.ByteBuffer;
 
 public abstract class MediaEncoder implements Runnable {
     private final String TAG = getClass().getSimpleName();
+
+    protected final Context appContext;
 
     protected static final int TIMEOUT_USEC = 10000;    // 10[msec]
 
@@ -63,11 +66,12 @@ public abstract class MediaEncoder implements Runnable {
 
     protected final MediaEncoderListener listener;
 
-    MediaEncoder(final MediaMuxerCaptureWrapper muxer, final MediaEncoderListener listener) {
+    MediaEncoder(final MediaMuxerCaptureWrapper muxer, final MediaEncoderListener listener,Context context) {
         if (listener == null) throw new NullPointerException("MediaEncoderListener is null");
         if (muxer == null) throw new NullPointerException("MediaMuxerCaptureWrapper is null");
         weakMuxer = new WeakReference<MediaMuxerCaptureWrapper>(muxer);
         muxer.addEncoder(this);
+        this.appContext = context.getApplicationContext();
         this.listener = listener;
         synchronized (sync) {
             // create BufferInfo here for effectiveness(to reduce GC)

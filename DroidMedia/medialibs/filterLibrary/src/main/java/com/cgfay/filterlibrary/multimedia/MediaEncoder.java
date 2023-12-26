@@ -22,6 +22,7 @@ package com.cgfay.filterlibrary.multimedia;
  * All files in the folder are under this Apache License, Version 2.0.
 */
 
+import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
@@ -35,6 +36,9 @@ public abstract class MediaEncoder implements Runnable {
     private static final String TAG = "MediaEncoder";
 
     protected static final int TIMEOUT_USEC = 10000;    // 10[msec]
+
+
+    protected final Context appContext;
 
     public interface MediaEncoderListener {
 
@@ -100,12 +104,12 @@ public abstract class MediaEncoder implements Runnable {
 
     private boolean mbIsVideo;
 
-    public MediaEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, boolean isVideo) {
+    public MediaEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, boolean isVideo,Context context) {
         mWeakMuxer = new WeakReference<MediaMuxerWrapper>(muxer);
         muxer.addEncoder(this);
         mListener = listener;
         mbIsVideo = isVideo;
-
+        this.appContext = context.getApplicationContext();
         synchronized (mSync) {
             // create BufferInfo here for effectiveness(to reduce GC)
             mBufferInfo = new MediaCodec.BufferInfo();

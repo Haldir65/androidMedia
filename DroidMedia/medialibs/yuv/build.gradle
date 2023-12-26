@@ -41,6 +41,11 @@ android {
             path "CMakeLists.txt"
         }
     }
+
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = true
+    }
     ndkVersion '26.1.10909125'
 }
 

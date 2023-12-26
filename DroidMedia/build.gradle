@@ -55,15 +55,15 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-//task checkJetifierAll(group: "verification") { }
-//
-//subprojects { project ->
-//    project.tasks.whenTaskAdded { task ->
-//        if (task.name == "checkJetifier") {
-//            checkJetifierAll.dependsOn(task)
-//        }
-//    }
-//}
+task checkJetifierAll(group: "verification") { }
+
+subprojects { project ->
+    project.tasks.configureEach { task ->
+        if (task.name == "checkJetifier") {
+            checkJetifierAll.dependsOn(task)
+        }
+    }
+}
 
 //作者：程序员江同学
 //链接：https://juejin.cn/post/7153250843905654798

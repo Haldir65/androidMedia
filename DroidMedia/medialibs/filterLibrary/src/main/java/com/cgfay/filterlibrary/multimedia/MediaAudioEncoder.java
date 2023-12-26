@@ -20,8 +20,11 @@ package com.cgfay.filterlibrary.multimedia;
  *  limitations under the License.
  *
  * All files in the folder are under this Apache License, Version 2.0.
-*/
+ */
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaCodec;
@@ -31,29 +34,31 @@ import android.media.MediaFormat;
 import android.media.MediaRecorder;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 
 public class MediaAudioEncoder extends MediaEncoder {
-	private static final boolean DEBUG = false;	// TODO set false on release
-	private static final String TAG = "MediaAudioEncoder";
+    private static final boolean DEBUG = false;    // TODO set false on release
+    private static final String TAG = "MediaAudioEncoder";
 
-	private static final String MIME_TYPE = "audio/mp4a-latm";
-    private static final int SAMPLE_RATE = 44100;	// 44.1[KHz] is only setting guaranteed to be available on all devices.
+    private static final String MIME_TYPE = "audio/mp4a-latm";
+    private static final int SAMPLE_RATE = 44100;    // 44.1[KHz] is only setting guaranteed to be available on all devices.
     private static final int BIT_RATE = 64000;
-	public static final int SAMPLES_PER_FRAME = 1024;	// AAC, bytes/frame/channel
-	public static final int FRAMES_PER_BUFFER = 25; 	// AAC, frame/buffer/sec
+    public static final int SAMPLES_PER_FRAME = 1024;    // AAC, bytes/frame/channel
+    public static final int FRAMES_PER_BUFFER = 25;    // AAC, frame/buffer/sec
 
     private AudioThread mAudioThread = null;
 
-	public MediaAudioEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener) {
-		super(muxer, listener, false);
-	}
+    public MediaAudioEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, Context context) {
+        super(muxer, listener, false,context);
+    }
 
-	@Override
-	protected void prepare() throws IOException {
-		if (DEBUG) Log.d(TAG, "prepare:");
+    @Override
+    protected void prepare() throws IOException {
+        if (DEBUG) Log.d(TAG, "prepare:");
         mTrackIndex = -1;
         mMuxerStarted = mIsEOS = false;
         // prepare MediaCodec for AAC encoding of audio data from inernal mic.
@@ -62,100 +67,103 @@ public class MediaAudioEncoder extends MediaEncoder {
             Log.e(TAG, "Unable to find an appropriate codec for " + MIME_TYPE);
             return;
         }
-		if (DEBUG) Log.i(TAG, "selected codec: " + audioCodecInfo.getName());
+        if (DEBUG) Log.i(TAG, "selected codec: " + audioCodecInfo.getName());
 
         final MediaFormat audioFormat = MediaFormat.createAudioFormat(MIME_TYPE, SAMPLE_RATE, 1);
-		audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
-		audioFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
-		audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
-		audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-		if (DEBUG) Log.i(TAG, "format: " + audioFormat);
+        audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
+        audioFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
+        audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
+        audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
+        if (DEBUG) Log.i(TAG, "format: " + audioFormat);
         mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
         mMediaCodec.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         mMediaCodec.start();
         if (DEBUG) Log.i(TAG, "prepare finishing");
         if (mListener != null) {
-        	try {
-        		mListener.onPrepared(this);
-        	} catch (final Exception e) {
-        		Log.e(TAG, "prepare:", e);
-        	}
+            try {
+                mListener.onPrepared(this);
+            } catch (final Exception e) {
+                Log.e(TAG, "prepare:", e);
+            }
         }
-	}
-
-    @Override
-	protected void startRecording() {
-		super.startRecording();
-		// create and execute audio capturing thread using internal mic
-		if (mAudioThread == null) {
-	        mAudioThread = new AudioThread();
-			mAudioThread.start();
-		}
-		if (mListener != null) {
-			try {
-				mListener.onStarted(this);
-			} catch (final Exception e) {
-				Log.e(TAG, "prepare:", e);
-			}
-		}
-	}
-
-	@Override
-	void pauseRecording(boolean isPause) {
-		super.pauseRecording(isPause);
-		if (mAudioThread != null) {
-			if (isPause) {
-				mAudioThread.stopRecording();
-			} else {
-				mAudioThread.startRecording();
-			}
-		}
-	}
-
-	@Override
-    protected void release() {
-		if (mAudioThread != null) {
-			mAudioThread.stopRecording();
-			mAudioThread = null;
-		}
-		super.release();
     }
 
-	private static final int[] AUDIO_SOURCES = new int[] {
-		MediaRecorder.AudioSource.MIC,
-		MediaRecorder.AudioSource.DEFAULT,
-		MediaRecorder.AudioSource.CAMCORDER,
-		MediaRecorder.AudioSource.VOICE_COMMUNICATION,
-		MediaRecorder.AudioSource.VOICE_RECOGNITION,
-	};
+    @Override
+    protected void startRecording() {
+        super.startRecording();
+        // create and execute audio capturing thread using internal mic
+        if (mAudioThread == null) {
+            mAudioThread = new AudioThread();
+            mAudioThread.start();
+        }
+        if (mListener != null) {
+            try {
+                mListener.onStarted(this);
+            } catch (final Exception e) {
+                Log.e(TAG, "prepare:", e);
+            }
+        }
+    }
 
-	/**
-	 * Thread to capture audio data from internal mic as uncompressed 16bit PCM data
-	 * and write them to the MediaCodec encoder
-	 */
+    @Override
+    void pauseRecording(boolean isPause) {
+        super.pauseRecording(isPause);
+        if (mAudioThread != null) {
+            if (isPause) {
+                mAudioThread.stopRecording();
+            } else {
+                mAudioThread.startRecording();
+            }
+        }
+    }
+
+    @Override
+    protected void release() {
+        if (mAudioThread != null) {
+            mAudioThread.stopRecording();
+            mAudioThread = null;
+        }
+        super.release();
+    }
+
+    private static final int[] AUDIO_SOURCES = new int[]{
+            MediaRecorder.AudioSource.MIC,
+            MediaRecorder.AudioSource.DEFAULT,
+            MediaRecorder.AudioSource.CAMCORDER,
+            MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+            MediaRecorder.AudioSource.VOICE_RECOGNITION,
+    };
+
+    /**
+     * Thread to capture audio data from internal mic as uncompressed 16bit PCM data
+     * and write them to the MediaCodec encoder
+     */
     private class AudioThread extends Thread {
 
-    	private Object mSync = new Object();
-    	private volatile boolean mAudioStarted = false;
-    	private WeakReference<AudioRecord> mWeakRecorder;
+        private Object mSync = new Object();
+        private volatile boolean mAudioStarted = false;
+        private WeakReference<AudioRecord> mWeakRecorder;
 
-    	@Override
-    	public void run() {
-    		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-    		try {
-				final int min_buffer_size = AudioRecord.getMinBufferSize(
-						SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO,
-						AudioFormat.ENCODING_PCM_16BIT);
-				int buffer_size = SAMPLES_PER_FRAME * FRAMES_PER_BUFFER;
-				if (buffer_size < min_buffer_size)
-					buffer_size = ((min_buffer_size / SAMPLES_PER_FRAME) + 1) * SAMPLES_PER_FRAME * 2;
+        @Override
+        public void run() {
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
+            try {
+                final int min_buffer_size = AudioRecord.getMinBufferSize(
+                        SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT);
+                int buffer_size = SAMPLES_PER_FRAME * FRAMES_PER_BUFFER;
+                if (buffer_size < min_buffer_size)
+                    buffer_size = ((min_buffer_size / SAMPLES_PER_FRAME) + 1) * SAMPLES_PER_FRAME * 2;
 
-				AudioRecord audioRecord = null;
-				for (final int source : AUDIO_SOURCES) {
-					try {
-						audioRecord = new AudioRecord(
-							source, SAMPLE_RATE,
-							AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, buffer_size);
+                AudioRecord audioRecord = null;
+                for (final int source : AUDIO_SOURCES) {
+                    try {
+                        if (ActivityCompat.checkSelfPermission(appContext, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        audioRecord = new AudioRecord(
+                                source, SAMPLE_RATE,
+                                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, buffer_size);
 	    	            if (audioRecord.getState() != AudioRecord.STATE_INITIALIZED)
 	    	            	audioRecord = null;
 					} catch (final Exception e) {
@@ -256,7 +264,7 @@ public class MediaAudioEncoder extends MediaEncoder {
      * @param mimeType
      * @return
      */
-    private static final MediaCodecInfo selectAudioCodec(final String mimeType) {
+    private static  MediaCodecInfo selectAudioCodec(final String mimeType) {
     	if (DEBUG) Log.d(TAG, "selectAudioCodec:");
 
     	MediaCodecInfo result = null;
@@ -269,9 +277,9 @@ LOOP:	for (int i = 0; i < numCodecs; i++) {
             }
             final String[] types = codecInfo.getSupportedTypes();
             for (int j = 0; j < types.length; j++) {
-            	if (DEBUG) Log.i(TAG, "supportedType:" + codecInfo.getName() + ",MIME=" + types[j]);
+//            	if (DEBUG) Log.i(TAG, "supportedType:" + codecInfo.getName() + ",MIME=" + types[j]);
                 if (types[j].equalsIgnoreCase(mimeType)) {
-                	if (result == null) {
+                	if (result != null) {
                 		result = codecInfo;
                			break LOOP;
                 	}

@@ -1,5 +1,6 @@
 package com.daasuu.gpuv.camerarecorder.capture;
 
+import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
@@ -36,9 +37,9 @@ public class MediaVideoEncoder extends MediaEncoder {
                              final float viewWidth,
                              final float viewHeight,
                              final boolean recordNoFilter,
-                             final GlFilter filter
-    ) {
-        super(muxer, listener);
+                             final GlFilter filter, final Context context
+                             ) {
+        super(muxer, listener,context);
         this.fileWidth = fileWidth;
         this.fileHeight = fileHeight;
         encodeRenderHandler = EncodeRenderHandler.createHandler(

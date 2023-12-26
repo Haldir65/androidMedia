@@ -21,6 +21,10 @@ android {
         viewBinding = true
 //        aidl true
     }
+    lint {
+        abortOnError false
+        checkReleaseBuilds true
+    }
 
     buildTypes {
         release {

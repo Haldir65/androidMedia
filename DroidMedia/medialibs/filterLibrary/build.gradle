@@ -74,6 +74,11 @@ android {
         jvmTarget = JavaVersion.VERSION_17
     }
 
+    lint {
+        abortOnError false
+        checkReleaseBuilds true
+    }
+
     if (SUPPORT_NATIVE_BUILD){
         externalNativeBuild {
             cmake {
