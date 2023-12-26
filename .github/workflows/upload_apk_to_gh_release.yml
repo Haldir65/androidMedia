@@ -59,7 +59,7 @@ jobs:
           prerelease: true
           files: |
             DroidMedia/app/build/outputs/apk/release/*.apk
-            README.MD
+            CHANGELOG.md
       # - name: Create_Github_Release 
       #   id: create_new_release
       #   uses: actions/create-release@v1
