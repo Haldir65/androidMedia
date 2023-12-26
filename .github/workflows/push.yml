@@ -75,6 +75,20 @@ jobs:
         working-directory: ./DroidMedia
         run: chmod +x gradlew
       - run: echo "Building Debug APK."
+        ## cache Gradle dependencies and wrapper to reduce build time
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
       - name: Build with Gradle
         working-directory: ./DroidMedia
         run: ./gradlew build
@@ -84,3 +98,18 @@ jobs:
         with:
           name: apk
           path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/release/
+      - name: Create Github Release 
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+            - Third Change
+          draft: false
+          prerelease: false

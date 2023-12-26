@@ -89,7 +89,7 @@ add_library( # Sets the name of the library.
         ${media}
         ${filemap}
         ${utility}
-        ${volan}
+#        ${volan}
         )
 
 # Searches for a specified prebuilt library and stores the path as a

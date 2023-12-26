@@ -143,6 +143,27 @@ android {
     }
 
 
+
+
+
+
+    //https://stackoverflow.com/a/40276710 每次换机器编译都要重新安装太费事了
+    signingConfigs {
+        release {
+            keyAlias 'key79'
+            keyPassword 'report989'
+            storePassword 'report989'
+            storeFile file("/Users/harris/Documents/github/androidMedia/DroidMedia/keystores/release2.keystore")
+        }
+
+        debug {
+            storeFile file("${rootDir}/keystores/debug.keystore")
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+
     buildTypes {
         debug {
             debuggable true
@@ -152,6 +173,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -174,22 +196,7 @@ android {
         }
     }
 
-    //https://stackoverflow.com/a/40276710 每次换机器编译都要重新安装太费事了
-    signingConfigs {
-        release {
-            keyAlias 'keyAlias'
-            keyPassword 'keyPassword'
-            storePassword 'storePassword'
-            storeFile file("${rootDir}/keystores/app.keystore")
-        }
 
-        debug {
-            storeFile file("${rootDir}/keystores/debug.keystore")
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storePassword 'android'
-        }
-    }
 
 
 }
