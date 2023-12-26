@@ -59,17 +59,17 @@ jobs:
     steps:
       - run: echo "Building Release APK."
       - name: show all files step1
-        working-directory: DroidMedia
+        # working-directory: DroidMedia
         run: ls -al
         ## cache Gradle dependencies and wrapper to reduce build time
       - name: Cache Gradle Wrapper
         uses: actions/cache@v3
         with:
           path: ~/.gradle/wrapper
-          working-directory: DroidMedia
+          # working-directory: DroidMedia
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
       - name: show all files step2
-        working-directory: DroidMedia
+        # working-directory: DroidMedia
         run: ls -al
       - name: Cache Gradle All Kinds of Dependencies
         uses: actions/cache@v3
@@ -80,7 +80,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-caches-
       - name: show all files step3
-        working-directory: DroidMedia
+        # working-directory: DroidMedia
         run: ls -al        
       - name: Build with_So_Much_Gradle
         working-directory: DroidMedia
