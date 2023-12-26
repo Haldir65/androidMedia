@@ -153,7 +153,7 @@ android {
             keyAlias 'key79'
             keyPassword 'report989'
             storePassword 'report989'
-            storeFile file("/Users/harris/Documents/github/androidMedia/DroidMedia/keystores/release2.keystore")
+            storeFile file("${rootDir}/keystores/release2.keystore")
         }
 
         debug {
@@ -189,7 +189,7 @@ android {
             output.properties.forEach { a , b  ->
                 project.logger.lifecycle("[map]${a} = ${b}")
             }
-            output.outputFileName = "DroidMedia" + variant.versionName + "_" + "arm64v8a" + ".apk"
+            output.outputFileName = "DroidMedia"+"_" + variant.versionName + "_" + "arm64v8a" + ".apk"
             output.versionCodeOverride =
                     project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) *
                             1000000 + android.defaultConfig.versionCode

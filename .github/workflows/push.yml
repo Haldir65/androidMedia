@@ -92,14 +92,14 @@ jobs:
       - name: Build with Gradle
         working-directory: ./DroidMedia
         run: ./gradlew build
-      - run: echo "Build status report=${{ job.status }}."    
-      - name: Upload APK
+      - run: echo "Build status report=${{ job.status }}."  
+      - name: Upload_APK
         uses: actions/upload-artifact@v3
         with:
-          name: apk
-          path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/release/
-      - name: Create Github Release 
-        id: create_release
+          name: myapk
+          path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/release/*.apk      
+      - name: Create_Github_Release 
+        id: create_new_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
@@ -113,3 +113,12 @@ jobs:
             - Third Change
           draft: false
           prerelease: false
+      - name: Upload APK to release assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          upload_url: ${{ steps.create_new_release.outputs.upload_url }}
+          asset_path: DroidMedia/app/build/outputs/apk/release/DroidMedia_1.0.0_arm64v8a.apk
+          asset_name: DroidMedia_1.0.0_arm64v8a.apk
+          asset_content_type: application/zip
