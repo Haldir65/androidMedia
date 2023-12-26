@@ -239,7 +239,7 @@ include_directories(
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
-set(MY_DEBUG_OPTIONS -Wno-implicit-function-declaration -Wnoint-conversion -Wno-error=narrowing -Wno-error=declaration-after-statement -Wno-unsafe-buffer-usage -Wno-declaration-after-statement -Wno-strict-prototypes -Wno-implicit-function-declaration -Wno-int-conversion)
+set(MY_DEBUG_OPTIONS -Wno-implicit-function-declaration -Wno-int-conversion -Wno-error=narrowing -Wno-error=declaration-after-statement -Wno-unsafe-buffer-usage -Wno-declaration-after-statement -Wno-strict-prototypes -Wno-implicit-function-declaration -Wno-int-conversion)
 message("ijk MY_DEBUG_OPTIONS = ${MY_DEBUG_OPTIONS}")
 target_compile_options(ijkplayer PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>)
 target_compile_options(ijkplayer PRIVATE "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
@@ -249,6 +249,7 @@ target_compile_options(ijkplayer PRIVATE
         -Wno-error=declaration-after-statement
         -Wno-strict-prototypes
         -Wno-error=narrowing
+        -Wno-int-conversion
         )
 
 target_link_libraries( # Specifies the target library.
