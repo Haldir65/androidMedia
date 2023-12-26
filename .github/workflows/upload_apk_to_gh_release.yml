@@ -1,4 +1,4 @@
-name: Build Release and upload asset
+name: Build Release and upload asset when we push a new tag v**
 
 # on:
 #   push:

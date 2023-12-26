@@ -1,4 +1,4 @@
-name: Build Release for testing purpose before shipment
+name: Build Release when we push to release , for testing purpose before shipment
 
 # on:
 #   push:
