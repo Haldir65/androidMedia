@@ -1,0 +1,60 @@
+name: run debug build every time we push
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  buildDebug:
+    name: BuildDebug
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      - run: echo "The ${{ github.repository }} repository has been cloned."
+      - run: echo "Setting up JDK"
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17    
+          distribution: 'oracle'
+          cache: gradle
+      - run: echo "Building Debug APK."
+      - run: echo "The workflow is now ready to test your code."
+      - name: clone required dependencies , glm and jpeg-turbo
+        working-directory: DroidMedia
+        run: |
+          chmod +x ./.buildscripts/ensure_third_party_deps.sh
+          ./.buildscripts/ensure_third_party_deps.sh
+        shell: bash
+      - name: Grant execute permission for gradlew
+        working-directory: DroidMedia
+        run: chmod +x gradlew
+        # cache Gradle dependencies and wrapper to reduce build time
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/wrapper
+          # working-directory: DroidMedia
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      - name: Cache Gradle All Kinds of Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+      - name: Build with_So_Much_Gradle
+        working-directory: DroidMedia
+        run: ./gradlew assembleDebug
+      - run: echo "Build status report=${{ job.status }}."  
+      - name: Upload_That_APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: myapk
+          retention-days: 3
+          path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/release/*.apk      
+    
