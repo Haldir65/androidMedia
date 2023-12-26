@@ -17,7 +17,7 @@ public:
 
     virtual ~AssetReader();
 
-    char *readAssets(JNIEnv *env,char *name, jobject assetmanager);
+    char *readAssets(JNIEnv *env,const char *name, jobject& assetmanager);
 };
 
 #endif //DROIDMEDIA_ASSETREADER_H

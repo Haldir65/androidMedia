@@ -15,19 +15,28 @@ set(SRC_FILES
         util.c
         jni_init.c)
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error -fvisibility=hidden -Wno-unsafe-buffer-usage")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error -fvisibility=hidden -Wno-unsafe-buffer-usage -Wnostrict-prototypes")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wno-unsafe-buffer-usage")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wno-unsafe-buffer-usage")
 
 set(MY_DEBUG_OPTIONS -Wno-implicit-function-declaration -Wno-error=declaration-after-statement -Wno-unsafe-buffer-usage -Wno-declaration-after-statement -Wno-strict-prototypes -Wno-implicit-function-declaration -Wno-int-conversion)
 
-
+message("MY_DEBUG_OPTIONS = ${MY_DEBUG_OPTIONS}")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>)
-#target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
-#target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:${MY_DEBUG_OPTIONS}>")
 
 target_compile_options(avif PRIVATE "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
+
+target_compile_options(avif PRIVATE
+        -Wno-implicit-function-declaration
+        -Wno-unsafe-buffer-usage
+        -Wno-error=declaration-after-statement
+        -Wno-strict-prototypes
+        )
+
+message("CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}")
+message("CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
 
 
 target_link_libraries(${PROJECT_NAME} jnigraphics avif log)

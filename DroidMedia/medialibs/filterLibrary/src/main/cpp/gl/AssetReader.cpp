@@ -12,7 +12,7 @@ AssetReader::~AssetReader() {
     LOGD("AssetReader destructor");
 }
 
-char *AssetReader::readAssets(JNIEnv *env, char *name, jobject assetmanager) {
+char *AssetReader::readAssets(JNIEnv *env, const char *name, jobject& assetmanager) {
     //得到AAssetManager对象指针
     AAssetManager *mManeger = AAssetManager_fromJava(env, assetmanager);
     //得到AAsset对象

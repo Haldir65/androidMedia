@@ -12,37 +12,24 @@ import android.widget.FrameLayout
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.ViewCompat
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.*
+import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
+import androidx.compose.ui.viewinterop.*
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem.fromUri
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -121,7 +108,8 @@ class ComposeVideoPlayerActivity:AppCompatActivity() {
 //                    setMediaItem(fromUri(videoURL))
                     playWhenReady    = true
                     repeatMode = Player.REPEAT_MODE_ONE
-                    videoScalingMode = VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+                    videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+                    setTurnScreenOn(true)
                     prepare()
                 }
 
@@ -176,9 +164,9 @@ class ComposeVideoPlayerActivity:AppCompatActivity() {
         }
         ) {
             val display = """
-                
-                count as click  $state  
-                and 
+
+                count as click  $state
+                and
 
             """.trimIndent()
             Text(text = display, Modifier.padding(16.dp), color = Color.Blue)

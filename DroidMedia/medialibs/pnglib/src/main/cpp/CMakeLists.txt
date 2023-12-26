@@ -54,6 +54,8 @@ set(libpng_public_hdrs
 
 include_directories(${LIB_PNG_VENDER_DIR})
 
+configure_file("${LIB_PNG_VENDER_DIR}/scripts/pnglibconf.h.prebuilt" ${LIB_PNG_VENDER_DIR}/pnglibconf.h COPYONLY)
+
 message("include_directories = ${LIB_PNG_VENDER_DIR}")
 
 add_library( # Sets the name of the library.

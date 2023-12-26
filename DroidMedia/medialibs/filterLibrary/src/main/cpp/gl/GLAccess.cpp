@@ -41,7 +41,10 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_drawTexture(JNIEnv *env, jobjec
                                                              jobject bitmap, jobject bitmap1,
                                                              jobject surface, jobject assetmanager) {
 
-    std::unique_ptr<EGLRoutine> routine{new EGLRoutine{}};
+
+    std::unique_ptr<EGLRoutine,void(*)(EGLRoutine*)> routine{new EGLRoutine{},[](EGLRoutine* a) {
+        delete a;
+    }};
     routine->eglSetup(env, surface);
     auto assetReader = std::make_unique<AssetReader>();
     const char* vertexSimpleTexture = assetReader->readAssets(env,"shader2/vertexSimpleTexture.glsl",assetmanager);
@@ -466,7 +469,7 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuvTransform(JNIEnv *env, j
                                                                   jobject assetmanager,jint filte_type) {
 
     LOGD("load yuv start  https://juejin.cn/post/7217373379343286329 如何使用glm对画面进行缩放，位移，旋转");
-    auto *routine = new EGLRoutine();
+    auto routine = std::make_unique<EGLRoutine>();
     routine->eglSetup(env, surface);
     auto assetReader = new AssetReader();
 
@@ -660,7 +663,7 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuvTransform(JNIEnv *env, j
 
     int scaleDuration = frameCount / 10;
 
-    LOGD("frameCount:%d", frameCount);
+    LOGD("frameCount:%ld", frameCount);
 
 
     for (int i = 0; i < frameCount; ++i) {
@@ -733,7 +736,6 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuvTransform(JNIEnv *env, j
         usleep(4000);
     }
 
-    delete routine;
 }
 
 float getTransformMatrix(int scaleDuration, int frame) {
@@ -768,9 +770,9 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuvGaussianBlur(JNIEnv *env
 
                                                                      jobject assetmanager) {
     LOGD("load yuv start  https://juejin.cn/post/7228220230634864699#heading-8 高斯模糊就是把每一个点的像素值参考周边8个点的色值");
-    auto *routine = new EGLRoutine();
+    auto routine = std::make_unique<EGLRoutine>();
     routine->eglSetup(env, surface);
-    auto assetReader = new AssetReader();
+    auto assetReader = std::make_unique<AssetReader>() ;
 
     const char *vertexShaderString = "shader2/GAUSSIAN_BLUR_VERTEX_SHADER.glsl";
     const char *fragShaderString = "shader2/GAUSSIAN_BLUR_FRAGMENT_SHADER.glsl";
@@ -782,7 +784,6 @@ Java_com_me_harris_filterlibrary_opengl_GLAccess_loadYuvGaussianBlur(JNIEnv *env
 
     auto vsh = routine->initShader(vertexShader, GL_VERTEX_SHADER);
     GLint fsh = routine->initShader(fragmentShader, GL_FRAGMENT_SHADER);
-    delete assetReader;
 
 
     //创建渲染程序
