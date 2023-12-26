@@ -79,3 +79,8 @@ jobs:
         working-directory: ./DroidMedia
         run: ./gradlew build
       - run: echo "Build status report=${{ job.status }}."    
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: apk
+          path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/release/

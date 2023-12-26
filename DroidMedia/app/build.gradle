@@ -49,8 +49,8 @@ android {
         minSdk = Integer.parseInt(libs.versions.minSdk.get())
         targetSdk = Integer.parseInt(libs.versions.targetSdk.get())
         //noinspection ExpiredTargetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 100
+        versionName "1.0.0"
 
         resourceConfigurations += ['zh', 'zh-rCN']
 
@@ -88,26 +88,6 @@ android {
 //        }
 
     }
-
-
-    //https://stackoverflow.com/a/40276710 每次换机器编译都要重新安装太费事了
-    signingConfigs {
-        release {
-            keyAlias 'keyAlias'
-            keyPassword 'keyPassword'
-            storePassword 'storePassword'
-            storeFile file("${rootDir}/keystores/app.keystore")
-        }
-
-        debug {
-            storeFile file("${rootDir}/keystores/debug.keystore")
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storePassword 'android'
-        }
-    }
-
-
 
 
     //DSL element 'dexOptions' is obsolete and should be removed.
@@ -152,16 +132,6 @@ android {
         jvmTarget = JavaVersion.VERSION_17
     }
 
-    buildTypes {
-        debug {
-            debuggable true
-        }
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     lint {
         abortOnError false
         checkReleaseBuilds true
@@ -171,6 +141,56 @@ android {
         resources.excludes.add("META-INF/*")
         pickFirst 'lib/*/liblog.so'
     }
+
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            ndk.abiFilters 'arm64-v8a'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // map for the version code
+    project.ext.versionCodes = ['armeabi-v7a': 1, 'arm64-v8a': 2, 'x86': 3, 'x86_64': 4]
+
+    android.applicationVariants.configureEach { variant ->
+        // assign different version code for each output
+        variant.outputs.each { output ->
+//            output.metaPropertyValues.forEach { a ->
+//                project.logger.lifecycle("${a.name} = ${a.value}")
+//            }
+            output.properties.forEach { a , b  ->
+                project.logger.lifecycle("[map]${a} = ${b}")
+            }
+            output.outputFileName = "DroidMedia" + variant.versionName + "_" + "arm64v8a" + ".apk"
+            output.versionCodeOverride =
+                    project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) *
+                            1000000 + android.defaultConfig.versionCode
+        }
+    }
+
+    //https://stackoverflow.com/a/40276710 每次换机器编译都要重新安装太费事了
+    signingConfigs {
+        release {
+            keyAlias 'keyAlias'
+            keyPassword 'keyPassword'
+            storePassword 'storePassword'
+            storeFile file("${rootDir}/keystores/app.keystore")
+        }
+
+        debug {
+            storeFile file("${rootDir}/keystores/debug.keystore")
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+
 
 }
 
