@@ -243,7 +243,6 @@ set(MY_DEBUG_OPTIONS -Wno-implicit-function-declaration -Wnoint-conversion -Wno-
 message("ijk MY_DEBUG_OPTIONS = ${MY_DEBUG_OPTIONS}")
 target_compile_options(ijkplayer PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>)
 target_compile_options(ijkplayer PRIVATE "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
-target_compile_options(ijkplayer PRIVATE -Wnoint-conversion )
 target_compile_options(ijkplayer PRIVATE
         -Wno-implicit-function-declaration
         -Wno-unsafe-buffer-usage
