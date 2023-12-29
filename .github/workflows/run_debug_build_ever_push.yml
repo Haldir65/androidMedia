@@ -1,6 +1,7 @@
 name: Android Build upon push
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master

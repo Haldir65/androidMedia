@@ -7,6 +7,7 @@ name: Build Release when we push to release , for testing purpose before shipmen
 #       - '*'           # Push events to every tag not containing /
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - release
@@ -15,6 +16,8 @@ jobs:
   buildRelease:
     name: BuildRelease
     runs-on: ubuntu-latest
+    env:
+      builddir: DroidMedia/app/build/outputs/apk/release
     steps:
       - run: echo "Building Release APK."
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
@@ -59,12 +62,21 @@ jobs:
         working-directory: DroidMedia
         run: ./gradlew assembleRelease
       - run: echo "Build status report=${{ job.status }}."  
+
+      - name: Generate hashes
+        run: |
+          for file in ${{ env.builddir }}/*; do
+            sha256sum $file >> ${{ env.builddir }}/hashes.txt
+          done
+
       - name: Upload_That_APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: myapk
           retention-days: 7
-          path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/release/*.apk      
+          path: |
+            ${{ env.builddir }}/*.apk  
+            ${{ env.builddir }}/hashes.txt 
    
       # - name: Create_Github_Release 
       #   id: create_new_release
