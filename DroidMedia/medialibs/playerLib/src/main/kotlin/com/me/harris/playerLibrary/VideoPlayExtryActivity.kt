@@ -15,7 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.me.harris.IJKPlayerSourcingActivity
 import com.me.harris.awesomelib.utils.VideoUtil
-import com.me.harris.playerLibrary.compose.ComposeVideoPlayerActivity
+import com.me.harris.playerLibrary.compose.basic.ComposeVideoPlayerActivity
+import com.me.harris.playerLibrary.compose.landscape.ComposeExoplayerHorizontalActivity
 import com.me.harris.playerLibrary.exoplayer.ExoplayerSampleActivity
 import com.me.harris.playerLibrary.ffmediaplayer.FFMediaPlayerActivity
 import com.me.harris.playerLibrary.openglplayvideo.MediaPlayerSurfaceStubActivity
@@ -111,6 +112,9 @@ class VideoPlayExtryActivity:AppCompatActivity() {
         }
         findViewById<Button>(R.id.btn11)?.setOnClickListener {
             startActivity(Intent(this, ComposeVideoPlayerActivity::class.java))
+        }
+        findViewById<Button>(R.id.btn12)?.setOnClickListener {
+            startActivity(Intent(this, ComposeExoplayerHorizontalActivity::class.java))
         }
         viewModel.doStuff()
     }

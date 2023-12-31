@@ -4,6 +4,7 @@
     
 ### actions/create-release@v1 已不再维护，改为使用 [action-gh-release](https://github.com/softprops/action-gh-release)
 
+## [create-android-release-using-github-actions](https://proandroiddev.com/create-android-release-using-github-actions-c052006f6b0b)
 
 - 往master分支push, commit message 包含 "[Build]" 触发assembleDebug
 

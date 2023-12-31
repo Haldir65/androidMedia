@@ -32,8 +32,12 @@
         <activity android:name="com.me.harris.playerLibrary.video.MediaCodecMain2Activity"
                 android:screenOrientation="portrait"
                 />
-        <activity android:name="com.me.harris.playerLibrary.compose.ComposeVideoPlayerActivity"
+        <activity android:name="com.me.harris.playerLibrary.compose.basic.ComposeVideoPlayerActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
+        <activity android:name="com.me.harris.playerLibrary.compose.landscape.ComposeExoplayerHorizontalActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             />
 
         <service android:name="com.me.harris.playerLibrary.process.ipc.RemoteMediaPlayerBackEndService"

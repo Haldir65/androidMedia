@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <drawable name="exo_controls_fullscreen_enter">@drawable/exo_icon_fullscreen_enter</drawable>
+    <drawable name="exo_controls_fullscreen_exit">@drawable/exo_icon_fullscreen_exit</drawable>
+</resources>

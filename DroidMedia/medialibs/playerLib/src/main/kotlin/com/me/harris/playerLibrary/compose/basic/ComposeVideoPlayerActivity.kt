@@ -1,4 +1,4 @@
-package com.me.harris.playerLibrary.compose
+package com.me.harris.playerLibrary.compose.basic
 
 import android.content.pm.ActivityInfo
 import android.os.Build
