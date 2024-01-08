@@ -16,8 +16,8 @@ echo "successfully clone glm lib .."
 
 
 mkdir -p medialibs/pnglib/vendor
-wget https://sourceforge.net/projects/libpng/files/libpng16/1.6.37/libpng-1.6.37.tar.gz -P medialibs/pnglib/vendor
-echo "successfully download libpng lib .. now unzip it..."
+#wget https://sourceforge.net/projects/libpng/files/libpng16/1.6.37/libpng-1.6.37.tar.gz -P medialibs/pnglib/vendor
+#echo "successfully download libpng lib .. now unzip it..."
 tar -xzvf medialibs/pnglib/vendor/libpng-1.6.37.tar.gz -C medialibs/pnglib/vendor
 echo "show all available  download libpng lib .."
 ls -al medialibs/pnglib/vendor/libpng-1.6.37
