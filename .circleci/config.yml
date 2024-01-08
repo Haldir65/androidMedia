@@ -1,32 +1,38 @@
 version: '2.1'
-orbs:
-  # android: circleci/android@0.2.0
-  android: circleci/android@1.0.3
+# orbs:
+#   # android: circleci/android@0.2.0
+#   android: circleci/android@1.0.3
   # dt: datatheorem/mobile-secure-orb@1.0.0
 jobs:
   assemble:
-    executor: android/android
-    working_directory: DroidMedia
+    docker:
+      - image: cimg/android:2023.12
     steps:
       - checkout
-      
       - run:
+          working_directory: DroidMedia
           name: clone required dependencies , glm and jpeg-turbo
           command: |
             chmod +x ./.buildscripts/ensure_third_party_deps.sh
             bash ./.buildscripts/ensure_third_party_deps.sh
       - run:
+          working_directory: DroidMedia
           name: Assemble release build
-          command: ./gradlew assembleDebug
+          command: ./gradlew assembleDebug --stacktrace
       - run:
+          working_directory: DroidMedia
           name: show  build results
           command: ls app/build/outputs/apk/debug/
       - save_cache:
+          working_directory: DroidMedia
           key: dt-mobile-app-cache
           paths:
             - app/build/outputs/apk/debug/app-debug.apk
 workflows:
-  version: 2
+  # version: 2
   assemble:
     jobs:
       - assemble
+          # filters:
+          #   branches:
+          #     only: master
