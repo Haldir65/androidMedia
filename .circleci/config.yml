@@ -1,12 +1,14 @@
 version: '2.1'
-# orbs:
-#   # android: circleci/android@0.2.0
+orbs:
+  android: circleci/android@2.4.0
 #   android: circleci/android@1.0.3
   # dt: datatheorem/mobile-secure-orb@1.0.0
 jobs:
-  assemble:
-    docker:
-      - image: cimg/android:2023.12
+  assembleDebugOrRelease:
+    executor:
+      name: android/android-machine
+      resource-class: large
+      tag: 2023.11.1
     steps:
       - checkout
       - run:
@@ -29,10 +31,11 @@ jobs:
           paths:
             - app/build/outputs/apk/debug/app-debug.apk
 workflows:
-  # version: 2
-  assemble:
-    jobs:
-      - assemble
-          # filters:
-          #   branches:
-          #     only: master
+  version: 2
+  build:
+      jobs:
+        - assembleDebugOrRelease:
+            filters:
+              branches:
+                only:
+                  - release
