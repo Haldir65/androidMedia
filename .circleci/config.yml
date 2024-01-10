@@ -20,16 +20,21 @@ jobs:
       - run:
           working_directory: DroidMedia
           name: Assemble release build
-          command: ./gradlew assembleDebug --stacktrace
+          command: ./gradlew assembleRelease --stacktrace
       - run:
           working_directory: DroidMedia
           name: show  build results
-          command: ls app/build/outputs/apk/debug/
+          command: ls -alSh app/build/outputs/apk/release
       - save_cache:
           working_directory: DroidMedia
           key: dt-mobile-app-cache
           paths:
-            - app/build/outputs/apk/debug/app-debug.apk
+            - app/build/outputs/apk/release
+      - store_artifacts:
+          path: DroidMedia/app/build/outputs/apk/release
+          destination: releaseApk
+
+            
 workflows:
   version: 2
   build:
