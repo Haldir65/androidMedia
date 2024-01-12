@@ -7,12 +7,12 @@ ls -al medialibs/jpegturbo/libjpeg-turbo
 
 echo "successfully clone libjepg-turbo..."
 
-git clone https://github.com/g-truc/glm.git medialibs/filterLibrary/src/main/cpp/glm
-git -C medialibs/filterLibrary/src/main/cpp/glm reset --hard "7882684a2cd69005fb57001c17a332899621e2be"
 
-ls -al medialibs/filterLibrary/src/main/cpp/glm
-
-echo "successfully clone glm lib .."
+## skip , managed by cmake
+#git clone https://github.com/g-truc/glm.git medialibs/filterLibrary/src/main/cpp/glm
+#git -C medialibs/filterLibrary/src/main/cpp/glm reset --hard "7882684a2cd69005fb57001c17a332899621e2be"
+#ls -al medialibs/filterLibrary/src/main/cpp/glm
+#echo "successfully clone glm lib .."
 
 
 mkdir -p medialibs/pnglib/vendor
