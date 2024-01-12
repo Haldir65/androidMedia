@@ -1,4 +1,4 @@
-name: Android Build upon push
+name: Android Build using docker image
 
 on:
   workflow_dispatch:
