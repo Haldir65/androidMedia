@@ -1,14 +1,14 @@
 echo "installing depths..."
 
-git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git medialibs/jpegturbo/libjpeg-turbo --depth=1
-git -C medialibs/jpegturbo/libjpeg-turbo "abeca1f0cc638a6492d81f4c3b956c2dec817c3e"
+git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git medialibs/jpegturbo/libjpeg-turbo
+git -C medialibs/jpegturbo/libjpeg-turbo reset --hard "abeca1f0cc638a6492d81f4c3b956c2dec817c3e"
 
 ls -al medialibs/jpegturbo/libjpeg-turbo
 
 echo "successfully clone libjepg-turbo..."
 
-git clone https://github.com/g-truc/glm.git medialibs/filterLibrary/src/main/cpp/glm --depth=1
-git -C medialibs/filterLibrary/src/main/cpp/glm "7882684a2cd69005fb57001c17a332899621e2be"
+git clone https://github.com/g-truc/glm.git medialibs/filterLibrary/src/main/cpp/glm
+git -C medialibs/filterLibrary/src/main/cpp/glm reset --hard "7882684a2cd69005fb57001c17a332899621e2be"
 
 ls -al medialibs/filterLibrary/src/main/cpp/glm
 
