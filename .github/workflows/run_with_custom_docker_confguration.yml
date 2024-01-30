@@ -1,4 +1,4 @@
-name: Android Build upon push
+name: Build with self home made docker image
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
       - name: clone required dependencies , glm and jpeg-turbo
         working-directory: DroidMedia
         run: |
-          cat <<EOF | docker exec mycontainer chmod +x ./.buildscripts/ensure_third_party_deps.sh
+          cat <<EOF | docker exec image1 chmod +x ./.buildscripts/ensure_third_party_deps.sh
           bash ./.buildscripts/ensure_third_party_deps.sh
           ls -al
           echo "begin Building Debug APK."
