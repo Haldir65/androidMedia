@@ -20,11 +20,14 @@ jobs:
       - name: set up Docker BUildx
         uses: docker/setup-buildx-action@v3
 
-      - run: echo "building custom Docker image... "
+      - run: echo "start building custom Docker image... "
       - name: build Docker image
         run: docker build --build-arg VERSION=2.294.0-ubuntu-focal --build-arg JAVA_VERSION=17 -f Dockerfile --tag=image1 .
       
-      - run: echo "building custom Docker image... "
+      - name: Look up images
+        run: docker image ls 
+
+      - run: echo "done building custom Docker image... "
       - name: clone required dependencies , glm and jpeg-turbo
         working-directory: DroidMedia
         run: |

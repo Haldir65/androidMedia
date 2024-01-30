@@ -60,6 +60,7 @@ RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_roo
   "platforms;android-29" \
   "platforms;android-28" \
   "platforms;android-21" \
+  "build-tools;34.0.0" \
   "build-tools;33.0.0" \
   "build-tools;32.0.0" \
   "build-tools;31.0.0" \
