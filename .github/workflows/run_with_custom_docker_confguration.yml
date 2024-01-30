@@ -1,0 +1,42 @@
+name: Android Build upon push
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  runWithDocker:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, '[Docker]')"
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      - run: echo "The ${{ github.repository }} repository has been cloned."
+      - run: echo "Setting up Docker"
+      - name: set up Docker BUildx
+        uses: docker/setup-buildx-action@v3
+
+      - run: echo "building custom Docker image... "
+      - name: build Docker image
+        uses: docker build --build-arg VERSION=2.294.0-ubuntu-focal --build-arg JAVA_VERSION=17 -f Dockerfile --tag=image1 .
+      
+      - run: echo "building custom Docker image... "
+      - name: clone required dependencies , glm and jpeg-turbo
+        working-directory: DroidMedia
+        run: |
+          cat <<EOF | docker exec mycontainer chmod +x ./.buildscripts/ensure_third_party_deps.sh
+          bash ./.buildscripts/ensure_third_party_deps.sh
+          ls -al
+          echo "begin Building Debug APK."
+          ./gradlew assembleDebug
+          echo "end Building Debug APK."
+          EOF
+
+      - run: echo "Build status report=${{ job.status }}."
+
+
+   
