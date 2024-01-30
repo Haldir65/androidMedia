@@ -21,7 +21,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - run: echo "start building custom Docker image... "
-      - name: build Docker image
+      - name: now build Docker image
         run: docker build --build-arg VERSION=2.294.0-ubuntu-focal --build-arg JAVA_VERSION=17 -f Dockerfile --tag=image1 .
       
       - name: Look up images
