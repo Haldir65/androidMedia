@@ -28,7 +28,10 @@ jobs:
         run: docker image ls 
 
       - run: echo "done building custom Docker image... "
-      - name: clone required dependencies , glm and jpeg-turbo
+      - name: Run a container from the image in detached mode.
+        run: docker run --name=image1 --rm --detach image1
+
+      - name: executing commands in container ,clone required dependencies , glm and jpeg-turbo , etc...
         working-directory: DroidMedia
         run: |
           cat <<EOF | docker exec -it image1 chmod +x ./.buildscripts/ensure_third_party_deps.sh
