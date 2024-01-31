@@ -56,25 +56,12 @@ RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_roo
   "platforms;android-33" \
   "platforms;android-32" \
   "platforms;android-31" \
-  "platforms;android-30" \
-  "platforms;android-29" \
-  "platforms;android-28" \
-  "platforms;android-21" \
   "build-tools;34.0.0" \
   "build-tools;33.0.0" \
   "build-tools;32.0.0" \
-  "build-tools;31.0.0" \
-  "build-tools;30.0.3" \
-  "build-tools;30.0.2" \
-  "build-tools;30.0.1" \
-  "build-tools;30.0.0" \
-  "build-tools;29.0.3" \
-  "build-tools;29.0.2" \
-  "build-tools;29.0.0" \
-  "build-tools;28.0.3" \
   "ndk-bundle" \
   "ndk;25.2.9519653" \
-  "ndk;25.1.8937393" \
+  "ndk;26.1.10909125" \
   "cmake;3.22.1" \
   "extras;android;m2repository" \
   "extras;google;m2repository" \
