@@ -32,9 +32,9 @@ jobs:
         run: docker run --name=container1 --rm --detach image1
 
       - name: executing commands in container ,clone required dependencies , glm and jpeg-turbo , etc...
-        working-directory: DroidMedia
         run: |
-          cat <<EOF | docker exec container1 ls -al
+          cat <<EOF | docker exec -w $(pwd)/DroidMedia container1 sh
+          ls -al
           chmod +x ./.buildscripts/ensure_third_party_deps.sh
           ls -al
           bash ./.buildscripts/ensure_third_party_deps.sh
