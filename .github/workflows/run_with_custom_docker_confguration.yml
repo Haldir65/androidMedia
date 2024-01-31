@@ -33,7 +33,11 @@ jobs:
 
       - name: executing commands in container ,clone required dependencies , glm and jpeg-turbo , etc...
         run: |
-          cat <<EOF | docker exec -w $(pwd)/DroidMedia container1 sh
+          cat <<EOF | docker exec  container1 sh
+          ls -al
+          git clone ${{ github.repositoryUrl }} --depth 1
+          ls -al
+          cd androidMedia/DroidMedia
           ls -al
           chmod +x ./.buildscripts/ensure_third_party_deps.sh
           ls -al
