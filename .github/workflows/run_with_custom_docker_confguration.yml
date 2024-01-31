@@ -35,8 +35,20 @@ jobs:
 
       - name: executing commands in container ,clone required dependencies , glm and jpeg-turbo , etc...
         run: |
-          docker run image1 sh -c "whoami;date;df -h;ls -al /usr/local/lib/android;git clone https://github.com/Haldir65/androidMedia.git --depth 1;ls -al;cd androidMedia/DroidMedia;java --version;chmod +x ./.buildscripts/ensure_third_party_deps.sh;bash ./.buildscripts/ensure_third_party_deps.sh;./gradlew assembleDebug"
+          docker run --name mycontainer image1 sh -c "whoami;date;df -h;ls -al /usr/local/lib/android;git clone https://github.com/Haldir65/androidMedia.git --depth 1;ls -al;cd androidMedia/DroidMedia;java --version;chmod +x ./.buildscripts/ensure_third_party_deps.sh;bash ./.buildscripts/ensure_third_party_deps.sh;./gradlew assembleRelease;cp -R app/build/outputs/apk/release /tmp/dist;ls -al /tmp/dist "
+          docker cp mycontainer:/tmp/dist /tmp/dist
+   
+      - name: show copy contents
+        run: ls -al /tmp/dist 
 
+      - name: Upload_That_APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-upload-apk
+          retention-days: 7
+          path: |
+            /tmp/dist/*.apk  
+     
       - run: echo "Build status report=${{ job.status }}."
 
 
