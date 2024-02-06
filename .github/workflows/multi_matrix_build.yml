@@ -60,6 +60,22 @@ jobs:
           ./.buildscripts/ensure_third_party_deps.sh
         shell: bash
 
+      #cache Gradle dependencies and wrapper to reduce build time
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/wrapper
+          # working-directory: DroidMedia
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle All Kinds of Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-  
+
       - name: show all files
         if: startsWith(matrix.target.id, 'darwin-') || startsWith(matrix.target.id, 'ubuntu-')
         working-directory: DroidMedia
