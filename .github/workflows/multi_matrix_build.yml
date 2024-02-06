@@ -1,4 +1,4 @@
-name: Android Build using docker image
+name: Android Build on major os
 
 on:
   workflow_dispatch:
@@ -7,19 +7,23 @@ on:
       - test_muiltiple_matrix
 
 jobs:
-  runMultipleBuildWithVariants:
+  BuildWithVariants:
     continue-on-error: false
     strategy:
       matrix:
           target:
             - id: 'linux-amd64'
               os: 'ubuntu-latest'
-            - id: 'darwin-amd64'
+            - id: 'darwin-aarch64'
               os: 'macos-14'
+            - id: 'windows-amd64'
+              os: 'windows-2022'
           buildType:
               ["release","debug"]   
     
     runs-on: ${{ matrix.target.os }}
+    env:
+      builddir: DroidMedia/app/build/outputs/apk/${{ matrix.buildType }}
 
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
@@ -32,7 +36,7 @@ jobs:
         if: startsWith(matrix.target.id, 'darwin-')
         shell: bash
         run: |
-          brew install ninja tree
+          brew install ninja tree 
       - name: Install `ninja` on Ubuntu
         if: startsWith(matrix.target.id, 'linux-')
         shell: bash
@@ -55,15 +59,21 @@ jobs:
           chmod +x ./.buildscripts/ensure_third_party_deps.sh
           ./.buildscripts/ensure_third_party_deps.sh
         shell: bash
+
       - name: show all files
+        if: startsWith(matrix.target.id, 'darwin-') || startsWith(matrix.target.id, 'ubuntu-')
         working-directory: DroidMedia
         run: |
           ls -al
           tree
+        shell: bash
+
       - name: Grant execute permission for gradlew
         working-directory: DroidMedia
         run: chmod +x gradlew
-      - run: echo "Building Debug APK."
+        shell: bash
+
+      - run: echo "Building APK"
       - name: Build with Gradle
         working-directory: DroidMedia
         run: |
@@ -75,7 +85,18 @@ jobs:
             echo "unsupportted target: ${{ matrix.buildType }} "
             echo "${{ matrix.buildType }}"
           fi
+        shell: bash
+          
       - run: echo "Build status report=${{ job.status }}."
 
+      
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target.os }}-${{ matrix.buildType }}-apk
+          path: |
+            ${{ env.builddir }}/*.apk  
+          if-no-files-found: error
+          retention-days: 7
 
    
