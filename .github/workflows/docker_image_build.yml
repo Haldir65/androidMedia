@@ -37,6 +37,12 @@ jobs:
             # run: ./gradlew build
         run: ./gradlew assembleDebug
       - run: echo "Build status report=${{ job.status }}."
+      - name: Upload_That_APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: myapk
+          retention-days: 7
+          path: ${{ github.workspace }}/DroidMedia/app/build/outputs/apk/debug/*.apk      
 
 
    
