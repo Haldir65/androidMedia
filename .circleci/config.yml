@@ -5,12 +5,12 @@ orbs:
   # dt: datatheorem/mobile-secure-orb@1.0.0
 jobs:
   assembleDebugOrRelease:
-    # executor:
-    #   name: android/android-machine
-    #   resource-class: large
-    #   tag: 2023.11.1
-    docker:
-      - image: cimg/android:2024.01.1-ndk
+    executor:
+      name: android/android-machine
+      resource-class: large
+      tag: 2023.11.1
+    # docker:
+    #   - image: cimg/android:2024.01.1-ndk
     steps:
       - checkout
       - run:
