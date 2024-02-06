@@ -10,7 +10,7 @@ jobs:
     #   resource-class: large
     #   tag: 2023.11.1
     docker:
-      - image: cimg/android:2021.08.1-ndk
+      - image: cimg/android:2024.01.1-ndk
     steps:
       - checkout
       - run:
