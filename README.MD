@@ -36,3 +36,6 @@ git tag -d v_1.0.3 ## in case you may want to delete this tag
 
 
 
+[practical examples for using github actions and docker](https://github.com/userdocs/btop-crossbuilds/blob/main/.github/workflows/matrix-btop-make-and-release.yml)
+
+[more cron examples](https://github.com/userdocs/qbt-musl-cross-make/tree/main/.github/workflows)

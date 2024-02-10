@@ -2,7 +2,7 @@
 minSdk="27"
 targetSdk="29"
 arrow = "1.2.1"
-androidGradlePlugin = "8.2.1"
+androidGradlePlugin = "8.2.2"
 glide = "4.16.0"
 kotlin_verison = "1.9.22"
 gson = "2.10"
@@ -41,14 +41,14 @@ kotlinxSerializationJson = "1.6.2"
 ktor = "1.6.3"
 exfiinterface="1.3.7"
 #exoplayer = "2.19.1"
-media3_version ="1.2.0"
+media3_version ="1.2.1"
 camerax_version="1.3.1"
 
 room = "2.6.1"
 
 mmkv = "1.2.15"
 kotlinxCollectionsImmutable = "0.3.5"
-material3 = "1.1.2"
+material3 = "1.2.0"
 # other versions
 
 [libraries]
