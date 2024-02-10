@@ -130,9 +130,27 @@
                 android:id="@+id/btn7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:background="@android:color/white"
-                android:text=""
+                android:text="shaderToy"
+                android:layout_gravity="center"
+                android:textAllCaps="false" />
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            style="@style/CardStyleButton"
+            app:contentPadding="4dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="3dp">
+
+            <TextView
+                android:id="@+id/btn8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="shaderToy2"
+                android:layout_gravity="center"
                 android:textAllCaps="false" />
         </androidx.cardview.widget.CardView>
 
