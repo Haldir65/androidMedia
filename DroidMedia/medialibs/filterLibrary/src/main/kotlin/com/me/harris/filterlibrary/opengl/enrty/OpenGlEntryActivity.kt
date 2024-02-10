@@ -10,6 +10,7 @@ import com.me.harris.filterlibrary.opengl.GLLoadBitmapActivity
 import com.me.harris.filterlibrary.opengl.GLLoadYUVActivity
 import com.me.harris.filterlibrary.opengl.GLMixTwoPictureActivity
 import com.me.harris.filterlibrary.opengl.GLTransformActivity
+import com.me.harris.filterlibrary.opengl.shadertoy.ShaderToyEntryActivity
 
 class OpenGlEntryActivity:AppCompatActivity()
 {
@@ -36,7 +37,9 @@ class OpenGlEntryActivity:AppCompatActivity()
         binding.btn6.setOnClickListener {
             startActivity(Intent(this,GLLoadBitmapActivity::class.java))
         }
-
+        binding.btn7.setOnClickListener {
+            startActivity(Intent(this,ShaderToyEntryActivity::class.java))
+        }
     }
 
 

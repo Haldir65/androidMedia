@@ -1,0 +1,55 @@
+name: Build with self home made docker image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  runWithDocker:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, '[Docker]')"
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      - run: echo "The ${{ github.repository }} repository has been cloned."
+      - run: echo "Setting up Docker"
+      - name: set up Docker BUildx
+        uses: docker/setup-buildx-action@v3
+
+      - run: echo "start building custom Docker image... "
+      - name: now build Docker image
+        run: docker build --build-arg VERSION=2.312.0-ubuntu-jammy --build-arg JAVA_VERSION=17 --build-arg SDK_TOOLS=11076708_latest -f Dockerfile --tag=image1 .
+      
+      - name: Look up images
+        run: docker image ls 
+
+      - run: echo "done building custom Docker image... for ${{ github.repositoryUrl }}"
+      # - name: Run a container from the image not in detached mode.
+      #   run: docker run --name=container1 --rm image1
+      # - name: show all docker ps
+      #   run: docker ps -a
+
+      - name: executing commands in container ,clone required dependencies , glm and jpeg-turbo , etc...
+        run: |
+          docker run --name mycontainer image1 sh -c "whoami;date;df -h;ls -al /usr/local/lib/android;git clone https://github.com/Haldir65/androidMedia.git --depth 1;ls -al;cd androidMedia/DroidMedia;java --version;chmod +x ./.buildscripts/ensure_third_party_deps.sh;bash ./.buildscripts/ensure_third_party_deps.sh;./gradlew assembleRelease;cp -R app/build/outputs/apk/release /tmp/dist;ls -al /tmp/dist "
+          docker cp mycontainer:/tmp/dist /tmp/dist
+   
+      - name: show copy contents
+        run: ls -al /tmp/dist 
+
+      - name: Upload_That_APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-upload-apk
+          retention-days: 7
+          path: |
+            /tmp/dist/*.apk  
+     
+      - run: echo "Build status report=${{ job.status }}."
+
+
+   
