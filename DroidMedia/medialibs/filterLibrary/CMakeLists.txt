@@ -2,7 +2,9 @@
 cmake_minimum_required(VERSION 3.21.0)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS  OFF)
+
+#set(CMAKE_CXX_STANDARD 17)
 
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-register")
@@ -99,6 +101,7 @@ target_include_directories(nativefilter PRIVATE
         ${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2
         ${CMAKE_SOURCE_DIR}/src/main/cpp/freetypes/${ANDROID_ABI}/include/freetype2/freetype
         )
+target_compile_options(nativefilter PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>)
 
 
 target_link_libraries(
