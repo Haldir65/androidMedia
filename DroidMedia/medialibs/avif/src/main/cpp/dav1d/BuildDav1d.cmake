@@ -17,10 +17,17 @@ endif ()
 
 execute_process(COMMAND bash b.sh ${CROSS_FILE} ${ANDROID_ABI} ${DAV1D_DIR}/${ANDROID_ABI}
         WORKING_DIRECTORY ${DAV1D_DIR}
-#        RESULT_VARIABLE result
-#        OUTPUT_VARIABLE out
+       RESULT_VARIABLE result
+       OUTPUT_VARIABLE out
         )
 #
+
+message("========= lib_dav1d 111 ========== result = ${result} out = ${out}"   )
+
+message("========= RESULT_VARIABLE: ${result}" )
+message( "========= OUTPUT_VARIABLE:  ${out}")
+
+message( "OUTPUT_VARIABLE:" ${out})
 
 if (EXISTS ${DAV1D_DIR}/${ANDROID_ABI})
     set(DAV1D_FOUND TRUE)

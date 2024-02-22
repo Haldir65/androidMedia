@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.6)
 project(avif-jni)
 
+
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+
+include(cmakeColorful)
+echoColor()
 #
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-register")
 #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wno-register -Wno-error=register")
@@ -44,3 +50,13 @@ message("CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
 
 target_link_libraries(${PROJECT_NAME} jnigraphics avif log)
 
+
+
+if(NOT WIN32)
+_green("====CMAKE_BUILD_TYPE==========" ${CMAKE_BUILD_TYPE})
+_BoldBlue("====CMAKE_CXX_COMPILER==========" ${CMAKE_CXX_COMPILER})
+_green("CMAKE_LINKER = \n ${CMAKE_LINKER}")
+_Cyan("====CMAKE_C_COMPILER==========" ${CMAKE_C_COMPILER})
+_Red("====CMAKE_C_FLAGS==========" ${CMAKE_C_FLAGS})
+_Yellow("====CMAKE_CXX_FLAGS==========" ${CMAKE_CXX_FLAGS})
+endif()
