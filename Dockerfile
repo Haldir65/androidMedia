@@ -57,19 +57,11 @@ RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_roo
   "platforms;android-32" \
   "platforms;android-31" \
   "build-tools;34.0.0" \
-  "build-tools;33.0.0" \
-  "build-tools;32.0.0" \
   "ndk-bundle" \
-  "ndk;25.2.9519653" \
-  "ndk;26.1.10909125" \
+  "ndk;21.4.7075529" \
   "cmake;3.22.1" \
   "extras;android;m2repository" \
-  "extras;google;m2repository" \
-  "extras;google;google_play_services" \
-  "add-ons;addon-google_apis-google-24" \
-  "add-ons;addon-google_apis-google-23" \
-  "add-ons;addon-google_apis-google-22" \
-  "add-ons;addon-google_apis-google-21" 1>/dev/null
+  "extras;google;m2repository"  1>/dev/null
 
 WORKDIR /actions-runner
 ENV PATH="${PATH}:/usr/local/lib/android/sdk/platform-tools/"
