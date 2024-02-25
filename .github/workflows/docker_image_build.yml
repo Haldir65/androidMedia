@@ -10,7 +10,9 @@ jobs:
   runDebugBuildWithCache:
     runs-on: ubuntu-latest
     container:
-      image: docker://fabernovel/android:api-34-gcloud-ndk-snapshot
+      # image: docker://fabernovel/android:api-34-gcloud-ndk-snapshot
+      image: docker://haldir65/android-build-env:latest
+
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
