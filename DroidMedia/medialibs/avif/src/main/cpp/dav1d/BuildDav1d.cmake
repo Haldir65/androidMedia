@@ -17,10 +17,18 @@ endif ()
 
 execute_process(COMMAND bash b.sh ${CROSS_FILE} ${ANDROID_ABI} ${DAV1D_DIR}/${ANDROID_ABI}
         WORKING_DIRECTORY ${DAV1D_DIR}
-#        RESULT_VARIABLE result
-#        OUTPUT_VARIABLE out
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE out
         )
 #
+
+message("========= lib_dav1d 111 ========== result = ${result} out = ${out}"   )
+
+message( STATUS "========= RESULT_VARIABLE:" ${result})
+message( STATUS "========= OUTPUT_VARIABLE:" ${out})
+
+message( STATUS "OUTPUT_VARIABLE:" ${out})
+
 
 if (EXISTS ${DAV1D_DIR}/${ANDROID_ABI})
     set(DAV1D_FOUND TRUE)
@@ -37,4 +45,11 @@ set(DAV1D_INCLUDE_DIR ${DAV1D_DIR}/${ANDROID_ABI}/include)
 
 set(DAV1D_VERSION 1.0.0)
 set(DAV1D_LIBRARY lib_dav1d)
+
+
+if(NOT TARGET dav1d)
+    message("========= lib_dav1d not found ==========")
+else ()
+    message("========= lib_dav1d found ==========")
+endif ()
 

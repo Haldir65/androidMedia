@@ -8,7 +8,32 @@
 
 void reading_content_of_json_file(const std::string&& filepath){
     auto beg =  std::chrono::high_resolution_clock::now();
+    // https://github.com/simdjson/simdjson/blob/master/doc/implementation-selection.md#manually-selecting-the-implementation
+    constexpr auto imp = []() {
+#ifdef _WIN32
+        return "haswell";
+#else
+        return "arm64";
+#endif
+    }();
+    auto my_implementation = simdjson::get_available_implementations()[imp];
+    if (! my_implementation) { exit(1); }
+    if (! my_implementation->supported_by_runtime_system()) { exit(1); }
+    simdjson::get_active_implementation() = my_implementation;
 
+
+
+#if SIMDJSON_IMPLEMENTATION_ARM64 == 1
+    ALOGI("using  %s implementation ","arm64");
+#endif
+
+#if SIMDJSON_IMPLEMENTATION_ICELAKE == 1
+    fmt::print(fmt::fg(fmt::color::lawn_green), "\n {0} \n", " icelake ");
+#endif
+
+#if SIMDJSON_IMPLEMENTATION_HASWELL == 1
+    fmt::print(fmt::fg(fmt::color::lawn_green), "\n {0} \n", " haswell ");
+#endif
 
     namespace fs = std::filesystem;
     if (!fs::exists(filepath)){

@@ -63,10 +63,10 @@ class ShaderToy(private val context: Context) : OnTouchListener {
 
     fun onSurfaceCreated() {
         val vertexSource = readAssetFileContentAsString(context,"shadertoy/vertex_shader.glsl")
-        val fragmentSource = readAssetFileContentAsString(context,"shadertoy/fragment_shader_llgxwc2.glsl")
+//        val fragmentSource = readAssetFileContentAsString(context,"shadertoy/fragment_shader_llgxwc2.glsl")
 //        val fragmentSource = readAssetFileContentAsString(context,"shadertoy/fragment_shader_sea.glsl")
 //        val fragmentSource = readAssetFileContentAsString(context,"shadertoy/fragment_shader_strip_tip.glsl")
-//        val fragmentSource = readAssetFileContentAsString(context,"shadertoy/fragment_shader_sun.glsl")
+        val fragmentSource = readAssetFileContentAsString(context,"shadertoy/fragment_shader_sun.glsl")
 //        val fragmentSource = readAssetFileContentAsString(context,"shadertoy/fragment_shader_exloding_fire.glsl")
         program = createProgram(vertexSource, fragmentSource)
         if (program > 0) {

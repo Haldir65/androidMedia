@@ -1,7 +1,7 @@
 
 #ndk path
 export ANDROID_NDK_HOME=/opt/android-sdk/ndk/23.1.7779620
-
+echo "========= really?=========="
 CROSS_FILE="$1"
 ABI="$2"
 PREFIX="$3"
