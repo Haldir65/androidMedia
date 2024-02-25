@@ -2,7 +2,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp").version("1.9.22-1.0.16") // Or latest version of KSP
+    id("com.google.devtools.ksp").version("1.9.22-1.0.17") // Or latest version of KSP
 }
 
 val SUPPORT_NATIVE_BUILD:String  by project
