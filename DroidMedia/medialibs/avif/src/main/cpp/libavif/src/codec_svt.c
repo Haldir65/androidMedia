@@ -46,9 +46,34 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
                                       avifEncoder * encoder,
                                       const avifImage * image,
                                       avifBool alpha,
+                                      int tileRowsLog2,
+                                      int tileColsLog2,
+                                      int quantizer,
+                                      avifEncoderChanges encoderChanges,
+                                      avifBool disableLaggedOutput,
                                       uint32_t addImageFlags,
                                       avifCodecEncodeOutput * output)
 {
+    // SVT-AV1 does not support changing encoder settings.
+    if (encoderChanges) {
+        return AVIF_RESULT_NOT_IMPLEMENTED;
+    }
+
+    // SVT-AV1 does not support changing image dimensions.
+    if (codec->internal->svt_encoder != NULL) {
+        if ((codec->internal->svt_config.source_width != image->width) || (codec->internal->svt_config.source_height != image->height)) {
+            return AVIF_RESULT_NOT_IMPLEMENTED;
+        }
+    }
+
+    // SVT-AV1 does not support encoding layered image.
+    if (encoder->extraLayerCount > 0) {
+        return AVIF_RESULT_NOT_IMPLEMENTED;
+    }
+
+    // SVT-AV1 does not support disabling lagged output. Ignore this setting.
+    (void)disableLaggedOutput;
+
     avifResult result = AVIF_RESULT_UNKNOWN_ERROR;
     EbColorFormat color_format = EB_YUV420;
     EbBufferHeaderType * input_buffer = NULL;
@@ -74,6 +99,7 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
                 break;
             case AVIF_PIXEL_FORMAT_YUV400:
             case AVIF_PIXEL_FORMAT_NONE:
+            case AVIF_PIXEL_FORMAT_COUNT:
             default:
                 return AVIF_RESULT_UNKNOWN_ERROR;
         }
@@ -103,7 +129,7 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
         svt_config->source_width = image->width;
         svt_config->source_height = image->height;
         svt_config->logical_processors = encoder->maxThreads;
-        svt_config->enable_adaptive_quantization = AVIF_FALSE;
+        svt_config->enable_adaptive_quantization = 2;
         // disable 2-pass
 #if SVT_AV1_CHECK_VERSION(0, 9, 0)
         svt_config->rc_stats_buffer = (SvtAv1FixedBuf) { NULL, 0 };
@@ -112,19 +138,21 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
         svt_config->rc_twopass_stats_in = (SvtAv1FixedBuf) { NULL, 0 };
 #endif
 
+        svt_config->rate_control_mode = 0; // CRF because enable_adaptive_quantization is 2
         if (alpha) {
             svt_config->min_qp_allowed = AVIF_CLAMP(encoder->minQuantizerAlpha, 0, 63);
             svt_config->max_qp_allowed = AVIF_CLAMP(encoder->maxQuantizerAlpha, 0, 63);
         } else {
             svt_config->min_qp_allowed = AVIF_CLAMP(encoder->minQuantizer, 0, 63);
-            svt_config->qp = AVIF_CLAMP(encoder->maxQuantizer, 0, 63);
+            svt_config->max_qp_allowed = AVIF_CLAMP(encoder->maxQuantizer, 0, 63);
         }
+        svt_config->qp = quantizer;
 
-        if (encoder->tileRowsLog2 != 0) {
-            svt_config->tile_rows = AVIF_CLAMP(encoder->tileRowsLog2, 0, 6);
+        if (tileRowsLog2 != 0) {
+            svt_config->tile_rows = tileRowsLog2;
         }
-        if (encoder->tileColsLog2 != 0) {
-            svt_config->tile_columns = AVIF_CLAMP(encoder->tileColsLog2, 0, 6);
+        if (tileColsLog2 != 0) {
+            svt_config->tile_columns = tileColsLog2;
         }
         if (encoder->speed != AVIF_SPEED_DEFAULT) {
             int speed = AVIF_CLAMP(encoder->speed, 0, 8);
@@ -135,6 +163,18 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
             svt_config->profile = PROFESSIONAL_PROFILE;
         } else if (color_format == EB_YUV444) {
             svt_config->profile = HIGH_PROFILE;
+        }
+
+        // In order for SVT-AV1 to force keyframes by setting pic_type to
+        // EB_AV1_KEY_PICTURE on any frame, force_key_frames has to be set.
+        svt_config->force_key_frames = TRUE;
+
+        // keyframeInterval == 1 case is handled when encoding each frame by
+        // setting pic_type to EB_AV1_KEY_PICTURE. For keyframeInterval > 1,
+        // set the intra_period_length. Even though setting intra_period_length
+        // to 0 should work in this case, it does not.
+        if (encoder->keyframeInterval > 1) {
+            svt_config->intra_period_length = encoder->keyframeInterval - 1;
         }
 
         res = svt_av1_enc_set_parameter(codec->internal->svt_encoder, svt_config);
@@ -175,7 +215,7 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
     input_buffer->pts = 0;
 
     EbAv1PictureType frame_type = EB_AV1_INVALID_PICTURE;
-    if (addImageFlags & AVIF_ADD_IMAGE_FLAG_FORCE_KEYFRAME) {
+    if ((addImageFlags & AVIF_ADD_IMAGE_FLAG_FORCE_KEYFRAME) || (encoder->keyframeInterval == 1)) {
         frame_type = EB_AV1_KEY_PICTURE;
     }
     input_buffer->pic_type = frame_type;
@@ -281,10 +321,14 @@ static avifResult dequeue_frame(avifCodec * codec, avifCodecEncodeOutput * outpu
         if (output_buf != NULL) {
             encode_at_eos = ((output_buf->flags & EB_BUFFERFLAG_EOS) == EB_BUFFERFLAG_EOS);
             if (output_buf->p_buffer && (output_buf->n_filled_len > 0)) {
-                avifCodecEncodeOutputAddSample(output,
-                                               output_buf->p_buffer,
-                                               output_buf->n_filled_len,
-                                               (output_buf->pic_type == EB_AV1_KEY_PICTURE));
+                const avifResult result = avifCodecEncodeOutputAddSample(output,
+                                                                         output_buf->p_buffer,
+                                                                         output_buf->n_filled_len,
+                                                                         (output_buf->pic_type == EB_AV1_KEY_PICTURE));
+                if (result != AVIF_RESULT_OK) {
+                    svt_av1_enc_release_out_buffer(&output_buf);
+                    return result;
+                }
             }
             svt_av1_enc_release_out_buffer(&output_buf);
         }

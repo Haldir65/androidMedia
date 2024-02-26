@@ -10,10 +10,10 @@
 : #
 : # On a successful local build, rav1e/build.libavif/ should contain the necessary headers and static library.
 
-git clone -b 0.5 --depth 1 https://github.com/xiph/rav1e.git
+git clone -b v0.6.6 --depth 1 https://github.com/xiph/rav1e.git
 
 cd rav1e
-cargo install cargo-c
+cargo install --locked cargo-c
 
 mkdir build.libavif
 cargo cinstall --release --library-type=staticlib --prefix=/usr --destdir build.libavif

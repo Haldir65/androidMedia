@@ -65,5 +65,7 @@ jboolean registerImageNativeMethods(JNIEnv *env) {
         return JNI_FALSE;
     }
 
+    print_lib_version();
+
     return JNI_TRUE;
 }

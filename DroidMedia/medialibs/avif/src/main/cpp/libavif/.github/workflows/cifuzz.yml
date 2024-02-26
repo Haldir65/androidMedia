@@ -1,7 +1,11 @@
-name: CIFuzz
+name: CI
 on: [pull_request]
+
+permissions:
+  contents: read
+
 jobs:
-  Fuzzing:
+  fuzz:
     runs-on: ubuntu-latest
     steps:
     - name: Build Fuzzers

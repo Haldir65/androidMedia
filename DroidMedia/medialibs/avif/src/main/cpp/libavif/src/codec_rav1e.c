@@ -12,6 +12,8 @@ struct avifCodecInternal
     RaContext * rav1eContext;
     RaChromaSampling chromaSampling;
     int yShift;
+    uint32_t encodeWidth;
+    uint32_t encodeHeight;
 };
 
 static void rav1eCodecDestroyInternal(avifCodec * codec)
@@ -51,9 +53,35 @@ static avifResult rav1eCodecEncodeImage(avifCodec * codec,
                                         avifEncoder * encoder,
                                         const avifImage * image,
                                         avifBool alpha,
+                                        int tileRowsLog2,
+                                        int tileColsLog2,
+                                        int quantizer,
+                                        avifEncoderChanges encoderChanges,
+                                        avifBool disableLaggedOutput,
                                         uint32_t addImageFlags,
                                         avifCodecEncodeOutput * output)
 {
+    // rav1e does not support changing encoder settings.
+    if (encoderChanges) {
+        return AVIF_RESULT_NOT_IMPLEMENTED;
+    }
+
+    // rav1e does not support changing image dimensions.
+    if (!codec->internal->rav1eContext) {
+        codec->internal->encodeWidth = image->width;
+        codec->internal->encodeHeight = image->height;
+    } else if ((codec->internal->encodeWidth != image->width) || (codec->internal->encodeHeight != image->height)) {
+        return AVIF_RESULT_NOT_IMPLEMENTED;
+    }
+
+    // rav1e does not support encoding layered image.
+    if (encoder->extraLayerCount > 0) {
+        return AVIF_RESULT_NOT_IMPLEMENTED;
+    }
+
+    // rav1e does not support disabling lagged output. See https://github.com/xiph/rav1e/issues/2267. Ignore this setting.
+    (void)disableLaggedOutput;
+
     avifResult result = AVIF_RESULT_UNKNOWN_ERROR;
 
     RaConfig * rav1eConfig = NULL;
@@ -90,6 +118,7 @@ static avifResult rav1eCodecEncodeImage(avifCodec * codec,
                     codec->internal->yShift = 1;
                     break;
                 case AVIF_PIXEL_FORMAT_NONE:
+                case AVIF_PIXEL_FORMAT_COUNT:
                 default:
                     return AVIF_RESULT_UNKNOWN_ERROR;
             }
@@ -120,27 +149,23 @@ static avifResult rav1eCodecEncodeImage(avifCodec * codec,
         }
 
         int minQuantizer = AVIF_CLAMP(encoder->minQuantizer, 0, 63);
-        int maxQuantizer = AVIF_CLAMP(encoder->maxQuantizer, 0, 63);
         if (alpha) {
             minQuantizer = AVIF_CLAMP(encoder->minQuantizerAlpha, 0, 63);
-            maxQuantizer = AVIF_CLAMP(encoder->maxQuantizerAlpha, 0, 63);
         }
         minQuantizer = (minQuantizer * 255) / 63; // Rescale quantizer values as rav1e's QP range is [0,255]
-        maxQuantizer = (maxQuantizer * 255) / 63;
+        quantizer = (quantizer * 255) / 63;
         if (rav1e_config_parse_int(rav1eConfig, "min_quantizer", minQuantizer) == -1) {
             goto cleanup;
         }
-        if (rav1e_config_parse_int(rav1eConfig, "quantizer", maxQuantizer) == -1) {
+        if (rav1e_config_parse_int(rav1eConfig, "quantizer", quantizer) == -1) {
             goto cleanup;
         }
-        if (encoder->tileRowsLog2 != 0) {
-            int tileRowsLog2 = AVIF_CLAMP(encoder->tileRowsLog2, 0, 6);
+        if (tileRowsLog2 != 0) {
             if (rav1e_config_parse_int(rav1eConfig, "tile_rows", 1 << tileRowsLog2) == -1) {
                 goto cleanup;
             }
         }
-        if (encoder->tileColsLog2 != 0) {
-            int tileColsLog2 = AVIF_CLAMP(encoder->tileColsLog2, 0, 6);
+        if (tileColsLog2 != 0) {
             if (rav1e_config_parse_int(rav1eConfig, "tile_cols", 1 << tileColsLog2) == -1) {
                 goto cleanup;
             }
@@ -148,6 +173,12 @@ static avifResult rav1eCodecEncodeImage(avifCodec * codec,
         if (encoder->speed != AVIF_SPEED_DEFAULT) {
             int speed = AVIF_CLAMP(encoder->speed, 0, 10);
             if (rav1e_config_parse_int(rav1eConfig, "speed", speed) == -1) {
+                goto cleanup;
+            }
+        }
+        if (encoder->keyframeInterval > 0) {
+            // "key_frame_interval" is the maximum interval between two keyframes.
+            if (rav1e_config_parse_int(rav1eConfig, "key_frame_interval", encoder->keyframeInterval) == -1) {
                 goto cleanup;
             }
         }
@@ -198,7 +229,10 @@ static avifResult rav1eCodecEncodeImage(avifCodec * codec,
             goto cleanup;
         } else if (pkt) {
             if (pkt->data && (pkt->len > 0)) {
-                avifCodecEncodeOutputAddSample(output, pkt->data, pkt->len, (pkt->frame_type == RA_FRAME_TYPE_KEY));
+                result = avifCodecEncodeOutputAddSample(output, pkt->data, pkt->len, (pkt->frame_type == RA_FRAME_TYPE_KEY));
+                if (result != AVIF_RESULT_OK) {
+                    goto cleanup;
+                }
             }
             rav1e_packet_unref(pkt);
             pkt = NULL;
@@ -240,7 +274,10 @@ static avifBool rav1eCodecEncodeFinish(avifCodec * codec, avifCodecEncodeOutput 
             if (pkt) {
                 gotPacket = AVIF_TRUE;
                 if (pkt->data && (pkt->len > 0)) {
-                    avifCodecEncodeOutputAddSample(output, pkt->data, pkt->len, (pkt->frame_type == RA_FRAME_TYPE_KEY));
+                    if (avifCodecEncodeOutputAddSample(output, pkt->data, pkt->len, (pkt->frame_type == RA_FRAME_TYPE_KEY)) !=
+                        AVIF_RESULT_OK) {
+                        return AVIF_FALSE;
+                    }
                 }
                 rav1e_packet_unref(pkt);
                 pkt = NULL;
