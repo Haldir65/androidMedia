@@ -23,13 +23,13 @@ extern "C" {
 // Related mingw-w64 commit: bfd33f6c0ec5e652cc9911857dd1492ece8d8383
 
 #if !defined(_UCRT) && (defined(__USE_MINGW_ANSI_STDIO) && __USE_MINGW_ANSI_STDIO == 0)
-#define AVIF_FMT_ZU "%Iu"
+#define AVIF_FMT_ZU "Iu"
 #else
-#define AVIF_FMT_ZU "%zu"
+#define AVIF_FMT_ZU "zu"
 #endif
 
-void avifImageDump(avifImage * avif, uint32_t gridCols, uint32_t gridRows, avifProgressiveState progressiveState);
-void avifContainerDump(avifDecoder * decoder);
+void avifImageDump(const avifImage * avif, uint32_t gridCols, uint32_t gridRows, avifProgressiveState progressiveState);
+void avifContainerDump(const avifDecoder * decoder);
 void avifPrintVersions(void);
 void avifDumpDiagnostics(const avifDiagnostics * diag);
 int avifQueryCPUCount(void); // Returns 1 if it cannot query or fails to query
@@ -63,10 +63,18 @@ struct y4mFrameIterator;
 avifAppFileFormat avifReadImage(const char * filename,
                                 avifPixelFormat requestedFormat,
                                 int requestedDepth,
+                                avifChromaDownsampling chromaDownsampling,
+                                avifBool ignoreColorProfile,
+                                avifBool ignoreExif,
+                                avifBool ignoreXMP,
+                                avifBool allowChangingCicp,
                                 avifImage * image,
                                 uint32_t * outDepth,
                                 avifAppSourceTiming * sourceTiming,
                                 struct y4mFrameIterator ** frameIter);
+
+// Removes a single trailing null character from the image->xmp, if there is exactly one.
+void avifImageFixXMP(avifImage * image);
 
 // Used by image decoders when the user doesn't explicitly choose a format with --yuv
 // This must match the cited fallback for "--yuv auto" in avifenc.c's syntax() function.

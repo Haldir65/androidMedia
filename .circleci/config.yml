@@ -3,13 +3,30 @@ orbs:
   android: circleci/android@2.4.0
 #   android: circleci/android@1.0.3
   # dt: datatheorem/mobile-secure-orb@1.0.0
+
+executors:
+  linux-docker:
+    docker:
+      - image: fabernovel/android:api-34-gcloud-ndk-snapshot
+    resource_class: large
+  linux-amd64:
+    machine:
+      image: android:default
+    resource_class: large
+
+
+
+
 jobs:
   assembleDebugOrRelease:
-    executor:
-      name: android/android-machine
-      resource-class: large
-      tag: default
-      
+    # executor:
+    #   name: android/android-machine
+    #   resource-class: large
+    #   tag: default
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
     steps:
       - checkout
       - run:
@@ -41,7 +58,10 @@ workflows:
   build:
       jobs:
         - assembleDebugOrRelease:
+            matrix:
+              parameters:
+                os: [linux-docker,linux-amd64]
             filters:
               branches:
                 only:
-                  - release
+                  - releae
