@@ -22,7 +22,7 @@ executors:
   linux-aarch64:
     machine:
       image: android:default
-    resource_class: large  
+    resource_class: arm.large  
 
 
 
