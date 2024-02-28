@@ -6,15 +6,30 @@ on:
     branches:
       - docker_image_publish
 
+env:
+  REGISTRY_IMAGE: haldir65/android-build-env      
+
 jobs:
   build_docker_image_and_push:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
     # if: "contains(github.event.head_commit.message, '[DPush]')"
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
       - name: Checkout the code
         uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_IMAGE }}  
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - run: echo "The ${{ github.repository }} repository has been cloned."
@@ -47,7 +62,8 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=2.312.0-ubuntu-jammy
             JAVA_VERSION=17
