@@ -19,10 +19,12 @@ executors:
     machine:
       image: android:default
     resource_class: large
-  linux-aarch64:
-    machine:
-      image: android:default
-    resource_class: arm.large  
+  # linux-aarch64:
+  #   machine:  
+  #     image: android:default
+  #   resource_class: arm.large  
+  ## Job was rejected because resource class arm.large, image android:default is not a valid resource class
+
 
 
 
@@ -126,7 +128,7 @@ workflows:
         - vmbuild:
             matrix:
                   parameters:
-                    os: [linux-amd64,linux-aarch64]
+                    os: [linux-amd64]
             filters:
               branches:
                 only:
