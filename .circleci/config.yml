@@ -12,7 +12,7 @@ executors:
   linux-amd64:
     machine:
       image: android:default
-    resource_class: large
+    resource_class: arm.large
 
 
 
@@ -29,6 +29,18 @@ jobs:
     executor: << parameters.os >>
     steps:
       - checkout
+
+      - run:
+          name: Install Dependency
+          command: |
+              sudo apt update 
+              apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux
+              tree -L 4
+      - run:
+          name: show system info
+          command: |
+             uname -a 
+             lscpu       
       - run:
           working_directory: DroidMedia
           name: clone required dependencies , glm and jpeg-turbo
@@ -41,16 +53,17 @@ jobs:
           command: ./gradlew assembleRelease --stacktrace
       - run:
           working_directory: DroidMedia
-          name: show  build results
-          command: ls -alSh app/build/outputs/apk/release
-      - save_cache:
-          working_directory: DroidMedia
-          key: dt-mobile-app-cache
-          paths:
-            - app/build/outputs/apk/release
-      - store_artifacts:
-          path: DroidMedia/app/build/outputs/apk/release
-          destination: releaseApk
+          name: show build results
+          command: |
+            tree -L 4 app/build
+      # - save_cache:
+      #     working_directory: DroidMedia
+      #     key: dt-mobile-app-cache
+      #     paths:
+      #       - app/build/outputs/apk/release
+      # - store_artifacts:
+      #     path: DroidMedia/app/build/outputs/apk/release
+      #     destination: releaseApk
 
             
 workflows:
