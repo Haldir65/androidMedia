@@ -15,9 +15,11 @@ jobs:
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
       - name: Checkout the code
         uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - run: echo "The ${{ github.repository }} repository has been cloned."
       - run: echo "Setting up Docker"
-      - name: set up Docker BUildx
+      - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
@@ -45,11 +47,12 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64
           build-args: |
             VERSION=2.312.0-ubuntu-jammy
             JAVA_VERSION=17
             SDK_TOOLS=11076708_latest
-          tags: haldir65/android-build-env:java17-ndk21
+          tags: haldir65/android-build-env:java17-ndk26-api34
      
       - run: echo "Build status report=${{ job.status }}."
 
