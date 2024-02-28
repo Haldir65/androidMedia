@@ -27,6 +27,9 @@ void jniThrowException(JNIEnv *env, const char *className, const char *msg);
 void throw_IOException(JNIEnv *env, const char *msg);
 
 
+void print_lib_version() ;
+
+
 #ifdef __cplusplus
 }
 #endif

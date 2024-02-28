@@ -1,4 +1,4 @@
-// Copyright 2022 Google LLC. All rights reserved.
+// Copyright 2022 Google LLC
 // SPDX-License-Identifier: BSD-2-Clause
 
 #include <limits>
@@ -58,8 +58,8 @@ TEST(AllocationTest, MinimumValidDimensions) {
   TestAllocation(1, 1, 8, AVIF_RESULT_OK);
 }
 
-// The libavif API accepts allocating up to SIZE_MAX bytes. Testing this
-// threshold is unrealistic so allocate 1 GB: that should pass on all platforms
+// Up to SIZE_MAX can be passed as the input argument to avifAlloc(). Testing
+// this value is unrealistic so allocate 1 GB: that should pass on all platforms
 // and environments.
 TEST(AllocationTest, Allocate1GB) {
   // 8 bits, so one byte per pixel per channel, up to 4 channels
@@ -72,24 +72,24 @@ TEST(AllocationTest, Allocate1GB) {
 }
 
 TEST(AllocationTest, MinimumInvalidDimensions) {
-  TestAllocation(std::numeric_limits<typeof(avifImage::width)>::max(), 1, 12,
+  TestAllocation(std::numeric_limits<decltype(avifImage::width)>::max(), 1, 12,
                  AVIF_RESULT_INVALID_ARGUMENT);
 }
 
 TEST(AllocationTest, MaximumInvalidDimensions) {
-  TestAllocation(std::numeric_limits<typeof(avifImage::width)>::max(),
-                 std::numeric_limits<typeof(avifImage::height)>::max(), 12,
+  TestAllocation(std::numeric_limits<decltype(avifImage::width)>::max(),
+                 std::numeric_limits<decltype(avifImage::height)>::max(), 12,
                  AVIF_RESULT_INVALID_ARGUMENT);
 }
 
 TEST(DISABLED_AllocationTest, OutOfMemory) {
   // This should pass on 64-bit but may fail on 32-bit or other setups.
-  TestAllocation(std::numeric_limits<typeof(avifImage::width)>::max(), 1, 8,
+  TestAllocation(std::numeric_limits<decltype(avifImage::width)>::max(), 1, 8,
                  AVIF_RESULT_OK);
   // This is valid in theory: malloc() should always refuse to allocate so much,
   // but avifAlloc() aborts on malloc() failure instead of returning.
-  TestAllocation(std::numeric_limits<typeof(avifImage::width)>::max() / 2,
-                 std::numeric_limits<typeof(avifImage::height)>::max(), 12,
+  TestAllocation(std::numeric_limits<decltype(avifImage::width)>::max() / 2,
+                 std::numeric_limits<decltype(avifImage::height)>::max(), 12,
                  AVIF_RESULT_OUT_OF_MEMORY);
 }
 
@@ -148,12 +148,14 @@ TEST(EncodingTest, MinimumValidDimensions) {
 }
 
 TEST(EncodingTest, ReasonableValidDimensions) {
+  // 16384 x 8704 is the maximum width x height allowed in the levels defined
+  // in the AV1 specification.
   TestEncoding(16384, 1, 12, AVIF_RESULT_OK);
-  TestEncoding(1, 16384, 12, AVIF_RESULT_OK);
+  TestEncoding(1, 8704, 12, AVIF_RESULT_OK);
 }
 
 // 65536 is the maximum AV1 frame dimension allowed by the AV1 specification.
-// See the section 5.5.1. General sequence header OBU syntax.
+// See the section 5.5.1 General sequence header OBU syntax.
 // However, this test is disabled because:
 // - Old versions of libaom are capped to 65535 (http://crbug.com/aomedia/3304).
 // - libaom may be compiled with CONFIG_SIZE_LIMIT defined, limiting the
@@ -175,14 +177,14 @@ TEST(EncodingTest, MinimumInvalidDimensions) {
 }
 
 TEST(EncodingTest, MaximumInvalidDimensions) {
-  TestEncoding(std::numeric_limits<typeof(avifImage::width)>::max(), 1, 8,
+  TestEncoding(std::numeric_limits<decltype(avifImage::width)>::max(), 1, 8,
                AVIF_RESULT_ENCODE_COLOR_FAILED);
-  TestEncoding(1, std::numeric_limits<typeof(avifImage::height)>::max(), 8,
+  TestEncoding(1, std::numeric_limits<decltype(avifImage::height)>::max(), 8,
                AVIF_RESULT_ENCODE_COLOR_FAILED);
-  TestEncoding(std::numeric_limits<typeof(avifImage::width)>::max(),
-               std::numeric_limits<typeof(avifImage::height)>::max(), 12,
+  TestEncoding(std::numeric_limits<decltype(avifImage::width)>::max(),
+               std::numeric_limits<decltype(avifImage::height)>::max(), 12,
                AVIF_RESULT_ENCODE_COLOR_FAILED);
-  TestEncoding(1, 1, std::numeric_limits<typeof(avifImage::depth)>::max(),
+  TestEncoding(1, 1, std::numeric_limits<decltype(avifImage::depth)>::max(),
                AVIF_RESULT_UNSUPPORTED_DEPTH);
 }
 

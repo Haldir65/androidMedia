@@ -75,14 +75,20 @@ int main(int argc, char * argv[])
         // * this frame's sequence timing
 
         avifRGBImageSetDefaults(&rgb, decoder->image);
-        // Override YUV(A)->RGB(A) defaults here: depth, format, chromaUpsampling, ignoreAlpha, alphaPremultiplied, libYUVUsage, etc
+        // Override YUV(A)->RGB(A) defaults here:
+        //   depth, format, chromaUpsampling, avoidLibYUV, ignoreAlpha, alphaPremultiplied, etc.
 
         // Alternative: set rgb.pixels and rgb.rowBytes yourself, which should match your chosen rgb.format
         // Be sure to use uint16_t* instead of uint8_t* for rgb.pixels/rgb.rowBytes if (rgb.depth > 8)
-        avifRGBImageAllocatePixels(&rgb);
+        result = avifRGBImageAllocatePixels(&rgb);
+        if (result != AVIF_RESULT_OK) {
+            fprintf(stderr, "Allocation of RGB samples failed: %s (%s)\n", inputFilename, avifResultToString(result));
+            goto cleanup;
+        }
 
-        if (avifImageYUVToRGB(decoder->image, &rgb) != AVIF_RESULT_OK) {
-            fprintf(stderr, "Conversion from YUV failed: %s\n", inputFilename);
+        result = avifImageYUVToRGB(decoder->image, &rgb);
+        if (result != AVIF_RESULT_OK) {
+            fprintf(stderr, "Conversion from YUV failed: %s (%s)\n", inputFilename, avifResultToString(result));
             goto cleanup;
         }
 

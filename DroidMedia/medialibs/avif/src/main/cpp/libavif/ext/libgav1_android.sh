@@ -9,15 +9,16 @@
 # The git tag below is known to work, and will occasionally be updated. Feel
 # free to use a more recent commit.
 
+set -e
+
 if [ $# -ne 1 ]; then
   echo "Usage: ${0} <path_to_android_ndk>"
   exit 1
 fi
 # When updating the libgav1 version, make the same change to libgav1.cmd.
-git clone -b v0.17.0 --depth 1 https://chromium.googlesource.com/codecs/libgav1
+git clone -b v0.18.0 --depth 1 https://chromium.googlesource.com/codecs/libgav1
 
 cd libgav1
-git clone -b lts_2021_03_24 --depth 1 https://github.com/abseil/abseil-cpp.git third_party/abseil-cpp
 mkdir build
 cd build
 
@@ -31,6 +32,9 @@ for abi in ${ABI_LIST}; do
     -DCMAKE_BUILD_TYPE=Release \
     -DLIBGAV1_ANDROID_NDK_PATH=${1} \
     -DLIBGAV1_THREADPOOL_USE_STD_MUTEX=1 \
+    -DLIBGAV1_ENABLE_EXAMPLES=0 \
+    -DLIBGAV1_ENABLE_TESTS=0 \
+    -DLIBGAV1_MAX_BITDEPTH=12 \
     -DANDROID_ABI=${abi}
   ninja
   cd ..

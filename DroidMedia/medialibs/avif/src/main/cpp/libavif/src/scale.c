@@ -5,12 +5,18 @@
 
 #if !defined(AVIF_LIBYUV_ENABLED)
 
-avifBool avifImageScale(avifImage * image, uint32_t dstWidth, uint32_t dstHeight, uint32_t imageSizeLimit, avifDiagnostics * diag)
+avifBool avifImageScale(avifImage * image,
+                        uint32_t dstWidth,
+                        uint32_t dstHeight,
+                        uint32_t imageSizeLimit,
+                        uint32_t imageDimensionLimit,
+                        avifDiagnostics * diag)
 {
     (void)image;
     (void)dstWidth;
     (void)dstHeight;
     (void)imageSizeLimit;
+    (void)imageDimensionLimit;
     avifDiagnosticsPrintf(diag, "avifImageScale() called, but is unimplemented without libyuv!");
     return AVIF_FALSE;
 }
@@ -36,7 +42,12 @@ avifBool avifImageScale(avifImage * image, uint32_t dstWidth, uint32_t dstHeight
 // This should be configurable and/or smarter. kFilterBox has the highest quality but is the slowest.
 #define AVIF_LIBYUV_FILTER_MODE kFilterBox
 
-avifBool avifImageScale(avifImage * image, uint32_t dstWidth, uint32_t dstHeight, uint32_t imageSizeLimit, avifDiagnostics * diag)
+avifBool avifImageScale(avifImage * image,
+                        uint32_t dstWidth,
+                        uint32_t dstHeight,
+                        uint32_t imageSizeLimit,
+                        uint32_t imageDimensionLimit,
+                        avifDiagnostics * diag)
 {
     if ((image->width == dstWidth) && (image->height == dstHeight)) {
         // Nothing to do
@@ -47,7 +58,7 @@ avifBool avifImageScale(avifImage * image, uint32_t dstWidth, uint32_t dstHeight
         avifDiagnosticsPrintf(diag, "avifImageScale requested invalid dst dimensions [%ux%u]", dstWidth, dstHeight);
         return AVIF_FALSE;
     }
-    if (dstWidth > (imageSizeLimit / dstHeight)) {
+    if (avifDimensionsTooLarge(dstWidth, dstHeight, imageSizeLimit, imageDimensionLimit)) {
         avifDiagnosticsPrintf(diag, "avifImageScale requested dst dimensions that are too large [%ux%u]", dstWidth, dstHeight);
         return AVIF_FALSE;
     }
@@ -71,8 +82,10 @@ avifBool avifImageScale(avifImage * image, uint32_t dstWidth, uint32_t dstHeight
     image->imageOwnsAlphaPlane = AVIF_FALSE;
 
     const uint32_t srcWidth = image->width;
-    image->width = dstWidth;
     const uint32_t srcHeight = image->height;
+    const uint32_t srcUVWidth = avifImagePlaneWidth(image, AVIF_CHAN_U);
+    const uint32_t srcUVHeight = avifImagePlaneHeight(image, AVIF_CHAN_U);
+    image->width = dstWidth;
     image->height = dstHeight;
 
     if (srcYUVPlanes[0] || srcAlphaPlane) {
@@ -95,13 +108,6 @@ avifBool avifImageScale(avifImage * image, uint32_t dstWidth, uint32_t dstHeight
             return AVIF_FALSE;
         }
 
-        avifPixelFormatInfo formatInfo;
-        avifGetPixelFormatInfo(image->yuvFormat, &formatInfo);
-        const uint32_t srcUVWidth = (srcWidth + formatInfo.chromaShiftX) >> formatInfo.chromaShiftX;
-        const uint32_t srcUVHeight = (srcHeight + formatInfo.chromaShiftY) >> formatInfo.chromaShiftY;
-        const uint32_t dstUVWidth = (dstWidth + formatInfo.chromaShiftX) >> formatInfo.chromaShiftX;
-        const uint32_t dstUVHeight = (dstHeight + formatInfo.chromaShiftY) >> formatInfo.chromaShiftY;
-
         for (int i = 0; i < AVIF_PLANE_COUNT_YUV; ++i) {
             if (!srcYUVPlanes[i]) {
                 continue;
@@ -109,8 +115,8 @@ avifBool avifImageScale(avifImage * image, uint32_t dstWidth, uint32_t dstHeight
 
             const uint32_t srcW = (i == AVIF_CHAN_Y) ? srcWidth : srcUVWidth;
             const uint32_t srcH = (i == AVIF_CHAN_Y) ? srcHeight : srcUVHeight;
-            const uint32_t dstW = (i == AVIF_CHAN_Y) ? dstWidth : dstUVWidth;
-            const uint32_t dstH = (i == AVIF_CHAN_Y) ? dstHeight : dstUVHeight;
+            const uint32_t dstW = avifImagePlaneWidth(image, i);
+            const uint32_t dstH = avifImagePlaneHeight(image, i);
             if (image->depth > 8) {
                 uint16_t * const srcPlane = (uint16_t *)srcYUVPlanes[i];
                 const uint32_t srcStride = srcYUVRowBytes[i] / 2;

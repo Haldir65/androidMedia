@@ -1,7 +1,7 @@
-# Copyright 2022 Google LLC. All rights reserved.
+# Copyright 2022 Google LLC
 # SPDX-License-Identifier: BSD-2-Clause
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.13)
 
 project(avif_android_jni)
 
@@ -15,8 +15,14 @@ project(avif_android_jni)
 # To override the variables in the libavif subproject:
 # https://stackoverflow.com/questions/3766740/overriding-a-default-option-value-in-cmake-from-a-parent-cmakelists-txt
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+# To disable libgav1, change the following two variables to OFF.
 set(AVIF_LOCAL_LIBGAV1 ON CACHE BOOL "" FORCE)
 set(AVIF_CODEC_LIBGAV1 ON CACHE BOOL "" FORCE)
+
+# To disable dav1d, change the following two variables to ON.
+set(AVIF_LOCAL_DAV1D OFF CACHE BOOL "" FORCE)
+set(AVIF_CODEC_DAV1D OFF CACHE BOOL "" FORCE)
 
 # The current CMake file lives in:
 # $LIBAVIF_ROOT/android_jni/avifandroidjni/src/main/jni.
@@ -26,4 +32,9 @@ add_subdirectory(../../../../.. build)
 
 add_library("avif_android" SHARED "libavif_jni.cc")
 
-target_link_libraries(avif_android jnigraphics avif log)
+# Import the cpu-features module to compute the number of threads used for
+# decoding.
+include(AndroidNdkModules)
+android_ndk_import_module_cpufeatures()
+
+target_link_libraries(avif_android jnigraphics avif log cpufeatures)

@@ -32,7 +32,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t * Data, size_t Size)
     if (result == AVIF_RESULT_OK) {
         for (int loop = 0; loop < 2; ++loop) {
             while (avifDecoderNextImage(decoder) == AVIF_RESULT_OK) {
-                if ((loop != 0) || (decoder->imageIndex != 0)) {
+                if (((decoder->image->width * decoder->image->height) > (30 * 1024 * 1024)) || (loop != 0) ||
+                    (decoder->imageIndex != 0)) {
                     // Skip the YUV<->RGB conversion tests, which are time-consuming for large
                     // images. It suffices to run these tests only for loop == 0 and only for the
                     // first image of an image sequence.
@@ -48,7 +49,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t * Data, size_t Size)
                             rgb.format = rgbFormats[rgbFormatsIndex];
                             rgb.depth = rgbDepths[rgbDepthsIndex];
                             rgb.chromaUpsampling = upsamplings[upsamplingsIndex];
-                            avifRGBImageAllocatePixels(&rgb);
+                            rgb.avoidLibYUV = AVIF_TRUE;
+                            if (avifRGBImageAllocatePixels(&rgb) != AVIF_RESULT_OK) {
+                                continue;
+                            }
                             avifResult rgbResult = avifImageYUVToRGB(decoder->image, &rgb);
                             // Since avifImageRGBToYUV() ignores rgb.chromaUpsampling, we only need
                             // to test avifImageRGBToYUV() with a single upsamplingsIndex.
@@ -59,9 +63,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t * Data, size_t Size)
                                                                             decoder->image->height,
                                                                             yuvDepths[yuvDepthsIndex],
                                                                             decoder->image->yuvFormat);
-                                    avifResult yuvResult = avifImageRGBToYUV(tempImage, &rgb);
-                                    if (yuvResult != AVIF_RESULT_OK) {
+                                    if (!tempImage) {
+                                        continue;
                                     }
+                                    (void)avifImageRGBToYUV(tempImage, &rgb);
                                     avifImageDestroy(tempImage);
                                 }
                             }
