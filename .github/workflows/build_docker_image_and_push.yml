@@ -21,17 +21,23 @@ jobs:
     # if: "contains(github.event.head_commit.message, '[DPush]')"
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: "arm64"
+      - name: show platform info
+        run:
+          uname -a
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
+
       - name: Checkout the code
         uses: actions/checkout@v4
-
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY_IMAGE }}  
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+    
       - run: echo "The ${{ github.repository }} repository has been cloned."
       - run: echo "Setting up Docker"
       - name: set up Docker Buildx
