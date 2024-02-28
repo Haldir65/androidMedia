@@ -22,8 +22,7 @@ RUN mkdir -p /etc/apt/keyrings && \
 
 # install the temurin jdk
 RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends temurin-$JAVA_VERSION-jdk
-## on arm64, this may be  /usr/lib/jvm/temurin-$JAVA_VERSION-jdk-arm64
-ENV JAVA_HOME=/usr/lib/jvm/temurin-$JAVA_VERSION-jdk-amd64
+
 
 
 
@@ -43,9 +42,10 @@ ARG ANDROID_ROOT
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID
-ARG USER_PLATFORM
 
 
+## on arm64, this may be  /usr/lib/jvm/temurin-$JAVA_VERSION-jdk-arm64
+ENV JAVA_HOME=/usr/lib/jvm/temurin-$JAVA_VERSION-jdk-amd64
 
 WORKDIR /tmp
 
@@ -73,8 +73,8 @@ RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_roo
   "platforms;android-32" \
   "platforms;android-31" \
   "build-tools;34.0.0" \
-  "ndk-bundle" \
   "ndk;26.1.10909125" \
+  "ndk-bundle" \
   "cmake;3.22.1" \
   "extras;android;m2repository" \
   "extras;google;m2repository"  1>/dev/null

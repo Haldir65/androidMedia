@@ -7,93 +7,118 @@ on:
       - docker_image_publish
 
 env:
-  REGISTRY_IMAGE: haldir65/android-build-env      
+  REGISTRY_IMAGE: haldir65/android-build-env 
+  DH_UNAME: haldir65     
+
 
 jobs:
-  build_docker_image_and_push:
+  build:
     runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, '[DPush]')"
     strategy:
       fail-fast: false
       matrix:
         platform:
-          - linux/amd64
-          - linux/arm64
-    # if: "contains(github.event.head_commit.message, '[DPush]')"
+          - amd64
+          - arm64
     steps:
-      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
-      - name: Set up QEMU
-        if: contains(matrix.platform, 'arm64')
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: "arm64"
-      - name: show platform info
-        run:
-          uname -a
-      - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
-
-      - name: Checkout the code
+      -
+        name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV          
+      -
+        name: Checkout
         uses: actions/checkout@v4
-      - name: Docker meta
+      -
+        name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY_IMAGE }}  
-    
-      - run: echo "The ${{ github.repository }} repository has been cloned."
-      - run: echo "Setting up Docker"
-      - name: set up Docker Buildx
+          images: ${{ env.REGISTRY_IMAGE }}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
+      -
+        name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ env.DH_UNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
+  
 
-      - run: echo "start building custom Docker image... "
-      # - name: now build Docker image
-      #   run: docker build --build-arg VERSION=2.312.0-ubuntu-jammy --build-arg JAVA_VERSION=17 --build-arg SDK_TOOLS=11076708_latest -f Dockerfile --tag=haldir65/android-build-env:latest .
-      
-      # - name: Look up images
-      #   run: docker image ls 
-
-      # - run: echo "done building custom Docker image... for ${{ github.repositoryUrl }}"
-      # - name: Run a container from the image not in detached mode.
-      #   run: docker run --name=container1 --rm image1
-      # - name: show all docker ps
-      #   run: docker ps -a
-
-      - name: Build and push amd64
-        if: contains(matrix.platform, 'amd64')
+      - name: Build and push by digest
         uses: docker/build-push-action@v5
+        id: build
         with:
+          push: false
           context: .
-          file: Dockerfile
-          push: true
-          platforms: ${{ matrix.platform }}
+          platforms: "linux/${{ matrix.platform }}"
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=2.312.0-ubuntu-jammy
             JAVA_VERSION=17
             SDK_TOOLS=11076708_latest
-          tags: haldir65/android-build-env:java17-ndk26-api34
+          file: ${{ matrix.platform }}.Dockerfile
+          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+
       -
-        name: Build and push
-        uses: docker/build-push-action@v5
-        if: contains(matrix.platform, 'arm64')
+        name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"          
+      -
+        name: Upload digest
+        uses: actions/upload-artifact@v4
         with:
-          context: .
-          push: true
-          platforms: ${{ matrix.platform }}
-          labels: ${{ steps.meta.outputs.labels }}
-          file: arm64.Dockerfile
-          build-args: |
-            VERSION=2.312.0-ubuntu-jammy
-            JAVA_VERSION=17
-            SDK_TOOLS=11076708_latest
-          tags: haldir65/android-build-env:java17-ndk26-api34    
-     
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
       - run: echo "Build status report=${{ job.status }}."
 
 
-   
+  merge:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      -
+        name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_IMAGE }}
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DH_UNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      -
+        name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          echo $DOCKER_METADATA_OUTPUT_JSON
+          echo $DOCKER_METADATA_OUTPUT_JSON | jq -cr '.tags | map("-t " + .) | join(" ")'
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+          $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *) --tag ${{ env.REGISTRY_IMAGE }}:latest
+      -
+        name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}    
