@@ -3,6 +3,32 @@ orbs:
   android: circleci/android@2.4.0
 #   android: circleci/android@1.0.3
   # dt: datatheorem/mobile-secure-orb@1.0.0
+
+executors:
+  docker-amd64:
+    docker:
+      # - image: fabernovel/android:api-34-gcloud-ndk-snapshot
+      - image: haldir65/android-build-env:latest
+    resource_class: large
+  docker-aarch64:
+    docker:
+      - image: haldir65/android-build-env:latest
+    resource_class: arm.large
+    
+  linux-amd64:
+    machine:
+      image: android:default
+    resource_class: large
+  # linux-aarch64:
+  #   machine:  
+  #     image: android:default
+  #   resource_class: arm.large  
+  ## Job was rejected because resource class arm.large, image android:default is not a valid resource class
+
+
+
+
+
 jobs:
   assembleDebugOrRelease:
     executor:
@@ -13,6 +39,18 @@ jobs:
     #   - image: cimg/android:2024.01.1-ndk
     steps:
       - checkout
+
+      - run:
+          name: Install Dependency
+          command: |
+              apt update 
+              apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-17-jdk
+              tree -L 4
+      - run:
+          name: show system info
+          command: |
+             uname -a 
+             lscpu       
       - run:
           working_directory: DroidMedia
           name: clone required dependencies , glm and jpeg-turbo
@@ -25,23 +63,62 @@ jobs:
           command: ./gradlew assembleRelease --stacktrace
       - run:
           working_directory: DroidMedia
-          name: show  build results
-          command: ls -alSh app/build/outputs/apk/release
-      - save_cache:
-          working_directory: DroidMedia
-          key: dt-mobile-app-cache
-          paths:
-            - app/build/outputs/apk/release
-      - store_artifacts:
-          path: DroidMedia/app/build/outputs/apk/release
-          destination: releaseApk
+          name: show build results
+          command: |
+            tree -L 4 app/build
+      # - save_cache:
+      #     working_directory: DroidMedia
+      #     key: dt-mobile-app-cache
+      #     paths:
+      #       - app/build/outputs/apk/release
+      # - store_artifacts:
+      #     path: DroidMedia/app/build/outputs/apk/release
+      #     destination: releaseApk
 
+
+
+  vmbuild:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
+    steps:
+      - checkout
+      - run:
+          name: Install Dependency
+          command: |
+              sudo apt update 
+              sudo apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-17-jdk
+              tree -L 4
+      - run:
+          name: show system info
+          command: |
+             uname -a 
+             lscpu       
+      - run:
+          working_directory: DroidMedia
+          name: clone required dependencies , glm and jpeg-turbo
+          command: |
+            chmod +x ./.buildscripts/ensure_third_party_deps.sh
+            bash ./.buildscripts/ensure_third_party_deps.sh
+      - run:
+          working_directory: DroidMedia
+          name: Assemble release build
+          command: ./gradlew assembleRelease --stacktrace
+      - run:
+          working_directory: DroidMedia
+          name: show build results
+          command: |
+            tree -L 4 app/build
             
 workflows:
   version: 2
   build:
       jobs:
-        - assembleDebugOrRelease:
+        - dockerbuild:
+            matrix:
+              parameters:
+                os: [docker-amd64,docker-aarch64]
             filters:
               branches:
                 only:

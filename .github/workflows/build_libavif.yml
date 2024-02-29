@@ -1,0 +1,109 @@
+name: Build libavif on fly
+
+# on:
+#   push:
+#     # Pattern matched against refs/tags
+#     tags:        
+#       - '*'           # Push events to every tag not containing /
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  buildRelease:
+    name: Build Libav1f
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, '[BuildAv1f]')"
+    steps:
+      - run: echo "Building Release APK."
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 1
+      - run: echo "The ${{ github.repository }} repository has been cloned."
+      - name: Install `deps` on Ubuntu
+        shell: bash
+        run: |
+          sudo apt install ninja-build build-essential clang coreutils tree -y
+          echo "cpu core num is "
+          nproc    
+
+      - name: Checkout source code of libav1f
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 1
+            repository: AOMediaCodec/libavif
+            ref: 'v1.0.4'
+            path: libav1f        
+      - run: echo "Setting up JDK"
+      - name: Setup JDK
+        uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
+        with:
+          distribution: "zulu"
+          java-version: 17
+      - name: Download and Setup the Android NDK
+        uses: nttld/setup-ndk@6a7e9c5494a25c4842ca1011f710300132eacd94 # v1.4.2
+        id: setup-ndk
+        with:
+          # r25c is the same as 25.2.9519653.
+          ndk-version: r25c
+          add-to-path: false
+
+      - name: Setup ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Setup python
+        uses: actions/setup-python@v5 # v5.0.0
+        with:
+          python-version: '3.x'
+      - name: Setup meson
+        run: pip install meson
+      - name: Setup nasm
+        uses: ilammy/setup-nasm@13cbeb366c45c4379d3478cdcbadd8295feb5028 # v1.5.1
+      - name: Build libgav1 with the Android NDK
+        working-directory: libav1f/ext
+        run: bash libgav1_android.sh ${{ steps.setup-ndk.outputs.ndk-path }}  
+      - name: Build dav1d with the Android NDK
+        working-directory: libav1f/ext
+        run: bash dav1d_android.sh ${{ steps.setup-ndk.outputs.ndk-path }}
+      # - name: Build libyuv with the Android NDK
+      #   working-directory: libav1f/ext
+      #   run: |
+      #     bash libyuv_android.sh ${{ steps.setup-ndk.outputs.ndk-path }}
+
+      - name: inspect outputs
+        working-directory: libav1f/ext
+        run: |
+          tree -L 5 dav1d/build
+      
+      - name: Zip
+        shell: bash
+        run: |
+          mkdir -p dist
+          tar --directory libav1f/ext --create --xz --verbose --file dist/llvm.tar.xz .
+       
+      - name: Download and Setup the Android SDK
+        uses: android-actions/setup-android@07976c6290703d34c16d382cb36445f98bb43b1f # v3.2.0
+      - name: Install CMake in the Android SDK
+        # This is the same version of cmake that is found in build.gradle. This
+        # will be used to build libavif and the JNI bindings.
+        run: sdkmanager "cmake;3.22.1"
+      - name: Build the libavif JNI Wrapper
+        working-directory: libav1f/android_jni
+        run: ./gradlew --no-daemon assembleRelease
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}       
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ext_storage
+          path: dist
+          if-no-files-found: error
+          retention-days: 7    
+   
+

@@ -2,7 +2,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp").version("1.9.22-1.0.16") // Or latest version of KSP
+    id("com.google.devtools.ksp").version("1.9.22-1.0.17") // Or latest version of KSP
 }
 
 val SUPPORT_NATIVE_BUILD:String  by project
@@ -38,7 +38,7 @@ android {
                 cmake {
                     abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
                     cppFlags("-g -std=c++17 -frtti -fexceptions -Wno-unsafe-buffer-usage")
-                    arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
+                    arguments("-DBUILD_SHARED_LIBS=OFF","-DAVIF_LOCAL_DAV1D=ON","-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
                 }
             }
             ndk {

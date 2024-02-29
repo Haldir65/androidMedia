@@ -42,6 +42,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 
 set(LIB_PNG_VENDER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../vendor/libpng-1.6.37")
+include(cmake/deps.cmake)
 message("LIB_PNG_VENDER_DIR=${LIB_PNG_VENDER_DIR}")
 
 
