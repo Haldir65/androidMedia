@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../library/simdjson.h"
+#include <simdjson.h>
 #include "SimdJsonUseCase.h"
 #include "AndroidLog.h"
 #include <chrono>

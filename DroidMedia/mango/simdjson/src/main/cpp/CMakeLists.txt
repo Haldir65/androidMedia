@@ -10,7 +10,6 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden -Wno-error=declaration-a
 
 file(GLOB_RECURSE workfile CONFIGURE_DEPENDS
         #        "*.h"
-        library/*.cpp
         source/*.cpp
         )
 
@@ -53,6 +52,24 @@ target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-std=c+
 
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
 
+include(cmake/CPM.cmake)
+CPMAddPackage(
+  NAME     simdjson
+  URL      https://github.com/simdjson/simdjson/archive/refs/tags/v3.7.0.zip
+  URL_HASH SHA256=e65f746674048f8ce6dfda423df64f18676d8db3d3f967644f01d23f5874de5a
+)
 
-target_link_libraries(${PROJECT_NAME} jnigraphics  log)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        jnigraphics
+        log
+        )
+
+if(simdjson_ADDED)
+        message("simdjson_ADDED = " ${simdjson_ADDED})
+        set_target_properties(simdjson PROPERTIES CXX_STANDARD 17)
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+        simdjson
+        )
+endif()
+
 
