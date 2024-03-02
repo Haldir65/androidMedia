@@ -4,13 +4,15 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dev_1.0
+      - master
 
 jobs:
   runDebugBuildWithCache:
+    if: "contains(github.event.head_commit.message, '[DockerBuild]')"
     runs-on: ubuntu-latest
     container:
-      image: docker://fabernovel/android:api-34-gcloud-ndk-snapshot
+      image: docker://haldir65/android-build-env:java17-ndk26-api34
+      # image: docker://fabernovel/android:api-34-gcloud-ndk-snapshot
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
