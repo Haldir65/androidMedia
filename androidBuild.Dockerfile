@@ -11,7 +11,7 @@ ARG USER_GID=$USER_UID
 # install the temurin jdk
 RUN apt -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     --no-install-recommends openjdk-$JAVA_VERSION-jdk \
-    wget tree python3 python3-pip zip unzip
+    wget tree python3 python3-pip zip unzip git
 
 RUN readlink -f $(which java)
 
