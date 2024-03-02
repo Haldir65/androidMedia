@@ -1,3 +1,6 @@
+FROM phusion/baseimage:jammy-1.0.2
+ARG BUILDPLATFORM=linux/amd64
+ARG ARCH=amd64
 ARG JAVA_VERSION=17
 ARG SDK_TOOLS=8512546_latest
 ARG ANDROID_ROOT=/usr/local/lib/android
@@ -5,18 +8,10 @@ ARG USERNAME=ubuntu
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-
-
-FROM phusion/baseimage:jammy-1.0.2
-ARG JAVA_VERSION
-ARG BUILDPLATFORM=linux/amd64
-ARG ARCH=amd64
-
-
 # install the temurin jdk
 RUN apt -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     --no-install-recommends openjdk-$JAVA_VERSION-jdk \
-    wget tree python3 python3-pip
+    wget tree python3 python3-pip zip unzip
 
 RUN readlink -f $(which java)
 
@@ -30,7 +25,7 @@ RUN readlink -f $(which java)
 ## export env will not persist in final image
 
 # /usr/lib/jvm/java-17-openjdk-amd64
-ENV JAVA_HOME=/usr/lib/jvm/temurin-$JAVA_VERSION-jdk-${ARCH}
+ENV JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-${ARCH}
 
 
 RUN echo ${JAVA_HOME}
@@ -40,10 +35,17 @@ WORKDIR /tmp
 
 # download android tools and use it to install the SDK
 RUN mkdir -p ${ANDROID_ROOT}/sdk/cmdline-tools/latest
+
+RUN echo ${ANDROID_ROOT}
+
 RUN wget -O android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-$SDK_TOOLS.zip && unzip android-sdk.zip && cp -r ./cmdline-tools/* ${ANDROID_ROOT}/sdk/cmdline-tools/latest
 
+RUN echo ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager
 
-RUN ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null
+RUN /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null
+
+RUN echo ${ANDROID_ROOT}
+
 
 
 RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_ROOT/sdk/ \
@@ -54,10 +56,11 @@ RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_roo
   "platforms;android-31" \
   "build-tools;34.0.0" \
   "ndk;26.1.10909125" \
-  "ndk-bundle" \
   "cmake;3.22.1" \
   "extras;android;m2repository" \
   "extras;google;m2repository"  1>/dev/null
+  
+RUN echo ${ANDROID_ROOT}
 
 
 RUN if [ "$BUILDPLATFORM" = "linux/arm64" ]; then echo "ndk-bundle install fail on arm64 "; else \
