@@ -124,7 +124,7 @@ workflows:
             filters:
               branches:
                 only:
-                  - master
+                  - release
         - vmbuild:
             matrix:
                   parameters:
