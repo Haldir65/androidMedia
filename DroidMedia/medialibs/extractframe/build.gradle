@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 def SUPPORTED_ABI = ['arm64-v8a', 'x86', 'x86_64','armeabi-v7a'] as String[]
+def enableCmake = "True".equalsIgnoreCase(property('SUPPORT_NATIVE_BUILD'))
 
 android {
     namespace 'com.me.harris.extractframe'
@@ -22,10 +23,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
+        if (enableCmake){
             externalNativeBuild {
                 cmake {
                     abiFilters SUPPORTED_ABI //只帮我打这个架构的就好了
-                    cppFlags "-g -std=c++11 -frtti -fexceptions"
+                    cppFlags "-g -std=c++17 -frtti -fexceptions"
                     arguments '-DANDROID_PLATFORM=android-21',
                             '-DANDROID_TOOLCHAIN=clang',
                             '-DANDROID_STL=c++_shared',
@@ -46,6 +48,7 @@ android {
                     universalApk true
                 }
             }
+        }
 
             packagingOptions {
                 pickFirst "lib/arm64-v8a/*.so"
@@ -53,7 +56,7 @@ android {
 
     }
 
-        if (SUPPORT_NATIVE_BUILD){
+        if (enableCmake){
         externalNativeBuild {
             cmake {
                 version "3.22.1"

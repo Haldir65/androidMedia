@@ -31,7 +31,7 @@ android {
             externalNativeBuild {
                 cmake {
                     abiFilters SUPPORTED_ABI //只帮我打这个架构的就好了
-                    cppFlags "-g -std=c++11 -frtti -fexceptions"
+                    cppFlags "-g -std=c++17 -frtti -fexceptions"
                     arguments '-DANDROID_PLATFORM=android-21',
                             '-DANDROID_TOOLCHAIN=clang',
                             '-DANDROID_STL=c++_shared'
