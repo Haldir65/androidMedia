@@ -36,6 +36,8 @@ jobs:
       - name: clone required dependencies , glm and jpeg-turbo
         working-directory: DroidMedia
         run: |
+          sudo apt update
+          sudo apt install tree
           chmod +x ./.buildscripts/ensure_third_party_deps.sh
           ./.buildscripts/ensure_third_party_deps.sh
         shell: bash
@@ -65,8 +67,13 @@ jobs:
 
       - name: Generate hashes
         run: |
+          tree -L 4 ${{ env.builddir }}
           for file in ${{ env.builddir }}/*; do
-            sha256sum $file >> ${{ env.builddir }}/hashes.txt
+            if [ -d "$file" ]; then
+              echo "this is an folder: $file"
+            else
+              sha256sum $file >> ${{ env.builddir }}/hashes.txt
+            fi
           done
 
       - name: Upload_That_APK
