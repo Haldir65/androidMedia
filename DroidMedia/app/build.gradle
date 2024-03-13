@@ -282,6 +282,7 @@ dependencies {
     implementation project(":medialibs:extractframe")
     implementation project(":medialibs:gpuv")
     implementation project(":medialibs:mediainfo")
+    implementation project(":medialibs:composeworkmanager")
     implementation project(":serviceloaderapi:serviceapi")
     implementation project(":mango:nativecrash")
 

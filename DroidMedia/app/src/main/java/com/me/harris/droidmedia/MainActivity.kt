@@ -104,6 +104,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         binding.btn15.setOnClickListener {
             startActivity(Intent(this, SimdJsonEntryActivity::class.java))
         }
+        binding.btn16.setOnClickListener {
+            startActivity(Intent(this, com.me.harris.composeworkmanager.BlurActivity::class.java))
+        }
     }
 
     override fun onResume() {

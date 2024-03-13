@@ -1,6 +1,6 @@
 [versions]
 minSdk="27"
-okhttpBom="4.10.0"
+okhttpBom="4.12.0"
 targetSdk="29"
 arrow = "1.2.1"
 androidGradlePlugin = "8.3.0"
@@ -12,6 +12,7 @@ cardview = "1.0.0"
 okhttp="4.12.0"
 okio="3.8.0"
 coroutine="1.7.3"
+androidx-work-ktx="2.9.0"
 androidx-core-ktx="1.12.0"
 androidx-viewpager2="1.0.0"
 androidx-appcompat-appcompat="1.6.1"
@@ -49,7 +50,7 @@ room = "2.6.1"
 
 mmkv = "1.2.15"
 kotlinxCollectionsImmutable = "0.3.5"
-material3 = "1.2.0"
+material3 = "1.2.1"
 # other versions
 
 [libraries]
@@ -76,7 +77,7 @@ oboe = { module = "com.google.oboe:oboe", version.ref = "oboe_version" }
 
 
 
-
+androidx-work-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work-ktx" }
 androidx-core-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-viewpager2-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "androidx-viewpager2" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintLayout" }

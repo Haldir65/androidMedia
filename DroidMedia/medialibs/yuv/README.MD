@@ -66,8 +66,7 @@ todo:
 - yuvJava allocateDirect老是oom?
 - [一直烂尾]https://github.com/glumes/AndroidOpenGLTutorial/blob/master/opengl_tutorial/src/main/java/com/glumes/openglbasicshape/transition/TransitionRender.java#L39
 - compose 搞搞
-- 整理一下项目经历
-- 算法先hold住，需要脑子清醒
+
 
 
 done
