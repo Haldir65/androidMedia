@@ -50,6 +50,10 @@ class SimdJsonEntryActivity:AppCompatActivity() {
             }
 
         }
+
+        binding.card2.setOnClickListener {
+           Java11Support.showJava11Support()
+        }
     }
 
 

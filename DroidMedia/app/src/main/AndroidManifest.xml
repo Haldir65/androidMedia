@@ -33,7 +33,7 @@
         android:requestLegacyExternalStorage="true"
         >
         <activity
-            android:name=".MainActivity"
+            android:name="com.me.harris.MainActivity2"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +45,7 @@
 
 
 
+        <activity android:name="com.me.harris.droidmedia.MainActivity" />
 
         <activity
             android:name="com.jadyn.mediakit.dumb.decode.DecodeActivity"

@@ -34,8 +34,17 @@ android {
     buildFeatures {
         buildConfig = true
         viewBinding = true
+        compose = true
 //        aidl true
     }
+
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
+    }
+
 
     sourceSets {
 //        main {
@@ -118,10 +127,6 @@ android {
         }
     }
 
-    packagingOptions {
-        pickFirst '**/libEGL.so'
-        pickFirst '**/libGLESv2.so'
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -139,13 +144,11 @@ android {
 
     packagingOptions {
         resources.excludes.add("META-INF/*")
+        resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         pickFirst 'lib/*/liblog.so'
+        pickFirst '**/libEGL.so'
+        pickFirst '**/libGLESv2.so'
     }
-
-
-
-
-
 
     //https://stackoverflow.com/a/40276710 每次换机器编译都要重新安装太费事了
     signingConfigs {
@@ -219,6 +222,7 @@ dependencies {
     implementation libs.exoplayer.ui
     implementation libs.coil.kt
     implementation  libs.androidx.recyclerview.recyclerview
+    implementation libs.androidx.material3.android
 
 
     testImplementation libs.junit.junit
@@ -289,6 +293,36 @@ dependencies {
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
+
+
+    implementation(platform("androidx.compose:compose-bom:2024.02.02"))
+    implementation("androidx.compose.compiler:compiler")
+    implementation "androidx.compose.compiler:compiler:1.5.10"
+    implementation("androidx.activity:activity-compose")
+    implementation("androidx.compose.animation:animation")
+    implementation("androidx.compose.animation:animation-android")
+    implementation("androidx.compose.animation:animation-core")
+    implementation("androidx.compose.animation:animation-core-android")
+    implementation("androidx.compose.animation:animation-graphics")
+    implementation("androidx.compose.animation:animation-graphics-android")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material:material-android")
+    implementation("androidx.compose.material:material-ripple")
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.runtime:runtime")
+    implementation("androidx.compose.runtime:runtime-livedata")
+    implementation("androidx.compose.runtime:runtime-saveable")
+    implementation("androidx.compose.foundation:foundation-layout")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-android")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-unit")
+    implementation("androidx.compose.ui:ui-geometry")
+    implementation("androidx.compose.ui:ui-text")
+    implementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-tooling-preview")
 
 
 

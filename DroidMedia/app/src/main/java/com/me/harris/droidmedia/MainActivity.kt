@@ -10,21 +10,21 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.daasuu.epf.VideoClipEntryActivity
-import com.me.harris.cameralib.CameraEntryActivity
-import com.me.harris.droidmedia.databinding.ActivityMainBinding
 import com.jadyn.mediakit.MediaKitEntryActivity
 import com.me.harris.AwesomePickVideoActivity
 import com.me.harris.audiolib.AudioLibEntryActivity
 import com.me.harris.avif.AvIfEntryActivity
-import com.me.harris.droidmedia.entity.JUserInfo
-import com.me.harris.droidmedia.entity.SubUserInfo
-import com.me.harris.droidmedia.entity.UserInfo
-import com.me.harris.filterlibrary.opengl.enrty.OpenGlEntryActivity
 import com.me.harris.awesomelib.utils.StoragePermissSucks
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.awesomelib.viewBinding
+import com.me.harris.cameralib.CameraEntryActivity
+import com.me.harris.droidmedia.databinding.ActivityMainBinding
+import com.me.harris.droidmedia.entity.JUserInfo
+import com.me.harris.droidmedia.entity.SubUserInfo
+import com.me.harris.droidmedia.entity.UserInfo
 import com.me.harris.extractframe.ExtractFrameEntryActivity
 import com.me.harris.filterlibrary.FilterEntryActivity
+import com.me.harris.filterlibrary.opengl.enrty.OpenGlEntryActivity
 import com.me.harris.gpuvideo.GPUVideoEntryActivity
 import com.me.harris.libjpeg.ui.LibJpegEntryActivity
 import com.me.harris.mediainfo.MediaInfoProbeActivity
@@ -32,6 +32,7 @@ import com.me.harris.playerLibrary.VideoPlayExtryActivity
 import com.me.harris.pnglib.PngLibEntryActivity
 import com.me.harris.simdjson.SimdJsonEntryActivity
 
+@Deprecated("replace with compose")
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val binding by viewBinding(ActivityMainBinding::bind)
