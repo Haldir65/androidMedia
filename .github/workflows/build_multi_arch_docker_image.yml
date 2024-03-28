@@ -8,7 +8,7 @@ on:
 env:
   REGISTRY_IMAGE: haldir65/android-build-env
   DH_UNAME: haldir65
-  IMAG_TAG: java17-ndk26-api34
+  IMAG_TAG: java21-ndk26-api34
 
 
 jobs:
@@ -22,13 +22,13 @@ jobs:
           - {
             os_arch: "linux/amd64",
             arch : "amd64",
-            java_version: 17,
+            java_version: 21,
             sdk_tools_version: "11076708_latest"
           }
           - {
             os_arch: "linux/arm64",
             arch: "arm64",
-            java_version: 17,
+            java_version: 21,
             sdk_tools_version: "11076708_latest"
           }
     steps:
