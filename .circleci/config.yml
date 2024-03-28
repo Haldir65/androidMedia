@@ -46,7 +46,7 @@ jobs:
           name: Install Dependency
           command: |
               apt update 
-              apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-17-jdk
+              apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
               tree -L 4
       - run:
           name: show system info
@@ -90,7 +90,7 @@ jobs:
           name: Install Dependency
           command: |
               sudo apt update 
-              sudo apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-17-jdk
+              sudo apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
               tree -L 4
       - run:
           name: show system info
