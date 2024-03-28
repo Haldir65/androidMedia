@@ -8,11 +8,11 @@ executors:
   docker-amd64:
     docker:
       # - image: fabernovel/android:api-34-gcloud-ndk-snapshot
-      - image: haldir65/android-build-env:java17-ndk26-api34
+      - image: haldir65/android-build-env:java21-ndk26-api34
     resource_class: large
   docker-aarch64:
     docker:
-      - image: haldir65/android-build-env:java17-ndk26-api34
+      - image: haldir65/android-build-env:java21-ndk26-api34
     resource_class: arm.large
     
   linux-amd64:
