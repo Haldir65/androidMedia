@@ -1,4 +1,4 @@
-name: Android Build upon push
+name: run debug build with jdk 21
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  runDebugBuildWithCache:
+  runDebugWithJdk21:
     runs-on: ubuntu-latest
     env:
       builddir: DroidMedia/app/build/outputs/apk
@@ -22,7 +22,7 @@ jobs:
       - name: set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 17    
+          java-version: 21    
           distribution: 'temurin'
           # distribution: 'temurin' # See 'Supported distributions' for available options
           # java-version: '21'

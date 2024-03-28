@@ -24,7 +24,7 @@ android {
     buildToolsVersion = '34.0.0'
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     namespace "com.me.harris.droidmedia"
@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 
 
@@ -121,7 +121,7 @@ android {
 //    }
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
+            languageVersion = JavaLanguageVersion.of(21)
 //            vendor = JvmVendorSpec.ORACLE
             implementation = JvmImplementation.VENDOR_SPECIFIC
         }
@@ -129,12 +129,12 @@ android {
 
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = JavaVersion.VERSION_21
     }
 
     lint {
@@ -295,9 +295,8 @@ dependencies {
     kapt libs.google.dagger.hilt.android.compiler
 
 
-    implementation(platform("androidx.compose:compose-bom:2024.02.02"))
-    implementation("androidx.compose.compiler:compiler")
-    implementation "androidx.compose.compiler:compiler:1.5.10"
+    implementation(platform(libs.androidx.compose.bom))
+    implementation libs.androidx.compiler
     implementation("androidx.activity:activity-compose")
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.animation:animation-android")
