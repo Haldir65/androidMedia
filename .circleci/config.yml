@@ -42,11 +42,13 @@ jobs:
     steps:
       - checkout
 
+      # preseed packages so that apt-get won't prompt for user input
       - run:
           name: Install Dependency
           command: |
-              apt update 
-              apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
+              echo "keyboard-configuration keyboard-configuration/layoutcode string us" | debconf-set-selections
+              echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
+              apt update && DEBIAN_FRONTEND=noninteractive apt install -q -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
               tree -L 4
       - run:
           name: show system info
@@ -89,9 +91,17 @@ jobs:
       - run:
           name: Install Dependency
           command: |
-              sudo apt update 
-              sudo apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
+              sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
               tree -L 4
+              
+      - run:
+          name: Switch to jdk 21
+          command: |
+              java -version
+              export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+              export PATH=$JAVA_HOME/bin:$PATH
+              java -version
+
       - run:
           name: show system info
           command: |
@@ -106,7 +116,13 @@ jobs:
       - run:
           working_directory: DroidMedia
           name: Assemble release build
-          command: ./gradlew assembleRelease --stacktrace
+          command: |
+              java -version
+              export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+              export PATH=$JAVA_HOME/bin:$PATH
+              java -version
+              ./gradlew assembleRelease --stacktrace
+              
       - run:
           working_directory: DroidMedia
           name: show build results
