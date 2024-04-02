@@ -1,7 +1,6 @@
 package com.me.harris.simdjson
 
 import android.os.Bundle
-import android.os.FileUtils
 import android.os.SystemClock
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +8,7 @@ import com.me.harris.simdjson.databinding.ActivitySimdJsonEntryBinding
 import com.me.harris.simdjson.desc.TimeLine
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import okhttp3.internal.ignoreIoExceptions
-import org.json.JSONObject
 import java.io.File
-import java.nio.charset.Charset
-import java.sql.Time
 import kotlin.random.Random
 
 class SimdJsonEntryActivity:AppCompatActivity() {
@@ -53,6 +48,10 @@ class SimdJsonEntryActivity:AppCompatActivity() {
 
         binding.card2.setOnClickListener {
            Java11Support.showJava11Support()
+        }
+
+        binding.card3.setOnClickListener {
+           JsonJni.testCPPThreadPool("")
         }
     }
 

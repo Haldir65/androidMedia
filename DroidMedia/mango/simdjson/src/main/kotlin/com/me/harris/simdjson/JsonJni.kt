@@ -9,4 +9,7 @@ object JsonJni {
 
     external fun loadJsonFile(filepath:String)
 
+
+    external fun testCPPThreadPool(filepath:String)
+
 }
