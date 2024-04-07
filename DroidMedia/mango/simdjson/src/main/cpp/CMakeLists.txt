@@ -55,8 +55,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPT
 include(cmake/CPM.cmake)
 CPMAddPackage(
   NAME     simdjson
-  URL      https://github.com/simdjson/simdjson/archive/refs/tags/v3.7.0.zip
-  URL_HASH SHA256=e65f746674048f8ce6dfda423df64f18676d8db3d3f967644f01d23f5874de5a
+  URL      https://github.com/simdjson/simdjson/archive/refs/tags/v3.9.1.tar.gz
+  URL_HASH SHA256=a4b6e7cd83176e0ccb107ce38521da40a8df41c2d3c90566f2a0af05b0cd05c4
 )
 
 CPMAddPackage(
