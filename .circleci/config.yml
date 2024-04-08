@@ -121,7 +121,7 @@ jobs:
               export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
               export PATH=$JAVA_HOME/bin:$PATH
               java -version
-              ./gradlew assembleRelease "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx2g" -Dfile.encoding=UTF-8
+              ./gradlew assembleRelease "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g" -Dfile.encoding=UTF-8
               
       - run:
           working_directory: DroidMedia
@@ -140,7 +140,7 @@ workflows:
             filters:
               branches:
                 only:
-                  - master
+                  - release
         - vmbuild:
             matrix:
                   parameters:
@@ -148,4 +148,4 @@ workflows:
             filters:
               branches:
                 only:
-                  - master 
+                  - release 
