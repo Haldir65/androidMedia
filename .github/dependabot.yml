@@ -1,0 +1,14 @@
+version: 2
+updates:
+    - package-ecosystem: "gradle"
+      directory: "/DroidMedia"
+      schedule:
+          interval: "daily"
+      rebase-strategy: "disabled"
+
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      target-branch: master
+      schedule:
+          interval: "daily"
+      rebase-strategy: "disabled"
