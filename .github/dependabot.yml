@@ -5,6 +5,7 @@ updates:
       schedule:
           interval: "daily"
       rebase-strategy: "disabled"
+      open-pull-requests-limit: 15
 
     - package-ecosystem: "github-actions"
       directory: "/"
@@ -12,3 +13,4 @@ updates:
       schedule:
           interval: "daily"
       rebase-strategy: "disabled"
+      open-pull-requests-limit: 15
