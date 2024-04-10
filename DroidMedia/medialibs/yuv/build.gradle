@@ -46,7 +46,9 @@ android {
         abortOnError = false
         checkReleaseBuilds = true
     }
-    ndkVersion '26.1.10909125'
+
+    ndkVersion project.properties['NDK_VERSION']
+
 }
 
 dependencies {
