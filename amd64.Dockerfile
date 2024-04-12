@@ -1,5 +1,5 @@
 ARG VERSION=2.312.0-ubuntu-focal
-ARG JAVA_VERSION=17
+ARG JAVA_VERSION=21
 ARG SDK_TOOLS=8512546_latest
 ARG ANDROID_ROOT=/usr/local/lib/android
 ARG USERNAME=ubuntu
@@ -73,7 +73,7 @@ RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_roo
   "platforms;android-32" \
   "platforms;android-31" \
   "build-tools;34.0.0" \
-  "ndk;26.1.10909125" \
+  "ndk;26.3.11579264" \
   "ndk-bundle" \
   "cmake;3.22.1" \
   "extras;android;m2repository" \

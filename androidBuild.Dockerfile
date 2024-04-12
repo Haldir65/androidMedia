@@ -55,7 +55,7 @@ RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_roo
   "platforms;android-32" \
   "platforms;android-31" \
   "build-tools;34.0.0" \
-  "ndk;26.1.10909125" \
+  "ndk;26.3.11579264" \
   "cmake;3.22.1" \
   "extras;android;m2repository" \
   "extras;google;m2repository"  1>/dev/null
