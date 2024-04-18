@@ -94,7 +94,7 @@ dependencies {
 
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.compose.compiler:compiler")
-    implementation 'androidx.compose.compiler:compiler:1.5.11'
+    implementation 'androidx.compose.compiler:compiler:1.5.12'
     implementation("androidx.activity:activity-compose")
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.animation:animation-android")
