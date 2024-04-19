@@ -200,8 +200,15 @@ function _build_curl() {
 
 function _show_optputs(){
     _green "show layouts after build completed \n"
-    tree -L 4 $SSL_DIR
-    tree -L 4 $CURL_DIR
+    OS=$(uname)
+    if [[ "$OS" == "Linux" || "$OS" == "Darwin" ]]; then
+       tree -L 4 $SSL_DIR
+       tree -L 4 $CURL_DIR
+    elif [[ "$OS" == "Windows" ]]; then
+        _green "widnows"
+    else
+        echo "Unknown system"
+    fi
     _purple "examine deps of openssl \n $SSL_DIR/openssl/bin/openssl \n"
     $READELF -a $SSL_DIR/openssl/bin/openssl | grep "NEEDED"
 
