@@ -1,0 +1,83 @@
+name: build curl for android
+
+on:
+    workflow_dispatch:
+    push:
+      branches:
+        - main
+
+
+jobs:        
+  buildCurl:
+    name: Build curl for andorid
+    continue-on-error: false
+    strategy:
+      matrix:
+        target:
+          - id: 'linux-amd64'
+            os: 'ubuntu-latest'
+          - id: 'darwin-amd64'
+            # os: 'macos-14-xlarge'  ## failed
+            os: 'macos-14'
+      fail-fast: true
+
+    runs-on: ${{ matrix.target.os }}    
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 2
+
+      - name: Install `deps` on Ubuntu
+        if: startsWith(matrix.target.id, 'linux-')
+        shell: bash
+        run: |
+          sudo apt install ninja-build build-essential zip autoconf automake tree clang cmake coreutils libidn2-0-dev pkg-config -y
+          echo "cpu core num is "
+          nproc
+      
+      - name: Install `ninja llvm cmake `  on macOS
+        if: startsWith(matrix.target.id, 'darwin-')
+        shell: bash
+        run: |
+          brew install ninja llvm cmake tree zip libunistring libidn2 pkg-config autoconf automake libtool
+
+      - name: test deps
+        if: startsWith(matrix.target.id, 'darwin-') || startsWith(matrix.target.id, 'linux-')
+        shell: bash
+        run: |
+          uname -a
+          clang --version
+          clang++ --version
+      
+      - name: setup ndk
+        id: setup-ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26d
+          add-to-path: true
+
+
+      - name: build curl static 
+        shell: bash
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          bash DroidMedia/.buildscripts/curl_android_build.sh 
+
+      - name: show layouts
+        shell: bash
+        run: |
+            tree -L 2
+    
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target.id }}-${{ matrix.target.os }}-prebuilt-curl-libs
+          path: curl-prebuilt.zip
+          if-no-files-found: error
+          retention-days: 7
+
+
+  
