@@ -2,9 +2,9 @@ name: build curl for android
 
 on:
     workflow_dispatch:
-    # push:
-    #   branches:
-    #     - master
+    push:
+      branches:
+        - master
 
 
 jobs:        
@@ -16,9 +16,10 @@ jobs:
         target:
           - id: 'linux-amd64'
             os: 'ubuntu-latest'
-          # - id: 'darwin-amd64'
-          #   # os: 'macos-14-xlarge'  ## failed
-          #   os: 'macos-14'
+          - id: 'darwin-amd64'
+            os: 'macos-13'
+          - id: 'windows-amd64'
+            os: 'windows-2022'
       fail-fast: true
 
     runs-on: ${{ matrix.target.os }}    
