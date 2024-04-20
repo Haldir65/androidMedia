@@ -17,7 +17,7 @@ jobs:
           - id: 'linux-amd64'
             os: 'ubuntu-latest'
           - id: 'darwin-amd64'
-            os: 'macos-13'
+            os: 'macos-14'
           # - id: 'windows-amd64'
           #   os: 'windows-2022'
       fail-fast: true
@@ -52,19 +52,26 @@ jobs:
           clang --version
           clang++ --version
       
-      - name: setup ndk
-        id: setup-ndk
-        uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r26d
-          add-to-path: true
+      # - name: setup ndk
+      #   id: setup-ndk
+      #   uses: nttld/setup-ndk@v1
+      #   with:
+      #     ndk-version: r26d
+      #     add-to-path: true
+      - name: Setup Android Environment
+        uses: android-actions/setup-android@v3
 
+      - name: Install Android NDK
+        run: |
+          sdkmanager --install "ndk;26.3.11579264"
+          echo "ANDROID_NDK_HOME=${ANDROID_SDK_ROOT}/ndk/26.3.11579264" >> "$GITHUB_ENV"
 
       - name: build curl static 
         shell: bash
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        # env:
+        #   ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
+          printf '%s\n' "$ANDROID_NDK_HOME"
           bash DroidMedia/.buildscripts/curl_android_build.sh 
 
       - name: show layouts
