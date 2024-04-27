@@ -1,4 +1,4 @@
-FROM phusion/baseimage:jammy-1.0.2
+FROM phusion/baseimage:noble-1.0.0
 ARG BUILDPLATFORM=linux/amd64
 ARG ARCH=amd64
 ARG JAVA_VERSION=17
