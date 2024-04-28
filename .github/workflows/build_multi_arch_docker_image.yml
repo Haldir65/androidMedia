@@ -1,9 +1,9 @@
 name: build docker image convenient for android ci 
 on:
     workflow_dispatch:
-    push:
-        branches:
-            - docker_image_publish
+    # push:
+    #     branches:
+    #         - docker_image_publish
 
 env:
   REGISTRY_IMAGE: haldir65/android-build-env

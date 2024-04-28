@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dev_1.0
+      - docker_image_publish
 
 jobs:
   runDebugBuildWithCache:
     runs-on: ubuntu-latest
     container:
-      image: docker://fabernovel/android:api-34-gcloud-ndk-snapshot
+      image: docker://haldir65/android-build-env:ubuntu24-sudo-test
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
@@ -22,21 +22,22 @@ jobs:
       - name: clone required dependencies , glm and jpeg-turbo
         working-directory: DroidMedia
         run: |
-          chmod +x ./.buildscripts/ensure_third_party_deps.sh
-          ./.buildscripts/ensure_third_party_deps.sh
+           which sudo
+           sudo apt install cmake -y
+           cmake --version
         shell: bash
-      - name: show all files
-        working-directory: DroidMedia
-        run: ls -al
-      - name: Grant execute permission for gradlew
-        working-directory: DroidMedia
-        run: chmod +x gradlew
-      - run: echo "Building Debug APK."
-      - name: Build with Gradle
-        working-directory: DroidMedia
-            # run: ./gradlew build
-        run: ./gradlew assembleDebug
-      - run: echo "Build status report=${{ job.status }}."
+      # - name: show all files
+      #   working-directory: DroidMedia
+      #   run: ls -al
+      # - name: Grant execute permission for gradlew
+      #   working-directory: DroidMedia
+      #   run: chmod +x gradlew
+      # - run: echo "Building Debug APK."
+      # - name: Build with Gradle
+      #   working-directory: DroidMedia
+      #       # run: ./gradlew build
+      #   run: ./gradlew assembleDebug
+      # - run: echo "Build status report=${{ job.status }}."
 
 
    
