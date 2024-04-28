@@ -31,51 +31,51 @@ ENV JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-${ARCH}
 RUN echo ${JAVA_HOME}
 
 
-# WORKDIR /tmp
+WORKDIR /tmp
 
-# # download android tools and use it to install the SDK
-# RUN mkdir -p ${ANDROID_ROOT}/sdk/cmdline-tools/latest
+# download android tools and use it to install the SDK
+RUN mkdir -p ${ANDROID_ROOT}/sdk/cmdline-tools/latest
 
-# RUN echo ${ANDROID_ROOT}
+RUN echo ${ANDROID_ROOT}
 
-# RUN wget -O android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-$SDK_TOOLS.zip && unzip android-sdk.zip && cp -r ./cmdline-tools/* ${ANDROID_ROOT}/sdk/cmdline-tools/latest
+RUN wget -O android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-$SDK_TOOLS.zip && unzip android-sdk.zip && cp -r ./cmdline-tools/* ${ANDROID_ROOT}/sdk/cmdline-tools/latest
 
-# RUN echo ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager
+RUN echo ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager
 
-# RUN /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null
+RUN /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null
 
-# RUN echo ${ANDROID_ROOT}
+RUN echo ${ANDROID_ROOT}
 
 
 
-# RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_ROOT/sdk/ \
-#   "platform-tools" \
-#   "platforms;android-34" \
-#   "platforms;android-33" \
-#   "platforms;android-32" \
-#   "platforms;android-31" \
-#   "build-tools;34.0.0" \
-#   "ndk;26.3.11579264" \
-#   "cmake;3.22.1" \
-#   "extras;android;m2repository" \
-#   "extras;google;m2repository"  1>/dev/null
+RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_ROOT/sdk/ \
+  "platform-tools" \
+  "platforms;android-34" \
+  "platforms;android-33" \
+  "platforms;android-32" \
+  "platforms;android-31" \
+  "build-tools;34.0.0" \
+  "ndk;26.3.11579264" \
+  "cmake;3.22.1" \
+  "extras;android;m2repository" \
+  "extras;google;m2repository"  1>/dev/null
   
-# RUN echo ${ANDROID_ROOT}
+RUN echo ${ANDROID_ROOT}
 
 
-# RUN if [ "$BUILDPLATFORM" = "linux/arm64" ]; then echo "ndk-bundle install fail on arm64 "; else \
-#     echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_ROOT/sdk/ \
-#     "ndk-bundle"  \
-#     ; fi
+RUN if [ "$BUILDPLATFORM" = "linux/arm64" ]; then echo "ndk-bundle install fail on arm64 "; else \
+    echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_ROOT/sdk/ \
+    "ndk-bundle"  \
+    ; fi
 
-# WORKDIR /actions-runner
-# ENV PATH="${PATH}:/usr/local/lib/android/sdk/platform-tools/"
+WORKDIR /actions-runner
+ENV PATH="${PATH}:/usr/local/lib/android/sdk/platform-tools/"
 
-# # Set env variable for SDK Root (https://developer.android.com/studio/command-line/variables)
-# # ANDROID_HOME is deprecated, but older versions of Gradle rely on it
-# ENV ANDROID_SDK_ROOT=$ANDROID_ROOT/sdk
-# ENV ANDROID_HOME=$ANDROID_ROOT/sdk
-# LABEL maintainer="ernstjason1@gmail.com"
+# Set env variable for SDK Root (https://developer.android.com/studio/command-line/variables)
+# ANDROID_HOME is deprecated, but older versions of Gradle rely on it
+ENV ANDROID_SDK_ROOT=$ANDROID_ROOT/sdk
+ENV ANDROID_HOME=$ANDROID_ROOT/sdk
+LABEL maintainer="ernstjason1@gmail.com"
 
 # Create the user
 RUN usermod -aG sudo $USERNAME \

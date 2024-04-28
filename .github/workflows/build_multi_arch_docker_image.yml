@@ -1,14 +1,14 @@
 name: build docker image convenient for android ci 
 on:
     workflow_dispatch:
-    # push:
-    #     branches:
-    #         - docker_image_publish
+    push:
+        branches:
+            - docker_image_publish
 
 env:
   REGISTRY_IMAGE: haldir65/android-build-env
   DH_UNAME: haldir65
-  IMAG_TAG: ubuntu24-sudo-test
+  IMAG_TAG: ubuntu24-java21-ndk26-api34
 
 
 jobs:

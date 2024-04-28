@@ -2,9 +2,9 @@ name: Android Build using docker image
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - docker_image_publish
+  # push:
+  #   branches:
+  #     - docker_image_publish
 
 jobs:
   runDebugBuildWithCache:
