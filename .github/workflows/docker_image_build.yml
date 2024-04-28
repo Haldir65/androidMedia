@@ -20,11 +20,15 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
       - run: echo "The ${{ github.repository }} repository has been cloned."
-      - name: set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: 21    
-          distribution: 'oracle'
+      - name: examine preinstalled software version
+        run: |
+          java --version
+        shell: bash
+      # - name: set up JDK 21
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     java-version: 21    
+      #     distribution: 'oracle'
       - run: echo "The workflow is now ready to test your code."
       - name: clone required dependencies , glm and jpeg-turbo
         working-directory: DroidMedia
