@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       # image: docker://fabernovel/android:api-34-gcloud-ndk-snapshot
-      image: docker://haldir65/android-build-env:java21-ndk26-api34
+      image: docker://haldir65/android-build-env:ubuntu24-java21-ndk26-api34
 
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
