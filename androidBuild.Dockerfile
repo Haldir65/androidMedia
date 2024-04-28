@@ -13,22 +13,22 @@ RUN apt -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     --no-install-recommends openjdk-$JAVA_VERSION-jdk \
     wget tree python3 python3-pip zip unzip git
 
-# RUN readlink -f $(which java)
+RUN readlink -f $(which java)
 
 
-# ## this will not work
-# # RUN set -eux; \
-# #     if [ "$BUILDPLATFORM" = "linux/arm64" ]; then arch=arm64; else arch=amd64; fi && \
-# #     export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-${arch} && \
-# #     echo ${JAVA_HOME} && \
-# #     ls -al ${JAVA_HOME}
-# ## export env will not persist in final image
+## this will not work
+# RUN set -eux; \
+#     if [ "$BUILDPLATFORM" = "linux/arm64" ]; then arch=arm64; else arch=amd64; fi && \
+#     export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-${arch} && \
+#     echo ${JAVA_HOME} && \
+#     ls -al ${JAVA_HOME}
+## export env will not persist in final image
 
-# # /usr/lib/jvm/java-17-openjdk-amd64
-# ENV JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-${ARCH}
+# /usr/lib/jvm/java-17-openjdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-${ARCH}
 
 
-# RUN echo ${JAVA_HOME}
+RUN echo ${JAVA_HOME}
 
 
 # WORKDIR /tmp
