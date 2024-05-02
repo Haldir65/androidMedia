@@ -1,5 +1,5 @@
 [versions]
-compiler="1.5.12"
+compiler="1.5.13"
 composeBom="2024.04.01"
 minSdk="27"
 okhttpBom="4.12.0"
