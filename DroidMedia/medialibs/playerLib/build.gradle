@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    alias(libs.plugins.compose.compiler)
+
 }
 
 android {
@@ -20,9 +22,11 @@ android {
     }
 
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = "1.5.11"
+//    }
+
+
 
     defaultConfig {
         minSdk = Integer.parseInt(libs.versions.minSdk.get())

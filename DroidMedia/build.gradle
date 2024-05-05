@@ -44,6 +44,11 @@ buildscript {
     }
 }
 
+plugins {
+    // Existing plugins
+    alias(libs.plugins.compose.compiler) apply false
+}
+
 allprojects {
     repositories {
         google()
@@ -51,7 +56,7 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 

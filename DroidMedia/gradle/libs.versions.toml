@@ -8,7 +8,7 @@ targetSdk="29"
 androidGradlePlugin = "8.4.0"
 arrow = "1.2.4"
 glide = "4.16.0"
-kotlin_verison = "1.9.23"
+kotlin_verison = "2.0.0-RC2"
 gson = "2.10.1"
 retrofit = "2.11.0"
 cardview = "1.0.0"
@@ -20,7 +20,7 @@ androidx-core-ktx="1.13.1"
 androidx-viewpager2="1.0.0"
 androidx-appcompat-appcompat="1.6.1"
 androidx-activity-ktx="1.9.0"
-android-material="1.11.0"
+android-material="1.12.0"
 constraintLayout="2.1.4"
 coordinateLayout="1.2.0"
 lifecycle="2.7.0"
@@ -39,8 +39,8 @@ slfj="2.0.13"
 x_crash="3.1.0"
 slfj-android="1.7.36"
 oboe_version="1.8.1"
-kotlinCompilerExtensionVersion="1.5.11"
-kspversion="1.9.23-1.0.19"
+#kotlinCompilerExtensionVersion="1.5.11"
+kspversion="2.0.0-RC2-1.0.20"
 
 kotlinxDatetime = "0.5.0"
 kotlinxSerializationJson = "1.6.3"
@@ -183,6 +183,7 @@ android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_verison" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_verison" }
-kotlin-gradlePlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_verison" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_verison" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_verison" }
 
 
