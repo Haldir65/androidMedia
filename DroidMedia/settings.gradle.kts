@@ -12,6 +12,7 @@ include (":medialibs:ijksource")
 include (":medialibs:yuv")
 include (":medialibs:extractframe")
 include (":medialibs:gpuv")
+include (":medialibs:renderscript-toolkit")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

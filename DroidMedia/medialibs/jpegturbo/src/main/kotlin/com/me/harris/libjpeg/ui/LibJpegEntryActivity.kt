@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.google.android.renderscript.Toolkit
 import com.me.harris.awesomelib.viewBinding
 import com.me.harris.jpegturbo.R
 import com.me.harris.jpegturbo.databinding.ActivityJpegEntryBinding
@@ -85,6 +86,18 @@ class LibJpegEntryActivity : AppCompatActivity(R.layout.activity_jpeg_entry) {
             bmp.compress(Bitmap.CompressFormat.JPEG,100,fos)
             require(File(despath).exists())
             viewModel.decomressJpegToBitmapTurbo(jpegFilePath = despath)
+        }
+
+        binding.btn7.setOnClickListener {
+            makeSureSaveDirExists()
+            val despath = "${saveDir}/opt_${System.currentTimeMillis()}.jpeg"
+            val bmp = assets.open("image_1009.jpg").use(BitmapFactory::decodeStream)
+            val fos = File(despath).outputStream()
+            bmp.compress(Bitmap.CompressFormat.JPEG,100,fos)
+            require(File(despath).exists())
+            val res = Toolkit.blur(bmp,25)
+            binding.comoressedImage7.setImageBitmap(res)
+//            viewModel.decomressJpegToBitmapTurbo(jpegFilePath = despath)
         }
 
         observeCompress()

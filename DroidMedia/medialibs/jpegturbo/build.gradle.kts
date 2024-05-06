@@ -86,6 +86,7 @@ dependencies {
 
     implementation (projects.awesomelib)
     implementation (projects.serviceloaderapi.serviceapi)
+    implementation (projects.medialibs.renderscriptToolkit)
 
 
     testImplementation(libs.junit.junit)
