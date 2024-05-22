@@ -1,3 +1,19 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 rootProject.name="DroidMedia"
 include (":app")
 include (":exoplayer")
@@ -13,6 +29,7 @@ include (":medialibs:yuv")
 include (":medialibs:extractframe")
 include (":medialibs:gpuv")
 include (":medialibs:renderscript-toolkit")
+include (":medialibs:VidCompose")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

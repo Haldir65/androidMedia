@@ -1,7 +1,9 @@
 [versions]
 
+accompanistPermissions="0.33.1-alpha"
 composeBom="2024.05.00"
 compiler="1.5.14"
+landscapistGlide="2.2.8"
 minSdk="27"
 okhttpBom="4.12.0"
 targetSdk="29"
@@ -59,10 +61,12 @@ material3Android = "1.2.1"
 # other versions
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }
 android-gradle-build-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 androidx-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3_version" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
 arrow-opticsreflect = { module = "io.arrow-kt:arrow-optics-reflect", version.ref = "arrow" }
@@ -76,6 +80,7 @@ glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = 
 glide-ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_verison" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+landscapist-glide = { module = "com.github.skydoves:landscapist-glide", version.ref = "landscapistGlide" }
 okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okhttpBom" }
 retrofit = {  module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit"  }
 arrow-integration-retrofit = { module = "io.arrow-kt:arrow-core-retrofit", version.ref = "arrow" }
@@ -105,7 +110,6 @@ androidx-lifecycle-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifec
 
 google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt_version" }
 google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt_version" }
-google-dagger-hilt-build-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt_version" }
 iqiyi-xcrash = { module = "com.iqiyi.xcrash:xcrash-android-lib", version.ref = "x_crash" }
 
 ##camerax
@@ -172,7 +176,6 @@ slfj-api = { module = "org.slf4j:slf4j-api", version.ref = "slfj" }
 slfj-android = { module = "org.slf4j:slf4j-android", version.ref = "slfj-android" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-
 
 
 

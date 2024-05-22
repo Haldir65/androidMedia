@@ -43,10 +43,17 @@ jobs:
         working-directory: DroidMedia
         run: chmod +x gradlew
       - run: echo "Building Debug APK."
+      
       - name: Build with Gradle
         working-directory: DroidMedia
-            # run: ./gradlew build
-        run: ./gradlew assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+        run: |
+          ./gradlew assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+
+      - name: Build sub apps with Gradle
+        working-directory: DroidMedia
+        run: |
+          ./gradlew :medialibs:VidCompose:assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+        
       - run: echo "Build status report=${{ job.status }}."
       - name: Generate hashes
         run: |
