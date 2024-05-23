@@ -46,7 +46,9 @@ jobs:
       - name: Build with Gradle
         working-directory: DroidMedia
             # run: ./gradlew build
-        run: ./gradlew assembleDebug
+        shell: bash
+        run: |
+          bash .buildscripts/build_project.sh -t all
       - run: echo "Build status report=${{ job.status }}."
 
 

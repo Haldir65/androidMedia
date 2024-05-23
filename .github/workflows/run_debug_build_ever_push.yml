@@ -46,13 +46,15 @@ jobs:
       
       - name: Build with Gradle
         working-directory: DroidMedia
+        shell: bash
         run: |
-          ./gradlew assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+          bash .buildscripts/build_project.sh -t main
 
       - name: Build sub apps with Gradle
         working-directory: DroidMedia
+        shell: bash
         run: |
-          ./gradlew :medialibs:VidCompose:assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+          bash .buildscripts/build_project.sh -t subapp
         
       - run: echo "Build status report=${{ job.status }}."
       - name: Generate hashes
