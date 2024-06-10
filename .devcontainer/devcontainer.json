@@ -6,10 +6,25 @@
       "version":"21",
       "installGradle":true
     },
+    "ghcr.io/msclock/features/vcpkg:1": {},
+    "ghcr.io/devcontainers-contrib/features/yt-dlp:2": {},
      "ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
             "plugins":"z git fd fzf history zsh-autosuggestions",
             "omzPlugins":"https://github.com/zsh-users/zsh-autosuggestions"
       },
-    "ghcr.io/nordcominc/devcontainer-features/android-sdk:1": {}
-  }
+    "ghcr.io/nordcominc/devcontainer-features/android-sdk:1": {
+      "platform": "32",
+      "extra_packages": "ndk;26.3.11579264 sources;android-32"
+    }
+  },
+  "customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-vscode.cpptools",
+				"ms-vscode.cmake-tools"
+			]
+		}
+	}
 }
