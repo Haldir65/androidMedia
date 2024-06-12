@@ -1,0 +1,54 @@
+name: Build exoplayer av1 decoder
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  BuildExoplayerAV1Decoder:
+    runs-on: ubuntu-latest
+    env:
+      builddir: DroidMedia/app/build/outputs/apk
+    if: "contains(github.event.head_commit.message, '[ExoplayerAv1]')"
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub! "
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      - run: echo "The ${{ github.repository }} repository has been cloned."
+      - run: echo "Setting up JDK"
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21    
+          distribution: 'temurin'
+          # distribution: 'temurin' # See 'Supported distributions' for available options
+          # java-version: '21'
+          cache: gradle
+      - run: echo "The workflow is now ready to test your code."
+      - name: install deps
+        working-directory: DroidMedia
+        run: |
+          sudo apt update
+          sudo apt install tree ninja-build
+        shell: bash
+      - name: Grant execute permission for gradlew
+        working-directory: DroidMedia
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        shell: bash
+        run: |
+          bash DroidMedia/.buildscripts/build_exoplayer_av1_decoder.sh
+      - name: upload libs
+        uses: actions/upload-artifact@v4
+        with:
+          name: av1_decoder_libs
+          retention-days: 3
+          path: ${{ github.workspace }}/build/*.gz  
+      - run: echo "Build status report=${{ job.status }}."
+     
+
+
+   
