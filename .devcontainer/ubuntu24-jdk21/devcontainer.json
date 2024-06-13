@@ -1,0 +1,30 @@
+{
+ "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/curl-apt-get:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "version":"21",
+      "installGradle":true
+    },
+    "ghcr.io/msclock/features/vcpkg:1": {},
+    "ghcr.io/devcontainers-contrib/features/yt-dlp:2": {},
+     "ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
+            "plugins":"z git fd fzf history zsh-autosuggestions",
+            "omzPlugins":"https://github.com/zsh-users/zsh-autosuggestions"
+      },
+    "ghcr.io/nordcominc/devcontainer-features/android-sdk:1": {
+      "platform": "32",
+      "extra_packages": "ndk;26.3.11579264 sources;android-32"
+    }
+  },
+  "customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-vscode.cpptools",
+				"ms-vscode.cmake-tools"
+			]
+		}
+	}
+}
