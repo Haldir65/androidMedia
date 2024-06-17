@@ -70,7 +70,6 @@ class ExoplayerSampleActivity:AppCompatActivity(R.layout.activity_exoplayer_samp
                     )
                     red.filterIsInstance<DecoderVideoRenderer>().forEach { videoRender ->
                         Log.e("videoRender" , "${videoRender.name}")
-
                     }
                     return red
                 }

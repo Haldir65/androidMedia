@@ -26,13 +26,18 @@ android {
 //    }
 
 
-
     defaultConfig {
         minSdk = Integer.parseInt(libs.versions.minSdk.get())
         targetSdk = Integer.parseInt(libs.versions.targetSdk.get())
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+//        sourceSets {
+//            main.java.srcDirs += 'decoder_vp9/src/main/java'
+//            main.jniLibs.srcDirs += 'decoder_vp9/src/main/libs'
+//        }
+
     }
 
     buildTypes {
@@ -124,7 +129,12 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    implementation files('libs/lib-decoder-av1-release.aar')
+//    implementation files('libs/lib-decoder-av1-release.aar')
 //    implementation files('somelibs/jetified-exoplayer-ui-r2.5.2.aar')
+    implementation projects.medialibs.aars.libav1decoder
+    implementation projects.medialibs.aars.libvp9decoder
+
+//    https://stackoverflow.com/questions/60878599/error-building-android-library-direct-local-aar-file-dependencies-are-not-supp
+
 
 }

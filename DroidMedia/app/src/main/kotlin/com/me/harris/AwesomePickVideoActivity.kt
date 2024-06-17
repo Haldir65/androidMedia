@@ -1,10 +1,11 @@
 package com.me.harris
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.FileUtils
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.me.harris.awesomelib.utils.VideoUtil
 import com.me.harris.droidmedia.databinding.ActivityPickVideoBinding
@@ -16,19 +17,41 @@ class AwesomePickVideoActivity:AppCompatActivity() {
         const val TAG = "=A="
     }
 
+
+
     private lateinit var binding:ActivityPickVideoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPickVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.card2.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "video/*"
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            kotlin.runCatching {
-                startActivityForResult(Intent.createChooser(intent,"选择播放文件"),2000)
+
+         val videoPickerResultActivityLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+            if (result != null) {
+                // 处理选定的视频文件
+                val selectedVideoUri: Uri = result
+                val path = com.me.harris.FileUtils.getImageAbsolutePath(this, selectedVideoUri).orEmpty()
+                Log.e(TAG, "onActivityResult: url: ${selectedVideoUri}, path: $path")
+                // 在此处处理选定的视频文件
+                binding.textUrl.text = """
+                =====
+                ${path}
+                =====
+            """.trimIndent()
+                val srcFile = File(path)
+                if (srcFile.exists()){
+                    VideoUtil.setUrl(path)
+                }
             }
+        }
+        binding.card2.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_GET_CONTENT)
+//            intent.type = "video/*"
+//            intent.addCategory(Intent.CATEGORY_OPENABLE)
+//            kotlin.runCatching {
+//                startActivityForResult(Intent.createChooser(intent,"选择播放文件"),2000)
+//            }
+            videoPickerResultActivityLauncher.launch("video/*")
         }
         val nowStr = VideoUtil.strVideo
         if (File(nowStr).exists()){
