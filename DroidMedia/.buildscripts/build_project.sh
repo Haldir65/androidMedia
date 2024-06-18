@@ -14,9 +14,11 @@ function _build_main_project(){
 }
 
 function _build_sub_app(){
+    pushd carica
     _green "[Build] now building sub app \n"
-    ./gradlew :medialibs:VidCompose:assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+    ./gradlew :VidCompose:assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
     _blue "[Build] done building sub app \n"
+    popd
 }
 
 function main(){

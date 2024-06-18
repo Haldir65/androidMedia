@@ -1,6 +1,12 @@
 pluginManagement {
     repositories {
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -52,6 +58,6 @@ include (":medialibs:pnglib")
 include (":medialibs:videocache")
 include (":medialibs:avif")
 include (":mango:simdjson")
-include (":medialibs:composeworkmanager")
-include(":medialibs:aars:libav1decoder")
-include(":medialibs:aars:libvp9decoder")
+include(":medialibs:composeworkmanager",
+    ":medialibs:aars:libav1decoder",
+    ":medialibs:aars:libvp9decoder")

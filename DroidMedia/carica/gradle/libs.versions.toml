@@ -1,0 +1,119 @@
+[versions]
+minSdk = "26"
+targetSdk = "29"
+compileSdk = "34"
+versionCode = "1"
+versionName = "1.0.0"
+kotlin = "2.0.0"
+app = "8.2.0"
+core = "1.13.1"
+androidxComposeCompiler = "1.5.0"
+landscapistGlide="2.3.4"
+lifecycle = "2.8.2"
+activityCompose = "1.9.0"
+bom = "2024.06.00"
+junit = "4.13.2"
+junit-ext = "1.1.5"
+espresso = "3.5.1"
+accompanistPermissions="0.35.1-alpha"
+espresso-core = "3.5.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+navigation = "2.7.7"
+kotlinxCoroutines = "1.8.1"
+hilt = "2.51.1"
+hiltExt = "1.2.0"
+media3_version ="1.3.1"
+camerax_version="1.3.4"
+androidxHiltNavigationCompose = "1.2.0"
+kotlinxSerializationJson = "1.7.0"
+retrofit = "2.11.0"
+retrofitKotlinxSerializationJson = "1.0.0"
+okhttp = "4.12.0"
+ksp = "2.0.0-1.0.21"
+coil = "2.6.0"
+org-jetbrains-kotlin-jvm = "2.0.0"
+
+[libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
+lifecycler = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "bom" }
+androidx-lifecycle-lifecycle-viewmodel-ktx  = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-lifecycle-viewmodel-compose  = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+
+
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-testing = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+
+#ExoPlayer
+exoplayer-core = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3_version" }
+exoplayer-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3_version" }
+exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3_version" }
+exoplayer-hls = { group = "androidx.media3", name = "media3-exoplayer-hls", version.ref = "media3_version" }
+androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3_version" }
+#exoplayer-smoothstreaming = { group = "com.google.android.exoplayer", name = "exoplayer-smoothstreaming", version.ref = "exoplayer" }
+#exoplayer-cast = { group = "com.google.android.exoplayer", name = "exoplayer-cast", version.ref = "exoplayer" }
+#exoplayer-extension-mediasession = { group = "com.google.android.exoplayer", name = "extension-mediasession", version.ref = "exoplayer" }
+landscapist-glide = { module = "com.github.skydoves:landscapist-glide", version.ref = "landscapistGlide" }
+
+
+
+junit = {group = "junit", name = "junit",version.ref = "junit"}
+junit-ext = {group = "androidx.test.ext",name ="junit",version.ref ="junit-ext"}
+espresso = {group = "androidx.test.espresso", name = "espresso:espresso-core", version.ref = "espresso"}
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "app" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
+
+coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationJson" }
+
+[bundles]
+compose = [
+    "compose-ui",
+    "compose-graphics",
+    "compose-preview",
+    "compose-material3",
+    "compose-material-iconsExtended"
+]
+network = [
+    "okhttp-logging",
+    "retrofit-core",
+    "retrofit-kotlin-serialization"
+]
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+application = { id = "com.android.application", version.ref = "app" }
+library = { id = "com.android.library", version.ref = "app" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
