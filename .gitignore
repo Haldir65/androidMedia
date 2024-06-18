@@ -11,3 +11,4 @@ local.properties
 DroidMeida/app/build
 DroidMedia/.kotlin/
 opengl/app/build
+DroidMedia/carica/build-logic/convention/build
