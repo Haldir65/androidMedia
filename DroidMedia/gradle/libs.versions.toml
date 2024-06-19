@@ -42,7 +42,7 @@ x_crash="3.1.0"
 slfj-android="1.7.36"
 oboe_version="1.8.1"
 #kotlinCompilerExtensionVersion="1.5.11"
-kspversion="2.0.0-1.0.21"
+kspversion="2.0.0-1.0.22"
 
 kotlinxDatetime = "0.6.0"
 kotlinxSerializationJson = "1.7.0"
