@@ -14,7 +14,7 @@
       },
     "ghcr.io/nordcominc/devcontainer-features/android-sdk:1": {
       "platform": "32",
-      "extra_packages": "ndk;26.3.11579264 sources;android-32"
+      "extra_packages": "ndk;26.3.11579264 sources;android-32 cmake;3.22.1"
     }
   },
   "customizations": {
