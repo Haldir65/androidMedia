@@ -1,7 +1,6 @@
 version: 2
 updates:
     - package-ecosystem: "gradle"
-      directory: "/DroidMedia"
       directories:
         - "/DroidMedia"
         - "/DroidMedia/carica"
