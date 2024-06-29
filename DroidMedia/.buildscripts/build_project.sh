@@ -9,14 +9,14 @@ set -o errtrace
 
 function _build_main_project(){
      _green "[Build] now building main app \n"
-    ./gradlew assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+    ./gradlew assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx4g" "-Dfile.encoding=UTF-8"
     _blue "[Build] done building main app \n"
 }
 
 function _build_sub_app(){
     pushd carica
     _green "[Build] now building sub app \n"
-    ./gradlew :VidCompose:assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g"
+    ./gradlew :VidCompose:assembleDebug "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx4g" "-Dfile.encoding=UTF-8"
     _blue "[Build] done building sub app \n"
     popd
 }

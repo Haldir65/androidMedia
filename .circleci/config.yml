@@ -12,7 +12,7 @@ executors:
     resource_class: large
   docker-aarch64:
     docker:
-      - image: haldir65/android-build-env:ubuntu24-java21-ndk26-api34
+      - image: saschpe/android-sdk:34-jdk21.0.2_13
     resource_class: arm.large
     
   linux-amd64:
@@ -64,7 +64,9 @@ jobs:
       - run:
           working_directory: DroidMedia
           name: Assemble release build
-          command: ./gradlew assembleRelease "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx2g" -Dfile.encoding=UTF-8
+          command: |
+            #bash .buildscripts/build_project.sh -t subapp
+            ./gradlew assembleRelease "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx2g" -Dfile.encoding=UTF-8
       - run:
           working_directory: DroidMedia
           name: show build results
@@ -140,7 +142,7 @@ workflows:
             filters:
               branches:
                 only:
-                  - release
+                  - master
         - vmbuild:
             matrix:
                   parameters:
