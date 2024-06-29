@@ -8,11 +8,12 @@ executors:
   docker-amd64:
     docker:
       # - image: fabernovel/android:api-34-gcloud-ndk-snapshot
-      - image: haldir65/android-build-env:ubuntu24-java21-ndk26-api34
+      # - image: haldir65/android-build-env:ubuntu24-java21-ndk26-api34
+      - image: cimg/openjdk:21.0.2
     resource_class: large
   docker-aarch64:
     docker:
-      - image: haldir65/android-build-env:ubuntu24-java21-ndk26-api34
+      - image: cimg/openjdk:21.0.2
     resource_class: arm.large
     
   linux-amd64:
@@ -46,9 +47,9 @@ jobs:
       - run:
           name: Install Dependency
           command: |
-              echo "keyboard-configuration keyboard-configuration/layoutcode string us" | debconf-set-selections
-              echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
-              apt update && DEBIAN_FRONTEND=noninteractive apt install -q -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
+              # echo "keyboard-configuration keyboard-configuration/layoutcode string us" | debconf-set-selections
+              # echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
+              sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -q -y ninja-build git unzip build-essential tree checkinstall coreutils util-linux
               tree -L 4
       - run:
           name: show system info
@@ -140,7 +141,7 @@ workflows:
             filters:
               branches:
                 only:
-                  - release
+                  - master
         - vmbuild:
             matrix:
                   parameters:
