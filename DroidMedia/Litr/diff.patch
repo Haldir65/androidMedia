@@ -43,7 +43,7 @@ index c1a8b28..e785199 100644
  zipStorePath=wrapper/dists
  zipStoreBase=GRADLE_USER_HOME
 diff --git a/litr-demo/build.gradle b/litr-demo/build.gradle
-index 713d721..465cefa 100644
+index 713d721..42a7eff 100644
 --- a/litr-demo/build.gradle
 +++ b/litr-demo/build.gradle
 @@ -19,8 +19,8 @@ android {
@@ -57,9 +57,12 @@ index 713d721..465cefa 100644
      }
  
      lint {
-@@ -46,14 +46,14 @@ dependencies {
+@@ -44,16 +44,16 @@ dependencies {
+     implementation project(':litr-filters')
+ 
      // uncomment to experiment with ffmpeg
-     // implementation project(':litr-ffmpeg')
+-    // implementation project(':litr-ffmpeg')
++     implementation project(':litr-ffmpeg')
  
 -    implementation 'androidx.appcompat:appcompat:1.2.0'
 -    implementation 'androidx.recyclerview:recyclerview:1.2.0'
@@ -121,6 +124,72 @@ index 5f4ff1e..59b5752 100644
          }
          startActivity(intent);
  
+diff --git a/litr-demo/src/main/java/com/linkedin/android/litr/demo/data/TranscodeVideoGlPresenter.kt b/litr-demo/src/main/java/com/linkedin/android/litr/demo/data/TranscodeVideoGlPresenter.kt
+index 60b6f93..feb2d7b 100644
+--- a/litr-demo/src/main/java/com/linkedin/android/litr/demo/data/TranscodeVideoGlPresenter.kt
++++ b/litr-demo/src/main/java/com/linkedin/android/litr/demo/data/TranscodeVideoGlPresenter.kt
+@@ -25,6 +25,7 @@ import com.linkedin.android.litr.io.MediaMuxerMediaTarget
+ import com.linkedin.android.litr.io.MediaRange
+ import com.linkedin.android.litr.io.MediaSource
+ import com.linkedin.android.litr.io.MediaTarget
++import com.linkedin.android.litr.muxers.NativeMediaMuxerMediaTarget
+ //import com.linkedin.android.litr.muxers.NativeMediaMuxerMediaTarget
+ import com.linkedin.android.litr.render.AudioRenderer
+ import com.linkedin.android.litr.render.GlVideoRenderer
+@@ -156,30 +157,30 @@ class TranscodeVideoGlPresenter(
+         else
+             MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4
+ 
+-        return MediaMuxerMediaTarget(
+-            context,
+-            Uri.fromFile(targetMedia.targetFile),
+-            targetMedia.includedTrackCount,
+-            videoRotation,
+-            outputFormat
+-        )
++//        return MediaMuxerMediaTarget(
++//            context,
++//            Uri.fromFile(targetMedia.targetFile),
++//            targetMedia.includedTrackCount,
++//            videoRotation,
++//            outputFormat
++//        )
+ 
+         // remove above code and uncomment if need to experiment with ffmpeg muxer
+-//        return if (enableNativeMuxer) {
+-//            NativeMediaMuxerMediaTarget(
+-//                targetMedia.targetFile.absolutePath,
+-//                targetMedia.includedTrackCount,
+-//                videoRotation,
+-//                outputFormat
+-//            )
+-//        } else {
+-//            MediaMuxerMediaTarget(
+-//                context,
+-//                Uri.fromFile(targetMedia.targetFile),
+-//                targetMedia.includedTrackCount,
+-//                videoRotation,
+-//                outputFormat
+-//            )
+-//        }
++        return if (enableNativeMuxer) {
++            NativeMediaMuxerMediaTarget(
++                targetMedia.targetFile.absolutePath,
++                targetMedia.includedTrackCount,
++                videoRotation,
++                outputFormat
++            )
++        } else {
++            MediaMuxerMediaTarget(
++                context,
++                Uri.fromFile(targetMedia.targetFile),
++                targetMedia.includedTrackCount,
++                videoRotation,
++                outputFormat
++            )
++        }
+     }
+ }
 diff --git a/litr-demo/src/main/java/com/linkedin/android/litr/demo/fragment/VideoFilterPreviewFragment.java b/litr-demo/src/main/java/com/linkedin/android/litr/demo/fragment/VideoFilterPreviewFragment.java
 index c7f0b9b..e3ff585 100644
 --- a/litr-demo/src/main/java/com/linkedin/android/litr/demo/fragment/VideoFilterPreviewFragment.java
@@ -205,13 +274,17 @@ index c7f0b9b..e3ff585 100644
          exoPlayer.setPlayWhenReady(true);
      }
 diff --git a/litr-ffmpeg/build.gradle b/litr-ffmpeg/build.gradle
-index 6ece76b..e93d0b1 100644
+index 6ece76b..d4da503 100644
 --- a/litr-ffmpeg/build.gradle
 +++ b/litr-ffmpeg/build.gradle
-@@ -14,9 +14,12 @@ android {
+@@ -14,9 +14,16 @@ android {
          targetSdkVersion rootProject.ext.targetSdkVersion
      }
  
++    buildFeatures {
++        buildConfig true
++    }
++
 +    ndkVersion '26.3.11579264'
 +
 +
@@ -223,7 +296,7 @@ index 6ece76b..e93d0b1 100644
      }
  
      kotlinOptions {
-@@ -26,7 +29,7 @@ android {
+@@ -26,7 +33,7 @@ android {
      externalNativeBuild {
          cmake {
              path file('src/main/cpp/CMakeLists.txt')
@@ -232,6 +305,31 @@ index 6ece76b..e93d0b1 100644
          }
      }
  }
+diff --git a/litr-ffmpeg/src/main/cpp/CMakeLists.txt b/litr-ffmpeg/src/main/cpp/CMakeLists.txt
+index d3948c1..c9cbc34 100644
+--- a/litr-ffmpeg/src/main/cpp/CMakeLists.txt
++++ b/litr-ffmpeg/src/main/cpp/CMakeLists.txt
+@@ -22,9 +22,9 @@ else()
+     set(ffmpeg_bundled_source_archive "${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg_bundled/ffmpeg-4.2.tar.gz")
+     if (NOT EXISTS "${ffmpeg_bundled_source_archive}")
+         file(DOWNLOAD
+-                https://git.ffmpeg.org/gitweb/ffmpeg.git/snapshot/e228a0cccd31c2466ea968f34be4ec0da50bd792.tar.gz
++                https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n4.2.9.tar.gz
+                 "${ffmpeg_bundled_source_archive}"
+-                EXPECTED_MD5 a08c1bdffbbb1e801c06fd62721af008
++                EXPECTED_MD5 f1e3b60a83811f803888956e5c1059ea
+                 STATUS DOWNLOAD_STATUS)
+ 
+         # Separate the returned status code, and error message.
+@@ -39,7 +39,7 @@ else()
+     endif()
+ 
+     # Once we have the snapshot, we can uncompress it in a location that we'll link too.
+-    set(ffmpeg_bundled_source "${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg_bundled/ffmpeg-e228a0c")
++    set(ffmpeg_bundled_source "${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg_bundled/FFmpeg-n4.2.9")
+     if (NOT EXISTS "${ffmpeg_bundled_source}")
+         file(ARCHIVE_EXTRACT
+                 INPUT "${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg_bundled/ffmpeg-4.2.tar.gz"
 diff --git a/litr-filters/build.gradle b/litr-filters/build.gradle
 index 57515b0..73e3cdc 100644
 --- a/litr-filters/build.gradle
@@ -335,3 +433,12 @@ index dddd1a6..e8538db 100644
          return destBitmap
      }
  
+diff --git a/settings.gradle b/settings.gradle
+index 38dd87a..3b2b7ff 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -1,3 +1,3 @@
+ include ':litr-demo', ':litr', ':litr-filters'
+ // uncomment if experimenting with ffmpeg
+-// include ':litr-ffmpeg'
++ include ':litr-ffmpeg'
