@@ -31,6 +31,7 @@ coil = "2.6.0"
 androidxHiltNavigationCompose = "1.2.0"
 hilt = "2.51.1"
 hiltExt = "1.2.0"
+detekt = "1.23.6"
 recyclerview="1.3.2"
 junit4 = "4.13.2"
 androixJunit="1.2.1"
@@ -139,7 +140,8 @@ coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutine" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-
+detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 #Database
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -189,4 +191,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_verison" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_verison" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspversion" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 

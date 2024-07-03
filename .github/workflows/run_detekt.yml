@@ -18,10 +18,16 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
       - name: detekt
-        uses: alaegin/Detekt-Action@v1.23.6
+        working-directory: DroidMedia
+            # run: ./gradlew build
+        shell: bash
+        run: |
+          bash .buildscripts/build_project.sh -t detekt
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.github_token }}
-          reviewdog_filter: nofilter
-          detekt_config: DroidMedia/default-detekt-config.yml # Change config path
-          fail_on_error: false
-          detekt_parallel: true
+          name: detekt-report-${{ github.run_id }}
+          path: DroidMedia/detekt.tar.gz
+          if-no-files-found: error
+          retention-days: 1  
+      - run: echo "Build status report=${{ job.status }}."

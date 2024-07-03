@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
@@ -47,7 +49,42 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.org.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.detekt)
 }
+
+
+
+val detektFormatting = libs.detekt.formatting
+
+//subprojects {
+//    apply {
+//        plugin("io.gitlab.arturbosch.detekt")
+//    }
+//
+//    detekt {
+//        config.from(rootProject.files("config/detekt/detekt.yml"))
+//        ignoreFailures = true
+//    }
+//
+//    dependencies {
+//        detektPlugins(detektFormatting)
+//    }
+//}
+
+tasks {
+    val detektAll by registering(Detekt::class) {
+        parallel = true
+        setSource(files(projectDir))
+        include("**/*.kt")
+        include("**/*.kts")
+        exclude("**/resources/**")
+        exclude("**/build/**")
+        config = files("$rootDir/config/detekt/detekt.yml")
+        buildUponDefaultConfig = false
+        ignoreFailures = true
+    }
+}
+
 
 //allprojects {
 //    repositories {

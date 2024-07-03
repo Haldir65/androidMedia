@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>DoubleMutabilityForCollection:UserInfo.kt$UserInfo$var affilates:ArrayList&lt;String&gt;? = null</ID>
+    <ID>EmptyClassBlock:ApplicationGainerConcrete.kt$ApplicationGainerConcrete${ }</ID>
+    <ID>EmptyClassBlock:AvaliablePages.kt$AvaliablePages${ }</ID>
+    <ID>EmptySecondaryConstructor:SubUserInfo.kt$SubUserInfo${ }</ID>
+    <ID>FunctionNaming:MainPageCard.kt$@Composable fun RoundedCardWithClick(textModifier:Modifier = Modifier.padding(10.dp), text:String, onclick:()-&gt;Unit )</ID>
+    <ID>FunctionNaming:MainPageCard.kt$@Preview @Composable fun CardWithContentColor()</ID>
+    <ID>FunctionNaming:MainPageCard.kt$@Preview @Composable fun SimpleCardPreview()</ID>
+    <ID>FunctionNaming:MainPageScreen.kt$@Composable fun AluromaticScreenContent(modifier: Modifier)</ID>
+    <ID>FunctionNaming:MainPageScreen.kt$@Composable fun MediaMainScreen()</ID>
+    <ID>FunctionNaming:Theme.kt$@Composable fun ABluromaticTheme( darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+ // Dynamic color in this app is turned off for learning purposes dynamicColor: Boolean = false, content: @Composable () -&gt; Unit )</ID>
+    <ID>LongMethod:MainActivity.kt$MainActivity$override fun onCreate(savedInstanceState: Bundle?)</ID>
+    <ID>MagicNumber:AwesomePickVideoActivity.kt$AwesomePickVideoActivity$2000</ID>
+    <ID>MagicNumber:FileUtils.kt$FileUtils$1024</ID>
+    <ID>MagicNumber:MainActivity.kt$MainActivity$100L</ID>
+    <ID>MagicNumber:MainActivity.kt$MainActivity$101L</ID>
+    <ID>MagicNumber:MainActivity.kt$MainActivity$1098</ID>
+    <ID>MagicNumber:MainActivity2.kt$MainActivity2$1098</ID>
+    <ID>MagicNumber:MainPageCard.kt$20F</ID>
+    <ID>MaxLineLength:AwesomePickVideoActivity.kt$AwesomePickVideoActivity$Log.w(TAG,"copy file ${srcFile.absolutePath} use send file to ${dstFile.absolutePath} cost me ${cost} millisecond")</ID>
+    <ID>MaxLineLength:AwesomePickVideoActivity.kt$AwesomePickVideoActivity$val</ID>
+    <ID>MaxLineLength:FileUtils.kt$FileUtils$return "${Environment.getExternalStorageDirectory().parentFile.parentFile}${File.separator}${type}${File.separator}${splitArr[1]}"</ID>
+    <ID>MaxLineLength:FileUtils.kt$FileUtils$val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), id.toLong())</ID>
+    <ID>MaxLineLength:MainActivity.kt$MainActivity$// ServiceHelper.getService(DisplayB::class.java)?.name.orEmpty().let { Log.w("=A=","service loader on Android works ${it}") }</ID>
+    <ID>MaxLineLength:MainActivity.kt$MainActivity$// ServiceHelper.getService(PlayerLibService::class.java)?.startPlayVideoActivity(activity = this, bundle = bundleOf(</ID>
+    <ID>MaxLineLength:MainPageCard.kt$modifier = Modifier.padding(10.dp).wrapContentHeight(Alignment.CenterVertically).wrapContentWidth(Alignment.CenterHorizontally)</ID>
+    <ID>MaxLineLength:MainPageScreen.kt$Column</ID>
+    <ID>MaxLineLength:SubUserInfo.kt$SubUserInfo$constructor</ID>
+    <ID>MayBeConst:AvaliablePages.kt$AudioLibEntry$val text:String = "AudioLibEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$AvIfEntry$val text:String = "AvIfEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$BlurActivityEntry$val text:String = "BlurActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$CameraPlayEntry$val text:String = "CameraEntry"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$ExtractFrameEntry$val text:String = "ExtractFrameEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$FilterEntry$val text:String = "FilterEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$GPUVideoEntry$val text:String = "GPUVideoEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$LibJpegEntry$val text:String = "LibJpegEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$MediaInfoProbeEntry$val text:String = "MediaInfoProbeActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$MediaKitEntry$val text:String = "MediaKitEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$OpenGlEntry$val text:String = "OpenGlEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$PickVideoEntry$val text:String = "PickVideoActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$PngLibEntry$val text:String = "PngLibEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$SimdJsonEntry$val text:String = "SimdJsonEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$VideoClipEntry$val text:String = "VideoClipEntryActivity"</ID>
+    <ID>MayBeConst:AvaliablePages.kt$VideoPlayEntry$val text:String = "VideoPlayExtryActivity"</ID>
+    <ID>NewLineAtEndOfFile:BaseApplication.kt$com.me.harris.droidmedia.BaseApplication.kt</ID>
+    <ID>NewLineAtEndOfFile:SubUserInfo.kt$com.me.harris.droidmedia.entity.SubUserInfo.kt</ID>
+    <ID>ReturnCount:FileUtils.kt$FileUtils$fun getImageAbsolutePath(context: Context, uri: Uri?): String?</ID>
+    <ID>UnsafeCallOnNullableType:FileUtils.kt$FileUtils$uri!!</ID>
+    <ID>UnusedPrivateProperty:BaseApplication.kt$BaseApplication$val a = GLJni // eagerly laad jni</ID>
+    <ID>WildcardImport:MainActivity2.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:MainActivity2.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:MainActivity2.kt$import androidx.compose.ui.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.foundation.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.foundation.shape.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.ui.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.ui.graphics.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.ui.tooling.preview.*</ID>
+    <ID>WildcardImport:MainPageCard.kt$import androidx.compose.ui.unit.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.foundation.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.ui.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.ui.platform.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.ui.res.*</ID>
+    <ID>WildcardImport:MainPageScreen.kt$import androidx.compose.ui.unit.*</ID>
+    <ID>WildcardImport:Theme.kt$import androidx.compose.foundation.*</ID>
+    <ID>WildcardImport:Theme.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:Theme.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:Theme.kt$import androidx.compose.ui.graphics.*</ID>
+    <ID>WildcardImport:Theme.kt$import androidx.compose.ui.platform.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

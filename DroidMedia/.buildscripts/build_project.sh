@@ -21,9 +21,21 @@ function _build_sub_app(){
     popd
 }
 
+function _run_detekt(){
+     _green "[Detekt] now detekt main app \n"
+     ./gradlew clean detektAll
+     if [ -d "build/reports/detekt" ];then
+        cp -r build/reports/detekt .
+        tar -czf detekt.tar.gz detekt
+        rm -rf detekt
+     fi
+     _green "[Detekt] complete detekt main app \n"
+}
+
 function main(){
     _build_main_project
     _build_sub_app
+    _run_detekt
 }
 
 
@@ -40,7 +52,7 @@ while getopts "t:a:s:i:f:mxh\?" o; do
         f)
             some_arg="${OPTARG}"
             _green " [some_arg] = ${some_arg}\n"
-			;;    
+			;;
 		t)
             BUILD_TARGET="${OPTARG}"
             _blue "BUILD_TARGET = ${BUILD_TARGET}\n"
@@ -57,6 +69,10 @@ while getopts "t:a:s:i:f:mxh\?" o; do
             sub | s | subapp)
                 _green "BUILD_TARGET = ${BUILD_TARGET}\n"
                 _build_sub_app
+                ;;
+            detekt | detektMain )
+                _blue "BUILD_TARGET = ${BUILD_TARGET}\n"
+                _run_detekt
                 ;;
             zz | "zse" | ju | "Vatican City")
                 _green "BUILD_TARGET = ${BUILD_TARGET}\n"
