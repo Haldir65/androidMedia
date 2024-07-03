@@ -23,8 +23,15 @@ jobs:
           java-version: 21    
           distribution: 'oracle'
           cache: gradle
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3     
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-wrapper.properties') }}   
       - name: detekt
         working-directory: DroidMedia
             # run: ./gradlew build
