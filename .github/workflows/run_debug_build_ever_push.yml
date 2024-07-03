@@ -27,6 +27,15 @@ jobs:
           # distribution: 'temurin' # See 'Supported distributions' for available options
           # java-version: '21'
           cache: gradle
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-wrapper.properties') }}        
       - run: echo "The workflow is now ready to test your code."
       - name: clone required dependencies , glm and jpeg-turbo
         working-directory: DroidMedia
