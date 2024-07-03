@@ -17,6 +17,12 @@ jobs:
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub! "
       - name: Checkout the code
         uses: actions/checkout@v4
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21    
+          distribution: 'oracle'
+          cache: gradle   
       - name: detekt
         working-directory: DroidMedia
             # run: ./gradlew build
