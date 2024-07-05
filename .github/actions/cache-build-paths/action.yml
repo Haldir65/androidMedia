@@ -13,6 +13,33 @@ runs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
+          DroidMedia/medialibs/mediainfo/build
+          DroidMedia/medialibs/mediakit/build
+          DroidMedia/medialibs/audiolib/build
+          DroidMedia/medialibs/gpuv/build
+          DroidMedia/medialibs/playerLib/build
+          DroidMedia/medialibs/extractframe/build
+          DroidMedia/medialibs/composeworkmanager/build
+          DroidMedia/medialibs/cameraLib/build
+          DroidMedia/medialibs/pnglib/build
+          DroidMedia/medialibs/videocache/build
+          DroidMedia/medialibs/aars/libav1decoder/build
+          DroidMedia/medialibs/aars/libvp9decoder/build
+          DroidMedia/medialibs/renderscript-toolkit/build
+          DroidMedia/medialibs/yuv/build
+          DroidMedia/medialibs/epf/build
+          DroidMedia/medialibs/avif/build
+          DroidMedia/medialibs/jpegturbo/build
+          DroidMedia/medialibs/filterLibrary/build
+          DroidMedia/medialibs/ijksource/build
+          DroidMedia/carica/build-logic/convention/build
+          DroidMedia/carica/VidCompose/build
+          DroidMedia/app/build
+          DroidMedia/awesomelib/build
+          DroidMedia/mango/simdjson/build
+          DroidMedia/mango/nativecrash/build
+          DroidMedia/serviceloaderapi/serviceapi/build
+          DroidMedia/build
         key: ${{ inputs.key }}
         restore-keys: |
           ${{ inputs.key }}
