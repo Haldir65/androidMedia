@@ -1,10 +1,10 @@
 pluginManagement {
     repositories {
         google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
             }
         }
         mavenCentral()
@@ -12,10 +12,18 @@ pluginManagement {
     }
 }
 
+// https://github.com/Kotlin/kmm-basic-sample/blob/master/settings.gradle.kts
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
         mavenCentral()
     }
 }
