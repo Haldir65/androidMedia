@@ -61,3 +61,5 @@ include (":mango:simdjson")
 include(":medialibs:composeworkmanager",
     ":medialibs:aars:libav1decoder",
     ":medialibs:aars:libvp9decoder")
+
+includeBuild("carica")
