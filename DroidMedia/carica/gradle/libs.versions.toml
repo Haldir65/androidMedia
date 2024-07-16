@@ -31,7 +31,7 @@ kotlinxSerializationJson = "1.7.1"
 retrofit = "2.11.0"
 retrofitKotlinxSerializationJson = "1.0.0"
 okhttp = "4.12.0"
-ksp = "2.0.0-1.0.22"
+ksp = "2.0.0-1.0.23"
 coil = "2.6.0"
 org-jetbrains-kotlin-jvm = "2.0.0"
 
