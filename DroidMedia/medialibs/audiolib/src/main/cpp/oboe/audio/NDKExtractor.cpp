@@ -22,6 +22,7 @@
 #include "../utils/logging.h"
 #include <cinttypes>
 #include <filesystem>
+#include <functional>
 
 #include "NDKExtractor.h"
 
