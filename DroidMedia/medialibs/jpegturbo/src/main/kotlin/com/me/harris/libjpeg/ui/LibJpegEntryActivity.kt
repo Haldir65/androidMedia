@@ -2,10 +2,17 @@ package com.me.harris.libjpeg.ui
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewGroup.MarginLayoutParams
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -30,7 +37,9 @@ class LibJpegEntryActivity : AppCompatActivity(R.layout.activity_jpeg_entry) {
     private val NON_SCALEABLE_BMP_NAME = "image_2010.jpg"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge(statusBarStyle = SystemBarStyle.light(Color.WHITE,Color.WHITE))
         super.onCreate(savedInstanceState)
+
 
         binding.originalImage.load(R.drawable.image_2010) {
             transformations(RoundedCornersTransformation(25f))
@@ -101,6 +110,17 @@ class LibJpegEntryActivity : AppCompatActivity(R.layout.activity_jpeg_entry) {
         }
 
         observeCompress()
+
+        // make statusBar color
+        // add margin to content top
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            _view.updateLayoutParams<MarginLayoutParams> {
+                // Push all content below the top system status bar
+                topMargin = insets.top
+            }
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun makeSureSaveDirExists() {

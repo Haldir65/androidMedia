@@ -74,6 +74,8 @@ dependencies {
 
 	implementation(libs.exoplayer.core)
 	implementation(libs.exoplayer.ui)
+    implementation (libs.androidx.activity.ktx)
+
 	implementation(libs.androidx.media3.session)
     implementation(libs.landscapist.glide)
 	implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
