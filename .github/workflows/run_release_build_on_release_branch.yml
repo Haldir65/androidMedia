@@ -33,7 +33,7 @@ jobs:
           distribution: 'oracle'
           cache: gradle
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3      
+        uses: gradle/actions/setup-gradle@v4      
       - run: echo "The workflow is now ready to test your code."
       - name: clone required dependencies , glm and jpeg-turbo
         working-directory: DroidMedia
