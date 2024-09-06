@@ -1,6 +1,6 @@
 [versions]
 
-accompanistPermissions="0.35.2-beta"
+accompanistPermissions="0.36.0"
 composeBom="2024.09.00"
 compiler="1.5.15"
 landscapistGlide="2.3.6"
