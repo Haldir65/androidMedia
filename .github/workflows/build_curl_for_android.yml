@@ -17,7 +17,7 @@ jobs:
           - id: 'linux-amd64'
             os: 'ubuntu-latest'
           - id: 'darwin-amd64'
-            os: 'macos-14'
+            os: 'macos-latest'
           # - id: 'windows-amd64'
           #   os: 'windows-2022'
       fail-fast: true
@@ -70,8 +70,8 @@ jobs:
 
       - name: Install Android NDK
         run: |
-          sdkmanager --install "ndk;27.0.12077973"
-          echo "ANDROID_NDK_HOME=${ANDROID_SDK_ROOT}/ndk/27.0.12077973" >> "$GITHUB_ENV"
+          sdkmanager --install "ndk;27.1.12297006"
+          echo "ANDROID_NDK_HOME=${ANDROID_SDK_ROOT}/ndk/27.1.12297006" >> "$GITHUB_ENV"
 
       - name: build curl static 
         shell: bash

@@ -52,17 +52,19 @@ RUN ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/nul
 # We can reduce the image size by supporting fewer versions here if we want.
 RUN echo "y" | ${ANDROID_ROOT}/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_ROOT/sdk/ \
   "platform-tools" \
+  "platforms;android-35" \
   "platforms;android-34" \
   "platforms;android-33" \
   "platforms;android-32" \
   "platforms;android-31" \
+  "build-tools;35.0.0" \
   "build-tools;34.0.0" \
   "build-tools;33.0.0" \
   "build-tools;32.0.0" \
   "ndk-bundle" \
-  "ndk;25.2.9519653" \
   "ndk;26.1.10909125" \
-  "cmake;3.22.1" \
+  "ndk;27.1.12297006" \
+  "cmake;3.30.3" \
   "extras;android;m2repository" \
   "extras;google;m2repository" \
   "extras;google;google_play_services" \
@@ -81,14 +83,14 @@ ENV ANDROID_HOME=$ANDROID_ROOT/sdk
 LABEL maintainer="ernstjason1@gmail.com"
 
 # Create the user
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    #
-    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+# RUN groupadd --gid $USER_GID $USERNAME \
+#     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+#     #
+#     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+#     && apt-get update \
+#     && apt-get install -y sudo \
+#     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+#     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # NB: there is no CMD so it will work the same as the base image. See the
 # https://github.com/myoung34/docker-github-actions-runner#environment-variables

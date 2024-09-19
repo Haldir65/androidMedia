@@ -10,7 +10,7 @@ val NDK_VERSION:String by project
 android {
     namespace = "com.google.android.renderscript"
     compileSdk = COMPILE_SKD_VERSION.toInt()
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "35.0.0"
     ndkVersion = NDK_VERSION
     buildFeatures {
         viewBinding = true
@@ -27,6 +27,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
         externalNativeBuild {
             cmake {
+                version =  "3.30.3"
                 cppFlags += "-std=c++17"
             }
         }
@@ -56,6 +57,7 @@ android {
 
     externalNativeBuild {
         cmake {
+            version =  "3.30.3"
             path = file("src/main/cpp/CMakeLists.txt")
         }
     }

@@ -36,6 +36,7 @@ android {
         if(enableCmake){
             externalNativeBuild {
                 cmake {
+                    version =  "3.30.3"
                     abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
                     cppFlags("-g -std=c++17 -frtti -fexceptions -Wno-unsafe-buffer-usage")
                     arguments("-DBUILD_SHARED_LIBS=OFF","-DAVIF_LOCAL_DAV1D=ON","-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
@@ -73,7 +74,7 @@ android {
     if (enableCmake){
         externalNativeBuild {
             cmake {
-                version =  "3.22.1"
+                version =  "3.30.3"
 //                path("vendor/libpng-1.6.37/CMakeLists.txt") // build libpng.so
                 path("src/main/cpp/CMakeLists.txt") // link libpng.so with mypng.so
             }

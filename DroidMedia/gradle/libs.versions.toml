@@ -1,7 +1,7 @@
 [versions]
 
 accompanistPermissions="0.36.0"
-composeBom="2024.09.01"
+composeBom="2024.09.02"
 compiler="1.5.15"
 landscapistGlide="2.3.8"
 minSdk="27"
@@ -25,7 +25,7 @@ androidx-activity-ktx="1.9.2"
 android-material="1.12.0"
 constraintLayout="2.1.4"
 coordinateLayout="1.2.0"
-lifecycle="2.8.5"
+lifecycle="2.8.6"
 hilt_version= "2.52"
 coil = "2.7.0"
 androidxHiltNavigationCompose = "1.2.0"

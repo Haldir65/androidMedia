@@ -154,9 +154,9 @@ function _build_curl() {
       --disable-telnet \
       --disable-verbose \
       "
-  _download_if_not_exists https://github.com/curl/curl/releases/download/curl-8_5_0/curl-8.5.0.tar.gz curl-8.5.0.tar.gz
-  tar -xzvf curl-8.5.0.tar.gz -C ${build_dir}
-  pushd ${build_dir}/curl-8.5.0
+  _download_if_not_exists https://github.com/curl/curl/releases/download/curl-8_10_1/curl-8.10.1.tar.gz curl-8.10.1.tar.gz
+  tar -xzvf curl-8.10.1.tar.gz -C ${build_dir}
+  pushd ${build_dir}/curl-8.10.1
 
   local _prefix=${build_dir}/curl
   mkdir -p $_prefix
@@ -175,7 +175,7 @@ function _build_curl() {
   cp -R $_prefix $CURL_DIR
   _green "_build_curl completed \n"
   popd
-  rm -rf ${build_dir}/curl-8.5.0
+  rm -rf ${build_dir}/curl-8.10.1
 
 }
 

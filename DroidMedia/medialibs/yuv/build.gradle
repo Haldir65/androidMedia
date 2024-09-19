@@ -18,7 +18,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                version "3.22.1"
+                version "3.30.3"
                 abiFilters 'armeabi-v7a', 'arm64-v8a'
                 arguments "-DANDROID_ARM_NEON=ON"
             }
@@ -38,6 +38,7 @@ android {
 
     externalNativeBuild {
         cmake {
+            version =  "3.30.3"
             path "CMakeLists.txt"
         }
     }
