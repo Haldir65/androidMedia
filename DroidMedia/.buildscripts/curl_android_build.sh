@@ -143,6 +143,7 @@ function _build_curl() {
       --disable-shared \
       --enable-ipv6 \
       --enable-static \
+      --without-libpsl \
       --enable-threaded-resolver \
       --disable-dict \
       --disable-gopher \
