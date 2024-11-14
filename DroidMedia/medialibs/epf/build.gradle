@@ -5,7 +5,8 @@ plugins {
 
 android {
     namespace 'com.daasuu.epf'
-    compileSdk 34
+    compileSdkVersion = project.properties['COMPILE_SKD_VERSION'].toInteger()
+    buildToolsVersion = project.properties['BUILD_TOOLS_VERSION']
     ndkVersion project.properties['NDK_VERSION']
 
     defaultConfig {

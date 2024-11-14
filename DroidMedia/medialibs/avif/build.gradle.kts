@@ -8,15 +8,17 @@ plugins {
 val SUPPORT_NATIVE_BUILD:String  by project
 val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 val SUPPORTED_ABI="arm64-v8a"
-val COMPILE_SKD_VERSION:String by project
 val MIN_SDK_VERSION:String by project
 val NDK_VERSION:String by project
+
+val COMPILE_SKD_VERSION:String by project
+val BUILD_TOOLS_VERSION:String by project
 
 
 android {
     namespace = "com.me.harris.avif"
     compileSdk = COMPILE_SKD_VERSION.toInt()
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = BUILD_TOOLS_VERSION
     ndkVersion = NDK_VERSION
 
 

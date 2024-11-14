@@ -5,8 +5,8 @@ plugins {
 
 android {
     namespace 'com.daasuu.gpuv'
-    compileSdk 34
-    buildToolsVersion = '34.0.0'
+    compileSdkVersion = project.properties['COMPILE_SKD_VERSION'].toInteger()
+    buildToolsVersion = project.properties['BUILD_TOOLS_VERSION']
     ndkVersion project.properties['NDK_VERSION']
 
     buildFeatures {

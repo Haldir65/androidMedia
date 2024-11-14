@@ -5,9 +5,13 @@ plugins {
 
 }
 
+val COMPILE_SKD_VERSION:String by project
+val BUILD_TOOLS_VERSION:String by project
+
 android {
     namespace = "com.me.harris.composeworkmanager"
-    compileSdk = 34
+    compileSdk = COMPILE_SKD_VERSION.toInt()
+    buildToolsVersion = BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdk = 27

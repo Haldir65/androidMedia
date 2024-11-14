@@ -10,10 +10,13 @@ val NDK_VERSION:String  by project
 val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 val SUPPORTED_ABI="arm64-v8a"
 
+val COMPILE_SKD_VERSION:String by project
+val BUILD_TOOLS_VERSION:String by project
+
 android {
     namespace = "com.me.harris.audiolib"
-    compileSdk = 34
-    buildToolsVersion = "34.0.0"
+    compileSdk = COMPILE_SKD_VERSION.toInt()
+    buildToolsVersion = BUILD_TOOLS_VERSION
     ndkVersion = NDK_VERSION
 
 

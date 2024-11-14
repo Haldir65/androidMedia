@@ -4,18 +4,20 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val COMPILE_SKD_VERSION:String by project
 //val MIN_SDK_VERSION:String by project
 val SUPPORT_NATIVE_BUILD:String  by project
 val NDK_VERSION:String  by project
 val SUPPORTED_ABI="arm64-v8a"
 val enableCmake = "true".equals(SUPPORT_NATIVE_BUILD,true)
 
+val COMPILE_SKD_VERSION:String by project
+val BUILD_TOOLS_VERSION:String by project
 
 
 android {
     namespace = "com.me.harris.pnglib"
     compileSdk = COMPILE_SKD_VERSION.toInt()
+    buildToolsVersion = BUILD_TOOLS_VERSION
     ndkVersion = NDK_VERSION
 
     buildFeatures {

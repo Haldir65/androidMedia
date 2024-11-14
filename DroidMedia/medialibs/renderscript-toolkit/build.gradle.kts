@@ -4,13 +4,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 val COMPILE_SKD_VERSION:String by project
+val BUILD_TOOLS_VERSION:String by project
 val MIN_SDK_VERSION:String by project
 val NDK_VERSION:String by project
 
 android {
     namespace = "com.google.android.renderscript"
     compileSdk = COMPILE_SKD_VERSION.toInt()
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = BUILD_TOOLS_VERSION
     ndkVersion = NDK_VERSION
     buildFeatures {
         viewBinding = true
