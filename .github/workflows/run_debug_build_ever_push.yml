@@ -2,16 +2,16 @@ name: run debug build with jdk 21
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
 
 jobs:
   runDebugWithJdk21:
     runs-on: ubuntu-latest
     env:
       builddir: DroidMedia/app/build/outputs/apk
-    if: "contains(github.event.head_commit.message, '[Build]')"
+    # if: "contains(github.event.head_commit.message, '[Build]')"
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub! "
