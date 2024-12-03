@@ -9,10 +9,10 @@ compileSdk="35"
 buildToolsVersion="35.0.0"
 okhttpBom="4.12.0"
 targetSdk="29"
-androidGradlePlugin = "8.7.2"
+androidGradlePlugin = "8.7.3"
 arrow = "1.2.4"
 glide = "4.16.0"
-kotlin_verison = "2.0.21"
+kotlin_verison = "2.1.0"
 gson = "2.11.0"
 retrofit = "2.11.0"
 cardview = "1.0.0"
@@ -28,7 +28,7 @@ android-material="1.12.0"
 constraintLayout="2.2.0"
 coordinateLayout="1.2.0"
 lifecycle="2.8.7"
-hilt_version= "2.52"
+hilt_version= "2.53"
 coil = "2.7.0"
 androidxHiltNavigationCompose = "1.2.0"
 hilt = "2.52"
@@ -45,7 +45,7 @@ x_crash="3.1.0"
 slfj-android="1.7.36"
 oboe_version="1.9.0"
 #kotlinCompilerExtensionVersion="1.5.11"
-kspversion="2.0.21-1.0.28"
+kspversion="2.1.0-1.0.29"
 
 kotlinxDatetime = "0.6.1"
 kotlinxSerializationJson = "1.7.3"
@@ -111,8 +111,7 @@ androidx-lifecycle-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecy
 androidx-lifecycle-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 
 
-google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt_version" }
-google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt_version" }
+
 iqiyi-xcrash = { module = "com.iqiyi.xcrash:xcrash-android-lib", version.ref = "x_crash" }
 
 ##camerax
@@ -128,8 +127,8 @@ coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-video-kt = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 #Dependency injection
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt_version" }
+google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt_version" }
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 

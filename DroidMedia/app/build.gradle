@@ -31,7 +31,7 @@ android {
     }
 
     namespace "com.me.harris.droidmedia"
-    ndkVersion '27.1.12297006'
+    ndkVersion project.properties['NDK_VERSION']
 
 
     buildFeatures {
