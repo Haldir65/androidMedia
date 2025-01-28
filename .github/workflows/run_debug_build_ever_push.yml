@@ -36,7 +36,7 @@ jobs:
         working-directory: DroidMedia
         run: |
           sudo apt update
-          sudo apt install tree
+          sudo apt install tree ninja-build
           chmod +x ./.buildscripts/ensure_third_party_deps.sh
           ./.buildscripts/ensure_third_party_deps.sh
         shell: bash
