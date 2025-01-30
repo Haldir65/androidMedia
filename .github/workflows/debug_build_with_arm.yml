@@ -1,0 +1,76 @@
+name: Android Build with arm image
+
+on:
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: 21    
+        distribution: 'temurin'
+    - name: Install Android SDK
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-21-jdk wget unzip tree
+
+        # Download command line tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O commandlinetools.zip
+        unzip commandlinetools.zip -d $HOME/cmdline-tools
+        mkdir -p $HOME/Android/sdk/cmdline-tools
+        mv $HOME/cmdline-tools $HOME/Android/sdk/cmdline-tools/latest
+        
+        # tree -L 4 $HOME/Android/sdk/latest/cmdline-tools
+        # Install SDK components
+        yes | $HOME/Android/sdk/latest/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/Android/sdk --licenses
+        yes | $HOME/Android/sdk/latest/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/Android/sdk "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+    - name: clone required dependencies , glm and jpeg-turbo
+      working-directory: DroidMedia
+      shell: bash
+      run: |
+          sudo apt update
+          sudo apt install tree ninja-build
+          chmod +x ./.buildscripts/ensure_third_party_deps.sh
+          ./.buildscripts/ensure_third_party_deps.sh
+
+    - name: show all files
+      working-directory: DroidMedia
+      run: ls -al
+    - name: Grant execute permission for gradlew
+      working-directory: DroidMedia
+      run: chmod +x gradlew
+    - run: echo "Building Debug APK."
+    - name: Build with Gradle
+      working-directory: DroidMedia
+      shell: bash
+      run: |
+          bash .buildscripts/build_project.sh -t main
+
+    - name: Build sub apps with Gradle
+      working-directory: DroidMedia
+      shell: bash
+      run: |
+          bash .buildscripts/build_project.sh -t subapp
+        
+    - run: echo "Build status report=${{ job.status }}."
+    - name: Generate hashes
+      run: |
+          tree -L 4 ${{ env.builddir }}
+          for file in ${{ env.builddir }}/*; do
+            if [ -d "$file" ]; then
+              echo "this is an folder: $file"
+            else
+              sha256sum $file >> ${{ env.builddir }}/hashes.txt
+            fi
+          done
+
+
+   
