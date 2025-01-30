@@ -6,7 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
-
+    env:
+        ANDROID_HOME: $HOME/Android/sdk
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -27,12 +28,12 @@ jobs:
         mkdir -p $HOME/Android/sdk/cmdline-tools
 
         tree -L 5 $HOME/cmdline-tools
-        mv $HOME/cmdline-tools $HOME/Android/sdk/cmdline-tools/latest
+        mv $HOME/cmdline-tools/* $HOME/Android/sdk/cmdline-tools/latest
         
         tree -L 5 $HOME/Android/sdk
         # Install SDK components
-        yes | $HOME/Android/sdk/cmdline-tools/latest/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/Android/sdk --licenses
-        yes | $HOME/Android/sdk/cmdline-tools/latest/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/Android/sdk "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+        yes | $HOME/Android/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/Android/sdk --licenses
+        yes | $HOME/Android/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/Android/sdk "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
     - name: clone required dependencies , glm and jpeg-turbo
       working-directory: DroidMedia
