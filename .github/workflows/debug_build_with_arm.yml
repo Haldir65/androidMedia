@@ -25,9 +25,11 @@ jobs:
         wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O commandlinetools.zip
         unzip commandlinetools.zip -d $HOME/cmdline-tools
         mkdir -p $HOME/Android/sdk/cmdline-tools
+
+        tree -L 5 $HOME/cmdline-tools
         mv $HOME/cmdline-tools $HOME/Android/sdk/cmdline-tools/latest
         
-        # tree -L 4 $HOME/Android/sdk/latest/cmdline-tools
+        tree -L 5 $HOME/Android/sdk
         # Install SDK components
         yes | $HOME/Android/sdk/latest/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/Android/sdk --licenses
         yes | $HOME/Android/sdk/latest/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/Android/sdk "platform-tools" "platforms;android-35" "build-tools;35.0.0"
