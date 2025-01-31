@@ -9,6 +9,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        ref: 'master'
 
     - name: Set up JDK 21
       uses: actions/setup-java@v4
@@ -23,10 +25,10 @@ jobs:
         # Download command line tools
         wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O commandlinetools.zip
         unzip commandlinetools.zip -d $HOME/cmdline-tools
-        mkdir -p $HOME/Android/sdk/cmdline-tools
+        mkdir -p $HOME/Android/sdk
 
         tree -L 5 $HOME/cmdline-tools
-        mv $HOME/cmdline-tools/* $HOME/Android/sdk/cmdline-tools
+        mv $HOME/cmdline-tools $HOME/Android/sdk
         
         tree -L 5 $HOME/Android/sdk
         # Install SDK components
