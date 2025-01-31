@@ -28,7 +28,7 @@ jobs:
         mkdir -p $HOME/Android/sdk
 
         tree -L 5 $HOME/cmdline-tools
-        mv $HOME/cmdline-tools $HOME/Android/sdk
+        mv $HOME/cmdline-tools/cmdline-tools $HOME/Android/sdk
         
         tree -L 5 $HOME/Android/sdk
         # Install SDK components
@@ -39,12 +39,12 @@ jobs:
     - name: Set up environment variables
       run: |
         echo "ANDROID_HOME=$HOME/Android/sdk" >> $GITHUB_ENV
-        echo "PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH" >> $GITHUB_ENV    
+        echo "PATH=$HOME/Android/sdk/cmdline-tools/bin:$PATH" >> $GITHUB_ENV    
 
     - name: Verify installation
       run: |
         echo $ANDROID_HOME
-        sdkmanager --list    
+        $HOME/Android/sdk/cmdline-tools/bin/sdkmanager --list    
     - name: clone required dependencies , glm and jpeg-turbo
       working-directory: DroidMedia
       shell: bash
