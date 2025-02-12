@@ -1,7 +1,7 @@
 [versions]
 
 accompanistPermissions="0.37.0"
-composeBom="2025.01.01"
+composeBom="2025.02.00"
 compiler="1.5.15"
 landscapistGlide="2.4.6"
 minSdk="27"
