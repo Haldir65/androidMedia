@@ -7,6 +7,7 @@ val COMPILE_SKD_VERSION:String by project
 val BUILD_TOOLS_VERSION:String by project
 val MIN_SDK_VERSION:String by project
 val NDK_VERSION:String by project
+val CMAKE_VERSION:String by project
 
 android {
     namespace = "com.google.android.renderscript"
@@ -28,7 +29,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
         externalNativeBuild {
             cmake {
-                version =  "3.30.3"
+                version =  CMAKE_VERSION
                 cppFlags += "-std=c++17"
             }
         }
@@ -58,7 +59,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            version =  "3.30.3"
+            version =  CMAKE_VERSION
             path = file("src/main/cpp/CMakeLists.txt")
         }
     }
