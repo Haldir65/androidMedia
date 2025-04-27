@@ -141,13 +141,13 @@ jobs:
               export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
               export PATH=$JAVA_HOME/bin:$PATH
               java -version
-              # ./gradlew assembleRelease "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g" -Dfile.encoding=UTF-8
+              ./gradlew assembleRelease "-Dorg.gradle.jvmargs=-XX:+UseZGC -XX:+ZGenerational -Xmx8g" -Dfile.encoding=UTF-8
               
-      # - run:
-      #     working_directory: DroidMedia
-      #     name: show build results
-      #     command: |
-      #       tree -L 4 app/build
+      - run:
+          working_directory: DroidMedia
+          name: show build results
+          command: |
+            tree -L 4 app/build
       - save_cache:
           key: >-
             gradle-cache-v1-{{ checksum "DroidMedia/gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "DroidMedia/gradle/libs.versions.toml" }}-{{ .Branch }}
