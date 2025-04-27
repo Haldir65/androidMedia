@@ -5,6 +5,7 @@
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
+.vscode
 /build
 /captures
 local.properties

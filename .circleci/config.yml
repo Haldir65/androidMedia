@@ -1,6 +1,14 @@
 version: '2.1'
+
+parameters:
+  workflow:
+    type: enum
+    default: none
+    description: The workflow to trigger.
+    enum: [linux, none]
+
 orbs:
-  android: circleci/android@2.4.0
+  android: circleci/android@3.1.0
 #   android: circleci/android@1.0.3
   # dt: datatheorem/mobile-secure-orb@1.0.0
 
@@ -84,12 +92,22 @@ jobs:
 
 
   vmbuild:
-    parameters:
-      os:
-        type: executor
-    executor: << parameters.os >>
+    executor:
+      name: android/android_machine
+      resource_class: large
+      tag: default
     steps:
       - checkout
+      - run:
+          name: Generate cache keys
+          command: grep 'kotlin_verison =' 'DroidMedia/gradle/libs.versions.toml' > konan-cache.txt
+      - restore_cache:
+          key: local-cache-v1-{{ .Branch }}      
+      - restore_cache:
+          keys:
+            - gradle-cache-v1-{{ checksum "DroidMedia/gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "DroidMedia/gradle/libs.versions.toml" }}-{{ .Branch }}
+            - gradle-cache-v1-{{ checksum "DroidMedia/gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "DroidMedia/gradle/libs.versions.toml" }}
+            - gradle-cache-v1-{{ checksum "DroidMedia/gradle/wrapper/gradle-wrapper.properties" }}-
       - run:
           name: Install Dependency
           command: |
@@ -130,24 +148,22 @@ jobs:
           name: show build results
           command: |
             tree -L 4 app/build
-            
+      - save_cache:
+          key: >-
+            gradle-cache-v1-{{ checksum "DroidMedia/gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "DroidMedia/gradle/libs.versions.toml" }}-{{ .Branch }}
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+      - save_cache:
+          key: local-cache-v1-{{ .Branch }}
+          paths:
+            - ./.gradle
+            - ./.kotlin      
+
 workflows:
   version: 2
   build:
-      jobs:
-        - dockerbuild:
-            matrix:
-              parameters:
-                os: [docker-amd64,docker-aarch64]
-            filters:
-              branches:
-                only:
-                  - release
-        - vmbuild:
-            matrix:
-                  parameters:
-                    os: [linux-amd64]
-            filters:
-              branches:
-                only:
-                  - release 
+    when: { equal: [ linux, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - vmbuild
+  
