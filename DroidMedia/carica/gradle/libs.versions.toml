@@ -34,7 +34,7 @@ retrofitKotlinxSerializationJson = "1.0.0"
 okhttp = "4.12.0"
 ksp = "2.1.21-2.0.2"
 coil = "2.7.0"
-org-jetbrains-kotlin-jvm = "2.1.21"
+org-jetbrains-kotlin-jvm = "2.2.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
