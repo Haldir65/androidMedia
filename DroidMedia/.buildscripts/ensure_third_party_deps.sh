@@ -28,7 +28,7 @@ echo "installing depths... skip"
 # echo "show all available  download libpng lib .."
 # ls -al medialibs/pnglib/vendor/libpng-1.6.37
 
-CMAKE_VERSION=3.31.6
+CMAKE_VERSION=4.0.2
 arch=x86_64
 mkdir ~/temp && pushd ~/temp && \
 curl -o cmake.tar.gz -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-${arch}.tar.gz && \

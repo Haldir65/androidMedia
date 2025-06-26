@@ -68,7 +68,7 @@ jobs:
           name: clone required dependencies , glm and jpeg-turbo
           command: |
             chmod +x ./.buildscripts/ensure_third_party_deps.sh
-            bash ./.buildscripts/ensure_third_party_deps.sh
+            bash .buildscripts/ensure_third_party_deps.sh
       - run:
           working_directory: DroidMedia
           name: Assemble release build

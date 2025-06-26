@@ -21,8 +21,8 @@ internal fun Project.configureKotlinAndroid(
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_18
-            targetCompatibility = JavaVersion.VERSION_18
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
         }
     }
 
@@ -32,8 +32,8 @@ internal fun Project.configureKotlinAndroid(
 
 internal fun Project.configureKotlinJvm() {
     extensions.configure<JavaPluginExtension> {
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     configureKotlin()
@@ -52,7 +52,7 @@ private fun Project.configureKotlin() {
                 "-opt-in=kotlinx.coroutines.FlowPreview",
             ))
         }
-//        
+//
 //        kotlinOptions {
 //            jvmTarget = JavaVersion.VERSION_18.toString()
 //            // Treat all Kotlin warnings as errors (disabled by default)
