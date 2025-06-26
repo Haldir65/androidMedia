@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.4.1)
-
+cmake_minimum_required(VERSION 3.21.0)
+project(ijkyuv)
 # CMakeLists for libyuv
 # Originally created for "roxlu build system" to compile libyuv on windows
 # Run with -DTEST=ON to build unit tests
