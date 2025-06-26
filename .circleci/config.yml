@@ -112,6 +112,8 @@ jobs:
           name: Install Dependency
           command: |
               sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y sudo ninja-build git unzip build-essential tree checkinstall coreutils util-linux openjdk-21-jdk
+              chmod +x ./.buildscripts/ensure_third_party_deps.sh
+              bash ./.buildscripts/ensure_third_party_deps.sh
               tree -L 4
               
       - run:
