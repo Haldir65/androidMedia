@@ -51,7 +51,7 @@ kotlinxDatetime = "0.7.1-0.6.x-compat"
 kotlinxSerializationJson = "1.9.0"
 exfiinterface="1.4.1"
 #exoplayer = "2.19.1"
-media3_version ="1.7.1"
+media3_version ="1.8.0"
 camerax_version="1.4.2"
 
 room = "2.7.2"
