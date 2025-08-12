@@ -21,7 +21,7 @@ jobs:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
       - name: Checkout the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
             fetch-depth: 1
       - run: echo "The ${{ github.repository }} repository has been cloned."
@@ -33,7 +33,7 @@ jobs:
           nproc    
 
       - name: Checkout source code of libav1f
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
             fetch-depth: 1
             repository: AOMediaCodec/libavif
