@@ -30,10 +30,10 @@ dependencyResolutionManagement {
 
 rootProject.name="DroidMedia"
 include (":app")
-include (":exoplayer")
+//include (":exoplayer")
 include (":awesomelib")
 include (":medialibs:filterLibrary")
-include (":meidalibs:playerlibrary")
+include (":medialibs:playerLib")
 include (":medialibs:epf")
 include (":medialibs:playerLib")
 include (":medialibs:cameraLib")
@@ -43,7 +43,7 @@ include (":medialibs:yuv")
 include (":medialibs:extractframe")
 include (":medialibs:gpuv")
 include (":medialibs:renderscript-toolkit")
-include (":medialibs:VidCompose")
+//include (":medialibs:VidCompose")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

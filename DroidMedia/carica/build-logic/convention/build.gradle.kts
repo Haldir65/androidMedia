@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -13,10 +14,17 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    compilerOptions {
+//        jvmTarget = JvmTarget.JVM_17
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) // Corrected line
+
     }
+//    kotlinOptions {
+//        jvmTarget = JavaVersion.VERSION_17.toString()
+//    }
 }
+
+
 
 dependencies {
     compileOnly(libs.android.gradlePlugin)
