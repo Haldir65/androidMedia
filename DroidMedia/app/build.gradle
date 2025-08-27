@@ -1,13 +1,12 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     id("io.gitlab.arturbosch.detekt").version(libs.versions.detekt)
-
 }
 
 
@@ -23,15 +22,15 @@ def SUPPORTED_ABI = ['arm64-v8a', 'x86', 'x86_64','armeabi-v7a'] as String[]
 
 
 android {
-    compileSdk =  35
-    buildToolsVersion = '35.0.0'
+    compileSdk =  Integer.parseInt(libs.versions.compileSdk.get())
+    buildToolsVersion = libs.versions.buildToolsVersion.get().toString()
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     namespace "com.me.harris.droidmedia"
-    ndkVersion '27.1.12297006'
+    ndkVersion '28.0.13004108'
 
 
     buildFeatures {
@@ -136,7 +135,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21
+//        jvmTarget = JavaVersion.VERSION_21
     }
 
     lint {

@@ -11,6 +11,11 @@ dependencyResolutionManagement {
 		google()
 		mavenCentral()
 	}
+    versionCatalogs {
+        create("libs") {
+            from(files(rootDir.parentFile.parentFile.resolve("gradle/libs.versions.toml")))
+        }
+    }
 }
 
 rootProject.name = "Vid Compose"

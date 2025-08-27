@@ -5,8 +5,8 @@ composeBom="2025.08.00"
 compiler="1.5.15"
 landscapistGlide="2.5.2"
 minSdk="27"
-compileSdk="35"
-buildToolsVersion="35.0.0"
+compileSdk="36"
+buildToolsVersion="36.0.0"
 okhttpBom="5.1.0"
 targetSdk="29"
 androidGradlePlugin = "8.12.1"
@@ -188,7 +188,7 @@ android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_verison" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_verison" }
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_verison" }
+kotlin-android  = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_verison" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_verison" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspversion" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

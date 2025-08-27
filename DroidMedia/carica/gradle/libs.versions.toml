@@ -5,27 +5,27 @@ compileSdk = "36"
 versionCode = "1"
 versionName = "1.0.0"
 kotlin = "2.2.10"
-app = "8.12.0"
-core = "1.16.0"
+app = "8.12.1"
+core = "1.17.0"
 androidxComposeCompiler = "1.5.0"
 landscapistGlide="2.5.2"
 lifecycle = "2.9.2"
 androidx-activity-ktx="1.10.1"
 activityCompose = "1.10.1"
-bom = "2025.07.00"
+bom = "2025.08.00"
 junit = "4.13.2"
-junit-ext = "1.2.1"
+junit-ext = "1.3.0"
 espresso = "3.5.1"
 accompanistPermissions="0.37.3"
-espresso-core = "3.6.1"
+espresso-core = "3.7.0"
 detekt = "1.23.8"
 appcompat = "1.7.1"
 material = "1.12.0"
-navigation = "2.9.2"
+navigation = "2.9.3"
 kotlinxCoroutines = "1.10.2"
 hilt = "2.57.1"
 hiltExt = "1.2.0"
-media3_version ="1.7.1"
+media3_version ="1.8.0"
 camerax_version="1.4.2"
 androidxHiltNavigationCompose = "1.2.0"
 kotlinxSerializationJson = "1.9.0"
@@ -115,10 +115,12 @@ network = [
 ]
 
 [plugins]
-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-application = { id = "com.android.application", version.ref = "app" }
-library = { id = "com.android.library", version.ref = "app" }
+android-application = { id = "com.android.application", version.ref = "app" }
+android-library = { id = "com.android.library", version.ref = "app" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
+kotlin-jvm= { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-android  = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

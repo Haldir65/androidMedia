@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.android)
 }
 
 val COMPILE_SKD_VERSION:String by project
