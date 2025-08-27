@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -27,8 +26,8 @@ tasks.withType<KotlinCompile>().configureEach {
 
 
 dependencies {
-    compileOnly(libs.android.gradlePlugin)
-    compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(deps.android.gradle.build.plugin)
+    compileOnly(deps.kotlin.gradle.plugin)
 }
 
 gradlePlugin {

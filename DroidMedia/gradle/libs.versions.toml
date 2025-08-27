@@ -24,6 +24,7 @@ androidx-work-ktx="2.10.3"
 androidx-viewpager2="1.1.0"
 androidx-appcompat-appcompat="1.7.1"
 androidx-activity-ktx="1.10.1"
+activityCompose = "1.10.1"
 android-material="1.12.0"
 constraintLayout="2.2.1"
 coordinateLayout="1.3.0"
@@ -31,6 +32,7 @@ lifecycle="2.9.2"
 hilt_version= "2.57.1"
 coil = "2.7.0"
 androidxHiltNavigationCompose = "1.2.0"
+navigation = "2.9.3"
 hilt = "2.57.1"
 hiltExt = "1.2.0"
 detekt = "1.23.8"
@@ -38,6 +40,7 @@ recyclerview="1.4.0"
 junit4 = "4.13.2"
 androixJunit="1.3.0"
 espresso="3.7.0"
+espresso-core = "3.7.0"
 rxandroid = "3.0.2"
 rxjava = "3.1.11"
 slfj="2.0.17"
@@ -62,12 +65,12 @@ kotlinxCollectionsImmutable = "0.4.0"
 material3Android = "1.3.2"
 # other versions
 
+
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }
 android-gradle-build-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
-androidx-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
-androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3_version" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
@@ -104,11 +107,27 @@ androidx-cardview-cardview = { module = "androidx.cardview:cardview", version.re
 androidx-exfi-interface = { module = "androidx.exifinterface:exifinterface", version.ref = "exfiinterface" }
 ##ViewModelScope
 androidx-lifecycle-lifecycle-viewmodel-ktx  = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-lifecycle-viewmodel-compose  = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 ##LifecycleScope
 androidx-lifecycle-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 ##LiveData
 androidx-lifecycle-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 
+
+
+### compose related
+androidx-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-testing = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 
 
 iqiyi-xcrash = { module = "com.iqiyi.xcrash:xcrash-android-lib", version.ref = "x_crash" }
@@ -170,6 +189,8 @@ junit-junit = { group = "junit", name = "junit", version.ref = "junit4" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androixJunit" }
 androidx-test-espresso-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
+espresso = {group = "androidx.test.espresso", name = "espresso:espresso-core", version.ref = "espresso"}
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
 
 # other dependencies

@@ -27,11 +27,11 @@ dependencyResolutionManagement {
         }
         mavenCentral()
     }
-//    versionCatalogs {
-//        create("libs") {
-//            from(files(rootDir.parentFile.resolve("gradle/libs.versions.toml")))
-//        }
-//    }
+    versionCatalogs {
+        create("deps") {
+            from(files(rootDir.parentFile.resolve("gradle/libs.versions.toml")))
+        }
+    }
 }
 
 rootProject.name = "wallpaper"

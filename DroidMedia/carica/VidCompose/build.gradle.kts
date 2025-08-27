@@ -11,8 +11,8 @@ import io.gitlab.arturbosch.detekt.Detekt
 plugins {
     id("wallpaper.android.application")
     id("wallpaper.android.application.compose")
-    alias(libs.plugins.compose.compiler)
-    id("io.gitlab.arturbosch.detekt").version(libs.versions.detekt)
+    alias(deps.plugins.compose.compiler)
+    id("io.gitlab.arturbosch.detekt").version(deps.versions.detekt)
 //    id("wallpaper.android.hilt")
 }
 
@@ -70,30 +70,30 @@ android {
 }
 
 dependencies {
-	implementation(libs.accompanist.permissions)
+	implementation(deps.accompanist.permissions)
 
-	implementation(libs.exoplayer.core)
-	implementation(libs.exoplayer.ui)
-    implementation (libs.androidx.activity.ktx)
+	implementation(deps.exoplayer.core)
+	implementation(deps.exoplayer.ui)
+    implementation (deps.androidx.activity.ktx)
 
-	implementation(libs.androidx.media3.session)
-    implementation(libs.landscapist.glide)
-	implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
-	implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
-	implementation(libs.core.ktx)
-	implementation(platform(libs.compose.bom))
-    implementation("androidx.activity:activity-compose")
-	implementation("androidx.compose.ui:ui")
-	implementation("androidx.compose.ui:ui-graphics")
-	implementation("androidx.compose.ui:ui-tooling-preview")
-	implementation("androidx.compose.material3:material3")
-	testImplementation(libs.junit)
-	androidTestImplementation(libs.junit.ext)
-	androidTestImplementation(libs.espresso.core)
-	androidTestImplementation(platform(libs.compose.bom))
-	androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-	debugImplementation("androidx.compose.ui:ui-tooling")
-	debugImplementation("androidx.compose.ui:ui-test-manifest")
+	implementation(deps.androidx.media3.session)
+    implementation(deps.landscapist.glide)
+	implementation(deps.androidx.lifecycle.lifecycle.viewmodel.ktx)
+	implementation(deps.androidx.lifecycle.lifecycle.viewmodel.compose)
+	implementation(deps.androidx.core.core.ktx)
+	implementation(platform(deps.androidx.compose.bom))
+    implementation(deps.activity.compose)
+	implementation(deps.compose.ui)
+	implementation(deps.compose.graphics)
+	implementation(deps.compose.preview)
+	implementation(deps.androidx.material3)
+	testImplementation(deps.junit.junit)
+	androidTestImplementation(deps.androidx.test.junit)
+	androidTestImplementation(deps.espresso.core)
+	androidTestImplementation(platform(deps.androidx.compose.bom))
+	androidTestImplementation(deps.compose.ui.testing)
+	debugImplementation(deps.compose.ui.tooling)
+	debugImplementation(deps.compose.ui.test.manifest)
 }
 
 
