@@ -3,8 +3,8 @@
 MY_LIBS_NAME=libjpeg-turbo
 MY_SOURCE_DIR=$(pwd)/libjpeg-turbo
 MY_BUILD_DIR=binary
-CMAKE_PATH=${ANDROID_HOME}/cmake/3.10.2.4988404
-NDK_PATH=${ANDROID_HOME}/ndk/21.4.7075529
+CMAKE_PATH=${ANDROID_HOME}/cmake/4.0.2
+NDK_PATH=${ANDROID_HOME}/ndk/28.0.13004108
 
 
 export PATH=${CMAKE_PATH}/bin:$PATH
@@ -50,7 +50,7 @@ ANDROID_VERSION=24
 
 ANDROID_ARMV5_CFLAGS="-march=armv5te"
 ANDROID_ARMV7_CFLAGS="-march=armv7-a -mfloat-abi=softfp -mfpu=neon"  # -mfpu=vfpv3-d16  -fexceptions -frtti
-ANDROID_ARMV8_CFLAGS="-march=armv8-a"                   # -mfloat-abi=softfp -mfpu=neon -fexceptions -frtti  
+ANDROID_ARMV8_CFLAGS="-march=armv8-a"                   # -mfloat-abi=softfp -mfpu=neon -fexceptions -frtti
 ANDROID_X86_CFLAGS="-march=i386 -mtune=intel -mssse3 -mfpmath=sse -m32"
 ANDROID_X86_64_CFLAGS="-march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel"
 
@@ -85,6 +85,7 @@ build_bin() {
       -DANDROID_PLATFORM=android-${ANDROID_VERSION} \
       -DCMAKE_BUILD_TYPE=Release \
       -DANDROID_NDK=${NDK_PATH} \
+      -DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON \
       -DCMAKE_TOOLCHAIN_FILE=${NDK_PATH}/build/cmake/android.toolchain.cmake \
       -DCMAKE_POSITION_INDEPENDENT_CODE=1 \
       -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android${ANDROID_VERSION}" \

@@ -35,6 +35,7 @@ android {
                     cppFlags "-g -std=c++17 -frtti -fexceptions"
                     arguments '-DANDROID_PLATFORM=android-21',
                             '-DANDROID_TOOLCHAIN=clang',
+                            '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON',
                             '-DANDROID_STL=c++_shared'
                             '-DANDROID_CPP_FEATURES=rtti exceptions'
 //                arguments  "-DANDROID_STL=stlport_static"

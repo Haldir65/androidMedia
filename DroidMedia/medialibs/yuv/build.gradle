@@ -20,7 +20,7 @@ android {
             cmake {
                 version project.properties['CMAKE_VERSION']
                 abiFilters 'armeabi-v7a', 'arm64-v8a'
-                arguments "-DANDROID_ARM_NEON=ON"
+                arguments "-DANDROID_ARM_NEON=ON","-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
             }
         }
     }

@@ -31,6 +31,7 @@ android {
             cmake {
                 version =  CMAKE_VERSION
                 cppFlags += "-std=c++17"
+                arguments += listOf("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
             }
         }
     }

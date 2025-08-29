@@ -38,7 +38,7 @@ android {
                     version =  CMAKE_VERSION
                     abiFilters(SUPPORTED_ABI)//只帮我打这个架构的就好了
                     cppFlags("-g -std=c++17 -frtti -fexceptions")
-                    arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
+                    arguments("-DANDROID_PLATFORM=android-24","-DANDROID_TOOLCHAIN=clang","-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON","-DANDROID_CPP_FEATURES=rtti exceptions","-DANDROID_ARM_NEON=true","-DANDROID_STL=c++_shared")
                 }
             }
             ndk {
