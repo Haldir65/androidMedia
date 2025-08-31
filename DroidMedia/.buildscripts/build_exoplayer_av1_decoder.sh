@@ -31,7 +31,7 @@ function _download_repos(){
 function main(){
     _download_repos
     pushd $WORKING_DIR/media
-    sed -i 's/gradle-[0-9]\+\.[0-9]\+-[^.]\+\.zip/gradle-8.8-all.zip/g' gradle/wrapper/gradle-wrapper.properties
+    sed -i 's/gradle-[0-9]\+\.[0-9]\+-[^.]\+\.zip/gradle-9.0.0-all.zip/g' gradle/wrapper/gradle-wrapper.properties
     chmod +x gradlew
     ./gradlew :lib-decoder-av1:assembleRelease
     popd
