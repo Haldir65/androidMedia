@@ -20,7 +20,7 @@ executors:
     resource_class: large
   docker-aarch64:
     docker:
-      - image: saschpe/android-sdk:34-jdk21.0.2_13
+      - image: saschpe/android-sdk:35-jdk23.0.2_7
     resource_class: arm.large
     
   linux-amd64:

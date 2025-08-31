@@ -108,9 +108,10 @@ esac
 }
 
 function _build_openssl(){
-  _download_if_not_exists https://github.com/openssl/openssl/releases/download/openssl-3.3.0/openssl-3.3.0.tar.gz openssl-3.3.0.tar.gz
-  tar -xzvf openssl-3.3.0.tar.gz -C ${build_dir}
-  pushd ${build_dir}/openssl-3.3.0
+  local openssl_version=3.5.2
+  _download_if_not_exists https://github.com/openssl/openssl/releases/download/openssl-${openssl_version}/openssl-${openssl_version}.tar.gz openssl-${openssl_version}.tar.gz
+  tar -xzvf openssl-${openssl_version}.tar.gz -C ${build_dir}
+  pushd ${build_dir}/openssl-${openssl_version}
   # arm64
 #  export CC=$TOOLCHAIN/bin/$TARGET_HOST$MIN_SDK_VERSION-clang
 #  export AS=$CC
@@ -131,11 +132,14 @@ function _build_openssl(){
   cp -R $_prefix $SSL_DIR
   _orange "build artificate located at $SSL_DIR \n"
   popd
-  rm -rf ${build_dir}/openssl-3.3.0
+  rm -rf ${build_dir}/openssl-${openssl_version}
 }
 
 function _build_curl() {
   _green "_build_curl begin \n"
+  local CURL_VERSION=8.15.0
+  local curl_string="${CURL_VERSION//./_}"
+  echo $curl_string
   # curl common configuration arguments
   # disable functionalities here to reduce size
   ARGUMENTS=" \
@@ -155,9 +159,9 @@ function _build_curl() {
       --disable-telnet \
       --disable-verbose \
       "
-  _download_if_not_exists https://github.com/curl/curl/releases/download/curl-8_10_1/curl-8.10.1.tar.gz curl-8.10.1.tar.gz
-  tar -xzvf curl-8.10.1.tar.gz -C ${build_dir}
-  pushd ${build_dir}/curl-8.10.1
+  _download_if_not_exists https://github.com/curl/curl/releases/download/curl-${curl_string}/curl-${CURL_VERSION}.tar.gz curl-${CURL_VERSION}.tar.gz
+  tar -xzvf curl-${CURL_VERSION}.tar.gz -C ${build_dir}
+  pushd ${build_dir}/curl-${CURL_VERSION}
 
   local _prefix=${build_dir}/curl
   mkdir -p $_prefix
@@ -176,7 +180,7 @@ function _build_curl() {
   cp -R $_prefix $CURL_DIR
   _green "_build_curl completed \n"
   popd
-  rm -rf ${build_dir}/curl-8.10.1
+  rm -rf ${build_dir}/curl-${CURL_VERSION}
 
 }
 
