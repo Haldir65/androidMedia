@@ -53,7 +53,8 @@ set(libpng_public_hdrs
         "${LIB_PNG_VENDER_DIR}/pngconf.h"
         )
 
-include_directories(${LIB_PNG_VENDER_DIR})
+## build libpng from source
+#add_subdirectory(${LIB_PNG_VENDER_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs)
 
 configure_file("${LIB_PNG_VENDER_DIR}/scripts/pnglibconf.h.prebuilt" ${LIB_PNG_VENDER_DIR}/pnglibconf.h COPYONLY)
 
@@ -73,7 +74,13 @@ add_library( # Sets the name of the library.
         )
 
 
+target_include_directories(mypng PRIVATE ${LIB_PNG_VENDER_DIR})
 
+
+target_compile_options(mypng PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-value>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-unused-value>
+)
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
