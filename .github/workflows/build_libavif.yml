@@ -57,7 +57,7 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Setup python
-        uses: actions/setup-python@v5 # v5.0.0
+        uses: actions/setup-python@v6 # v5.0.0
         with:
           python-version: '3.x'
       - name: Setup meson
