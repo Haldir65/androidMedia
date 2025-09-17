@@ -3,7 +3,7 @@
 accompanistPermissions="0.37.3"
 composeBom="2025.09.00"
 compiler="1.5.15"
-landscapistGlide="2.5.2"
+landscapistGlide="2.6.0"
 minSdk="27"
 compileSdk="36"
 buildToolsVersion="36.0.0"
