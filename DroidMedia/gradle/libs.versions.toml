@@ -57,7 +57,7 @@ exfiinterface="1.4.1"
 media3_version ="1.8.0"
 camerax_version="1.5.0"
 
-room = "2.8.0"
+room = "2.8.1"
 
 mmkv = "2.2.3"
 material3 = "1.3.2"
