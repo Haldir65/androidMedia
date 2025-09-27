@@ -87,6 +87,7 @@ dependencies {
 	implementation(deps.compose.graphics)
 	implementation(deps.compose.preview)
 	implementation(deps.androidx.material3)
+	implementation(deps.compose.material.iconsExtended)
 	testImplementation(deps.junit.junit)
 	androidTestImplementation(deps.androidx.test.junit)
 	androidTestImplementation(deps.espresso.core)
