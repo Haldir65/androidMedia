@@ -374,8 +374,8 @@ int JpegSpoon::write_JPEG_file_in_memory(BYTE *data, int w, int h, int quality, 
 
     // write file
     startTime = std::chrono::high_resolution_clock::now();
-    std::string_view filepath { outFileName };
-    std::fstream fos { filepath ,std::ios::out | std::ios::binary };
+    std::string filepath { outFileName };
+    std::fstream fos {filepath ,std::ios::out | std::ios::binary };
     if (fos){
         fos.write(reinterpret_cast<const char *>(outbuffer), (std::streamsize)outSize);
     } else {
