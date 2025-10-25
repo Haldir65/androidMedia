@@ -64,7 +64,7 @@ class MainActivity2 : AppCompatActivity() {
             VideoUtil.setUrl()
 //            startActivity(Intent(this, ExtractFrameAndSaveKeyFrameToFileActivity::class.java))
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Build.VERSION.SDK_INT!=Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             if (!Environment.isExternalStorageManager()) {
                 StoragePermissSucks.grantManageExternalStoragePermission(this)
             }

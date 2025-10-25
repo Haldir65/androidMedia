@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import com.me.harris.awesomelib.videoutil.VideoInfoHelper
 import java.io.File
-import java.util.*
 
 object VideoUtil {
 
@@ -53,11 +52,9 @@ object VideoUtil {
 
     @JvmStatic
     fun setUrl() {
-        val selfHosted = Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1
+        val selfHosted = Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM
         val glassy = Build.VERSION.SECURITY_PATCH == "2020-12-01"
-        val dir :File = if (selfHosted )
-            File(Environment.getExternalStorageDirectory().absolutePath).parentFile.parentFile.listFiles()[0]
-        else  File(
+        val dir :File = File(
             Environment.getExternalStorageDirectory().path +
                     File.separator + Environment.DIRECTORY_MOVIES
         )
