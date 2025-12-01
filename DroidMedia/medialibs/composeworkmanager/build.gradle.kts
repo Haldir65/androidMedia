@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -13,9 +15,15 @@ android {
     compileSdk = COMPILE_SKD_VERSION.toInt()
     buildToolsVersion = BUILD_TOOLS_VERSION
 
+    testOptions {
+        targetSdk = libs.versions.targetSdk.get().toInt() // ✅ Correct way for specifying targetSdk for testing
+    }
+    lint {
+        targetSdk = libs.versions.targetSdk.get().toInt() // ✅ Correct way for specifying targetSdk for linting
+    }
+
     defaultConfig {
         minSdk = 27
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -30,12 +38,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
     buildFeatures {
         compose = true
     }
@@ -48,6 +54,12 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
     }
 }
 

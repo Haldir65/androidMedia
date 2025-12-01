@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -8,6 +10,14 @@ val COMPILE_SKD_VERSION:String by project
 android {
     namespace = "androidx.media3.decoder.vp9"
     compileSdk = COMPILE_SKD_VERSION.toInt()
+
+
+    testOptions {
+        targetSdk = libs.versions.targetSdk.get().toInt() // ✅ Correct way for specifying targetSdk for testing
+    }
+    lint {
+        targetSdk = libs.versions.targetSdk.get().toInt() // ✅ Correct way for specifying targetSdk for linting
+    }
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -29,11 +39,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
+}
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
     }
 }
-
 dependencies {
 
     implementation(libs.androidx.core.core.ktx)
