@@ -60,7 +60,7 @@ camerax_version="1.5.1"
 room = "2.8.4"
 
 material3 = "1.4.0"
-mmkv = "2.2.4"
+mmkv = "2.3.0"
 kotlinxCollectionsImmutable = "0.4.0"
 material3Android = "1.4.0"
 # other versions
