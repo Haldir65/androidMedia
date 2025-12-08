@@ -108,7 +108,7 @@ esac
 }
 
 function _build_openssl(){
-  local openssl_version=3.5.2
+  local openssl_version=3.6.0
   _download_if_not_exists https://github.com/openssl/openssl/releases/download/openssl-${openssl_version}/openssl-${openssl_version}.tar.gz openssl-${openssl_version}.tar.gz
   tar -xzvf openssl-${openssl_version}.tar.gz -C ${build_dir}
   pushd ${build_dir}/openssl-${openssl_version}
@@ -137,7 +137,7 @@ function _build_openssl(){
 
 function _build_curl() {
   _green "_build_curl begin \n"
-  local CURL_VERSION=8.15.0
+  local CURL_VERSION=8.17.0
   local curl_string="${CURL_VERSION//./_}"
   echo $curl_string
   # curl common configuration arguments
