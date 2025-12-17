@@ -1,7 +1,7 @@
 [versions]
 
 accompanistPermissions="0.37.3"
-androidxCompiler="1.5.14"
+androidxCompiler="1.5.15"
 composeBom="2025.12.00"
 compiler="1.5.15"
 kotlinMetadataJvm="2.3.0-Beta1"
