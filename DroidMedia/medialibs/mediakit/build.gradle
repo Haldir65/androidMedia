@@ -122,5 +122,6 @@ dependencies {
     // we want to access application context in library module
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
+    kapt(libs.kotlin.metadata.jvm)
 
 }

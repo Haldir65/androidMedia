@@ -94,6 +94,8 @@ dependencies {
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
+    kapt(libs.kotlin.metadata.jvm)
+
 
     implementation 'com.github.wseemann:FFmpegMediaPlayer-core:1.0.5'
 //    implementation 'com.github.wseemann:FFmpegMediaPlayer-native:1.0.5'
@@ -102,7 +104,7 @@ dependencies {
 
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.compose.compiler:compiler")
-    implementation 'androidx.compose.compiler:compiler:1.5.14'
+    implementation libs.androidx.compose.compiler.v1514
     implementation("androidx.activity:activity-compose")
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.animation:animation-android")

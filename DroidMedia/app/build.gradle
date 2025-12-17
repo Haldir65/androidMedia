@@ -300,6 +300,7 @@ dependencies {
 
     implementation libs.google.dagger.hilt.android
     kapt libs.google.dagger.hilt.android.compiler
+    kapt(libs.kotlin.metadata.jvm)
 
 
     implementation(platform(libs.androidx.compose.bom))
