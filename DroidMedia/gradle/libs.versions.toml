@@ -2,7 +2,7 @@
 
 accompanistPermissions="0.37.3"
 androidxCompiler="1.5.15"
-composeBom="2025.12.01"
+composeBom="2026.01.00"
 compiler="1.5.15"
 kotlinMetadataJvm="2.3.0-Beta1"
 landscapistGlide="2.8.2"
