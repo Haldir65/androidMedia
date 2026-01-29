@@ -2,7 +2,7 @@
 
 accompanistPermissions="0.37.3"
 androidxCompiler="1.5.15"
-composeBom="2026.01.00"
+composeBom="2026.01.01"
 compiler="1.5.15"
 kotlinMetadataJvm="2.3.0-Beta1"
 landscapistGlide="2.9.0"
@@ -11,7 +11,7 @@ compileSdk="36"
 buildToolsVersion="36.1.0"
 okhttpBom="5.3.2"
 targetSdk="29"
-androidGradlePlugin = "8.13.2"
+androidGradlePlugin = "9.0.0"
 arrow = "2.2.1.1"
 glide = "5.0.5"
 kotlin_verison = "2.3.0"
@@ -25,7 +25,7 @@ androidx-core-ktx="1.17.0"
 androidx-work-ktx="2.11.0"
 androidx-viewpager2="1.1.0"
 androidx-appcompat-appcompat="1.7.1"
-androidx-activity-ktx="1.12.2"
+androidx-activity-ktx="1.12.3"
 activityCompose = "1.12.2"
 android-material="1.13.0"
 constraintLayout="2.2.1"
@@ -35,7 +35,7 @@ hilt_version= "2.59"
 coil = "2.7.0"
 navigation = "2.9.6"
 androidxHiltNavigationCompose = "1.3.0"
-hilt = "2.58"
+hilt = "2.59"
 hiltExt = "1.3.0"
 detekt = "1.23.8"
 recyclerview="1.4.0"
@@ -50,14 +50,14 @@ x_crash="3.1.0"
 slfj-android="1.7.36"
 oboe_version="1.10.0"
 #kotlinCompilerExtensionVersion="1.5.11"
-kspversion="2.3.4"
+kspversion="2.3.5"
 
 kotlinxDatetime = "0.7.1-0.6.x-compat"
 kotlinxSerializationJson = "1.10.0"
 exfiinterface="1.4.2"
 #exoplayer = "2.19.1"
 media3_version ="1.9.1"
-camerax_version="1.5.2"
+camerax_version="1.5.3"
 
 room = "2.8.4"
 
@@ -73,7 +73,6 @@ accompanist-permissions = { module = "com.google.accompanist:accompanist-permiss
 adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }
 android-gradle-build-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 
-androidx-compose-compiler-v1514 = { module = "androidx.compose.compiler:compiler", version.ref = "androidxCompiler" }
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3_version" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }

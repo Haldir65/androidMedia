@@ -1,7 +1,6 @@
 
 import com.android.build.gradle.LibraryExtension
-import com.blank.wallpaper.configureAndroidCompose
-import com.blank.wallpaper.libs
+import com.blank.wallpaper.configureAndroidComposeLib
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
@@ -11,8 +10,8 @@ class AndroidLibraryComposeConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("com.android.library")
             val extension = extensions.getByType<LibraryExtension>()
-            configureAndroidCompose(extension)
+            configureAndroidComposeLib(extension)
         }
     }
-
 }
+

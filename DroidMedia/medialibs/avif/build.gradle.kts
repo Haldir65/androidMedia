@@ -2,9 +2,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp").version(libs.versions.kspversion) // Or latest version of KSP
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
+//    id("org.jetbrains.kotlin.android")
+//    id("com.google.devtools.ksp").version(libs.versions.kspversion) // Or latest version of KSP
 }
 
 val SUPPORT_NATIVE_BUILD:String  by project

@@ -1,8 +1,7 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -35,9 +34,9 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21
-    }
+//    kotlinOptions {
+//        jvmTarget = JavaVersion.VERSION_21
+//    }
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
@@ -74,7 +73,7 @@ dependencies {
 //    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     implementation libs.google.dagger.hilt.android
-    kapt libs.google.dagger.hilt.android.compiler
-    kapt(libs.kotlin.metadata.jvm)
+    ksp libs.google.dagger.hilt.android.compiler
+//    kapt(libs.kotlin.metadata.jvm)
 
 }

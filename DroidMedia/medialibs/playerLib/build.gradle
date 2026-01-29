@@ -1,8 +1,7 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -50,9 +49,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21
-    }
+//    kotlinOptions {
+//        jvmTarget = JavaVersion.VERSION_21
+//    }
     lint {
         abortOnError false
         checkReleaseBuilds true
@@ -91,20 +90,19 @@ dependencies {
     implementation project(":serviceloaderapi:serviceapi")
     implementation projects.medialibs.videocache
 
-
     implementation libs.google.dagger.hilt.android
-    kapt libs.google.dagger.hilt.android.compiler
-    kapt(libs.kotlin.metadata.jvm)
+    ksp libs.google.dagger.hilt.android.compiler
+//    kapt(libs.kotlin.metadata.jvm)
 
 
-    implementation 'com.github.wseemann:FFmpegMediaPlayer-core:1.0.5'
+//    implementation 'com.github.wseemann:FFmpegMediaPlayer-core:1.0.5'
 //    implementation 'com.github.wseemann:FFmpegMediaPlayer-native:1.0.5'
-    implementation 'com.github.wseemann:FFmpegMediaPlayer-native-arm64-v8a:1.0.5'
+//    implementation 'com.github.wseemann:FFmpegMediaPlayer-native-arm64-v8a:1.0.5'
 
 
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.compose.compiler:compiler")
-    implementation libs.androidx.compose.compiler.v1514
+    implementation libs.androidx.compiler
     implementation("androidx.activity:activity-compose")
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.animation:animation-android")

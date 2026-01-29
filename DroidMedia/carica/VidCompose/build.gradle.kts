@@ -24,6 +24,7 @@ plugins {
 
 android {
 	namespace = "com.codingwithumair.app.vidcompose"
+    compileSdk =  Integer.parseInt(deps.versions.compileSdk.get())
    /* compileSdk = COMPILE_SKD_VERSION.toInt()
 
 	defaultConfig {

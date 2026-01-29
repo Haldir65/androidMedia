@@ -1,6 +1,7 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+//    id 'com.android.library'
+    alias(libs.plugins.android.library)
+//    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -26,9 +27,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21
-    }
+//    kotlinOptions {
+//        jvmTarget = JavaVersion.VERSION_21
+//    }
 }
 
 dependencies {
