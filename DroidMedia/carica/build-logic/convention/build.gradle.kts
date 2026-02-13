@@ -28,7 +28,7 @@ tasks.withType<KotlinCompile>().configureEach {
 dependencies {
 //    compileOnly(deps.android.gradle.build.plugin)
 //    compileOnly(deps.kotlin.gradle.plugin)
-    implementation("com.android.tools.build:gradle:9.0.0")
+    implementation("com.android.tools.build:gradle:9.0.1")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.10")
 }
 
