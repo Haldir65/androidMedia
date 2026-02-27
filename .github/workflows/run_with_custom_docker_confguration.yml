@@ -42,7 +42,7 @@ jobs:
         run: ls -al /tmp/dist 
 
       - name: Upload_That_APK
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: docker-upload-apk
           retention-days: 7
