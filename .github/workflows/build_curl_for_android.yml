@@ -87,7 +87,7 @@ jobs:
             tree -L 2
     
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.target.id }}-${{ matrix.target.os }}-prebuilt-curl-libs
           path: curl-prebuilt.zip

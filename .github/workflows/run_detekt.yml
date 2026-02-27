@@ -39,7 +39,7 @@ jobs:
         run: |
           bash .buildscripts/build_project.sh -t detekt
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: detekt-report-${{ github.run_id }}
           path: DroidMedia/detekt.tar.gz
