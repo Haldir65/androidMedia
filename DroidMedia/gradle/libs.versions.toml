@@ -52,7 +52,7 @@ oboe_version="1.10.0"
 #kotlinCompilerExtensionVersion="1.5.11"
 kspversion="2.3.7"
 
-kotlinxDatetime = "0.7.1-0.6.x-compat"
+kotlinxDatetime = "0.8.0-0.6.x-compat"
 kotlinxSerializationJson = "1.11.0"
 exfiinterface="1.4.2"
 #exoplayer = "2.19.1"
