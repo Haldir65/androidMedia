@@ -63,7 +63,7 @@ room = "2.8.4"
 
 material3 = "1.4.0"
 mmkv = "2.4.0"
-kotlinxCollectionsImmutable = "0.5.0"
+kotlinxCollectionsImmutable = "0.5.1"
 material3Android = "1.4.0"
 # other versions
 
