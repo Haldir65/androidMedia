@@ -29,7 +29,7 @@ jobs:
 
     - name: Cache external dependencies
       id: cache-ext
-      uses: actions/cache@v3
+      uses: actions/cache@v6
       with:
         path: ext
         key: ${{ runner.os }}-${{ runner.build-type }}-${{ hashFiles('ext/*.cmd', 'ext/svt.sh') }}

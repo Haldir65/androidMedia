@@ -48,14 +48,14 @@ jobs:
         run: chmod +x gradlew
         # cache Gradle dependencies and wrapper to reduce build time
       # - name: Cache Gradle Wrapper
-      #   uses: actions/cache@v3
+      #   uses: actions/cache@v6
       #   with:
       #     path: ~/.gradle/wrapper
       #     # working-directory: DroidMedia
       #     key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
       # - name: Cache Gradle All Kinds of Dependencies
-      #   uses: actions/cache@v3
+      #   uses: actions/cache@v6
       #   with:
       #     path: ~/.gradle/caches
       #     key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
